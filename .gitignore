@@ -81,3 +81,5 @@ orleans.codegen.cs
 WebApi/subscribed_members.csv
 /Web/wwwroot/images/Thumbs.db
 WebApi/Controllers/PresaleController.cs
+
+/node_modules
