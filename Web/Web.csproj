@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <Folder Include="e2e\" />
+    <Folder Include="src\" />
+    <Folder Include="static\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,4 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\WebApi\WebApi.csproj" />
+  </ItemGroup>
 </Project>
