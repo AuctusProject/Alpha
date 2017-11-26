@@ -14,7 +14,13 @@ namespace Web
     {
         public static void Main(string[] args)
         {
+            Auctus.Util.Email.SendGridEmailAsync().Wait();
             BuildWebHost(args).Run();
+        }
+
+        private static void SendEmail()
+        {
+            
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
