@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
+    <Folder Include="e2e\" />
+    <Folder Include="src\" />
+    <Folder Include="static\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.csproj" />
+    <ProjectReference Include="..\WebApi\WebApi.csproj" />
   </ItemGroup>
-
 </Project>
