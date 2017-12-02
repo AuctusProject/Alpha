@@ -1,0 +1,13 @@
+<label>
+  email:
+  <input [(ngModel)]="login.email" type="text"/>
+</label>
+<label>
+  password:
+  <input [(ngModel)]="login.password" type="password" />
+</label>
+<label>
+  remember:
+  <input type="checkbox" [(ngModel)]="login.rememberMe" />
+</label>
+<input type="button" (click)="onLoginClick()" value="Login"/>

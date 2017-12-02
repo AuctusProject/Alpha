@@ -25,7 +25,13 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-           
+
+            services.AddCors(o => o.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

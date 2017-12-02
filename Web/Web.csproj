@@ -7,9 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="src\app\model\login.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="src\app\components\" />
+    <Folder Include="src\app\services\" />
     <Folder Include="wwwroot\" />
     <Folder Include="e2e\" />
-    <Folder Include="src\" />
     <Folder Include="static\" />
   </ItemGroup>
 
@@ -22,5 +27,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Util\Util.csproj" />
     <ProjectReference Include="..\WebApi\WebApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="src\app\model\login.ts" />
   </ItemGroup>
 </Project>
