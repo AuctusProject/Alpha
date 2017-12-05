@@ -1,0 +1,7 @@
+<register-steps [currentStep]="currentStep"></register-steps>
+<div [ngSwitch]="currentStep">
+  <goal-step *ngSwitchCase="0"></goal-step>
+  <period-step *ngSwitchCase="1"></period-step>
+  <amount-step *ngSwitchCase="2"></amount-step>
+  <risk-step *ngSwitchCase="3"></risk-step>
+</div>
