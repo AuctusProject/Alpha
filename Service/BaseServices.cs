@@ -1,4 +1,5 @@
-﻿using Auctus.Util;
+﻿using Auctus.Business.Account;
+using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,7 @@ namespace Auctus.Service
             MemoryCache = cache;
             Logger = loggerFactory;
         }
+
+        protected UserBusiness UserBusiness { get { return new UserBusiness(Logger, MemoryCache); } }
     }
 }

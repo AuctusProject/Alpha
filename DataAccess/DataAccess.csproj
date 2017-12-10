@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.4-alpha1-00070" />
-    <PackageReference Include="MySql.Data" Version="8.0.9-dmr" />
+    <PackageReference Include="Dapper" Version="1.50.4" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Auctus.Model
+namespace Api.Model.Account
 {
-    public class Login
+    public class RecoverPasswordRequest
     {
+        public string Code { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
-        public bool RememberMe { get; set; }
-
     }
 }

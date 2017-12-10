@@ -6,7 +6,7 @@ import { HttpService } from './http.service';
 @Injectable()
 export class LoginService {
 
-  private loginUrl = "http://localhost:16814/api/login"
+  private loginUrl = this.httpService.apiUrl("account/login");
 
   constructor(private httpService : HttpService)
   { }

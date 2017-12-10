@@ -1,9 +1,9 @@
 ﻿using Auctus.Util.DapperAttributes;
 using Dapper;
-using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -25,9 +25,15 @@ namespace Auctus.DataAccess.Core
         #endregion
 
         #region Connection
-        protected MySqlConnection GetOpenConnection()
+        //protected MySqlConnection GetOpenConnection()
+        //{
+        //    var connection = new MySqlConnection(_connectionString);
+        //    connection.Open();
+        //    return connection;
+        //}
+        protected SqlConnection GetOpenConnection()
         {
-            var connection = new MySqlConnection(_connectionString);
+            var connection = new SqlConnection(_connectionString);
             connection.Open();
             return connection;
         }
@@ -129,7 +135,8 @@ namespace Auctus.DataAccess.Core
         {
             using (var connection = GetOpenConnection())
             {
-                sql = string.Concat(sql, "; SELECT LAST_INSERT_ID();");
+                //sql = string.Concat(sql, "; SELECT LAST_INSERT_ID();");
+                sql = string.Concat(sql, "; SELECT SCOPE_IDENTITY();");
                 return SqlMapper.ExecuteScalar<int>(connection, sql, param, transaction, commandTimeout, CommandType.Text);
             }
         }

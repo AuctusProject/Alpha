@@ -4,10 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-
 using System.Linq;
 using System.Text;
-using MySql.Data.MySqlClient;
 using Auctus.DataAccess.Core;
 using Auctus.Util.NotShared;
 
@@ -15,10 +13,8 @@ namespace Auctus.DataAccess
 {
     public abstract class BaseData<T> : DapperRepositoryBase
     {
-        protected BaseData() : base(Config.DbConnString)
+        protected BaseData() : base(Config.CONNECTION_STRING)
         { }
-        //TODO: add to configuration manager like structure
-        private readonly string connString = Config.DbConnString;
 
         public IEnumerable<T> SelectByObject(T criteria)
         {
