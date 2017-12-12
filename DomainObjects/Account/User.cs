@@ -15,13 +15,9 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.AnsiString)]
         public string Password { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
-        public DateTime Creation { get; set; }
+        public DateTime CreationDate { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime? ConfirmedEmail { get; set; }
-        [DapperType(System.Data.DbType.DateTime)]
-        public DateTime? RecoverPasswordDate { get; set; }
-        [DapperType(System.Data.DbType.AnsiString)]
-        public string RecoverPasswordCode { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
         public string ConfirmationCode { get; set; }
     }

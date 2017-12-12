@@ -39,7 +39,7 @@ namespace Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { logged = false, error = ex.Message });
+                return BadRequest(new { logged = false, error = "Credentials are invalid." });
             }
             if (!user.ConfirmedEmail.HasValue)
             {
@@ -48,18 +48,38 @@ namespace Api.Controllers
             return Ok(new { logged = true, jwt = GenerateToken(loginRequest.Email.ToLower().Trim()) });
         }
         
-        [Route("register")]
+        [Route("simpleregister")]
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Register([FromBody]RegisterRequest registerRequest)
+        public async Task<IActionResult> SimpleRegister([FromBody]SimpleRegisterRequest registerRequest)
         {
             if (registerRequest == null)
                 return BadRequest();
            
             try
             {
-                await AccountServices.Register(registerRequest.Email, registerRequest.Password);
+                await AccountServices.SimpleRegister(registerRequest.Email, registerRequest.Password);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()) });
+        }
+
+        [Route("fullregister")]
+        [HttpPost]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> FullRegister([FromBody]FullRegisterRequest registerRequest)
+        {
+            if (registerRequest == null)
+                return BadRequest();
+
+            try
+            {
+                await AccountServices.FullRegister(registerRequest.Email, registerRequest.Password, registerRequest.GoalOptionId, registerRequest.Timeframe, registerRequest.Risk, registerRequest.TargetAmount, registerRequest.StartingAmount, registerRequest.MonthlyContribution);
             }
             catch (InvalidOperationException ex)
             {
@@ -80,7 +100,7 @@ namespace Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { error = ex.Message });
+                //return BadRequest(new { error = ex.Message });
             }
             return Ok();
         }
@@ -100,7 +120,7 @@ namespace Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return BadRequest(new { error = "Email could not be confirmed." });
             }
             return Ok();
         }
@@ -134,7 +154,7 @@ namespace Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { error = ex.Message });
+                //return BadRequest(new { error = ex.Message });
             }
             return Ok();
         }
@@ -154,9 +174,18 @@ namespace Api.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return BadRequest(new { error = "Recover password could not be validated." });
             }
             return Ok();
+        }
+
+        [Route("goaloptions")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult GoalOptions()
+        {
+            var options = AccountServices.ListGoalsOptions();
+            return Ok(options.Select(c => new { id = c.Id, description = c.Description}));
         }
     }
 }

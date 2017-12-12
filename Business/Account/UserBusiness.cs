@@ -10,6 +10,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Auctus.Business.Account
 {
@@ -22,29 +23,32 @@ namespace Auctus.Business.Account
             BaseEmailValidation(email);
             BasePasswordValidation(password);
 
-            var user = GetUser(email);
-            if (user == null || user.Password != Security.Encrypt(password))
-                throw new InvalidOperationException("Credentials are invalid.");
+            var user = GetValidUser(email);
+            if (user.Password != Security.Encrypt(password))
+                throw new InvalidOperationException("Password are invalid.");
 
             return user;
         }
 
-        public async Task<User> Register(string email, string password)
+        public async Task<User> SimpleRegister(string email, string password)
         {
-            BaseEmailValidation(email);
-            BasePasswordValidation(password);
-            PasswordValidation(password);
-
-            User user = GetUser(email);
-            if (user != null)
-                throw new InvalidOperationException("Email already registered.");
-
-            user = new User();
-            user.Email = email.ToLower().Trim();
-            user.Creation = DateTime.UtcNow;
-            user.Password = Security.Encrypt(password);
-            user.ConfirmationCode = Guid.NewGuid().ToString();
+            var user = SetBaseUserCreation(email, password);
             Data.Insert(user);
+
+            await SendEmailConfirmation(user.Email, user.ConfirmationCode);
+
+            return user;
+        }
+
+        public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        {
+            var user = SetBaseUserCreation(email, password);
+            using (var scope = new TransactionScope())
+            {
+                Data.Insert(user);
+                GoalBusiness.Create(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+                scope.Complete();
+            }
 
             await SendEmailConfirmation(user.Email, user.ConfirmationCode);
 
@@ -59,17 +63,7 @@ namespace Auctus.Business.Account
 
             await SendEmailConfirmation(email, user.ConfirmationCode);
         }
-
-        public async Task SendEmailForForgottenPassword(string email)
-        {
-            var user = GetValidUser(email);
-            user.RecoverPasswordCode = Guid.NewGuid().ToString();
-            user.RecoverPasswordDate = DateTime.UtcNow;
-            Data.Update(user);
-
-            await SendForgottenPassword(email, user.RecoverPasswordCode);
-        }
-
+        
         public void ConfirmEmail(string email, string code)
         {
             var user = GetValidUser(email);
@@ -79,38 +73,28 @@ namespace Auctus.Business.Account
             user.ConfirmedEmail = DateTime.UtcNow;
             Data.Update(user);
         }
-
-        public void RecoverPassword(string email, string code, string password)
-        {
-            var user = GetValidUser(email);
-            if (code != user.RecoverPasswordCode)
-                throw new InvalidOperationException("Invalid recover password code.");
-            if (!user.RecoverPasswordDate.HasValue || DateTime.UtcNow > user.RecoverPasswordDate.Value.AddDays(1))
-                throw new InvalidOperationException("Recover password code is expired.");
-
-            BasePasswordValidation(password);
-            PasswordValidation(password);
-
-            user.Password = Security.Encrypt(password);
-            Data.Update(user);
-        }
-
+        
         public void ChangePassword(string email, string password)
         {
-            var user = GetValidUser(email);
+            UpdatePassword(GetValidUser(email), password);
+        }
+
+        public void UpdatePassword(User user, string password)
+        {
             BasePasswordValidation(password);
             PasswordValidation(password);
 
             user.Password = Security.Encrypt(password);
             Data.Update(user);
         }
-
-        private async Task SendForgottenPassword(string email, string code)
+        
+        public User GetValidUser(string email)
         {
-            await Email.SendAsync(
-                new string[] { email },
-                "Recover your password from Auctus Alpha",
-                string.Format("To recover your password from Auctus Alpha <a href='{0}/recoverpassword?c={1}' target='_blank'>click here</a><br/><br/><small>If you do not recognize this email, just ignore the message.</small>", Config.WEB_URL, code));
+            BaseEmailValidation(email);
+            var user = Data.Get(email);
+            if (user == null)
+                throw new InvalidOperationException("User cannot be found.");
+            return user;
         }
 
         private async Task SendEmailConfirmation(string email, string code)
@@ -121,19 +105,21 @@ namespace Auctus.Business.Account
                 string.Format("Thank you for support to Auctus Alpha. <br/><br/>To verify your account <a href='{0}/confirm?c={1}' target='_blank'>click here</a><br/><br/><small>If you do not recognize this email, just ignore the message.</small>", Config.WEB_URL, code));
         }
 
-        private User GetUser(string email)
-        {
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("Email", email.ToLower().Trim(), DbType.AnsiString);
-            return Data.SelectByParameters<User>(parameters).SingleOrDefault();
-        }
-
-        private User GetValidUser(string email)
+        private User SetBaseUserCreation(string email, string password)
         {
             BaseEmailValidation(email);
-            var user = GetUser(email);
-            if (user == null)
-                throw new InvalidOperationException("User cannot be found.");
+            BasePasswordValidation(password);
+            PasswordValidation(password);
+
+            User user = Data.Get(email);
+            if (user != null)
+                throw new InvalidOperationException("Email already registered.");
+
+            user = new User();
+            user.Email = email.ToLower().Trim();
+            user.CreationDate = DateTime.UtcNow;
+            user.Password = Security.Encrypt(password);
+            user.ConfirmationCode = Guid.NewGuid().ToString();
             return user;
         }
 
