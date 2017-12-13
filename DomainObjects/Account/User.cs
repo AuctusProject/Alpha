@@ -17,7 +17,7 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime CreationDate { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
-        public DateTime? ConfirmedEmail { get; set; }
+        public DateTime? ConfirmationDate { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
         public string ConfirmationCode { get; set; }
     }

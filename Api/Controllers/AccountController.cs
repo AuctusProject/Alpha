@@ -41,7 +41,7 @@ namespace Api.Controllers
             {
                 return BadRequest(new { logged = false, error = "Credentials are invalid." });
             }
-            if (!user.ConfirmedEmail.HasValue)
+            if (!user.ConfirmationDate.HasValue)
             {
                 return Ok(new { logged = false, message = "Pending email confirmation." });
             }

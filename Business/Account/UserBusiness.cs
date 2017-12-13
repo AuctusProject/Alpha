@@ -43,13 +43,9 @@ namespace Auctus.Business.Account
         public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             var user = SetBaseUserCreation(email, password);
-            using (var scope = new TransactionScope())
-            {
-                Data.Insert(user);
-                GoalBusiness.Create(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
-                scope.Complete();
-            }
-
+            Data.Insert(user);
+            GoalBusiness.Create(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+            
             await SendEmailConfirmation(user.Email, user.ConfirmationCode);
 
             return user;
@@ -70,7 +66,7 @@ namespace Auctus.Business.Account
             if (code != user.ConfirmationCode)
                 throw new InvalidOperationException("Invalid confirmation code.");
 
-            user.ConfirmedEmail = DateTime.UtcNow;
+            user.ConfirmationDate = DateTime.UtcNow;
             Data.Update(user);
         }
         
