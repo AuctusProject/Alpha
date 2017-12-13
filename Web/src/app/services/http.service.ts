@@ -10,7 +10,7 @@ export class HttpService {
   constructor(private http: HttpClient) { }
 
   private jwt: string = "auc_jwt";
-  private api_url: string = "http://localhost:57574/api/"; 
+  private api_url: string = "http://localhost:52448/api/"; 
 
   private getAccessToken(): string {
     return window ? window.localStorage.getItem(this.jwt) : null;

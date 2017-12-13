@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'goal-step',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./goal-step.component.css']
 })
 export class GoalStepComponent implements OnInit {
+
+  @Input() form: FormGroup;
 
   constructor() { }
 
