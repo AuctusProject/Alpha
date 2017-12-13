@@ -1,7 +1,27 @@
-<register-steps [currentStep]="currentStep"></register-steps>
+<!-- <register-steps [currentStep]="currentStep"></register-steps>
 <div [ngSwitch]="currentStep">
   <goal-step *ngSwitchCase="0"></goal-step>
   <period-step *ngSwitchCase="1"></period-step>
-  <amount-step *ngSwitchCase="2"></amount-step>
+  
   <risk-step *ngSwitchCase="3"></risk-step>
-</div>
+</div> -->
+
+<mat-horizontal-stepper [linear]="isLinear">
+    <mat-step [stepControl]="goalStepForm">
+      <goal-step [form]="goalStepForm"></goal-step>
+    </mat-step>
+    <mat-step [stepControl]="periodStep">
+      <form [formGroup]="periodStep">
+          <ng-template matStepLabel>Period</ng-template>
+          <period-step></period-step>
+      </form>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Amount</ng-template>
+        <amount-step></amount-step>
+    </mat-step>
+    <mat-step>
+        <ng-template matStepLabel>Risk Assessment</ng-template>
+        <risk-step></risk-step>
+    </mat-step>
+  </mat-horizontal-stepper>

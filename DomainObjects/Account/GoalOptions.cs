@@ -11,7 +11,7 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.Int32)]
         public int Id { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
-        public DateTime Description { get; set; }
+        public String Description { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int Risk { get; set; }
         [DapperType(System.Data.DbType.Int32)]
