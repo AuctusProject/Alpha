@@ -91,5 +91,7 @@ namespace Api.Controllers
 
         protected AccountServices AccountServices { get { return new AccountServices(LoggerFactory, MemoryCache); } }
         protected AdviceServices AdviceService { get { return new AdviceServices(LoggerFactory, MemoryCache); } }
+        protected AssetServices AssetServices { get { return new AssetServices(LoggerFactory, MemoryCache); } }
+        protected PortfolioServices PortfolioServices { get { return new PortfolioServices(LoggerFactory, MemoryCache); } }
     }
 }

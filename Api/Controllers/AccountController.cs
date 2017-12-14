@@ -187,5 +187,24 @@ namespace Api.Controllers
             var options = AccountServices.ListGoalsOptions();
             return Ok(options.Select(c => new { id = c.Id, description = c.Description}));
         }
+
+
+        [Route("updatevalue")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult updatevalue()
+        {
+            AssetServices.UpdateAllAssetsValues();
+            return Ok();
+        }
+
+        [Route("updateportfolioshistory")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult updatePortfoliosHistory()
+        {
+            PortfolioServices.UpdatePortfoliosHistory();
+            return Ok();
+        }
     }
 }
