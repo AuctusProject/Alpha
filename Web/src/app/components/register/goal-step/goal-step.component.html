@@ -1,22 +1,21 @@
-<form [formGroup]="form">
-    <ng-template matStepLabel>Goal</ng-template>
+<form #goalForm="ngForm">
     <div fxLayout="column" fxLayoutGap="20px">
         <div fxLayout="row">
           <span fxFlex fxLayoutAlign="center center">What are you saving for?</span>
         </div>
       
         <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-            <mat-button-toggle-group formControlName="goal">
-                <mat-button-toggle>Retirement</mat-button-toggle>
-                <mat-button-toggle>Just invest</mat-button-toggle>
-                <mat-button-toggle>House</mat-button-toggle>
+            <mat-button-toggle-group [(ngModel)]="model.GoalOption.Description" name="GoalOptionDescription" ngDefaultControl srequired>
+                <mat-button-toggle [value]="'Retirement'">Retirement</mat-button-toggle>
+                <mat-button-toggle [value]="'Just invest'">Just invest</mat-button-toggle>
+                <!-- <mat-button-toggle>House</mat-button-toggle>
                 <mat-button-toggle>Child</mat-button-toggle>
                 <mat-button-toggle>Big spend</mat-button-toggle>
-                <mat-button-toggle>Other</mat-button-toggle>
+                <mat-button-toggle>Other</mat-button-toggle> -->
             </mat-button-toggle-group>
             <div fxLayout="row" fxLayoutGap="20px">
                 <mat-form-field hintLabel="Optional">
-                    <input matInput placeholder="Target amount" formControlName="targetAmount" required>
+                    <input matInput placeholder="Target amount" name="TargetAmount" [(ngModel)]="model.TargetAmount" required>
                   </mat-form-field>
               </div>
         </div>

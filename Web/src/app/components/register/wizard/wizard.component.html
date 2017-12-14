@@ -7,14 +7,13 @@
 </div> -->
 
 <mat-horizontal-stepper [linear]="isLinear">
-    <mat-step [stepControl]="goalStepForm">
-      <goal-step [form]="goalStepForm"></goal-step>
+    <mat-step>
+      <ng-template matStepLabel>Goal</ng-template>
+      <goal-step [model]="goal"></goal-step>
     </mat-step>
-    <mat-step [stepControl]="periodStep">
-      <form [formGroup]="periodStep">
-          <ng-template matStepLabel>Period</ng-template>
-          <period-step></period-step>
-      </form>
+    <mat-step>
+        <ng-template matStepLabel>Period</ng-template>
+        <period-step></period-step>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Amount</ng-template>
@@ -25,3 +24,5 @@
         <risk-step></risk-step>
     </mat-step>
   </mat-horizontal-stepper>
+  <h4>Goal Option change log</h4>
+  <div *ngFor="let goalOption of goalOptionChangeLog">{{goalOption}}</div>

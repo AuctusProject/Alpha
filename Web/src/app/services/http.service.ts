@@ -53,6 +53,21 @@ export class HttpService {
     );
   }
 
+  get<T>(url: string, httpOptions: any = {}): Observable<any> {
+    if (!httpOptions) {
+      httpOptions = { headers: this.baseHttpHeaders() };
+    }
+    else if (!httpOptions["headers"]) {
+      httpOptions["headers"] = this.baseHttpHeaders();
+    }
+    return this.http.get<any>(url, httpOptions).pipe(
+      tap((response: any) => {
+        if (response && response.jwt) this.setAccessToken(response.jwt);
+      }),
+      catchError(this.handleError<T>(url))
+    );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 

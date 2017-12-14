@@ -18,6 +18,7 @@ import { RiskStepComponent } from './components/register/risk-step/risk-step.com
 import { MatModule } from './/mat.module';
 
 import { AppComponent } from './app.component';
+import { AccountService } from './services/account.service';
 
 
 @NgModule({
@@ -41,7 +42,7 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     FlexLayoutModule
   ],
-  providers: [LoginService, HttpService],
+  providers: [LoginService, HttpService, AccountService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
