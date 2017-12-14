@@ -13,7 +13,7 @@ namespace Auctus.DataAccess.Core
     public abstract class DapperRepositoryBase
     {
         private readonly string _connectionString;
-        private const int _timeout = 30;
+        protected const int _defaultTimeout = 30;
 
         public abstract string TableName { get; }
 
@@ -40,7 +40,7 @@ namespace Auctus.DataAccess.Core
         #endregion
 
         #region Query
-        protected IEnumerable<T> Query<T>(string sql, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected IEnumerable<T> Query<T>(string sql, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -48,7 +48,7 @@ namespace Auctus.DataAccess.Core
             }
         }
 
-        protected IEnumerable<IDictionary<string, object>> Query(string sql, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected IEnumerable<IDictionary<string, object>> Query(string sql, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -57,7 +57,7 @@ namespace Auctus.DataAccess.Core
         }
 
         protected IEnumerable<TParent> QueryParentChild<TParent, TChild, TParentKey>(string sql, Func<TParent, TParentKey> parentKeySelector, 
-            Func<TParent, IList<TChild>> childSelector, string splitOn, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+            Func<TParent, IList<TChild>> childSelector, string splitOn, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             Dictionary<TParentKey, TParent> cache = new Dictionary<TParentKey, TParent>();
             using (var connection = GetOpenConnection())
@@ -81,7 +81,7 @@ namespace Auctus.DataAccess.Core
             return cache.Values;
         }
 
-        protected SqlMapper.GridReader QueryMultiple(string sql, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected SqlMapper.GridReader QueryMultiple(string sql, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -89,7 +89,7 @@ namespace Auctus.DataAccess.Core
             }
         }
 
-        protected IEnumerable<TReturn> Query<TFirst, TSecond, TReturn>(string sql, Func<TFirst, TSecond, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected IEnumerable<TReturn> Query<TFirst, TSecond, TReturn>(string sql, Func<TFirst, TSecond, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -97,7 +97,7 @@ namespace Auctus.DataAccess.Core
             }
         }
 
-        protected IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TReturn>(string sql, Func<TFirst, TSecond, TThird, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TReturn>(string sql, Func<TFirst, TSecond, TThird, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -105,7 +105,7 @@ namespace Auctus.DataAccess.Core
             }
         }
 
-        protected IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -113,7 +113,7 @@ namespace Auctus.DataAccess.Core
             }
         }
 
-        protected IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -123,7 +123,7 @@ namespace Auctus.DataAccess.Core
         #endregion
 
         #region Execute
-        protected int Execute(string sql, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected virtual int Execute(string sql, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
@@ -131,14 +131,18 @@ namespace Auctus.DataAccess.Core
             }
         }
 
-        protected int ExecuteReturningIdentity(string sql, dynamic param = null, int commandTimeout = _timeout, IDbTransaction transaction = null)
+        protected virtual int ExecuteReturningIdentity(string sql, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             using (var connection = GetOpenConnection())
             {
-                //sql = string.Concat(sql, "; SELECT LAST_INSERT_ID();");
-                sql = string.Concat(sql, "; SELECT SCOPE_IDENTITY();");
-                return SqlMapper.ExecuteScalar<int>(connection, sql, param, transaction, commandTimeout, CommandType.Text);
+                return SqlMapper.ExecuteScalar<int>(connection, ParseIdentityCommandQuery(sql), param, transaction, commandTimeout, CommandType.Text);
             }
+        }
+
+        protected string ParseIdentityCommandQuery(string sql)
+        {
+            //return string.Concat(sql, "; SELECT LAST_INSERT_ID();");
+            return string.Concat(sql, "; SELECT SCOPE_IDENTITY();");
         }
         #endregion
 
@@ -177,13 +181,13 @@ namespace Auctus.DataAccess.Core
             return Query<T>(sql, criteria);
         }
 
-        protected void Insert<T>(T obj)
+        protected void Insert<T>(T obj, string tableName = null)
         {
             PropertyContainer propertyContainer = ParseProperties(obj);
             bool identity = !string.IsNullOrEmpty(propertyContainer.Identity);
             IEnumerable<string> columns = identity ? propertyContainer.ValueNames : propertyContainer.AllNames;
             var sql = string.Format("INSERT INTO {0} ({1}) VALUES(@{2})",
-                TableName,
+                tableName ?? TableName,
                 string.Join(", ", columns),
                 string.Join(", @", columns));
 
@@ -196,20 +200,20 @@ namespace Auctus.DataAccess.Core
                 Execute(sql, propertyContainer.AllParameters);
         }
 
-        protected void Update<T>(T obj)
+        protected void Update<T>(T obj, string tableName = null)
         {
             PropertyContainer propertyContainer = ParseProperties(obj);
             string sqlKeyPairs = GetSqlPairs(propertyContainer.KeyNames, " AND ");
             string sqlValuePairs = GetSqlPairs(propertyContainer.ValueNames, ", ");
-            string sql = string.Format("UPDATE {0} SET {1} WHERE {2} ", TableName, sqlValuePairs, sqlKeyPairs);
+            string sql = string.Format("UPDATE {0} SET {1} WHERE {2} ", tableName ?? TableName, sqlValuePairs, sqlKeyPairs);
             Execute(sql, propertyContainer.AllParameters);
         }
 
-        protected void Delete<T>(T obj)
+        protected void Delete<T>(T obj, string tableName = null)
         {
             PropertyContainer propertyContainer = ParseProperties(obj);
             string sqlKeyPairs = GetSqlPairs(propertyContainer.KeyNames, " AND ");
-            string sql = string.Format("DELETE FROM {0} WHERE {1} ", TableName, sqlKeyPairs);
+            string sql = string.Format("DELETE FROM {0} WHERE {1} ", tableName ?? TableName, sqlKeyPairs);
             Execute(sql, propertyContainer.KeyParameters);
         }
         
