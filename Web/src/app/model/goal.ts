@@ -1,8 +1,12 @@
+import { GoalOption } from "./goalOption";
+
 export class Goal {
-    Id: number;
-    TargetAmount: number;
-    StartingAmount: number;
-    MonthlyContribution: number;
-    GoalOption: GoalOption;
-  }
-  
+
+  constructor(
+    public Id: number,
+    public TargetAmount: number,
+    public StartingAmount: number,
+    public MonthlyContribution: number,
+    public GoalOption: GoalOption
+  ) { }
+}

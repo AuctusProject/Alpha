@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Goal } from "../../../model/goal";
 
 @Component({
   selector: 'goal-step',
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class GoalStepComponent implements OnInit {
 
-  @Input() form: FormGroup;
+  @Input() model: Goal;
 
   constructor() { }
 
