@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Account;
+using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Account;
 using Auctus.Util;
 using Auctus.Util.NotShared;
@@ -43,9 +44,14 @@ namespace Auctus.Business.Account
         public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             var user = SetBaseUserCreation(email, password);
-            Data.Insert(user);
-            GoalBusiness.Create(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
-            
+            using (TransactionalDapperCommand transaction = new TransactionalDapperCommand())
+            {
+                transaction.Insert(user, "[User]");
+                var goal = GoalBusiness.SetNewData(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+                transaction.Insert(goal);
+                transaction.Commit();
+            }
+        
             await SendEmailConfirmation(user.Email, user.ConfirmationCode);
 
             return user;

@@ -20,6 +20,13 @@ namespace Auctus.Business.Account
 
         public Goal Create(int userId, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
+            var goal = SetNewData(userId, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+            Data.Insert(goal);
+            return goal;
+        }
+
+        public Goal SetNewData(int userId, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        {
             var goal = new Goal();
             goal.UserId = userId;
             goal.GoalOptionId = goalOptionId;
@@ -29,7 +36,6 @@ namespace Auctus.Business.Account
             goal.TargetAmount = targetAmount;
             goal.Timeframe = timeframe;
             goal.Risk = risk;
-            Data.Insert(goal);
             return goal;
         }
     }
