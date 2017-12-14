@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auctus.DomainObjects.Account
 {
-    public class GoalOptions
+    public class GoalOption
     {
         [DapperKey(true)]
         [DapperType(System.Data.DbType.Int32)]

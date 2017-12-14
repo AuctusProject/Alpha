@@ -20,10 +20,10 @@ namespace Auctus.Business
 
         private UserBusiness _userBusiness;
         private PasswordRecoveryBusiness _passwordRecoveryBusiness;
-        private GoalOptionsBusiness _goalOptionsBusiness;
+        private GoalOptionBusiness _goalOptionsBusiness;
         private GoalBusiness _goalBusiness;
         private AdvisorBusiness _advisorBusiness;
-        private AdvisorDetailsBusiness _advisorDetailsBusiness;
+        private AdvisorDetailBusiness _advisorDetailsBusiness;
         private BuyBusiness _buyBusiness;
         private DistributionBusiness _distributionBusiness;
         private PortfolioBusiness _portfolioBusiness;
@@ -79,12 +79,12 @@ namespace Auctus.Business
             }
         }
 
-        protected GoalOptionsBusiness GoalOptionsBusiness
+        protected GoalOptionBusiness GoalOptionsBusiness
         {
             get
             {
                 if (_goalOptionsBusiness == null)
-                    _goalOptionsBusiness = new GoalOptionsBusiness(LoggerFactory, MemoryCache);
+                    _goalOptionsBusiness = new GoalOptionBusiness(LoggerFactory, MemoryCache);
                 return _goalOptionsBusiness;
             }
         }
@@ -109,12 +109,12 @@ namespace Auctus.Business
             }
         }
 
-        protected AdvisorDetailsBusiness AdvisorDetailsBusiness
+        protected AdvisorDetailBusiness AdvisorDetailsBusiness
         {
             get
             {
                 if (_advisorDetailsBusiness == null)
-                    _advisorDetailsBusiness = new AdvisorDetailsBusiness(LoggerFactory, MemoryCache);
+                    _advisorDetailsBusiness = new AdvisorDetailBusiness(LoggerFactory, MemoryCache);
                 return _advisorDetailsBusiness;
             }
         }

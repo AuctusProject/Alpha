@@ -57,7 +57,7 @@ namespace Auctus.Service
             return UserBusiness.Login(email, password);
         }
 
-        public List<GoalOptions> ListGoalsOptions()
+        public List<GoalOption> ListGoalsOptions()
         {
             return GoalOptionsBusiness.List();
         }

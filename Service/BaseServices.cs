@@ -21,11 +21,11 @@ namespace Auctus.Service
         }
 
         protected UserBusiness UserBusiness { get { return new UserBusiness(Logger, MemoryCache); } }
-        protected GoalOptionsBusiness GoalOptionsBusiness { get { return new GoalOptionsBusiness(Logger, MemoryCache); } }
+        protected GoalOptionBusiness GoalOptionsBusiness { get { return new GoalOptionBusiness(Logger, MemoryCache); } }
         protected GoalBusiness GoalBusiness { get { return new GoalBusiness(Logger, MemoryCache); } }
         protected PasswordRecoveryBusiness PasswordRecoveryBusiness { get { return new PasswordRecoveryBusiness(Logger, MemoryCache); } }
         protected AdvisorBusiness AdvisorBusiness { get { return new AdvisorBusiness(Logger, MemoryCache); } }
-        protected AdvisorDetailsBusiness AdvisorDetailsBusiness { get { return new AdvisorDetailsBusiness(Logger, MemoryCache); } }
+        protected AdvisorDetailBusiness AdvisorDetailsBusiness { get { return new AdvisorDetailBusiness(Logger, MemoryCache); } }
         protected BuyBusiness BuyBusiness { get { return new BuyBusiness(Logger, MemoryCache); } }
         protected DistributionBusiness DistributionBusiness { get { return new DistributionBusiness(Logger, MemoryCache); } }
         protected PortfolioBusiness PortfolioBusiness { get { return new PortfolioBusiness(Logger, MemoryCache); } }

@@ -8,8 +8,8 @@ using System.Text;
 
 namespace Auctus.Business.Advice
 {
-    public class AdvisorDetailsBusiness : BaseBusiness<AdvisorDetails, AdvisorDetailsData>
+    public class AdvisorDetailBusiness : BaseBusiness<AdvisorDetail, AdvisorDetailData>
     {
-        public AdvisorDetailsBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public AdvisorDetailBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
     }
 }

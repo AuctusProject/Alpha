@@ -9,19 +9,19 @@ using System.Text;
 
 namespace Auctus.Business.Account
 {
-    public class GoalOptionsBusiness : BaseBusiness<GoalOptions, GoalOptionsData>
+    public class GoalOptionBusiness : BaseBusiness<GoalOption, GoalOptionData>
     {
-        public GoalOptionsBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public GoalOptionBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
-        public List<GoalOptions> List()
+        public List<GoalOption> List()
         {
             string cacheKey = "GoalOptions";
-            List<GoalOptions> options = MemoryCache.Get<List<GoalOptions>>(cacheKey);
+            List<GoalOption> options = MemoryCache.Get<List<GoalOption>>(cacheKey);
             if (options == null)
             {
                 options = ListAll().OrderBy(c => c.Position).ToList();
                 if (options != null)
-                    MemoryCache.Set<List<GoalOptions>>(cacheKey, options, 1440);
+                    MemoryCache.Set<List<GoalOption>>(cacheKey, options, 1440);
             }
             return options;
         }

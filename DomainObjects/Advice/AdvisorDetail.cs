@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auctus.DomainObjects.Advice
 {
-    public class AdvisorDetails
+    public class AdvisorDetail
     {
         [DapperKey(true)]
         [DapperType(System.Data.DbType.Int32)]
