@@ -163,20 +163,23 @@ namespace Auctus.DataAccess.Core
             return Select<T>(pairs, properties?.AllParameters);
         }
 
-        public IEnumerable<T> SelectByParameters<T>(DynamicParameters criteria)
+        public IEnumerable<T> SelectByParameters<T>(DynamicParameters criteria, String orderBy = "")
         {
             string pairs = null;
             if (criteria != null && criteria.ParameterNames.Any())
                 pairs = GetSqlPairs(criteria.ParameterNames, " AND ");
 
-            return Select<T>(pairs, criteria);
+            return Select<T>(pairs, criteria, orderBy);
         }
 
-        private IEnumerable<T> Select<T>(string pairs, DynamicParameters criteria)
+        private IEnumerable<T> Select<T>(string pairs, DynamicParameters criteria, String orderBy = "")
         {
             string sql = string.Format("SELECT * FROM {0} ", TableName);
             if (!string.IsNullOrEmpty(pairs))
                 sql += " WHERE " + pairs;
+
+            if (!string.IsNullOrEmpty(orderBy))
+                sql += " ORDER BY " + orderBy;
 
             return Query<T>(sql, criteria);
         }
