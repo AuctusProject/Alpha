@@ -60,5 +60,45 @@ namespace Api.Controllers
             }
             return Ok(new { id = advisorDetail.Id });
         }
+
+        [Route("portfolio")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Portfolio([FromBody]PortfolioRequest portfolioRequest)
+        {
+            if (portfolioRequest == null || portfolioRequest.Distribution == null)
+                return BadRequest();
+
+            Portfolio portfolio;
+            try
+            {
+                portfolio = AdviceService.CreatePortfolio(GetUser(), portfolioRequest.AdvisorId, portfolioRequest.Risk, portfolioRequest.ProjectionValue,
+                    portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
+                    portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percent));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { id = portfolio.Id });
+        }
+
+        [Route("disbleportfolio")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult DisablePortfolio([FromBody]int portfolioId)
+        {
+            try
+            {
+                AdviceService.DisablePortfolio(GetUser(), portfolioId);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
     }
 }

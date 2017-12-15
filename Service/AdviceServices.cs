@@ -20,5 +20,22 @@ namespace Auctus.Service
         {
             return AdvisorDetailBusiness.Create(email, advisorId, description, period, price, enabled);
         }
+
+        public Portfolio CreatePortfolio(string email, int advisorId, int risk, double projection, double? optimisticProjection, 
+            double? pessimisticProjection, Dictionary<int, double> distribution)
+        {
+            return PortfolioBusiness.Create(email, advisorId, risk, projection, optimisticProjection, pessimisticProjection, distribution);
+        }
+
+        public void DisablePortfolio(string email, int portfolioId)
+        {
+            PortfolioBusiness.Disable(email, portfolioId);
+        }
+
+        public Projection CreateProjection(string email, int portfolioId, double projection, double? optimisticProjection,
+            double? pessimisticProjection, Dictionary<int, double> distribution)
+        {
+            return ProjectionBusiness.Create(email, portfolioId, projection, optimisticProjection, pessimisticProjection, distribution);
+        }
     }
 }
