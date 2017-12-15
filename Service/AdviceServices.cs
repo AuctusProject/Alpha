@@ -1,4 +1,5 @@
-﻿using Auctus.Util;
+﻿using Auctus.DomainObjects.Advice;
+using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,5 +10,15 @@ namespace Auctus.Service
     public class AdviceServices : BaseServices
     {
         public AdviceServices(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+
+        public Advisor CreateAdvisor(string email, string name, string description, int period, double price)
+        {
+            return AdvisorBusiness.Create(email, name, description, period, price);
+        }
+
+        public AdvisorDetail UpdateAdvisor(string email, int advisorId, string description, int period, double price, bool enabled)
+        {
+            return AdvisorDetailBusiness.Create(email, advisorId, description, period, price, enabled);
+        }
     }
 }

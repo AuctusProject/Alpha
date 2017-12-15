@@ -37,7 +37,7 @@ namespace Api.Controllers
             {
                 user = AccountServices.Login(loginRequest.Email, loginRequest.Password);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { logged = false, error = "Credentials are invalid." });
             }
@@ -45,7 +45,7 @@ namespace Api.Controllers
             {
                 return Ok(new { logged = false, message = "Pending email confirmation." });
             }
-            return Ok(new { logged = true, jwt = GenerateToken(loginRequest.Email.ToLower().Trim()) });
+            return Ok(new { logged = true, jwt = GenerateToken(loginRequest.Email.ToLower().Trim()), email = user.Email });
         }
         
         [Route("simpleregister")]
@@ -56,16 +56,17 @@ namespace Api.Controllers
         {
             if (registerRequest == null)
                 return BadRequest();
-           
+
+            User user;
             try
             {
-                await AccountServices.SimpleRegister(registerRequest.Email, registerRequest.Password);
+                user = await AccountServices.SimpleRegister(registerRequest.Email, registerRequest.Password);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
-            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()) });
+            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), email = user.Email });
         }
 
         [Route("fullregister")]
@@ -77,15 +78,16 @@ namespace Api.Controllers
             if (registerRequest == null)
                 return BadRequest();
 
+            User user;
             try
             {
-                await AccountServices.FullRegister(registerRequest.Email, registerRequest.Password, registerRequest.GoalOptionId, registerRequest.Timeframe, registerRequest.Risk, registerRequest.TargetAmount, registerRequest.StartingAmount, registerRequest.MonthlyContribution);
+                user = await AccountServices.FullRegister(registerRequest.Email, registerRequest.Password, registerRequest.GoalOptionId, registerRequest.Timeframe, registerRequest.Risk, registerRequest.TargetAmount, registerRequest.StartingAmount, registerRequest.MonthlyContribution);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
-            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()) });
+            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), email = user.Email });
         }
 
         [Route("forgotpassword")]
@@ -98,7 +100,7 @@ namespace Api.Controllers
             {
                 await AccountServices.SendEmailForForgottenPassword(email);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 //return BadRequest(new { error = ex.Message });
             }
@@ -118,7 +120,7 @@ namespace Api.Controllers
             {
                 AccountServices.ConfirmEmail(confirmEmailRequest.Email, confirmEmailRequest.Code);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { error = "Email could not be confirmed." });
             }
@@ -135,7 +137,28 @@ namespace Api.Controllers
             {
                 AccountServices.ChangePassword(GetUser(), password);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
+
+        [Route("goal")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult SetGoal([FromBody]SetGoalRequest setGoalRequest)
+        {
+            if (setGoalRequest == null)
+                return BadRequest();
+
+            try
+            {
+                AccountServices.CreateGoal(GetUser(), setGoalRequest.GoalOptionId, setGoalRequest.Timeframe, setGoalRequest.Risk, 
+                    setGoalRequest.TargetAmount, setGoalRequest.StartingAmount, setGoalRequest.MonthlyContribution);
+            }
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
@@ -152,7 +175,7 @@ namespace Api.Controllers
             {
                 await AccountServices.ResendEmailConfirmation(email);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 //return BadRequest(new { error = ex.Message });
             }
@@ -172,7 +195,7 @@ namespace Api.Controllers
             {
                 AccountServices.RecoverPassword(recoverPasswordRequest.Email, recoverPasswordRequest.Code, recoverPasswordRequest.Password);
             }
-            catch (InvalidOperationException ex)
+            catch (ArgumentException ex)
             {
                 return BadRequest(new { error = "Recover password could not be validated." });
             }
