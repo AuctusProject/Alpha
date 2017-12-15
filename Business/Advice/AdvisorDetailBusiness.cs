@@ -45,5 +45,10 @@ namespace Auctus.Business.Advice
             if (price < 0.000001)
                 throw new ArgumentException("Price is invalid.");
         }
+        
+        public AdvisorDetail GetForAutoEnabled(int advisorId)
+        {
+            return Data.GetForAutoEnabled(advisorId);
+        }
     }
 }

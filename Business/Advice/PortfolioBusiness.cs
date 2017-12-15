@@ -27,6 +27,8 @@ namespace Auctus.Business.Advice
             if (portfolio != null)
                 throw new ArgumentException("Already exist a portfolio registered for this risk.");
 
+            var advisorDetail = AdvisorDetailBusiness.GetForAutoEnabled(advisorId);
+
             portfolio = new Portfolio();
             portfolio.AdvisorId = advisorId;
             portfolio.CreationDate = DateTime.UtcNow;
@@ -42,8 +44,14 @@ namespace Auctus.Business.Advice
 
                 portfolio.ProjectionId = projection.Id;
                 transaction.Update(portfolio);
+                if (advisorDetail != null)
+                {
+                    advisorDetail = AdvisorDetailBusiness.SetNew(advisorId, advisorDetail.Description, advisorDetail.Period, advisorDetail.Price, true);
+                    transaction.Insert(advisorDetail);
+                }
                 projection.Distribution = distributions;
                 portfolio.Projection = projection;
+                transaction.Commit();
             }
             return portfolio;
         }
