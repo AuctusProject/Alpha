@@ -25,7 +25,7 @@ namespace Auctus.Service
         protected GoalBusiness GoalBusiness { get { return new GoalBusiness(Logger, MemoryCache); } }
         protected PasswordRecoveryBusiness PasswordRecoveryBusiness { get { return new PasswordRecoveryBusiness(Logger, MemoryCache); } }
         protected AdvisorBusiness AdvisorBusiness { get { return new AdvisorBusiness(Logger, MemoryCache); } }
-        protected AdvisorDetailBusiness AdvisorDetailsBusiness { get { return new AdvisorDetailBusiness(Logger, MemoryCache); } }
+        protected AdvisorDetailBusiness AdvisorDetailBusiness { get { return new AdvisorDetailBusiness(Logger, MemoryCache); } }
         protected BuyBusiness BuyBusiness { get { return new BuyBusiness(Logger, MemoryCache); } }
         protected DistributionBusiness DistributionBusiness { get { return new DistributionBusiness(Logger, MemoryCache); } }
         protected PortfolioBusiness PortfolioBusiness { get { return new PortfolioBusiness(Logger, MemoryCache); } }

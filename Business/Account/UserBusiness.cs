@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Account;
+using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Account;
 using Auctus.Util;
 using Auctus.Util.NotShared;
@@ -25,7 +26,7 @@ namespace Auctus.Business.Account
 
             var user = GetValidUser(email);
             if (user.Password != Security.Encrypt(password))
-                throw new InvalidOperationException("Password are invalid.");
+                throw new ArgumentException("Password are invalid.");
 
             return user;
         }
@@ -43,9 +44,15 @@ namespace Auctus.Business.Account
         public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             var user = SetBaseUserCreation(email, password);
-            Data.Insert(user);
-            GoalBusiness.Create(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
-            
+            using (var transaction = new TransactionalDapperCommand())
+            {
+                transaction.Insert(user, "[User]");
+                var goal = GoalBusiness.SetNewData(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+                transaction.Insert(goal);
+                user.Goal = goal;
+                transaction.Commit();
+            }
+        
             await SendEmailConfirmation(user.Email, user.ConfirmationCode);
 
             return user;
@@ -64,7 +71,7 @@ namespace Auctus.Business.Account
         {
             var user = GetValidUser(email);
             if (code != user.ConfirmationCode)
-                throw new InvalidOperationException("Invalid confirmation code.");
+                throw new ArgumentException("Invalid confirmation code.");
 
             user.ConfirmationDate = DateTime.UtcNow;
             Data.Update(user);
@@ -89,7 +96,7 @@ namespace Auctus.Business.Account
             BaseEmailValidation(email);
             var user = Data.Get(email);
             if (user == null)
-                throw new InvalidOperationException("User cannot be found.");
+                throw new ArgumentException("User cannot be found.");
             return user;
         }
 
@@ -109,7 +116,7 @@ namespace Auctus.Business.Account
 
             User user = Data.Get(email);
             if (user != null)
-                throw new InvalidOperationException("Email already registered.");
+                throw new ArgumentException("Email already registered.");
 
             user = new User();
             user.Email = email.ToLower().Trim();
@@ -122,25 +129,25 @@ namespace Auctus.Business.Account
         private void BaseEmailValidation(string email)
         {
             if (string.IsNullOrEmpty(email))
-                throw new InvalidOperationException("Email must be filled.");
+                throw new ArgumentException("Email must be filled.");
             if (!Email.IsValidEmail(email))
-                throw new InvalidOperationException("Email informed is invalid.");
+                throw new ArgumentException("Email informed is invalid.");
         }
 
         private void BasePasswordValidation(string password)
         {
             if (string.IsNullOrEmpty(password))
-                throw new InvalidOperationException("Password must be filled.");
+                throw new ArgumentException("Password must be filled.");
         }
 
         private void PasswordValidation(string password)
         {
             if (password.Length < 8)
-                throw new InvalidOperationException("Password must be at least 8 characters.");
+                throw new ArgumentException("Password must be at least 8 characters.");
             if (password.Length > 30)
-                throw new InvalidOperationException("Password cannot have more than 30 characters.");
+                throw new ArgumentException("Password cannot have more than 30 characters.");
             if (password.Contains(" "))
-                throw new InvalidOperationException("Password cannot have spaces.");
+                throw new ArgumentException("Password cannot have spaces.");
         }
     }
 }

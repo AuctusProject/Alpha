@@ -23,7 +23,7 @@ namespace Auctus.Business
         private GoalOptionBusiness _goalOptionsBusiness;
         private GoalBusiness _goalBusiness;
         private AdvisorBusiness _advisorBusiness;
-        private AdvisorDetailBusiness _advisorDetailsBusiness;
+        private AdvisorDetailBusiness _advisorDetailBusiness;
         private BuyBusiness _buyBusiness;
         private DistributionBusiness _distributionBusiness;
         private PortfolioBusiness _portfolioBusiness;
@@ -109,13 +109,13 @@ namespace Auctus.Business
             }
         }
 
-        protected AdvisorDetailBusiness AdvisorDetailsBusiness
+        protected AdvisorDetailBusiness AdvisorDetailBusiness
         {
             get
             {
-                if (_advisorDetailsBusiness == null)
-                    _advisorDetailsBusiness = new AdvisorDetailBusiness(LoggerFactory, MemoryCache);
-                return _advisorDetailsBusiness;
+                if (_advisorDetailBusiness == null)
+                    _advisorDetailBusiness = new AdvisorDetailBusiness(LoggerFactory, MemoryCache);
+                return _advisorDetailBusiness;
             }
         }
 

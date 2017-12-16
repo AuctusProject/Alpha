@@ -20,5 +20,7 @@ namespace Auctus.DomainObjects.Advice
         public double? OptimisticProjection { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double? PessimisticProjection { get; set; }
+
+        public List<Distribution> Distribution { get; set; }
     }
 }

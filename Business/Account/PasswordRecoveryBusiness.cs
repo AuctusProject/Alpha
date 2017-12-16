@@ -41,11 +41,11 @@ namespace Auctus.Business.Account
             var user = UserBusiness.GetValidUser(email);
             var recovery = Data.Get(user.Id);
             if (recovery == null)
-                throw new InvalidOperationException("There is no request for recover password.");
+                throw new ArgumentException("There is no request for recover password.");
             if (code != recovery.Token)
-                throw new InvalidOperationException("Invalid recover password code.");
+                throw new ArgumentException("Invalid recover password code.");
             if (DateTime.UtcNow > recovery.Date.AddMinutes(60))
-                throw new InvalidOperationException("Recover password code is expired.");
+                throw new ArgumentException("Recover password code is expired.");
 
             UserBusiness.UpdatePassword(user, password);
         }

@@ -11,5 +11,9 @@ namespace Auctus.Business.Advice
     public class PortfolioHistoryBusiness : BaseBusiness<PortfolioHistory, PortfolioHistoryData>
     {
         public PortfolioHistoryBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+
+        public void UpdatePortfoliosHistory()
+        {
+        }
     }
 }

@@ -20,5 +20,7 @@ namespace Auctus.DomainObjects.Advice
         public double Price { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int Period { get; set; }
+        [DapperType(System.Data.DbType.Boolean)]
+        public bool Enabled { get; set; }
     }
 }

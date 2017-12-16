@@ -10,5 +10,16 @@ namespace Auctus.Business.Asset
     public class AssetBusiness : BaseBusiness<Auctus.DomainObjects.Asset.Asset, AssetData>
     {
         public AssetBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        
+
+        public void UpdateAllAssetsValues()
+        {
+            var assets = Data.SelectAll();
+
+            foreach (var asset in assets)
+            {
+                AssetValueBusiness.UpdateAssetValue(asset);
+            }
+        }
     }
 }
