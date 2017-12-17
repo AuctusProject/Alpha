@@ -1,18 +1,18 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Goal } from "../../../model/goal";
 import { AccountService } from "../../../services/account.service";
 import { GoalOption } from '../../../model/goalOption';
-import { OnChanges } from '@angular/core/src/metadata/lifecycle_hooks';
-import { ControlValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'goal-step',
   templateUrl: './goal-step.component.html',
   styleUrls: ['./goal-step.component.css']
 })
-export class GoalStepComponent implements OnInit, ControlValueAccessor {
+export class GoalStepComponent implements OnInit {
 
   @Input() model: Goal;
+  @Output() modelChange = new EventEmitter<Goal>();
+  
   options: GoalOption[];
 
   constructor(private accountService: AccountService) { }
@@ -25,12 +25,7 @@ export class GoalStepComponent implements OnInit, ControlValueAccessor {
     )
   }
 
-  writeValue(value: any){
-  }
-
-  registerOnChange(fn){
-  }
-
-  registerOnTouched(){
+  onOptionChange(event){
+    this.model.GoalOption = this.options.filter(option => option.id == event.value)[0];
   }
 }

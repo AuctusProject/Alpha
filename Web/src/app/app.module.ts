@@ -19,6 +19,7 @@ import { MatModule } from './/mat.module';
 
 import { AppComponent } from './app.component';
 import { AccountService } from './services/account.service';
+import { StepperComponent } from './components/ui/stepper/stepper.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { AccountService } from './services/account.service';
     PeriodStepComponent,
     AmountStepComponent,
     RiskStepComponent,
-    WizardComponent
+    WizardComponent,
+    StepperComponent
   ],
   imports: [
     BrowserModule,

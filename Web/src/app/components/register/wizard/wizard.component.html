@@ -5,24 +5,25 @@
   
   <risk-step *ngSwitchCase="3"></risk-step>
 </div> -->
-
-<mat-horizontal-stepper [linear]="isLinear">
-    <mat-step>
-      <ng-template matStepLabel>Goal</ng-template>
-      <goal-step [model]="goal"></goal-step>
-    </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Period</ng-template>
-        <period-step></period-step>
-    </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Amount</ng-template>
-        <amount-step></amount-step>
-    </mat-step>
-    <mat-step>
-        <ng-template matStepLabel>Risk Assessment</ng-template>
-        <risk-step></risk-step>
-    </mat-step>
-  </mat-horizontal-stepper>
-  <h4>Goal Option change log</h4>
-  <div *ngFor="let goalOption of goalOptionChangeLog">{{goalOption}}</div>
+<form #goalForm="ngForm">
+    <mat-horizontal-stepper [linear]="isLinear">
+        <mat-step [stepControl]="goalForm">
+            <ng-template matStepLabel>Goal</ng-template>
+            <goal-step [(model)]="goal"></goal-step>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Period</ng-template>
+            <period-step></period-step>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Amount</ng-template>
+            <amount-step></amount-step>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Risk Assessment</ng-template>
+            <risk-step></risk-step>
+        </mat-step>
+    </mat-horizontal-stepper>
+</form>
+<h4>Goal Option change log</h4>
+<div *ngFor="let goalOption of goalOptionChangeLog">{{goalOption}}</div>

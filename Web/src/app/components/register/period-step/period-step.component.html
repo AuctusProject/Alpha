@@ -1,3 +1,20 @@
-<p>
-  period-step works!
-</p>
+<form>
+  <div fxLayout="column" fxLayoutGap="20px">
+      <div fxLayout="row">
+        <span fxFlex fxLayoutAlign="center center">How many years do you plan to invest for?</span>
+      </div>
+    
+      <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+          <div fxLayout="row" fxLayoutGap="20px">
+              <mat-form-field hintLabel="Optional">
+                  <input matInput placeholder="Target amount" name="TargetAmount" [(ngModel)]="model.TargetAmount" required>
+                </mat-form-field>
+            </div>
+      </div>
+    </div>
+    
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+</form>
