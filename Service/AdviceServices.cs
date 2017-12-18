@@ -27,6 +27,11 @@ namespace Auctus.Service
             return PortfolioBusiness.Create(email, advisorId, risk, projection, optimisticProjection, pessimisticProjection, distribution);
         }
 
+        public List<Portfolio> ListPortfolio(string email)
+        {
+            return PortfolioBusiness.List(email);
+        }
+
         public void DisablePortfolio(string email, int portfolioId)
         {
             PortfolioBusiness.Disable(email, portfolioId);

@@ -1,4 +1,5 @@
 ﻿using Auctus.DomainObjects.Account;
+using Auctus.DomainObjects.Asset;
 using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,6 +16,11 @@ namespace Auctus.Service
         public void UpdateAllAssetsValues()
         {
             AssetBusiness.UpdateAllAssetsValues();
+        }
+
+        public List<Asset> ListAssets()
+        {
+            return AssetBusiness.ListAssets();
         }
     }
 }

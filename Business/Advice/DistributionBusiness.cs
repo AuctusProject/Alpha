@@ -33,5 +33,16 @@ namespace Auctus.Business.Advice
             }
             return distributions;
         }
+
+        public List<Distribution> List(IEnumerable<int> projectionIds)
+        {
+            if (projectionIds.Count() == 0)
+                return new List<Distribution>();
+
+            var distributions = Data.List(projectionIds);
+            var assets = AssetBusiness.ListAssets();
+            distributions.ForEach(c => c.Asset = assets.Single(a => a.Id == c.AssetId));
+            return distributions;
+        }
     }
 }

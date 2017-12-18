@@ -5,6 +5,7 @@ using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Auctus.Business.Advice
@@ -74,6 +75,14 @@ namespace Auctus.Business.Advice
         public Portfolio GetValidByOwner(string email, int portfolioId)
         {
             return Data.GetValidByOwner(email, portfolioId);
+        }
+
+        public List<Portfolio> List(string email)
+        {
+            var portfolio = Data.List(email);
+            var distributions = DistributionBusiness.List(portfolio.Select(c => c.ProjectionId.Value));
+            portfolio.ForEach(c => c.Projection.Distribution = distributions.Where(d => d.ProjectionId == c.ProjectionId.Value).ToList());
+            return portfolio;
         }
     }
 }

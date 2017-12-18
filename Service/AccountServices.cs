@@ -52,6 +52,16 @@ namespace Auctus.Service
             return GoalBusiness.Create(email, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
         }
 
+        public User GetUser(Guid guid)
+        {
+            return UserBusiness.Get(guid);
+        }
+
+        public ApiAccess CreateApiAccess(string email)
+        {
+            return ApiAccessBusiness.Create(email);
+        }
+
         public User Login(string email, string password)
         {
             return UserBusiness.Login(email, password);
