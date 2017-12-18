@@ -42,5 +42,10 @@ namespace Auctus.Service
         {
             return ProjectionBusiness.Create(email, portfolioId, projection, optimisticProjection, pessimisticProjection, distribution);
         }
+
+        public Buy Buy(string email, int advisorId)
+        {
+            return BuyBusiness.Create(email, advisorId);
+        }
     }
 }

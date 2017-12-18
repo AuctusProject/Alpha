@@ -26,5 +26,7 @@ namespace Auctus.DomainObjects.Account
         public int? Risk { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int GoalOptionId { get; set; }
+
+        public GoalOption GoalOption { get; set; }
     }
 }
