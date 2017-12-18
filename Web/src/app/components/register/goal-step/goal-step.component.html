@@ -1,17 +1,12 @@
-<form #goalForm="ngForm">
+<form>
     <div fxLayout="column" fxLayoutGap="20px">
         <div fxLayout="row">
           <span fxFlex fxLayoutAlign="center center">What are you saving for?</span>
         </div>
       
         <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-            <mat-button-toggle-group [(ngModel)]="model.GoalOption.Description" name="GoalOptionDescription" ngDefaultControl srequired>
-                <mat-button-toggle [value]="'Retirement'">Retirement</mat-button-toggle>
-                <mat-button-toggle [value]="'Just invest'">Just invest</mat-button-toggle>
-                <!-- <mat-button-toggle>House</mat-button-toggle>
-                <mat-button-toggle>Child</mat-button-toggle>
-                <mat-button-toggle>Big spend</mat-button-toggle>
-                <mat-button-toggle>Other</mat-button-toggle> -->
+            <mat-button-toggle-group [(ngModel)]="model.GoalOption.id" (change)="onOptionChange($event)" name="GoalOption" ngDefaultControl required>
+                <mat-button-toggle *ngFor="let option of options" [value]="option.id">{{option.description}}</mat-button-toggle>
             </mat-button-toggle-group>
             <div fxLayout="row" fxLayoutGap="20px">
                 <mat-form-field hintLabel="Optional">
