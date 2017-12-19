@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Goal } from "../../../model/goal";
 
 @Component({
   selector: 'risk-step',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RiskStepComponent implements OnInit {
 
+  @Input() model: Goal;
+  @Output() modelChange = new EventEmitter<Goal>();
+
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onChangeSlider(){
+    console.log(this.model);
   }
 
 }

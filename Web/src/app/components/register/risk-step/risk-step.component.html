@@ -1,3 +1,15 @@
-<p>
-  risk-step works!
-</p>
+<form>
+  <div fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="row">
+      <span fxFlex fxLayoutAlign="center center">Set a risk/reward balance</span>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+      <div fxLayout="row" fxLayoutGap="20px">
+        <mat-slider class="example-margin" [invert]="false" [max]="5" [min]="0" [step]="1" [thumb-label]="false"
+          [tick-interval]="1" [(ngModel)]="model.risk" [vertical]="false" name="risk" (change)="onChangeSlider()">
+        </mat-slider>
+      </div>
+    </div>
+  </div>
+</form>
