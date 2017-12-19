@@ -1,15 +1,20 @@
-<form>
+<form #periodForm="ngForm" (ngSubmit)="onSubmit()">
   <div fxLayout="column" fxLayoutGap="20px">
-      <div fxLayout="row">
-        <span fxFlex fxLayoutAlign="center center">How many years do you plan to invest for?</span>
-      </div>
-    
-      <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-          <div fxLayout="row" fxLayoutGap="20px">
-              <mat-form-field>
-                  <input matInput placeholder="Years" name="Years" [(ngModel)]="model.timeFrame" required>
-                </mat-form-field>
-            </div>
+    <div fxLayout="row">
+      <span fxFlex fxLayoutAlign="center center">How many years do you plan to invest for?</span>
+    </div>
+
+    <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+      <div fxLayout="row" fxLayoutGap="20px">
+        <mat-form-field>
+          <input matInput placeholder="Years" name="Years" [(ngModel)]="model.timeFrame" required>
+        </mat-form-field>
       </div>
     </div>
+
+    <div fxLayout="row">
+      <button mat-button type="submit" [disabled]="!periodForm.form.valid">Submit</button>
+    </div>
+
+  </div>
 </form>

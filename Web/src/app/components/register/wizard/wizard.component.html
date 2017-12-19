@@ -12,7 +12,7 @@
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Period</ng-template>
-        <period-step [(model)]="goal"></period-step>
+        <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Amount</ng-template>
@@ -23,7 +23,3 @@
         <risk-step [(model)]="goal"></risk-step>
     </mat-step>
 </mat-horizontal-stepper>
-<div>
-    <button (click)="goBack(stepper)" [disabled]="stepper.selectedIndex === 0">Back</button>
-    <button (click)="goForward(stepper)" [disabled]="stepper.selectedIndex === stepper._steps.length-1">Next</button>
- </div>

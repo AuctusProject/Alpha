@@ -10,10 +10,14 @@ export class PeriodStepComponent implements OnInit {
 
   @Input() model: Goal;
   @Output() modelChange = new EventEmitter<Goal>();
+  @Output() onSubmitted = new EventEmitter<boolean>();
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  onSubmit(){
+    this.onSubmitted.emit(true);
+  }
 }
