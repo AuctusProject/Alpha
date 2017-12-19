@@ -23,19 +23,19 @@ namespace Api.Controllers
     {
         public AssetController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider) : base (loggerFactory, cache, serviceProvider) { }
         
-        [Route("updatevalue")]
+        [Route("updateValue")]
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult updatevalue()
+        public IActionResult Updatevalue()
         {
             AssetServices.UpdateAllAssetsValues();
             return Ok();
         }
 
-        [Route("updateportfolioshistory")]
+        [Route("updatePortfoliosHistory")]
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult updatePortfoliosHistory()
+        public IActionResult UpdatePortfoliosHistory()
         {
             PortfolioServices.UpdatePortfoliosHistory();
             return Ok();

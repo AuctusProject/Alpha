@@ -14,7 +14,7 @@ namespace Auctus.Service
 
         public void UpdatePortfoliosHistory()
         {
-            PortfolioHistoryBusiness.UpdatePortfoliosHistory();
+            PortfolioBusiness.UpdateAllPortfoliosHistory();
         }
     }
 }

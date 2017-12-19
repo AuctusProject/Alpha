@@ -5,7 +5,7 @@ using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Auctus.Business.Advice
 {
@@ -48,6 +48,11 @@ namespace Auctus.Business.Advice
             return portfolio;
         }
 
+        internal Projection GetProjectionAtDate(DateTime date, Portfolio portfolio)
+        {
+            return portfolio.Projections.Where(p => p.Date < date).OrderByDescending(p => p.Date).FirstOrDefault();
+        }
+
         public void Disable(string email, int portfolioId)
         {
             var portfolio = GetValidByOwner(email, portfolioId);
@@ -66,6 +71,16 @@ namespace Auctus.Business.Advice
         public Portfolio GetValidByOwner(string email, int portfolioId)
         {
             return Data.GetValidByOwner(email, portfolioId);
+        }
+
+
+        public void UpdateAllPortfoliosHistory()
+        {
+            var portfolios = Data.ListAll();
+            foreach(var portfolio in portfolios)
+            {
+                PortfolioHistoryBusiness.UpdatePortfolioHistory(portfolio);
+            }
         }
     }
 }

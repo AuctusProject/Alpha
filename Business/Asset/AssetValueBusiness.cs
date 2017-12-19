@@ -1,9 +1,11 @@
 ﻿using Auctus.DataAccess.Asset;
 using Auctus.DomainObjects.Asset;
 using Auctus.Util;
+using Dapper;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace Auctus.Business.Asset
@@ -19,7 +21,7 @@ namespace Auctus.Business.Asset
 
         internal void UpdateAssetValue(DomainObjects.Asset.Asset asset)
         {
-            var lastUpdatedValue = AssetValueBusiness.LastAssetValue(asset.Id)?.Date ?? new DateTime(2015, 8, 8);
+            var lastUpdatedValue = LastAssetValue(asset.Id)?.Date ?? new DateTime(2015, 8, 8);
             if (lastUpdatedValue >= DateTime.Now.Date)
             {
                 return;
@@ -28,17 +30,42 @@ namespace Auctus.Business.Asset
             CreateAssetValueForPendingDates(asset, lastUpdatedValue, assetDateAndValues);
         }
 
+        internal Dictionary<DateTime, List<AssetValue>> GetAssetValuesGroupedByDate(IEnumerable<int> assetsIds, DateTime startDate)
+        {
+            var assetValues = Data.List(assetsIds, startDate);
+
+            return assetValues.GroupBy(av => av.Date).ToDictionary(av => av.Key, av => av.ToList());
+
+        }
+
         private void CreateAssetValueForPendingDates(DomainObjects.Asset.Asset asset, DateTime lastUpdatedValue, Dictionary<DateTime, double> assetDateAndValues)
         {
             var pendingUpdate = assetDateAndValues?.Where(d => d.Key > lastUpdatedValue).OrderBy(v => v.Key);
+            var previousDateAndValue = assetDateAndValues?.Where(d => d.Key == lastUpdatedValue).OrderByDescending(v => v.Key).FirstOrDefault();
             if (pendingUpdate != null)
             {
                 foreach (var pending in pendingUpdate)
                 {
+                    previousDateAndValue = InsertAssetValueForPreviousDaysWithoutMarketValues(asset, previousDateAndValue, pending);
                     var assetValue = new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = pending.Key, Value = pending.Value };
                     Data.Insert(assetValue);
                 }
             }
+        }
+
+        private KeyValuePair<DateTime, double> InsertAssetValueForPreviousDaysWithoutMarketValues(DomainObjects.Asset.Asset asset, KeyValuePair<DateTime, double>? previousDateAndValue, KeyValuePair<DateTime, double> currentPendingDateAndValue)
+        {
+            if (previousDateAndValue.HasValue && previousDateAndValue?.Key > DateTime.MinValue)
+            {
+                var previousDate = previousDateAndValue?.Key.AddDays(1);
+                while (previousDate < currentPendingDateAndValue.Key)
+                {
+                    var previousAssetValue = new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = previousDate.Value, Value = previousDateAndValue.Value.Value };
+                    Data.Insert(previousAssetValue);
+                    previousDate = previousDate.Value.AddDays(1);
+                }
+            }
+            return currentPendingDateAndValue;
         }
 
         private static Dictionary<DateTime, double> GetAssetValuesByDate(DomainObjects.Asset.Asset asset)

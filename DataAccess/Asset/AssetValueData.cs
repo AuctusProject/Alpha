@@ -11,11 +11,34 @@ namespace Auctus.DataAccess.Asset
     {
         public override string TableName => "AssetValue";
 
+        private readonly string SQL_LIST_BY_ASSET_ID = @"SELECT TOP 1 av.* 
+                                                FROM 
+                                                AssetValue av
+                                                where AssetId = @AssetId
+                                                ORDER BY Date desc";
+
+        private readonly string SQL_LIST_BY_ASSETS_IDS = @"SELECT av.* 
+                                                FROM 
+                                                AssetValue av
+                                                where AssetId IN @AssetId
+                                                AND Date >= @Date 
+                                                ORDER BY Date desc";
+
         public AssetValue GetLastValue(int assetId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("AssetId", assetId, DbType.Int32);
-            return SelectByParameters<AssetValue>(parameters, "Date desc").FirstOrDefault();   
+            return Query<AssetValue>(SQL_LIST_BY_ASSET_ID, parameters).FirstOrDefault();   
+        }
+
+        public IEnumerable<AssetValue> List(IEnumerable<int> assetsIds, DateTime startDate)
+        {
+            var query = SQL_LIST_BY_ASSETS_IDS;
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("AssetId", assetsIds, ((DbType)(-1)));
+            parameters.Add("Date", startDate, DbType.DateTime);
+
+            return Query<AssetValue>(query, parameters);
         }
     }
 }
