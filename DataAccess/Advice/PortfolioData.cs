@@ -21,6 +21,13 @@ namespace Auctus.DataAccess.Advice
                                                        INNER JOIN [User] u ON u.Id = a.UserId  
                                                        WHERE p.Id = @Id AND u.Email = @Email AND p.Disabled IS NULL";
 
+        private const string SELECT_LIST_BY_OWNER = @"SELECT p.*, j.* FROM 
+                                                      Portfolio p  
+                                                      INNER JOIN Projection j ON p.ProjectionId = j.Id
+                                                      INNER JOIN Advisor a ON a.Id = p.AdvisorId  
+                                                      INNER JOIN [User] u ON u.Id = a.UserId  
+                                                      WHERE u.Email = @Email AND p.Disabled IS NULL";
+
         private const string LIST_ALL =
             @"SELECT port.*, proj.*, dist.* FROM Portfolio port 
             INNER JOIN Projection proj on port.ProjectionId = proj.Id
@@ -40,6 +47,18 @@ namespace Auctus.DataAccess.Advice
             parameters.Add("Id", portfolioId, DbType.Int32);
             parameters.Add("Email", email, DbType.AnsiString);
             return Query<Portfolio>(SELECT_VALID_BY_OWNER, parameters).SingleOrDefault();
+        }
+
+        public List<Portfolio> List(string email)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Email", email, DbType.AnsiString);
+            return Query<Portfolio, Projection, Portfolio>(SELECT_LIST_BY_OWNER,
+                            (port, proj) =>
+                            {
+                                port.Projection = proj;
+                                return port;
+                            }, "Id", parameters).ToList();
         }
         
         public IEnumerable<Portfolio> ListAll()

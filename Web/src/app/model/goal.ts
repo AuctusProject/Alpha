@@ -3,10 +3,12 @@ import { GoalOption } from "./goalOption";
 export class Goal {
 
   constructor(
-    public Id: number,
-    public TargetAmount: number,
-    public StartingAmount: number,
-    public MonthlyContribution: number,
+    public id: number,
+    public targetAmount: number,
+    public startingAmount: number,
+    public monthlyContribution: number,
+    public timeFrame: number,
+    public risk: number,
     public GoalOption: GoalOption
   ) { }
 }

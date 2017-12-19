@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Auctus.Business.Advice
 {
@@ -27,6 +28,8 @@ namespace Auctus.Business.Advice
             if (portfolio != null)
                 throw new ArgumentException("Already exist a portfolio registered for this risk.");
 
+            var advisorDetail = AdvisorDetailBusiness.GetForAutoEnabled(advisorId);
+
             portfolio = new Portfolio();
             portfolio.AdvisorId = advisorId;
             portfolio.CreationDate = DateTime.UtcNow;
@@ -42,8 +45,14 @@ namespace Auctus.Business.Advice
 
                 portfolio.ProjectionId = projection.Id;
                 transaction.Update(portfolio);
+                if (advisorDetail != null)
+                {
+                    advisorDetail = AdvisorDetailBusiness.SetNew(advisorId, advisorDetail.Description, advisorDetail.Period, advisorDetail.Price, true);
+                    transaction.Insert(advisorDetail);
+                }
                 projection.Distribution = distributions;
                 portfolio.Projection = projection;
+                transaction.Commit();
             }
             return portfolio;
         }
@@ -73,6 +82,13 @@ namespace Auctus.Business.Advice
             return Data.GetValidByOwner(email, portfolioId);
         }
 
+        public List<Portfolio> List(string email)
+        {
+            var portfolio = Data.List(email);
+            var distributions = DistributionBusiness.List(portfolio.Select(c => c.ProjectionId.Value));
+            portfolio.ForEach(c => c.Projection.Distribution = distributions.Where(d => d.ProjectionId == c.ProjectionId.Value).ToList());
+            return portfolio;
+        }
 
         public void UpdateAllPortfoliosHistory()
         {

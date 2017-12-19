@@ -33,5 +33,6 @@ namespace Auctus.Service
         protected ProjectionBusiness ProjectionBusiness { get { return new ProjectionBusiness(Logger, MemoryCache); } }
         protected AssetBusiness AssetBusiness { get { return new AssetBusiness(Logger, MemoryCache); } }
         protected AssetValueBusiness AssetValueBusiness { get { return new AssetValueBusiness(Logger, MemoryCache); } }
+        protected ApiAccessBusiness ApiAccessBusiness { get { return new ApiAccessBusiness(Logger, MemoryCache); } }
     }
 }

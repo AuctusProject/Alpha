@@ -31,6 +31,7 @@ namespace Auctus.Business.Advice
                 portfolio.ProjectionId = projection.Id;
                 transaction.Update(portfolio);
                 projection.Distribution = distributions;
+                transaction.Commit();
             }
             return projection;
         }

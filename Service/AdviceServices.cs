@@ -27,6 +27,11 @@ namespace Auctus.Service
             return PortfolioBusiness.Create(email, advisorId, risk, projection, optimisticProjection, pessimisticProjection, distribution);
         }
 
+        public List<Portfolio> ListPortfolio(string email)
+        {
+            return PortfolioBusiness.List(email);
+        }
+
         public void DisablePortfolio(string email, int portfolioId)
         {
             PortfolioBusiness.Disable(email, portfolioId);
@@ -36,6 +41,11 @@ namespace Auctus.Service
             double? pessimisticProjection, Dictionary<int, double> distribution)
         {
             return ProjectionBusiness.Create(email, portfolioId, projection, optimisticProjection, pessimisticProjection, distribution);
+        }
+
+        public Buy Buy(string email, int advisorId)
+        {
+            return BuyBusiness.Create(email, advisorId);
         }
     }
 }

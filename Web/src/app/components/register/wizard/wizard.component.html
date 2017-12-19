@@ -5,24 +5,21 @@
   
   <risk-step *ngSwitchCase="3"></risk-step>
 </div> -->
-
-<mat-horizontal-stepper [linear]="isLinear">
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
     <mat-step>
-      <ng-template matStepLabel>Goal</ng-template>
-      <goal-step [model]="goal"></goal-step>
+        <ng-template matStepLabel>Goal</ng-template>
+        <goal-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></goal-step>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Period</ng-template>
-        <period-step></period-step>
+        <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Amount</ng-template>
-        <amount-step></amount-step>
+        <amount-step [(model)]="goal"></amount-step>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Risk Assessment</ng-template>
-        <risk-step></risk-step>
+        <risk-step [(model)]="goal"></risk-step>
     </mat-step>
-  </mat-horizontal-stepper>
-  <h4>Goal Option change log</h4>
-  <div *ngFor="let goalOption of goalOptionChangeLog">{{goalOption}}</div>
+</mat-horizontal-stepper>
