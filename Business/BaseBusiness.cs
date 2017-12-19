@@ -31,6 +31,7 @@ namespace Auctus.Business
         private ProjectionBusiness _projectionBusiness;
         private AssetBusiness _assetBusiness;
         private AssetValueBusiness _assetValueBusiness;
+        private ApiAccessBusiness _apiAccessBusiness;
 
         protected BaseBusiness(ILoggerFactory loggerFactory, Cache cache)
         {
@@ -186,6 +187,16 @@ namespace Auctus.Business
                 if (_assetValueBusiness == null)
                     _assetValueBusiness = new AssetValueBusiness(LoggerFactory, MemoryCache);
                 return _assetValueBusiness;
+            }
+        }
+
+        protected ApiAccessBusiness ApiAccessBusiness
+        {
+            get
+            {
+                if (_apiAccessBusiness == null)
+                    _apiAccessBusiness = new ApiAccessBusiness(LoggerFactory, MemoryCache);
+                return _apiAccessBusiness;
             }
         }
     }

@@ -100,5 +100,22 @@ namespace Api.Controllers
             }
             return Ok();
         }
+
+        [Route("buy")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Buy([FromBody]int advisorId)
+        {
+            try
+            {
+                AdviceService.Buy(GetUser(), advisorId);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
     }
 }

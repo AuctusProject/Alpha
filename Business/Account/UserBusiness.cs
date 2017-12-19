@@ -21,7 +21,6 @@ namespace Auctus.Business.Account
 
         public User Login(string email, string password)
         {
-            BaseEmailValidation(email);
             BasePasswordValidation(password);
 
             var user = GetValidUser(email);
@@ -94,10 +93,23 @@ namespace Auctus.Business.Account
         public User GetValidUser(string email)
         {
             BaseEmailValidation(email);
-            var user = Data.Get(email);
+            var cacheKey = email.ToLower().Trim();
+            var user = MemoryCache.Get<User>(cacheKey);
             if (user == null)
-                throw new ArgumentException("User cannot be found.");
+            {
+                EmailValidation(email);
+                user = Data.Get(email);
+                if (user == null)
+                    throw new ArgumentException("User cannot be found.");
+                else if (user.ConfirmationDate.HasValue)
+                    MemoryCache.Set<User>(cacheKey, user);
+            }
             return user;
+        }
+        
+        public User Get(Guid guid)
+        {
+            return Data.Get(guid);
         }
 
         private async Task SendEmailConfirmation(string email, string code)
@@ -111,6 +123,7 @@ namespace Auctus.Business.Account
         private User SetBaseUserCreation(string email, string password)
         {
             BaseEmailValidation(email);
+            EmailValidation(email);
             BasePasswordValidation(password);
             PasswordValidation(password);
 
@@ -130,6 +143,10 @@ namespace Auctus.Business.Account
         {
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentException("Email must be filled.");
+        }
+
+        private void EmailValidation(string email)
+        {
             if (!Email.IsValidEmail(email))
                 throw new ArgumentException("Email informed is invalid.");
         }

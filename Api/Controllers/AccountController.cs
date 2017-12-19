@@ -211,6 +211,24 @@ namespace Api.Controllers
             return Ok(options.Select(c => new { id = c.Id, description = c.Description}));
         }
 
+        [Route("apikey")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult GenerateApiAccess()
+        {
+            ApiAccess apiAccess;
+            try
+            {
+                apiAccess = AccountServices.CreateApiAccess(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { key = apiAccess.ApiKey });
+        }
+
 
         [Route("updatevalue")]
         [HttpGet]

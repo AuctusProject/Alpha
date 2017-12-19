@@ -4,6 +4,7 @@ using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Auctus.Business.Account
@@ -22,6 +23,17 @@ namespace Auctus.Business.Account
         {
             var goal = SetNewData(userId, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
             Data.Insert(goal);
+            return goal;
+        }
+
+        public Goal GetCurrent(int userId)
+        {
+            var goal = Data.GetCurrent(userId);
+            if (goal == null)
+                throw new ArgumentException("An user goal must be defined.");
+
+            var options = GoalOptionsBusiness.List();
+            goal.GoalOption = options.Single(c => c.Id == goal.GoalOptionId);
             return goal;
         }
 

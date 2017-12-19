@@ -15,5 +15,7 @@ namespace Auctus.DomainObjects.Advice
         public int ProjectionId { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double Percent { get; set; }
+        
+        public Auctus.DomainObjects.Asset.Asset Asset { get; set; }
     }
 }

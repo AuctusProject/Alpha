@@ -36,5 +36,13 @@ namespace Auctus.Business.Advice
         {
             return Data.GetWithOwner(id, email);
         }
+
+        public Advisor GetWithDetail(int id)
+        {
+            var advisor = Data.GetWithDetail(id);
+            if (advisor == null)
+                throw new ArgumentException("Advisor cannot be found.");
+            return advisor;
+        }
     }
 }
