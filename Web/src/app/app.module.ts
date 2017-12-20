@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './/app-routing.module';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/account/login/login.component';
 import { LoginService } from './services/login.service';
 import { HttpService } from './services/http.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -21,6 +21,8 @@ import { AppComponent } from './app.component';
 import { AccountService } from './services/account.service';
 import { StepperComponent } from './components/ui/stepper/stepper.component';
 import { RegisterStepComponent } from './components/register/register-step/register-step.component';
+import { ForgotPasswordEmailComponent } from './components/account/forgot-password-email/forgot-password-email.component';
+import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component'; 
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import { RegisterStepComponent } from './components/register/register-step/regis
     RiskStepComponent,
     WizardComponent,
     StepperComponent,
-    RegisterStepComponent
+    RegisterStepComponent,
+    ForgotPasswordEmailComponent,
+    ForgotPasswordResetComponent
   ],
   imports: [
     BrowserModule,

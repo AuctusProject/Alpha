@@ -228,24 +228,5 @@ namespace Api.Controllers
             }
             return Ok(new { key = apiAccess.ApiKey });
         }
-
-
-        [Route("updatevalue")]
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult updatevalue()
-        {
-            AssetServices.UpdateAllAssetsValues();
-            return Ok();
-        }
-
-        [Route("updateportfolioshistory")]
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult updatePortfoliosHistory()
-        {
-            PortfolioServices.UpdatePortfoliosHistory();
-            return Ok();
-        }
     }
 }

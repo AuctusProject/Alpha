@@ -28,6 +28,11 @@ namespace Auctus.DataAccess.Advice
                                                       INNER JOIN [User] u ON u.Id = a.UserId  
                                                       WHERE u.Email = @Email AND p.Disabled IS NULL";
 
+        private const string LIST_ALL =
+            @"SELECT port.*, proj.*, dist.* FROM Portfolio port 
+            INNER JOIN Projection proj on port.ProjectionId = proj.Id
+            INNER JOIN Distribution dist on proj.Id = dist.ProjectionId";
+
         public Portfolio GetValidByAdvisorAndRisk(int advisorId, int risk)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -55,5 +60,46 @@ namespace Auctus.DataAccess.Advice
                                 return port;
                             }, "Id", parameters).ToList();
         }
+        
+        public IEnumerable<Portfolio> ListAll()
+        {
+            var cache = new Dictionary<int, Portfolio>();
+            var cacheProjection = new Dictionary<int, Projection>();
+            return Query<Portfolio, Projection, Distribution, Portfolio>(LIST_ALL,
+                    (portfolio, projection, distribution) =>
+                    {
+                        if (!cache.ContainsKey(portfolio.Id))
+                            cache.Add(portfolio.Id, portfolio);
+
+                        var cached = cache[portfolio.Id];
+
+                        if (!cacheProjection.ContainsKey(projection.Id))
+                            cacheProjection.Add(projection.Id, projection);
+
+                        if (cached.Projections == null)
+                        {
+                            cached.Projections = new List<Projection>();
+                        }
+
+                        var cachedProjection = cacheProjection[projection.Id];
+
+                        if (!cached.Projections.Contains(cachedProjection))
+                        {
+                            cached.Projections.Add(cachedProjection);
+                        }
+
+                        if (cachedProjection.Distribution == null)
+                        {
+                            cachedProjection.Distribution = new List<Distribution>();
+                        }
+                        if (distribution != null)
+                        {
+                            cachedProjection.Distribution.Add(distribution);
+                        }
+
+                        return cached;
+                    }, "Id, AssetId").Distinct();
+        }
+
     }
 }

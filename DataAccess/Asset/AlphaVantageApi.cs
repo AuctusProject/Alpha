@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
+using Auctus.Util;
 
 namespace Auctus.DataAccess.Asset
 {
@@ -38,6 +39,11 @@ namespace Auctus.DataAccess.Asset
 
         public static Dictionary<DateTime, double> GetCloseAdjustedValues(string symbol)
         {
+            return Retry.Get().Execute<Dictionary<DateTime, double>>((Func<string, Dictionary<DateTime, double>>)InternalGetCloseAdjustedValues, symbol);
+        }
+
+        private static Dictionary<DateTime, double> InternalGetCloseAdjustedValues(string symbol)
+        {
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(AlphaVantageApiBaseUrl);
@@ -45,7 +51,7 @@ namespace Auctus.DataAccess.Asset
                 if (response.IsSuccessStatusCode)
                 {
                     var result = JsonConvert.DeserializeObject<AlphaVantageApiResult>(response.Content.ReadAsStringAsync().Result);
-                    var returnDictionary = result.Values.ToDictionary(v =>v.Key, v =>v.Value.AdjustedClose);
+                    var returnDictionary = result.Values.ToDictionary(v => v.Key, v => v.Value.AdjustedClose);
                     return returnDictionary;
                 }
                 throw new InvalidOperationException();
@@ -54,10 +60,11 @@ namespace Auctus.DataAccess.Asset
 
         public static Dictionary<DateTime, double> GetCloseCryptoValue(string symbol)
         {
-            using (HttpClient client = new HttpClient())
-            {
-                client.GetAsync(AlphaVantageApiBaseUrl);
-            }
+            return Retry.Get().Execute<Dictionary<DateTime, double>>((Func<string, Dictionary<DateTime, double>>)InternalGetCloseCryptoValue, symbol);
+        }
+
+        private static Dictionary<DateTime, double> InternalGetCloseCryptoValue(string symbol)
+        {
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(AlphaVantageApiBaseUrl);

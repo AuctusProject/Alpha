@@ -22,5 +22,7 @@ namespace Auctus.DomainObjects.Advice
         public int? ProjectionId { get; set; }
 
         public Projection Projection { get; set; }
+
+        public List<Projection> Projections { get; set; }
     }
 }

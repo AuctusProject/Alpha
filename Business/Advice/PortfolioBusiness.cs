@@ -57,6 +57,11 @@ namespace Auctus.Business.Advice
             return portfolio;
         }
 
+        internal Projection GetProjectionAtDate(DateTime date, Portfolio portfolio)
+        {
+            return portfolio.Projections.Where(p => p.Date < date).OrderByDescending(p => p.Date).FirstOrDefault();
+        }
+
         public void Disable(string email, int portfolioId)
         {
             var portfolio = GetValidByOwner(email, portfolioId);
@@ -83,6 +88,15 @@ namespace Auctus.Business.Advice
             var distributions = DistributionBusiness.List(portfolio.Select(c => c.ProjectionId.Value));
             portfolio.ForEach(c => c.Projection.Distribution = distributions.Where(d => d.ProjectionId == c.ProjectionId.Value).ToList());
             return portfolio;
+        }
+
+        public void UpdateAllPortfoliosHistory()
+        {
+            var portfolios = Data.ListAll();
+            foreach(var portfolio in portfolios)
+            {
+                PortfolioHistoryBusiness.UpdatePortfolioHistory(portfolio);
+            }
         }
     }
 }
