@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Login } from '../../model/login';
-import { LoginService } from '../../services/login.service';
+import { Login } from '../../../model/account/login';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     
-  }
+  } 
 
   onLoginClick(): void {
     console.log(this.login);
