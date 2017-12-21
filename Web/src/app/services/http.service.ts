@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class HttpService {
@@ -21,7 +22,7 @@ export class HttpService {
   }
 
   apiUrl(route: string): string {
-    return this.api_url + route;
+    return environment.apiUrl + route;
   }
 
   baseHttpHeaders(): any {
