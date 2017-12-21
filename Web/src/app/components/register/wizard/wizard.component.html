@@ -16,11 +16,11 @@
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Amount</ng-template>
-        <amount-step [(model)]="goal"></amount-step>
+        <amount-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></amount-step>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Risk Assessment</ng-template>
-        <risk-step [(model)]="goal"></risk-step>
+        <risk-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></risk-step>
     </mat-step>
     <mat-step>
         <ng-template matStepLabel>Register</ng-template>

@@ -81,13 +81,20 @@ namespace Api.Controllers
             User user;
             try
             {
-                user = await AccountServices.FullRegister(registerRequest.Email, registerRequest.Password, registerRequest.GoalOptionId, registerRequest.Timeframe, registerRequest.Risk, registerRequest.TargetAmount, registerRequest.StartingAmount, registerRequest.MonthlyContribution);
+                user = await AccountServices.FullRegister(registerRequest.User.Email, 
+                                                            registerRequest.User.Password, 
+                                                            registerRequest.Goal.GoalOption.Id, 
+                                                            registerRequest.Goal.Timeframe, 
+                                                            registerRequest.Goal.Risk, 
+                                                            registerRequest.Goal.TargetAmount, 
+                                                            registerRequest.Goal.StartingAmount, 
+                                                            registerRequest.Goal.MonthlyContribution);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
-            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), email = user.Email });
+            return Ok(new { jwt = GenerateToken(registerRequest.User.Email.ToLower().Trim()), email = user.Email });
         }
 
         [Route("forgotpassword")]

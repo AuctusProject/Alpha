@@ -1,17 +1,14 @@
-﻿using System;
+﻿using Auctus.DomainObjects.Account;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Api.Model.Account
 {
-    public class FullRegisterRequest : SimpleRegisterRequest
+    public class FullRegisterRequest
     {
-        public double? TargetAmount { get; set; }
-        public double? StartingAmount { get; set; }
-        public double? MonthlyContribution { get; set; }
-        public int? Timeframe { get; set; }
-        public int? Risk { get; set; }
-        public int GoalOptionId { get; set; }
+        public User User { get; set; }
+        public Goal Goal { get; set; }
     }
 }

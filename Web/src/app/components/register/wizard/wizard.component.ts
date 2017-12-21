@@ -13,7 +13,7 @@ export class WizardComponent implements OnInit {
   goal: Goal;
 
   constructor() {
-    this.goal = new Goal(0, 0, 0, 0, 0, 0, new GoalOption(0, '', 0, 0));
+    this.goal = new Goal();
   }
 
   ngOnInit() {

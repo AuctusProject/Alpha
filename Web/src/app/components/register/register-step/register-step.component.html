@@ -7,12 +7,12 @@
     <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field>
-          <input matInput placeholder="Email" name="email" [(ngModel)]="login.email">
+          <input matInput placeholder="Email" name="email" [(ngModel)]="fullRegisterDTO.user.email">
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field>
-          <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="login.password">
+          <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="fullRegisterDTO.user.password">
         </mat-form-field>
       </div>
     </div>

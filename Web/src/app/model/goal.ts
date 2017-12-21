@@ -2,13 +2,15 @@ import { GoalOption } from "./goalOption";
 
 export class Goal {
 
-  constructor(
-    public id: number,
-    public targetAmount: number,
-    public startingAmount: number,
-    public monthlyContribution: number,
-    public timeFrame: number,
-    public risk: number,
-    public GoalOption: GoalOption
-  ) { }
+  id: number;
+  targetAmount: number;
+  startingAmount: number;
+  monthlyContribution: number;
+  timeFrame: number;
+  risk: number;
+  goalOption: GoalOption;
+  
+  constructor() {
+    this.goalOption = new GoalOption();
+  }
 }

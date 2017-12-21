@@ -10,6 +10,7 @@ export class RiskStepComponent implements OnInit {
 
   @Input() model: Goal;
   @Output() modelChange = new EventEmitter<Goal>();
+  @Output() onSubmitted = new EventEmitter<boolean>();
 
   constructor() { }
 
@@ -18,6 +19,10 @@ export class RiskStepComponent implements OnInit {
 
   onChangeSlider(){
     console.log(this.model);
+  }
+
+  onSubmit(){
+    this.onSubmitted.emit(true);
   }
 
 }

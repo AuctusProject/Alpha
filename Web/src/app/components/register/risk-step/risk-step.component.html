@@ -1,4 +1,4 @@
-<form>
+<form #riskForm="ngForm" (ngSubmit)="onSubmit()">
   <div fxLayout="column" fxLayoutGap="20px">
     <div fxLayout="row">
       <span fxFlex fxLayoutAlign="center center">Set a risk/reward balance</span>
@@ -10,6 +10,10 @@
           [tick-interval]="1" [(ngModel)]="model.risk" [vertical]="false" name="risk" (change)="onChangeSlider()">
         </mat-slider>
       </div>
+    </div>
+
+    <div fxLayout="row">
+      <button mat-button type="submit" [disabled]="!riskForm.form.valid">Next</button>
     </div>
   </div>
 </form>

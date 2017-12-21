@@ -29,7 +29,7 @@ export class GoalStepComponent implements OnInit {
   }
 
   onOptionChange(event){
-    this.model.GoalOption = this.options.filter(option => option.id == event.value)[0];
+    this.model.goalOption = this.options.filter(option => option.id == event.value)[0];
   }
 
   onSubmit(){

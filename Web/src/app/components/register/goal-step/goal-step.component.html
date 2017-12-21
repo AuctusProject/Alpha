@@ -5,7 +5,7 @@
         </div>
 
         <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-            <mat-button-toggle-group [(ngModel)]="model.GoalOption.id" (change)="onOptionChange($event)" name="GoalOption" ngDefaultControl
+            <mat-button-toggle-group [(ngModel)]="model.goalOption.id" (change)="onOptionChange($event)" name="GoalOption" ngDefaultControl
                 required>
                 <mat-button-toggle *ngFor="let option of options" [value]="option.id">{{option.description}}</mat-button-toggle>
             </mat-button-toggle-group>
