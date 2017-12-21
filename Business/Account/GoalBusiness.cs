@@ -13,15 +13,15 @@ namespace Auctus.Business.Account
     {
         public GoalBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
-        public Goal Create(string email, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public Goal Create(string email, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             var user = UserBusiness.GetValidUser(email);
             return Create(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
         }
 
-        public Goal Create(int userId, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public Goal Create(int userId, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
-            var goal = SetNewData(userId, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+            var goal = SetNew(userId, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
             Data.Insert(goal);
             return goal;
         }
@@ -37,8 +37,9 @@ namespace Auctus.Business.Account
             return goal;
         }
 
-        public Goal SetNewData(int userId, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public Goal SetNew(int userId, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
+            RiskType riskType = RiskType.Get(risk);
             var goal = new Goal();
             goal.UserId = userId;
             goal.GoalOptionId = goalOptionId;
@@ -47,7 +48,7 @@ namespace Auctus.Business.Account
             goal.StartingAmount = startingAmount;
             goal.TargetAmount = targetAmount;
             goal.Timeframe = timeframe;
-            goal.Risk = risk;
+            goal.Risk = riskType.Value;
             return goal;
         }
     }

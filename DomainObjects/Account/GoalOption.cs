@@ -16,5 +16,7 @@ namespace Auctus.DomainObjects.Account
         public int Risk { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int Position { get; set; }
+
+        public RiskType RiskType { get { return RiskType.Get(Risk); } }
     }
 }

@@ -20,7 +20,13 @@ namespace Auctus.Business.Advice
             if (portfolio == null)
                 throw new ArgumentException("Invalid portfolio.");
 
-            var projection = SetNew(portfolioId, projectionValue, optimisticProjection, pessimisticProjection);
+            return Create(portfolio, projectionValue, optimisticProjection, pessimisticProjection, distribution);
+        }
+
+        internal Projection Create(Portfolio portfolio, double projectionValue, double? optimisticProjection,
+            double? pessimisticProjection, Dictionary<int, double> distribution)
+        {
+            var projection = SetNew(portfolio.Id, projectionValue, optimisticProjection, pessimisticProjection);
             using (var transaction = new TransactionalDapperCommand())
             {
                 transaction.Insert(projection);
@@ -52,6 +58,11 @@ namespace Auctus.Business.Advice
             projection.OptimisticProjection = optimisticProjection;
             projection.PessimisticProjection = pessimisticProjection;
             return projection;
+        }
+
+        public Projection Get(int projectionId)
+        {
+            return Data.Get(projectionId);
         }
     }
 }

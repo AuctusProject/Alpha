@@ -37,11 +37,12 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public IActionResult Portfolio([FromQuery]Guid guid)
         {
+            var method = "GetPortfolio";
             if (guid == null)
                 return BadRequest();
-            if (!CanAccess(guid))
+            if (!CanAccess(guid, method))
                 return new StatusCodeResult(429);
-            var user = GetUser(guid);
+            var user = GetUser(guid, method);
             if (user == null)
                 return new StatusCodeResult(403);
 
@@ -54,7 +55,33 @@ namespace Api.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
-            return Ok(portfolios);
+            return Ok(portfolios.Select(p => 
+                    new
+                    {
+                        id = p.Id,
+                        risk = p.Risk,
+                        projectionValue = p.Projection.ProjectionValue,
+                        pessimisticValue = p.Projection.PessimisticProjection,
+                        optimisticValue = p.Projection.OptimisticProjection,
+                        advisor = new
+                        {
+                            id = p.AdvisorId,
+                            name = p.Advisor.Name,
+                            price = p.Advisor.Detail.Price,
+                            description = p.Advisor.Detail.Description,
+                            period = p.Advisor.Detail.Period
+                        },
+                        distribution = p.Projection.Distribution.Select(d => new
+                        {
+                            asset = new
+                            {
+                                id = d.Asset.Id,
+                                name = d.Asset.Name,
+                                code = d.Asset.Code
+                            },
+                            percent = d.Percent
+                        })
+                    }));
         }
 
         [Route("advisor/{guid}")]
@@ -64,11 +91,12 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public IActionResult AdvisorUpdate([FromQuery]Guid guid, [FromBody]AdvisorDetailRequest advisorDetailRequest)
         {
+            var method = "AdvisorUpdate";
             if (advisorDetailRequest == null || guid == null)
                 return BadRequest();
-            if (!CanAccess(guid))
+            if (!CanAccess(guid, method))
                 return new StatusCodeResult(429);
-            var user = GetUser(guid);
+            var user = GetUser(guid, method);
             if (user == null)
                 return new StatusCodeResult(403);
 
@@ -91,11 +119,12 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
         public IActionResult Portfolio([FromQuery]Guid guid, [FromBody]PortfolioRequest portfolioRequest)
         {
+            var method = "PostPortfolio";
             if (portfolioRequest == null || portfolioRequest.Distribution == null || guid == null)
                 return BadRequest();
-            if (!CanAccess(guid))
+            if (!CanAccess(guid, method))
                 return new StatusCodeResult(429);
-            var user = GetUser(guid);
+            var user = GetUser(guid, method);
             if (user == null)
                 return new StatusCodeResult(403);
 
@@ -118,13 +147,16 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+        [ProducesResponseType(StatusCodes.Status405MethodNotAllowed)]
         public IActionResult Projection([FromQuery]Guid guid, [FromBody]ProjectionRequest projectionRequest)
         {
+            return new StatusCodeResult(405);
+            var method = "PostProjection";
             if (projectionRequest == null || projectionRequest.Distribution == null || !projectionRequest.PortfolioId.HasValue || guid == null)
                 return BadRequest();
-            if (!CanAccess(guid))
+            if (!CanAccess(guid, method))
                 return new StatusCodeResult(429);
-            var user = GetUser(guid);
+            var user = GetUser(guid, method);
             if (user == null)
                 return new StatusCodeResult(403);
 
@@ -141,17 +173,50 @@ namespace Api.Controllers
             return Ok();
         }
 
-        private bool CanAccess(Guid guid)
+        [Route("distribution/{guid}")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+        public IActionResult Distribution([FromQuery]Guid guid, [FromBody]NewDistributionRequest newDistributionRequest)
         {
-            return MemoryCache.Get<string>(guid.ToString()) == null;
+            var method = "PostDistribution";
+            if (newDistributionRequest == null || newDistributionRequest.Distribution == null)
+                return BadRequest();
+            if (!CanAccess(guid, method))
+                return new StatusCodeResult(429);
+            var user = GetUser(guid, method);
+            if (user == null)
+                return new StatusCodeResult(403);
+
+            try
+            {
+                AdviceService.CreateDistribution(user, newDistributionRequest.PortfolioId, 
+                    newDistributionRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percent));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
         }
 
-        private string GetUser(Guid guid)
+        private string GetCacheKey(Guid guid, string method)
+        {
+            return string.Format("{0}_{1}", guid.ToString(), method);
+        }
+
+        private bool CanAccess(Guid guid, string method)
+        {
+            return MemoryCache.Get<string>(GetCacheKey(guid, method)) == null;
+        }
+
+        private string GetUser(Guid guid, string method)
         {
             User user = AccountServices.GetUser(guid);
             if (user != null)
             {
-                MemoryCache.Set<string>(guid.ToString(), user.Email, 5);
+                MemoryCache.Set<string>(GetCacheKey(guid, method), user.Email, 10);
                 return user.Email;
             }
             else

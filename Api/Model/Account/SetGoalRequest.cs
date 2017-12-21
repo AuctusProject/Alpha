@@ -11,7 +11,7 @@ namespace Api.Model.Account
         public double? StartingAmount { get; set; }
         public double? MonthlyContribution { get; set; }
         public int? Timeframe { get; set; }
-        public int? Risk { get; set; }
+        public int Risk { get; set; }
         public int GoalOptionId { get; set; }
     }
 }

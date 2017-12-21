@@ -101,6 +101,27 @@ namespace Api.Controllers
             return Ok();
         }
 
+        [Route("distribution")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Distribution([FromBody]NewDistributionRequest newDistributionRequest)
+        {
+            if (newDistributionRequest == null || newDistributionRequest.Distribution == null)
+                return BadRequest();
+
+            try
+            {
+                AdviceService.CreateDistribution(GetUser(), newDistributionRequest.PortfolioId, 
+                    newDistributionRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percent));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
+
         [Route("buy")]
         [HttpPost]
         [Authorize("Bearer")]

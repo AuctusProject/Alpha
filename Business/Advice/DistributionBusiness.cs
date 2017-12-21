@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Advice;
+using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Advice;
 using Auctus.Util;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,20 @@ namespace Auctus.Business.Advice
     public class DistributionBusiness : BaseBusiness<Distribution, DistributionData>
     {
         public DistributionBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+
+        public List<Distribution> Create(string email, int portfolioId, Dictionary<int, double> distribution)
+        {
+            var portfolio = PortfolioBusiness.GetValidByOwner(email, portfolioId);
+            if (portfolio == null)
+                throw new ArgumentException("Invalid portfolio.");
+
+            var projection = ProjectionBusiness.Get(portfolio.ProjectionId.Value);
+            if (projection == null)
+                throw new ArgumentException("Invalid projection.");
+            
+            return ProjectionBusiness.Create(portfolio, projection.ProjectionValue, projection.OptimisticProjection,
+                projection.PessimisticProjection, distribution).Distribution;
+        }
 
         public List<Distribution> SetNew(int projectionId, Dictionary<int, double> distribution)
         {

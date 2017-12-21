@@ -21,12 +21,20 @@ namespace Auctus.DataAccess.Advice
                                                        INNER JOIN [User] u ON u.Id = a.UserId  
                                                        WHERE p.Id = @Id AND u.Email = @Email AND p.Disabled IS NULL";
 
-        private const string SELECT_LIST_BY_OWNER = @"SELECT p.*, j.* FROM 
+        private const string SELECT_LIST_BY_OWNER = @"SELECT p.*, j.*, a.*, d.* FROM 
                                                       Portfolio p  
                                                       INNER JOIN Projection j ON p.ProjectionId = j.Id
                                                       INNER JOIN Advisor a ON a.Id = p.AdvisorId  
+                                                      INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
                                                       INNER JOIN [User] u ON u.Id = a.UserId  
-                                                      WHERE u.Email = @Email AND p.Disabled IS NULL";
+                                                      WHERE 
+                                                      u.Email = @Email AND p.Disabled IS NULL AND d.Enabled = 1
+                                                      d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id)";
+
+        private const string SELECT_LIST_BY_ADVISOR = @"SELECT p.*, j.* FROM 
+                                                      Portfolio p  
+                                                      INNER JOIN Projection j ON p.ProjectionId = j.Id
+                                                      WHERE  p.AdvisorId = @AdvisorId AND p.Disabled IS NULL";
 
         private const string LIST_ALL =
             @"SELECT port.*, proj.*, dist.* FROM Portfolio port 
@@ -49,16 +57,30 @@ namespace Auctus.DataAccess.Advice
             return Query<Portfolio>(SELECT_VALID_BY_OWNER, parameters).SingleOrDefault();
         }
 
-        public List<Portfolio> List(string email)
+        public List<Portfolio> ListByAdvisor(int advisorId)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("Email", email, DbType.AnsiString);
-            return Query<Portfolio, Projection, Portfolio>(SELECT_LIST_BY_OWNER,
+            parameters.Add("AdvisorId", advisorId, DbType.Int32);
+            return Query<Portfolio, Projection, Portfolio>(SELECT_LIST_BY_ADVISOR,
                             (port, proj) =>
                             {
                                 port.Projection = proj;
                                 return port;
                             }, "Id", parameters).ToList();
+        }
+
+        public List<Portfolio> List(string email)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Email", email, DbType.AnsiString);
+            return Query<Portfolio, Projection, Advisor, AdvisorDetail, Portfolio>(SELECT_LIST_BY_OWNER,
+                            (port, proj, adv, det) =>
+                            {
+                                port.Advisor = adv;
+                                port.Advisor.Detail = det;
+                                port.Projection = proj;
+                                return port;
+                            }, "Id,Id,Id", parameters).ToList();
         }
         
         public IEnumerable<Portfolio> ListAll()

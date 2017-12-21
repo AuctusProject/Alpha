@@ -75,7 +75,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> FullRegister([FromBody]FullRegisterRequest registerRequest)
         {
-            if (registerRequest == null)
+            if (registerRequest == null || registerRequest.User == null || registerRequest.Goal == null)
                 return BadRequest();
 
             User user;

@@ -22,10 +22,14 @@ namespace Auctus.Business.Account
         public User Login(string email, string password)
         {
             BasePasswordValidation(password);
+            BaseEmailValidation(email);
+            EmailValidation(email);
 
-            var user = GetValidUser(email);
+            var user = Data.Get(email);
             if (user.Password != Security.Encrypt(password))
                 throw new ArgumentException("Password are invalid.");
+            else if (user.ConfirmationDate.HasValue)
+                MemoryCache.Set<User>(user.Email, user);
 
             return user;
         }
@@ -40,14 +44,18 @@ namespace Auctus.Business.Account
             return user;
         }
 
-        public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             var user = SetBaseUserCreation(email, password);
             using (var transaction = new TransactionalDapperCommand())
             {
                 transaction.Insert(user, "[User]");
-                var goal = GoalBusiness.SetNewData(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+                var goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
                 transaction.Insert(goal);
+                var option = GoalOptionsBusiness.List().Single(c => c.Id == goal.GoalOptionId);
+                var portfolio = PortfolioBusiness.GetByRisk(AdvisorBusiness.DefaultAdvisorId, RiskType.Get(goal.Risk, option.Risk));
+                var buyAuctusAdvisor = BuyBusiness.SetNew(AdvisorBusiness.DefaultAdvisorId, portfolio.ProjectionId.Value, goal.Id, 999999);
+                transaction.Insert(buyAuctusAdvisor);
                 user.Goal = goal;
                 transaction.Commit();
             }
@@ -111,7 +119,7 @@ namespace Auctus.Business.Account
         {
             return Data.Get(guid);
         }
-
+        
         private async Task SendEmailConfirmation(string email, string code)
         {
             await Email.SendAsync(
