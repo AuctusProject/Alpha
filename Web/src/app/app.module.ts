@@ -22,7 +22,10 @@ import { AccountService } from './services/account.service';
 import { StepperComponent } from './components/ui/stepper/stepper.component';
 import { RegisterStepComponent } from './components/register/register-step/register-step.component';
 import { ForgotPasswordEmailComponent } from './components/account/forgot-password-email/forgot-password-email.component';
-import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component'; 
+import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
+import { AdvisorDetailComponent } from './components/advice/advisor-detail/advisor-detail.component';
+import { AdvisorsComponent } from './components/advice/advisors/advisors.component';
+import { AdviceService } from './services/advice.service'; 
 
 
 @NgModule({
@@ -37,7 +40,9 @@ import { ForgotPasswordResetComponent } from './components/account/forgot-passwo
     StepperComponent,
     RegisterStepComponent,
     ForgotPasswordEmailComponent,
-    ForgotPasswordResetComponent
+    ForgotPasswordResetComponent,
+    AdvisorDetailComponent,
+    AdvisorsComponent
   ],
   imports: [
     BrowserModule,
@@ -50,7 +55,7 @@ import { ForgotPasswordResetComponent } from './components/account/forgot-passwo
     AppRoutingModule,
     FlexLayoutModule
   ],
-  providers: [LoginService, HttpService, AccountService],
+  providers: [LoginService, HttpService, AccountService, AdviceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
