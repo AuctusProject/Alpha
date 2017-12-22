@@ -1,1 +1,7 @@
-<div>{{id}}</div>
+{{advisorId}}
+
+<ul class="portfolios">
+  <li *ngFor="let portfolio of portfolios" (click)="onSelect(portfolio)">
+    {{portfolio.projection.projectionValue}}
+  </li>
+</ul>

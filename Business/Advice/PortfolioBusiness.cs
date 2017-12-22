@@ -124,6 +124,16 @@ namespace Auctus.Business.Advice
         public List<Portfolio> List(string email)
         {
             var portfolio = Data.List(email);
+            return FillPortfoliosDistribution(portfolio);
+        }
+        public List<Portfolio> List(int advisorId)
+        {
+            var portfolio = Data.ListByAdvisor(advisorId);
+            return FillPortfoliosDistribution(portfolio);
+        }
+
+        private List<Portfolio> FillPortfoliosDistribution(List<Portfolio> portfolio)
+        {
             var distributions = DistributionBusiness.List(portfolio.Select(c => c.ProjectionId.Value));
             portfolio.ForEach(c => c.Projection.Distribution = distributions.Where(d => d.ProjectionId == c.ProjectionId.Value).ToList());
             return portfolio;

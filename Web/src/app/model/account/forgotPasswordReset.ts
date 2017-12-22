@@ -1,4 +1,4 @@
 export class ForgotPasswordReset {
-    NewPassword: string;
-    ConfirmedPassword: string;
+    newPassword: string;
+    confirmedPassword: string;
 }

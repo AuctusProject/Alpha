@@ -1,4 +1,4 @@
-import { AdvisorDetail } from "./advisor-detail";
+import { AdvisorDetail } from "./advisorDetail";
 
 export class Advisor {
   id: number;

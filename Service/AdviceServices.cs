@@ -21,7 +21,7 @@ namespace Auctus.Service
             return AdvisorDetailBusiness.Create(email, advisorId, description, period, price, enabled);
         }
 
-        public Portfolio CreatePortfolio(string email, int advisorId, int risk, double projection, double? optimisticProjection, 
+        public Portfolio CreatePortfolio(string email, int advisorId, int risk, double projection, double? optimisticProjection,
             double? pessimisticProjection, Dictionary<int, double> distribution)
         {
             return PortfolioBusiness.Create(email, advisorId, risk, projection, optimisticProjection, pessimisticProjection, distribution);
@@ -30,6 +30,11 @@ namespace Auctus.Service
         public List<Portfolio> ListPortfolio(string email)
         {
             return PortfolioBusiness.List(email);
+        }
+
+        public List<Portfolio> ListPortfolio(int advisorId)
+        {
+            return PortfolioBusiness.List(advisorId);
         }
 
         public void DisablePortfolio(string email, int portfolioId)
@@ -51,6 +56,11 @@ namespace Auctus.Service
         public Buy Buy(string email, int advisorId)
         {
             return BuyBusiness.Create(email, advisorId);
+        }
+
+        public IEnumerable<Advisor> ListAdvisors()
+        {
+            return AdvisorBusiness.ListAvailable();
         }
     }
 }
