@@ -42,12 +42,12 @@ namespace Auctus.Service
             return await UserBusiness.SimpleRegister(email, password);
         }
 
-        public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             return await UserBusiness.FullRegister(email, password, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
         }
 
-        public Goal CreateGoal(string email, int goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public Goal CreateGoal(string email, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             return GoalBusiness.Create(email, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
         }

@@ -43,6 +43,11 @@ namespace Auctus.Service
             return ProjectionBusiness.Create(email, portfolioId, projection, optimisticProjection, pessimisticProjection, distribution);
         }
 
+        public List<Distribution> CreateDistribution(string email, int portfolioId, Dictionary<int, double> distribution)
+        {
+            return DistributionBusiness.Create(email, portfolioId, distribution);
+        }
+
         public Buy Buy(string email, int advisorId)
         {
             return BuyBusiness.Create(email, advisorId);

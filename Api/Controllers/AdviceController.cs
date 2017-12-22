@@ -101,6 +101,27 @@ namespace Api.Controllers
             return Ok();
         }
 
+        [Route("distribution")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Distribution([FromBody]NewDistributionRequest newDistributionRequest)
+        {
+            if (newDistributionRequest == null || newDistributionRequest.Distribution == null)
+                return BadRequest();
+
+            try
+            {
+                AdviceService.CreateDistribution(GetUser(), newDistributionRequest.PortfolioId, 
+                    newDistributionRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percent));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
+
         [Route("buy")]
         [HttpPost]
         [Authorize("Bearer")]
@@ -116,6 +137,35 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
             return Ok();
+        }
+
+
+        [Route("advisors")]
+        [HttpGet]
+        //[Authorize("Bearer")]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Advisors()
+        {
+            try
+            {
+                var advisors = new List<Advisor>{
+                    new Auctus.DomainObjects.Advice.Advisor(){
+                        Id = 1,
+                        Name="Teste"                
+                    },
+                    new Auctus.DomainObjects.Advice.Advisor(){
+                        Id = 2,
+                        Name="Teste2"
+                    },
+                };
+                return Ok(advisors);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            
         }
     }
 }

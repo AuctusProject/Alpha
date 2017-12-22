@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Advice;
+using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Advice;
 using Auctus.Util;
 using Microsoft.Extensions.Logging;
@@ -25,19 +26,32 @@ namespace Auctus.Business.Advice
                 throw new ArgumentException("Advisor already bought.");
 
             var goal = GoalBusiness.GetCurrent(user.Id);
-            
+            var portfolio = PortfolioBusiness.GetByRisk(advisorId, RiskType.Get(goal.Risk, goal.GoalOption.Risk));
+
+            var buy = SetNew(advisorId, portfolio.ProjectionId.Value, goal.Id, advisor.Detail.Period);
+            Data.Insert(buy);
+            return buy;
+        }
+        
+        public Buy SetNew(int advisorId, int projectionId, int goalId, int period)
+        {
             var buy = new Buy();
             buy.AdvisorId = advisorId;
+            buy.ProjectionId = projectionId;
+            buy.GoalId = goalId;
             buy.CreationDate = DateTime.UtcNow;
-            buy.GoalId = goal.Id;
-            buy.ExpirationDate = buy.CreationDate.AddDays(advisor.Detail.Period);
-            Data.Insert(buy);
+            buy.ExpirationDate = buy.CreationDate.AddDays(period);
             return buy;
         }
 
         public List<Buy> ListBought(int userId)
         {
             return Data.ListBought(userId);
+        }
+
+        public List<Buy> ListBoughtWithAdvisor(int userId)
+        {
+            return Data.ListBoughtWithAdvisor(userId);
         }
     }
 }

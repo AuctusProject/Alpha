@@ -40,6 +40,8 @@ namespace Auctus.Business.Advice
         {
             if (string.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Description cannot be empty.");
+            if (description.Length > 500)
+                throw new ArgumentException("Description is too long.");
             if (period < 1)
                 throw new ArgumentException("Period is invalid.");
             if (price < 0.000001)

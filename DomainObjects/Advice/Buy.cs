@@ -1,4 +1,5 @@
-﻿using Auctus.Util.DapperAttributes;
+﻿using Auctus.DomainObjects.Account;
+using Auctus.Util.DapperAttributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,5 +19,11 @@ namespace Auctus.DomainObjects.Advice
         public int AdvisorId { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int GoalId { get; set; }
+        [DapperType(System.Data.DbType.Int32)]
+        public int ProjectionId { get; set; }
+
+        public Goal Goal { get; set; }
+        public Advisor Advisor { get; set; }
+        public Projection Projection { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Auctus.Util.DapperAttributes;
+﻿using Auctus.DomainObjects.Account;
+using Auctus.Util.DapperAttributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,8 +22,9 @@ namespace Auctus.DomainObjects.Advice
         [DapperType(System.Data.DbType.Int32)]
         public int? ProjectionId { get; set; }
 
+        public RiskType RiskType { get { return RiskType.Get(Risk); } }
+        public Advisor Advisor { get; set; }
         public Projection Projection { get; set; }
-
         public List<Projection> Projections { get; set; }
     }
 }

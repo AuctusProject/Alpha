@@ -1,5 +1,6 @@
 ﻿using Auctus.DataAccess.Advice;
 using Auctus.DataAccess.Core;
+using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Advice;
 using Auctus.Util;
 using Microsoft.Extensions.Logging;
@@ -68,8 +69,46 @@ namespace Auctus.Business.Advice
             if (portfolio == null)
                 throw new ArgumentException("Invalid portfolio.");
 
+            if (!Data.ListByAdvisor(portfolio.AdvisorId).Any(c => c.Id != portfolio.Id))
+                throw new ArgumentException("Unique advisor's portfolio cannot be disabled.");
+
             portfolio.Disabled = DateTime.UtcNow;
             Data.Update(portfolio);
+        }
+
+        public Portfolio GetByRisk(int advisorId, RiskType riskType)
+        {
+            string defaultPortfoliosKey = "DefaultPortfolios";
+            List<Portfolio> portfolios = null;
+            if (advisorId == AdvisorBusiness.DefaultAdvisorId)
+                portfolios = MemoryCache.Get<List<Portfolio>>(defaultPortfoliosKey);
+            if (portfolios == null)
+            {
+                portfolios = Data.ListByAdvisor(advisorId);
+                if (advisorId == AdvisorBusiness.DefaultAdvisorId)
+                    MemoryCache.Set<List<Portfolio>>(defaultPortfoliosKey, portfolios);
+            }
+
+            if (portfolios.Count == 1)
+                return portfolios.First();
+
+            var sameRisk = portfolios.SingleOrDefault(c => c.RiskType == riskType);
+            if (sameRisk != null)
+                return sameRisk;
+
+            var littleLower = portfolios.SingleOrDefault(c => c.RiskType.Value == (riskType.Value - 1));
+            if (littleLower != null)
+                return littleLower;
+
+            var littleHigher = portfolios.SingleOrDefault(c => c.RiskType.Value == (riskType.Value + 1));
+            if (littleHigher != null)
+                return littleHigher;
+
+            var lower = portfolios.SingleOrDefault(c => c.RiskType.Value == (riskType.Value - 2));
+            if (lower != null)
+                return lower;
+
+            return portfolios.Single(c => c.RiskType.Value == (riskType.Value + 2));
         }
 
         public Portfolio GetValidByAdvisorAndRisk(int advisorId, int risk)

@@ -11,13 +11,17 @@ namespace Auctus.Business.Advice
 {
     public class AdvisorBusiness : BaseBusiness<Advisor, AdvisorData>
     {
+        public int DefaultAdvisorId { get { return 0; } }
+
         public AdvisorBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
         public Advisor Create(string email, string name, string description, int period, double price)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Name cannot be empty.");
-            
+            if (name.Length > 50)
+                throw new ArgumentException("Name is too long.");
+
             var user = UserBusiness.GetValidUser(email);
             var advisor = new Advisor();
             using (var transaction = new TransactionalDapperCommand())
