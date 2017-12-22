@@ -74,7 +74,9 @@ export class HttpService {
     return (response: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
-      this.notificationService.error("Error", response.error.error);
+      if (response.status == "400"){
+        this.notificationService.error("Error", response.error.error);
+      }
       console.error(response); // log to console instead
 
       // TODO: better job of transforming error for user consumption
