@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http'
+import { NotificationsService } from "angular2-notifications";
 
 @Component({
   selector: 'app-root',
