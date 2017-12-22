@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { SimpleNotificationsModule } from 'angular2-notifications';
+
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './/app-routing.module';
@@ -48,7 +50,8 @@ import { ForgotPasswordResetComponent } from './components/account/forgot-passwo
     HttpModule,
     HttpClientModule,
     AppRoutingModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    SimpleNotificationsModule.forRoot()
   ],
   providers: [LoginService, HttpService, AccountService],
   bootstrap: [AppComponent]
