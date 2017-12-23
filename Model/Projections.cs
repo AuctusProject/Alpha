@@ -28,12 +28,19 @@ namespace Auctus.Model
             public double ProjectionPercent { get; set; }
             public double? OptimisticPercent { get; set; }
             public double? PessimisticPercent { get; set; }
-            public double? PurchasedProjectionValue { get; set; }
-            public double? PurchasedOptimisticValue { get; set; }
-            public double? PurchasedPessimisticValue { get; set; }
-            public double? CurrentProjectionValue { get; set; }
-            public double? CurrentOptimisticValue { get; set; }
-            public double? CurrentPessimisticValue { get; set; }
+            public Result Current { get; set; }
+            public Result Purchased { get; set; }
+        }
+        
+        public class Result
+        {
+            public double? ProjectionValue { get; set; }
+            public double? OptimisticValue { get; set; }
+            public double? PessimisticValue { get; set; }
+            public bool? Reached { get; set; }
+            public double? Difference { get; set; }
+            public double? NewStartingAmount { get; set; }
+            public double? NewMonthlyContribution { get; set; }
         }
 
         public class Goal
