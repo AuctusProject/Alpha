@@ -1,4 +1,6 @@
-﻿using Auctus.DomainObjects.Advice;
+﻿using Auctus.DomainObjects.Account;
+using Auctus.DomainObjects.Advice;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
@@ -51,6 +53,11 @@ namespace Auctus.Service
         public Buy Buy(string email, int advisorId)
         {
             return BuyBusiness.Create(email, advisorId);
+        }
+
+        public Projections GetProjections(string email)
+        {
+            return ProjectionBusiness.GetProjections(email);
         }
     }
 }

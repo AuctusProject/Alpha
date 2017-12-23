@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Model.Advice;
+using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Advice;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -137,6 +139,24 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
             return Ok();
+        }
+
+        [Route("projection")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Projection()
+        {
+            Projections projections;
+            try
+            {
+                projections = AdviceService.GetProjections(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(projections);
         }
 
 

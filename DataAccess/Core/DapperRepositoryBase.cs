@@ -120,6 +120,14 @@ namespace Auctus.DataAccess.Core
                 return SqlMapper.Query<TFirst, TSecond, TThird, TFourth, TFifth, TReturn>(connection, sql, map, param, transaction, true, splitOn, commandTimeout, CommandType.Text);
             }
         }
+
+        protected IEnumerable<TReturn> Query<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(string sql, Func<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn> map, string splitOn, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
+        {
+            using (var connection = GetOpenConnection())
+            {
+                return SqlMapper.Query<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TReturn>(connection, sql, map, param, transaction, true, splitOn, commandTimeout, CommandType.Text);
+            }
+        }
         #endregion
 
         #region Execute

@@ -21,8 +21,8 @@ namespace Auctus.Business.Advice
             if (advisor.UserId == user.Id)
                 throw new ArgumentException("User is the advisor owner.");
 
-            var bought = ListBought(user.Id);
-            if (bought.Any(c => c.AdvisorId == advisorId))
+            var purchases = ListPurchases(user.Id);
+            if (purchases.Any(c => c.AdvisorId == advisorId))
                 throw new ArgumentException("Advisor already bought.");
 
             var goal = GoalBusiness.GetCurrent(user.Id);
@@ -44,14 +44,17 @@ namespace Auctus.Business.Advice
             return buy;
         }
 
-        public List<Buy> ListBought(int userId)
+        public List<Buy> ListPurchases(int userId)
         {
-            return Data.ListBought(userId);
+            return Data.ListPurchases(userId);
         }
 
-        public List<Buy> ListBoughtWithAdvisor(int userId)
+        public List<Buy> ListPurchasesComplete(int userId)
         {
-            return Data.ListBoughtWithAdvisor(userId);
+            var purchases = Data.ListPurchasesComplete(userId);
+            var options = GoalOptionsBusiness.List();
+            purchases.ForEach(c => c.Goal.GoalOption = options.Single(o => o.Id == c.Goal.GoalOptionId));
+            return purchases;
         }
     }
 }

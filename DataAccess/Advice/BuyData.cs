@@ -18,15 +18,17 @@ namespace Auctus.DataAccess.Advice
                                                INNER JOIN Goal g ON g.Id = b.GoalId 
                                                WHERE g.UserId = @UserId AND b.ExpirationDate > @Date";
 
-        private const string SELECT_BOUGHT_WITH_ADVISOR = @"SELECT b.*, g., a.*, d.* FROM 
-                                                            Buy b 
-                                                            INNER JOIN Goal g ON g.Id = b.GoalId 
-                                                            INNER JOIN Advisor a ON a.Id = b.AdvisorId 
-                                                            INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id 
-                                                            WHERE g.UserId = @UserId AND b.ExpirationDate > @Date AND
-                                                            d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id AND d2.Date <= @Date)";
+        private const string SELECT_BOUGHT_COMPLETE = @"SELECT b.*, g., a.*, d.*, e.*, p.* FROM 
+                                                        Buy b 
+                                                        INNER JOIN Goal g ON g.Id = b.GoalId 
+                                                        INNER JOIN Advisor a ON a.Id = b.AdvisorId 
+                                                        INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id 
+                                                        INNER JOIN Projection e ON e.Id = b.ProjectionId 
+                                                        INNER JOIN Portfolio p ON p.Id = e.PortfolioId 
+                                                        WHERE g.UserId = @UserId AND b.ExpirationDate > @Date AND
+                                                        d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id AND d2.Date <= @Date)";
 
-        public List<Buy> ListBought(int userId)
+        public List<Buy> ListPurchases(int userId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int32);
@@ -39,19 +41,21 @@ namespace Auctus.DataAccess.Advice
                             }, "Id", parameters).ToList();
         }
 
-        public List<Buy> ListBoughtWithAdvisor(int userId)
+        public List<Buy> ListPurchasesComplete(int userId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int32);
             parameters.Add("Date", DateTime.UtcNow, DbType.DateTime);
-            return Query<Buy, Goal, Advisor, AdvisorDetail, Buy>(SELECT_BOUGHT_WITH_ADVISOR,
-                            (buy, goal, advisor, detail) =>
+            return Query<Buy, Goal, Advisor, AdvisorDetail, Projection, Portfolio, Buy>(SELECT_BOUGHT_COMPLETE,
+                            (buy, goal, advisor, detail, projection, portfolio) =>
                             {
                                 buy.Goal = goal;
                                 buy.Advisor = advisor;
                                 buy.Advisor.Detail = detail;
+                                buy.Projection = projection;
+                                buy.Projection.Portfolio = portfolio;
                                 return buy;
-                            }, "Id,Id,Id", parameters).ToList();
+                            }, "Id,Id,Id,Id,Id", parameters).ToList();
         }
     }
 }
