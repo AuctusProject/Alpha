@@ -31,4 +31,8 @@ export class WizardComponent implements OnInit {
   goForward(stepper: MatStepper) {
     stepper.next();
   }
+
+  onStepChange(){
+    console.log("step change")
+  }
 }

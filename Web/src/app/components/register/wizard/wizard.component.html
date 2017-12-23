@@ -5,7 +5,7 @@
   
   <risk-step *ngSwitchCase="3"></risk-step>
 </div> -->
-<mat-horizontal-stepper [linear]="isLinear" #stepper>
+<mat-horizontal-stepper [linear]="isLinear" #stepper (selectionChange)="onStepChange()">
     <mat-step>
         <ng-template matStepLabel>Goal</ng-template>
         <goal-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></goal-step>

@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -27,7 +28,8 @@ import { ForgotPasswordEmailComponent } from './components/account/forgot-passwo
 import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
 import { AdvisorDetailComponent } from './components/advice/advisor-detail/advisor-detail.component';
 import { AdvisorsComponent } from './components/advice/advisors/advisors.component';
-import { AdviceService } from './services/advice.service'; 
+import { AdviceService } from './services/advice.service';
+import { FocusDirective } from './directives/focus.directive';
 
 
 @NgModule({
@@ -44,7 +46,8 @@ import { AdviceService } from './services/advice.service';
     ForgotPasswordEmailComponent,
     ForgotPasswordResetComponent,
     AdvisorDetailComponent,
-    AdvisorsComponent
+    AdvisorsComponent,
+    FocusDirective
   ],
   imports: [
     BrowserModule,
@@ -56,6 +59,13 @@ import { AdviceService } from './services/advice.service';
     HttpClientModule,
     AppRoutingModule,
     FlexLayoutModule,
+    Angular2PromiseButtonModule
+      .forRoot({
+        spinnerTpl: '<span class="btn-spinner"></span>',
+        disableBtn: true,
+        btnLoadingClass: 'is-loading',
+        handleCurrentBtnOnly: true,
+    }),
     SimpleNotificationsModule.forRoot()
   ],
   providers: [LoginService, HttpService, AccountService, AdviceService],

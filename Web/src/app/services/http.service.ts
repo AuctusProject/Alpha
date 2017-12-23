@@ -62,7 +62,9 @@ export class HttpService {
     else if (!httpOptions["headers"]) {
       httpOptions["headers"] = this.baseHttpHeaders();
     }
-    return this.http.get<any>(url, httpOptions).pipe(
+    return this.http
+    .get<any>(url, httpOptions)
+    .pipe(
       tap((response: any) => {
         if (response && response.jwt) this.setAccessToken(response.jwt);
       }),

@@ -11,7 +11,7 @@
             </mat-button-toggle-group>
             <div fxLayout="row" fxLayoutGap="20px">
                 <mat-form-field hintLabel="Optional">
-                    <input matInput placeholder="Target amount" name="TargetAmount" [(ngModel)]="model.targetAmount">
+                    <input matInput [inputFocus]="true" placeholder="Target amount" name="TargetAmount" [(ngModel)]="model.targetAmount">
                 </mat-form-field>
             </div>
         </div>
