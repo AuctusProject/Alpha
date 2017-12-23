@@ -3,12 +3,13 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
+import { NotificationsService } from "angular2-notifications";
 import { environment } from '../../environments/environment';
 
 @Injectable()
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private notificationService: NotificationsService) { }
 
   private jwt: string = "auc_jwt";
   private api_url: string = "http://localhost:52448/api/"; 
@@ -70,10 +71,13 @@ export class HttpService {
   }
 
   private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
+    return (response: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
+      if (response.status == "400"){
+        this.notificationService.error("Error", response.error.error);
+      }
+      console.error(response); // log to console instead
 
       // TODO: better job of transforming error for user consumption
       //this.log(`${operation} failed: ${error.message}`);

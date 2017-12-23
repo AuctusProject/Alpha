@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http'
+import { NotificationsService } from "angular2-notifications";
 
 @Component({
   selector: 'app-root',
@@ -7,10 +8,19 @@ import { Http } from '@angular/http'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-   constructor(private _httpService: Http) { }
 
-   apiValues: string[] = [];
+  public options = {
+    position: ["bottom", "left"],
+    timeOut: 2500,
+    maxStack: 1,
+    preventDuplicates: true,
+    preventLastDuplicates: "visible"
+  }
 
-   ngOnInit() {
-   }
+  constructor(private _httpService: Http) { }
+
+  apiValues: string[] = [];
+
+  ngOnInit() {
+  }
 }

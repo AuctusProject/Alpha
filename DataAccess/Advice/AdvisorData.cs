@@ -18,7 +18,13 @@ namespace Auctus.DataAccess.Advice
                                                     Advisor a
                                                     INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
                                                     WHERE
-                                                    a.Id = @Id AND d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id)";
+                                                    a.Id = @Id AND d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) ";
+
+        private const string LIST_ALL_AVAILABLE_WITH_DETAIL = @"SELECT a.*, d.* FROM
+                                                    Advisor a
+                                                    INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
+                                                    WHERE
+                                                    d.Enabled = 1 AND d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) ";
 
         public Advisor GetWithOwner(int id, string email)
         {
@@ -38,6 +44,16 @@ namespace Auctus.DataAccess.Advice
                         ad.Detail = de;
                         return ad;
                     }, "Id", parameters).SingleOrDefault();
+        }
+
+        public IEnumerable<Advisor> ListAvailable()
+        {
+            return Query<Advisor, AdvisorDetail, Advisor>(LIST_ALL_AVAILABLE_WITH_DETAIL,
+                    (ad, de) =>
+                    {
+                        ad.Detail = de;
+                        return ad;
+                    }, "Id");
         }
     }
 }

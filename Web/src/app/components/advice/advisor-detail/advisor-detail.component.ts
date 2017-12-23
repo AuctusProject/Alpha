@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AdviceService } from "../../../services/advice.service";
 import { Advisor } from "../../../model/advice/advisor";
+import { Portfolio } from "../../../model/advice/portfolio";
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -11,13 +12,19 @@ import { ActivatedRoute } from '@angular/router';
 export class AdvisorDetailComponent implements OnInit {
 
   @Input() advisor: Advisor;
-  id: number;
+  advisorId: number;
+  portfolios: Portfolio[];
+
   constructor(private adviceService: AdviceService,
     private route: ActivatedRoute) { } 
 
   ngOnInit() {
-    this.id = +this.route.snapshot.paramMap.get('id');
+    this.getPortfolios();
+  }
 
+  getPortfolios():void{
+    this.advisorId = +this.route.snapshot.paramMap.get('id');
+    this.adviceService.getAdvisorPortfolios(this.advisorId).subscribe(portfolios => this.portfolios = portfolios);
   }
 
 }

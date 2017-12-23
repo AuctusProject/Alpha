@@ -215,7 +215,7 @@ namespace Api.Controllers
         public IActionResult GoalOptions()
         {
             var options = AccountServices.ListGoalsOptions();
-            return Ok(options.Select(c => new { id = c.Id, description = c.Description}));
+            return Ok(options.Select(c => new { id = c.Id, description = c.Description, risk = c.Risk}));
         }
 
         [Route("apikey")]

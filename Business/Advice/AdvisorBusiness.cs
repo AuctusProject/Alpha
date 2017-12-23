@@ -48,5 +48,10 @@ namespace Auctus.Business.Advice
                 throw new ArgumentException("Advisor cannot be found.");
             return advisor;
         }
+
+        public IEnumerable<Advisor> ListAvailable()
+        {
+            return Data.ListAvailable();
+        }
     }
 }
