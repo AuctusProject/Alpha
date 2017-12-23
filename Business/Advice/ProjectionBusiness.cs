@@ -107,29 +107,69 @@ namespace Auctus.Business.Advice
                         ProjectionPercent = purchase.Projection.ProjectionValue,
                         OptimisticPercent = purchase.Projection.OptimisticProjection,
                         PessimisticPercent = purchase.Projection.PessimisticProjection,
-                        CurrentOptimisticValue = GetProjectionValue(purchase.Projection.OptimisticProjection, user.Goal),
-                        CurrentPessimisticValue = GetProjectionValue(purchase.Projection.PessimisticProjection, user.Goal),
-                        CurrentProjectionValue = GetProjectionValue(purchase.Projection.ProjectionValue, user.Goal),
-                        PurchasedOptimisticValue = GetProjectionValue(purchase.Projection.OptimisticProjection, purchase.Goal),
-                        PurchasedPessimisticValue = GetProjectionValue(purchase.Projection.PessimisticProjection, purchase.Goal),
-                        PurchasedProjectionValue = GetProjectionValue(purchase.Projection.ProjectionValue, purchase.Goal)
+                        Current = GetProjectionResult(user.Goal, purchase.Projection),
+                        Purchased = GetProjectionResult(purchase.Goal, purchase.Projection)
                     }
                 });
             }
             return projections;
         }
 
-        private double? GetProjectionValue(double? percent, Goal goal)
+        private Projections.Result GetProjectionResult(Goal goal, Projection projection)
         {
-            if (percent > 0 && goal.Timeframe > 0 && (goal.StartingAmount > 0 || goal.MonthlyContribution > 0))
+            Projections.Result result = new Projections.Result();
+            if (goal.Timeframe > 0 && (goal.StartingAmount > 0 || goal.MonthlyContribution > 0))
             {
-                var start = !goal.StartingAmount.HasValue ? 0 : goal.StartingAmount.Value * Math.Pow((1 + percent.Value / 100), goal.Timeframe.Value);
-                var monthly = !goal.MonthlyContribution.HasValue ? 0 : goal.StartingAmount.HasValue ?
-                    goal.MonthlyContribution.Value * ((Math.Pow((1 + percent.Value / 100), goal.Timeframe.Value) - 1) / (percent.Value / 100)) :
-                    goal.MonthlyContribution.Value * (((Math.Pow((1 + percent.Value / 100), goal.Timeframe.Value + 1) - 1) / (percent.Value / 100)) - 1);
-                return start + monthly;
+                if (projection.OptimisticProjection > 0)
+                    result.OptimisticValue = GetStartProjectionValue(goal, projection.OptimisticProjection.Value) + GetMonthlyProjectionValue(goal, projection.OptimisticProjection.Value);
+                if (projection.PessimisticProjection > 0)
+                    result.PessimisticValue = GetStartProjectionValue(goal, projection.PessimisticProjection.Value) + GetMonthlyProjectionValue(goal, projection.PessimisticProjection.Value);
+
+                if (projection.ProjectionValue > 0)
+                {
+                    var start = GetStartProjectionValue(goal, projection.ProjectionValue);
+                    var monthly = GetMonthlyProjectionValue(goal, projection.ProjectionValue);
+                    result.ProjectionValue = start + monthly;
+                    if (goal.TargetAmount > 0)
+                    {
+                        result.Reached = goal.TargetAmount.Value <= result.ProjectionValue.Value;
+                        result.Difference = Math.Abs(goal.TargetAmount.Value - result.ProjectionValue.Value);
+                        result.NewStartingAmount = Math.Abs(goal.TargetAmount.Value - monthly) / GetStartProjectionInterestRate(goal.Timeframe.Value, projection.ProjectionValue);
+                        result.NewMonthlyContribution = Math.Abs(goal.TargetAmount.Value - start) /
+                            (goal.StartingAmount.HasValue ?
+                            GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe.Value, projection.ProjectionValue) :
+                            GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe.Value, projection.ProjectionValue));
+                    }
+                }
             }
-            return (double?)null;
+            return result;
+        }
+
+        private double GetStartProjectionInterestRate(int period, double percent)
+        {
+            return Math.Pow((1 + percent / 100), period);
+        }
+
+        private double GetMotnhlyProjectionAntecipatedInterestRate(int period, double percent)
+        {
+            return ((Math.Pow((1 + percent / 100), period + 1) - 1) / (percent / 100)) - 1;
+        }
+
+        private double GetMotnhlyProjectionExpiredInterestRate(int period, double percent)
+        {
+            return (Math.Pow((1 + percent / 100), period) - 1) / (percent / 100);
+        }
+
+        private double GetStartProjectionValue(Goal goal, double percent)
+        {
+            return !goal.StartingAmount.HasValue ? 0 : goal.StartingAmount.Value * GetStartProjectionInterestRate(goal.Timeframe.Value, percent);
+        }
+
+        private double GetMonthlyProjectionValue(Goal goal, double percent)
+        {
+            return !goal.MonthlyContribution.HasValue ? 0 : goal.StartingAmount.HasValue ?
+                    goal.MonthlyContribution.Value * GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe.Value, percent) :
+                    goal.MonthlyContribution.Value * GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe.Value, percent);
         }
     }
 }
