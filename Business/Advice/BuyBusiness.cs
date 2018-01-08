@@ -49,6 +49,11 @@ namespace Auctus.Business.Advice
             return Data.ListPurchases(userId);
         }
 
+        public List<Buy> ListPurchasesWithPortfolio(int userId)
+        {
+            return Data.ListPurchasesWithPortfolio(userId);
+        }
+
         public List<Buy> ListPurchasesComplete(int userId)
         {
             var purchases = Data.ListPurchasesComplete(userId);

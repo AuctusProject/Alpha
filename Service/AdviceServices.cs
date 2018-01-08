@@ -65,6 +65,11 @@ namespace Auctus.Service
             return ProjectionBusiness.GetProjections(email);
         }
 
+        public List<Model.PortfolioHistory> ListPortfolioHistory(string email)
+        {
+            return PortfolioHistoryBusiness.ListPortfolioHistory(email);
+        }
+
         public IEnumerable<Advisor> ListAdvisors()
         {
             return AdvisorBusiness.ListAvailable();

@@ -159,6 +159,24 @@ namespace Api.Controllers
             return Ok(projections);
         }
 
+        [Route("portfoliohistory")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult PortfolioHistory()
+        {
+            List<Auctus.Model.PortfolioHistory> portfolioHistory;
+            try
+            {
+                portfolioHistory = AdviceService.ListPortfolioHistory(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(portfolioHistory);
+        }
+
 
         [Route("advisors")]
         [HttpGet]

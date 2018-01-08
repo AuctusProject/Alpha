@@ -23,5 +23,12 @@ namespace Auctus.DataAccess.Advice
             parameters.Add("PortfolioId", portfolioId, DbType.Int32);
             return Query<PortfolioHistory>(SQL_LIST_BY_ASSET_ID, parameters).FirstOrDefault();
         }
+
+        public List<PortfolioHistory> ListPortfolioHistory(int portfolioId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("PortfolioId", portfolioId, DbType.Int32);
+            return SelectByParameters<PortfolioHistory>(parameters, "Date").ToList();
+        }
     }
 }

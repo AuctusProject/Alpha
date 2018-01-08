@@ -1,6 +1,7 @@
 ﻿using Auctus.DataAccess.Advice;
 using Auctus.DomainObjects.Advice;
 using Auctus.DomainObjects.Asset;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace Auctus.Business.Advice
 {
-    public class PortfolioHistoryBusiness : BaseBusiness<PortfolioHistory, PortfolioHistoryData>
+    public class PortfolioHistoryBusiness : BaseBusiness<DomainObjects.Advice.PortfolioHistory, PortfolioHistoryData>
     {
         public PortfolioHistoryBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
@@ -49,7 +50,7 @@ namespace Auctus.Business.Advice
             return previousAssetValue;
         }
 
-        private PortfolioHistory CreatePortfolioHistoryForDate(DateTime date, Portfolio portfolio, List<AssetValue> currentAssetValues, List<AssetValue> previousAssetValues)
+        private DomainObjects.Advice.PortfolioHistory CreatePortfolioHistoryForDate(DateTime date, Portfolio portfolio, List<AssetValue> currentAssetValues, List<AssetValue> previousAssetValues)
         {
             var projection = PortfolioBusiness.GetProjectionAtDate(date, portfolio);
             if (projection != null)
@@ -65,7 +66,7 @@ namespace Auctus.Business.Advice
 
                         portfolioRealValue += currentAssetValue.Value / previousAssetValue.Value * assetDistribution.Percent;
                     }
-                    var portfolioHistory = new PortfolioHistory()
+                    var portfolioHistory = new DomainObjects.Advice.PortfolioHistory()
                     {
                         Date = date,
                         PortfolioId = portfolio.Id,
@@ -85,6 +86,41 @@ namespace Auctus.Business.Advice
         {
             var portfolioHistory = Data.LastPortfolioHistory(id);
             return portfolioHistory?.Date;
+        }
+
+        public List<Model.PortfolioHistory> ListPortfolioHistory(string email)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var purchases = BuyBusiness.ListPurchasesWithPortfolio(user.Id);
+            List<Model.PortfolioHistory> result = new List<Model.PortfolioHistory>();
+            foreach (Buy buy in purchases)
+            {
+                Model.PortfolioHistory portfolioHistory = new Model.PortfolioHistory();
+                portfolioHistory.AdvisorId = buy.AdvisorId;
+                portfolioHistory.Risk = buy.Projection.Portfolio.Risk;
+                portfolioHistory.Values = ListPortfolioHistory(buy.Projection.PortfolioId).Select(c => new Model.PortfolioHistory.HistoryValue()
+                {
+                    Date = c.Date,
+                    Value = c.RealValue
+                }).ToList();
+                result.Add(portfolioHistory);
+            }
+            return result;
+        }
+
+        private List<DomainObjects.Advice.PortfolioHistory> ListPortfolioHistory(int portfolioId)
+        {
+            string cacheKey = string.Format("PortfolioHistory{0}", portfolioId);
+            var portfolioHistory = MemoryCache.Get<List<DomainObjects.Advice.PortfolioHistory>>(cacheKey);
+            if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != DateTime.UtcNow.Date)
+            {
+                portfolioHistory = Data.ListPortfolioHistory(portfolioId);
+                if (portfolioHistory == null)
+                    throw new ArgumentException("Portfolio history cannot be found.");
+                else if (portfolioHistory.Last().Date.Date == DateTime.UtcNow.Date)
+                    MemoryCache.Set<List<DomainObjects.Advice.PortfolioHistory>>(cacheKey, portfolioHistory, 720);
+            }
+            return portfolioHistory;
         }
     }
 }
