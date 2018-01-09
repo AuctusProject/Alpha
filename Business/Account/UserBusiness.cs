@@ -53,9 +53,8 @@ namespace Auctus.Business.Account
                 var goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
                 transaction.Insert(goal);
                 var option = GoalOptionsBusiness.List().Single(c => c.Id == goal.GoalOptionId);
-                var portfolio = PortfolioBusiness.GetByRisk(AdvisorBusiness.DefaultAdvisorId, RiskType.Get(goal.Risk, option.Risk));
-                var buyAuctusAdvisor = BuyBusiness.SetNew(AdvisorBusiness.DefaultAdvisorId, portfolio.ProjectionId.Value, goal.Id, 999999);
-                transaction.Insert(buyAuctusAdvisor);
+                //var portfolio = PortfolioBusiness.GetByRisk(AdvisorBusiness.DefaultAdvisorId, RiskType.Get(goal.Risk, option.Risk));
+                //transaction.Insert(buyAuctusAdvisor);
                 user.Goal = goal;
                 transaction.Commit();
             }
