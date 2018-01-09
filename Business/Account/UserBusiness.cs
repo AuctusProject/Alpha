@@ -74,10 +74,10 @@ namespace Auctus.Business.Account
             await SendEmailConfirmation(email, user.ConfirmationCode);
         }
         
-        public void ConfirmEmail(string email, string code)
+        public void ConfirmEmail(string code)
         {
-            var user = GetValidUser(email);
-            if (code != user.ConfirmationCode)
+            var user = Data.GetByConfirmationCode(code);
+            if (user == null)
                 throw new ArgumentException("Invalid confirmation code.");
 
             user.ConfirmationDate = DateTime.UtcNow;

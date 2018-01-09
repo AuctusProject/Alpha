@@ -118,14 +118,14 @@ namespace Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult ConfirmEmail([FromBody]ConfirmEmailRequest confirmEmailRequest)
+        public IActionResult ConfirmEmail([FromBody]string confirmationCode)
         {
-            if (confirmEmailRequest == null)
+            if (confirmationCode == null)
                 return BadRequest();
 
             try
             {
-                AccountServices.ConfirmEmail(confirmEmailRequest.Email, confirmEmailRequest.Code);
+                AccountServices.ConfirmEmail(confirmationCode);
             }
             catch (ArgumentException ex)
             {
