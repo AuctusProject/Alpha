@@ -97,7 +97,6 @@ namespace Auctus.Business.Advice
             {
                 Model.PortfolioHistory portfolioHistory = new Model.PortfolioHistory();
                 portfolioHistory.AdvisorId = buy.AdvisorId;
-                portfolioHistory.Risk = buy.Projection.Portfolio.Risk;
                 portfolioHistory.Values = ListPortfolioHistory(buy.Projection.PortfolioId).Select(c => new Model.PortfolioHistory.HistoryValue()
                 {
                     Date = c.Date,

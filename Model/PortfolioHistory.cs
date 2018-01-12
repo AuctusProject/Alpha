@@ -6,7 +6,6 @@ namespace Auctus.Model
 {
     public class PortfolioHistory
     {
-        public int Risk { get; set; }
         public int AdvisorId { get; set; }
         public List<HistoryValue> Values { get; set; }
 

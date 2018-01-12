@@ -11,9 +11,7 @@ namespace Auctus.DataAccess.Advice
     public class DistributionData : BaseData<Distribution>
     {
         public override string TableName => "Distribution";
-
-        private const string SELECT_BY_PROJECTIONS = @"SELECT * FROM Distribution WHERE";
-
+        
         public List<Distribution> List(IEnumerable<int> projectionsId)
         {
             List<string> restrictions = new List<string>();

@@ -70,6 +70,11 @@ namespace Auctus.Service
             return PortfolioHistoryBusiness.ListPortfolioHistory(email);
         }
 
+        public List<Model.PortfolioDistribution> ListPortfolioDistribution(string email)
+        {
+            return DistributionBusiness.ListPortfolioDistribution(email);
+        }
+
         public IEnumerable<Advisor> ListAdvisors()
         {
             return AdvisorBusiness.ListAvailable();
