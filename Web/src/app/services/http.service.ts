@@ -77,7 +77,12 @@ export class HttpService {
 
       // TODO: send the error to remote logging infrastructure
       if (response.status == "400"){
-        this.notificationService.error("Error", response.error.error);
+        if (response.error){
+          this.notificationService.error("Error", response.error.error);
+        }
+        else {
+          this.notificationService.error("Error", "Error on request");
+        }
       }
       console.error(response); // log to console instead
 
