@@ -108,3 +108,40 @@ button.is-loading .btn-spinner {
     margin-left: 5px;
     opacity: 1;
 }
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+/* angular material stepper */
+
+.mat-stepper-horizontal-line{
+    display: none !important;
+}
+
+.mat-step-header .mat-step-icon-not-touched{
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 100px !important;
+    border: solid 1px #ebeaea !important;
+    background-color: white !important;
+    color: #ebeaea !important;
+  }
+
+  .mat-step-header[ng-reflect-selected="true"] .mat-step-icon{
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 100px !important;
+    border: solid 1px #4a90e2 !important;
+    background-color: #4a90e2 !important;
+    color: white !important;
+  }
+
+  .mat-step-header[ng-reflect-selected="false"] .mat-step-icon{
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 100px !important;
+    border: solid 1px #4a90e2 !important;
+    background-color: white !important;
+    color: #4a90e2 !important;
+  }

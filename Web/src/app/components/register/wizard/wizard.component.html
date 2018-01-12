@@ -1,29 +1,18 @@
-<!-- <register-steps [currentStep]="currentStep"></register-steps>
-<div [ngSwitch]="currentStep">
-  <goal-step *ngSwitchCase="0"></goal-step>
-  <period-step *ngSwitchCase="1"></period-step>
-  
-  <risk-step *ngSwitchCase="3"></risk-step>
-</div> -->
+<wizard-header></wizard-header>
 <mat-horizontal-stepper [linear]="isLinear" #stepper (selectionChange)="onStepChange()">
     <mat-step>
-        <ng-template matStepLabel>Goal</ng-template>
         <goal-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></goal-step>
     </mat-step>
     <mat-step>
-        <ng-template matStepLabel>Period</ng-template>
         <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
     </mat-step>
     <mat-step>
-        <ng-template matStepLabel>Amount</ng-template>
         <amount-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></amount-step>
     </mat-step>
     <mat-step>
-        <ng-template matStepLabel>Risk Assessment</ng-template>
         <risk-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></risk-step>
     </mat-step>
     <mat-step>
-        <ng-template matStepLabel>Register</ng-template>
         <register-step [(model)]="goal"></register-step>
     </mat-step>
 </mat-horizontal-stepper>

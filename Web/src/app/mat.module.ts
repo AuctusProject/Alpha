@@ -4,14 +4,32 @@ import { MatInputModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatSliderModule } from '@angular/material';
+import { MatToolbarModule } from '@angular/material';
+import { MatIconModule } from '@angular/material';
 
 
 @NgModule({
   imports: [
-    MatButtonModule, MatCheckboxModule, MatButtonToggleModule, MatStepperModule, MatFormFieldModule, MatInputModule, MatSliderModule
+    MatButtonModule, 
+    MatCheckboxModule,
+    MatButtonToggleModule, 
+    MatStepperModule, 
+    MatFormFieldModule,
+    MatInputModule, 
+    MatSliderModule, 
+    MatToolbarModule,
+    MatIconModule
   ],
   exports: [
-    MatButtonModule, MatCheckboxModule, MatButtonToggleModule, MatStepperModule, MatFormFieldModule, MatInputModule, MatSliderModule
+    MatButtonModule, 
+    MatCheckboxModule, 
+    MatButtonToggleModule, 
+    MatStepperModule, 
+    MatFormFieldModule, 
+    MatInputModule, 
+    MatSliderModule, 
+    MatToolbarModule,
+    MatIconModule
   ],
   declarations: []
 })
