@@ -1,0 +1,6 @@
+.mat-step-header .mat-step-icon-not-touched{
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 100px !important;
+  border: solid 1px #ebeaea !important;
+}

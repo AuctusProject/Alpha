@@ -1,0 +1,15 @@
+.wizard-header {
+    background-color: white;
+    padding: 50px;
+}
+
+.wizard-header a{
+    font-size: 12px;
+    padding: 9 12;
+    color: #4a4a4a;
+    text-decoration: none;
+}
+
+.wizard-header .menu{
+    padding-right: 50px;
+}

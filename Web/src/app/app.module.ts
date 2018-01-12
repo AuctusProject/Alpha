@@ -30,6 +30,8 @@ import { AdvisorDetailComponent } from './components/advice/advisor-detail/advis
 import { AdvisorsComponent } from './components/advice/advisors/advisors.component';
 import { AdviceService } from './services/advice.service';
 import { FocusDirective } from './directives/focus.directive';
+import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
+import { WizardHeaderComponent } from './components/register/wizard-header/wizard-header.component';
 
 
 @NgModule({
@@ -47,7 +49,9 @@ import { FocusDirective } from './directives/focus.directive';
     ForgotPasswordResetComponent,
     AdvisorDetailComponent,
     AdvisorsComponent,
-    FocusDirective
+    FocusDirective,
+    ConfirmEmailComponent,
+    WizardHeaderComponent
   ],
   imports: [
     BrowserModule,

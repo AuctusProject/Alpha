@@ -6,13 +6,16 @@ import { ForgotPasswordEmailComponent } from './components/account/forgot-passwo
 import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
 import { AdvisorsComponent } from './components/advice/advisors/advisors.component';
 import { AdvisorDetailComponent } from './components/advice/advisor-detail/advisor-detail.component';
+import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
+
 const routes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'try', component: WizardComponent },
+    { path: 'confirm', component: ConfirmEmailComponent },
     { path: 'advisors', component: AdvisorsComponent },
-    { path: 'advisor/:id', component: AdvisorDetailComponent },];
+    { path: 'advisor/:id', component: AdvisorDetailComponent }];
 
 @NgModule({
     exports: [RouterModule],

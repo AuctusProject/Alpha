@@ -159,7 +159,7 @@ namespace Api.Controllers
             return Ok(projections);
         }
 
-        [Route("portfoliohistory")]
+        [Route("portfolio/history")]
         [HttpGet]
         [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -177,6 +177,23 @@ namespace Api.Controllers
             return Ok(portfolioHistory);
         }
 
+        [Route("portfolio/distribution")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult PortfolioDistribution()
+        {
+            List<Auctus.Model.PortfolioDistribution> portfolioDistribution;
+            try
+            {
+                portfolioDistribution = AdviceService.ListPortfolioDistribution(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(portfolioDistribution);
+        }
 
         [Route("advisors")]
         [HttpGet]

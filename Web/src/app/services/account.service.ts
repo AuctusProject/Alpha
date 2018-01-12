@@ -21,11 +21,10 @@ export class AccountService {
     return this.httpService.post(this.fullRegisterUrl, fullRegisterDTO);
   }
 
-  confirm(code : String, email: String): Observable<Boolean> {
-    let json = {
-      code : code,
-      email: email
-    };
-    return this.httpService.post(this.confirmEmailUrl, json);
+  confirmEmail(code : string): Observable<any> {
+    let confirmationRequest = {
+      Code: code
+    }
+    return this.httpService.post(this.confirmEmailUrl, confirmationRequest);
   }
 }

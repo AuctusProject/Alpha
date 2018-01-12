@@ -126,6 +126,7 @@ namespace Auctus.Business.Advice
             var portfolio = Data.List(email);
             return FillPortfoliosDistribution(portfolio);
         }
+
         public List<Portfolio> List(int advisorId)
         {
             var portfolio = Data.ListByAdvisor(advisorId);

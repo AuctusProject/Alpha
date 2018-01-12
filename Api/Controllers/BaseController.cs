@@ -38,6 +38,16 @@ namespace Api.Controllers
             return Request.HttpContext.User.Identity.IsAuthenticated ? Request.HttpContext.User.Identity.Name : null;
         }
 
+        protected new OkObjectResult Ok()
+        {
+            return Ok(new { });
+        }
+
+        protected new BadRequestObjectResult BadRequest()
+        {
+            return BadRequest(new { });
+        }
+
         public override void OnActionExecuted(ActionExecutedContext context)
         {
             var user = GetUser();
