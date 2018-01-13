@@ -7,8 +7,10 @@ import { ForgotPasswordResetComponent } from './components/account/forgot-passwo
 import { AdvisorsComponent } from './components/advice/advisors/advisors.component';
 import { AdvisorDetailComponent } from './components/advice/advisor-detail/advisor-detail.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
+import { HomeComponent } from "./components/home/home.component";
 
 const routes: Routes = [
+    { path: '', component: HomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },

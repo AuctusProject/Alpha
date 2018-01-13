@@ -1,6 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
+@font-face {
+    font-family: "HelveticaNeueBold";
+    src: url('/assets/fonts/HelveticaNeueBold.eot'); /* IE9 Compat Modes */
+    src: 
+        url('/assets/fonts/HelveticaNeueBold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url('/assets/fonts/HelveticaNeueBold.woff2') format('woff2'), /* Super Modern Browsers */
+        url("/assets/fonts/HelveticaNeueBold.woff") format("woff"), /* Pretty Modern Browsers */
+        url("/assets/fonts/HelveticaNeueBold.ttf") format("truetype"), /* Safari, Android, iOS */
+        url('/assets/fonts/HelveticaNeueBold.svg#svgFontName') format('svg'); /* Legacy iOS */
+  }
+
+  @font-face {
+    font-family: "HelveticaNeue";
+    src: url('/assets/fonts/HelveticaNeueRegular.eot'); /* IE9 Compat Modes */
+    src: 
+        url('/assets/fonts/HelveticaNeueRegular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+        url("/assets/fonts/HelveticaNeueRegular.woff") format("woff"), /* Pretty Modern Browsers */
+        url("/assets/fonts/HelveticaNeueRegular.ttf") format("truetype"), /* Safari, Android, iOS */
+        url('/assets/fonts/HelveticaNeueRegular.svg#svgFontName') format('svg'); /* Legacy iOS */
+  }
+
 @-webkit-keyframes three-quarters {
     0% {
         -webkit-transform: rotate(0deg);
@@ -144,4 +165,62 @@ button.is-loading .btn-spinner {
     border: solid 1px #4a90e2 !important;
     background-color: white !important;
     color: #4a90e2 !important;
+  }
+
+  body, p, span {
+    font-family: 'HelveticaNeue', 'Helvetica', sans-serif;
+  }
+
+  h1 {
+    font-family: 'HelveticaNeue', 'Helvetica', sans-serif;
+    font-size: 56px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.11;
+    letter-spacing: normal;
+    color: #4a4a4a;
+  }
+
+  h1.bold {
+    font-family: 'HelveticaNeueBold' !important;
+  }
+
+  h3 {
+    font-family: 'HelveticaNeue';
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.71;
+    letter-spacing: normal;
+    color: #55606e;
+  }
+
+  button {
+      font-size: 14px;
+  }
+
+  .primary-button {
+    border-radius: 100px;
+    border: solid 1px #3c91e6;
+    background: white;
+    padding: 12px 35px;
+    color: #3c91e6;
+    cursor: pointer;
+  }
+  .primary-button.bold {
+    font-family: 'HelveticaNeueBold';
+  }
+
+  button.no-border {
+    background: white;
+    padding: 10px 35px;
+    color: #3c91e6;
+    cursor: pointer;
+    border: 0px;
+  }
+
+  button.no-border.bold{
+    font-family: 'HelveticaNeueBold';
   }

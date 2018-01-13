@@ -32,6 +32,8 @@ import { AdviceService } from './services/advice.service';
 import { FocusDirective } from './directives/focus.directive';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { WizardHeaderComponent } from './components/register/wizard-header/wizard-header.component';
+import { HomeComponent } from './components/home/home.component';
+import { PaddingDirective } from './directives/padding.directive';
 
 
 @NgModule({
@@ -51,7 +53,9 @@ import { WizardHeaderComponent } from './components/register/wizard-header/wizar
     AdvisorsComponent,
     FocusDirective,
     ConfirmEmailComponent,
-    WizardHeaderComponent
+    WizardHeaderComponent,
+    HomeComponent,
+    PaddingDirective
   ],
   imports: [
     BrowserModule,
