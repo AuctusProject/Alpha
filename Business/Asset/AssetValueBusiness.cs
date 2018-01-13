@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Asset;
+using Auctus.DataAccess.Exchanges;
 using Auctus.DomainObjects.Asset;
 using Auctus.Util;
 using Dapper;
@@ -26,7 +27,7 @@ namespace Auctus.Business.Asset
             {
                 return;
             }
-            Dictionary<DateTime, double> assetDateAndValues = GetAssetValuesByDate(asset);
+            Dictionary<DateTime, double> assetDateAndValues = GetAssetValuesByDate(asset, lastUpdatedValue);
             CreateAssetValueForPendingDates(asset, lastUpdatedValue, assetDateAndValues);
         }
 
@@ -68,7 +69,7 @@ namespace Auctus.Business.Asset
             return currentPendingDateAndValue;
         }
 
-        private static Dictionary<DateTime, double> GetAssetValuesByDate(DomainObjects.Asset.Asset asset)
+        private static Dictionary<DateTime, double> GetAssetValuesByDate(DomainObjects.Asset.Asset asset, DateTime startDate)
         {
             Dictionary<DateTime, double> assetDateAndValues;
             if (asset.Type == DomainObjects.Asset.AssetType.Traditional)
@@ -77,7 +78,7 @@ namespace Auctus.Business.Asset
             }
             else if (asset.Type == DomainObjects.Asset.AssetType.Crypto)
             {
-                assetDateAndValues = AlphaVantageApi.GetCloseCryptoValue(asset.Code);
+                assetDateAndValues = ExchangeApi.GetCloseCryptoValue(asset.Code, startDate);
             }
             else
                 throw new InvalidOperationException();

@@ -32,7 +32,7 @@ namespace Auctus.Util
                         Thread.Sleep(milissecondsDelay);
 
                     var result = operation.DynamicInvoke(param);
-                    return (T)Convert.ChangeType(result, typeof(T));
+                    return (T)ChangeType(result, typeof(T));
                 }
                 catch (Exception ex)
                 {
@@ -40,6 +40,23 @@ namespace Auctus.Util
                 }
             }
             throw new AggregateException(exceptions);
+        }
+
+        private static object ChangeType(object value, Type conversion)
+        {
+            var t = conversion;
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null)
+                {
+                    return null;
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return Convert.ChangeType(value, t);
         }
     }
 }

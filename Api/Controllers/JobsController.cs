@@ -25,7 +25,7 @@ namespace Api.Controllers
 
         [Route("AssetsValues")]
         [HttpPost]
-        [Authorize("Bearer")]
+        //[Authorize("Bearer")]
         public IActionResult UpdateAssetsValues()
         {
             RunJobAsync(AssetServices.UpdateAllAssetsValues);
