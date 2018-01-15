@@ -11,7 +11,7 @@ namespace Auctus.Business.Advice
 {
     public class AdvisorBusiness : BaseBusiness<Advisor, AdvisorData>
     {
-        public int DefaultAdvisorId { get { return 0; } }
+        public int DefaultAdvisorId { get { return 1; } }
 
         public AdvisorBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 

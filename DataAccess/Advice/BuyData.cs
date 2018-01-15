@@ -25,7 +25,7 @@ namespace Auctus.DataAccess.Advice
                                                                 INNER JOIN Portfolio p ON p.Id = e.PortfolioId 
                                                                 WHERE g.UserId = @UserId AND b.ExpirationDate > @Date";
 
-        private const string SELECT_PURCHASE_COMPLETE = @"SELECT b.*, g., a.*, d.*, e.*, p.* FROM 
+        private const string SELECT_PURCHASE_COMPLETE = @"SELECT b.*, g.*, a.*, d.*, e.*, p.* FROM 
                                                           Buy b 
                                                           INNER JOIN Goal g ON g.Id = b.GoalId 
                                                           INNER JOIN Advisor a ON a.Id = b.AdvisorId 

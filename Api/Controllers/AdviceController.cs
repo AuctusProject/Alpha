@@ -86,7 +86,7 @@ namespace Api.Controllers
             return Ok(new { id = portfolio.Id });
         }
 
-        [Route("disbleportfolio")]
+        [Route("disableportfolio")]
         [HttpPost]
         [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -141,7 +141,7 @@ namespace Api.Controllers
             return Ok();
         }
 
-        [Route("projection")]
+        [Route("projections")]
         [HttpGet]
         [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -197,7 +197,7 @@ namespace Api.Controllers
 
         [Route("advisors")]
         [HttpGet]
-        //[Authorize("Bearer")]
+        [Authorize("Bearer")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult ListarAdvisors()
@@ -216,7 +216,7 @@ namespace Api.Controllers
 
         [Route("advisors/{advisorId}/portfolios")]
         [HttpGet]
-        //[Authorize("Bearer")]
+        [Authorize("Bearer")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult ListarPortfolios([FromRoute]int advisorId)

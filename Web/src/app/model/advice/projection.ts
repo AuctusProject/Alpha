@@ -1,14 +1,13 @@
-import { Distribution } from "./distribution";
+import { Result } from "./result";
 
 export class Projection {
-  id: number;
-  date: Date;
-  projectionValue: number;
-  optimisticProjection: number;
-  pessimisticProjection: number;
-  distribution: Distribution[];
+  risk: number;
+  projectionPercent: number;
+  optimisticPercent: number;
+  pessimisticPercent: number;
+  current: Result;
+  purchased: Result;
 
   constructor(){
-    this.distribution = [];
   }
 }

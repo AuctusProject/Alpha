@@ -8,6 +8,7 @@ import { AdvisorsComponent } from './components/advice/advisors/advisors.compone
 import { AdvisorDetailComponent } from './components/advice/advisor-detail/advisor-detail.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { HomeComponent } from "./components/home/home.component";
+import { DashboardComponent } from "./components/dashboard/dashboard/dashboard.component";
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -17,7 +18,9 @@ const routes: Routes = [
     { path: 'try', component: WizardComponent },
     { path: 'confirm', component: ConfirmEmailComponent },
     { path: 'advisors', component: AdvisorsComponent },
-    { path: 'advisor/:id', component: AdvisorDetailComponent }];
+    { path: 'advisor/:id', component: AdvisorDetailComponent },
+    { path: 'dashboard', component: DashboardComponent }
+];
 
 @NgModule({
     exports: [RouterModule],

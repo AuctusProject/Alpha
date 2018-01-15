@@ -34,6 +34,9 @@ import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.
 import { WizardHeaderComponent } from './components/register/wizard-header/wizard-header.component';
 import { HomeComponent } from './components/home/home.component';
 import { PaddingDirective } from './directives/padding.directive';
+import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
+import { GoalHeaderComponent } from './components/dashboard/goal-header/goal-header.component';
+import { ProjectionTabComponent } from './components/dashboard/projection-tab/projection-tab.component';
 
 
 @NgModule({
@@ -55,7 +58,10 @@ import { PaddingDirective } from './directives/padding.directive';
     ConfirmEmailComponent,
     WizardHeaderComponent,
     HomeComponent,
-    PaddingDirective
+    PaddingDirective,
+    DashboardComponent,
+    GoalHeaderComponent,
+    ProjectionTabComponent
   ],
   imports: [
     BrowserModule,
