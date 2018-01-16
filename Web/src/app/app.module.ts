@@ -39,6 +39,9 @@ import { GoalHeaderComponent } from './components/dashboard/goal-header/goal-hea
 import { ProjectionTabComponent } from './components/dashboard/projection-tab/projection-tab.component';
 import { GoalOptionComponent } from './components/register/goal-step/goal-option/goal-option.component';
 import { WindowRefService } from './services/window-ref.service';
+import { ActionBarComponent } from './components/dashboard/action-bar/action-bar.component';
+import { PortfolioTabComponent } from './components/dashboard/portfolio-tab/portfolio-tab.component';
+import { HistoricalTabComponent } from './components/dashboard/historical-tab/historical-tab.component';
 
 
 @NgModule({
@@ -64,7 +67,10 @@ import { WindowRefService } from './services/window-ref.service';
     DashboardComponent,
     GoalHeaderComponent,
     ProjectionTabComponent,
-    GoalOptionComponent
+    GoalOptionComponent,
+    ActionBarComponent,
+    PortfolioTabComponent,
+    HistoricalTabComponent
   ],
   imports: [
     BrowserModule,

@@ -6,7 +6,7 @@ export class Goal {
   targetAmount: number;
   startingAmount: number;
   monthlyContribution: number;
-  timeFrame: number;
+  timeframe: number;
   risk: number;
   goalOption: GoalOption;
   

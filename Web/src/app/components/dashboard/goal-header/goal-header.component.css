@@ -1,0 +1,20 @@
+.goal-header {
+  background-color: white;
+  padding: 60px 72px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.goal-item {
+  text-align: center;
+  line-height: 20px;
+}
+
+.goal-item-value {
+  font-size: 16px;
+  color: #4a90e2;
+}
+
+.goal-item-description {
+  font-size: 12px;
+  color: #4a4a4a;
+}
