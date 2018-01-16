@@ -34,7 +34,7 @@ namespace Auctus.DataAccess.Advice
         private const string SELECT_LIST_BY_ADVISOR = @"SELECT p.*, j.* FROM 
                                                       Portfolio p  
                                                       INNER JOIN Projection j ON p.ProjectionId = j.Id
-                                                      WHERE  p.AdvisorId = @AdvisorId AND p.Disabled IS NULL";
+                                                      WHERE p.Disabled IS NULL AND ({0})";
 
         private const string LIST_ALL =
             @"SELECT port.*, proj.*, dist.* FROM Portfolio port 
@@ -57,11 +57,19 @@ namespace Auctus.DataAccess.Advice
             return Query<Portfolio>(SELECT_VALID_BY_OWNER, parameters).SingleOrDefault();
         }
 
-        public List<Portfolio> ListByAdvisor(int advisorId)
+        public List<Portfolio> ListByAdvisor(IEnumerable<int> advisorsId)
         {
+            List<string> restrictions = new List<string>();
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("AdvisorId", advisorId, DbType.Int32);
-            return Query<Portfolio, Projection, Portfolio>(SELECT_LIST_BY_ADVISOR,
+            for (int i = 0; i < advisorsId.Count(); ++i)
+            {
+                var parameterName = string.Format("advisor{0}", i);
+                restrictions.Add(string.Format("p.AdvisorId={0}", parameterName));
+                parameters.Add(parameterName, advisorsId.ElementAt(i), DbType.Int32);
+            }
+
+            return Query<Portfolio, Projection, Portfolio>(
+                string.Format(SELECT_LIST_BY_ADVISOR, string.Join(" OR ", restrictions)),
                             (port, proj) =>
                             {
                                 port.Projection = proj;

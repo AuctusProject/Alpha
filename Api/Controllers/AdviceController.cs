@@ -198,13 +198,12 @@ namespace Api.Controllers
         [Route("advisors")]
         [HttpGet]
         [Authorize("Bearer")]
-        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult ListarAdvisors()
         {
             try
             {
-                var advisors = AdviceService.ListAdvisors();
+                var advisors = AdviceService.ListAdvisors(GetUser());
                 return Ok(advisors);
             }
             catch (ArgumentException ex)

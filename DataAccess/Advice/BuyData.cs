@@ -18,6 +18,11 @@ namespace Auctus.DataAccess.Advice
                                                  INNER JOIN Goal g ON g.Id = b.GoalId 
                                                  WHERE g.UserId = @UserId AND b.ExpirationDate > @Date";
 
+        private const string SELECT_PURCHASE_QTY = @"SELECT b.AdvisorId, COUNT(b.Id) Qty FROM 
+                                                     Buy b 
+                                                     WHERE {0}
+                                                     GROUP BY b.AdvisorId";
+
         private const string SELECT_PURCHASE_WITH_PORTFOLIO = @"SELECT b.*, g.*, e.*, p.* FROM 
                                                                 Buy b 
                                                                 INNER JOIN Goal g ON g.Id = b.GoalId 
@@ -78,6 +83,25 @@ namespace Auctus.DataAccess.Advice
                                 buy.Projection.Portfolio = portfolio;
                                 return buy;
                             }, "Id,Id,Id,Id,Id", parameters).ToList();
+        }
+
+        public Dictionary<int, int> ListAdvisorsPurchases(IEnumerable<int> advisorIds)
+        {
+            List<string> advisorRestrictions = new List<string>();
+            DynamicParameters parameters = new DynamicParameters();
+            for (int i = 0; i < advisorIds.Count(); ++i)
+            {
+                var parameterName = string.Format("advisor{0}", i);
+                advisorRestrictions.Add(string.Format("b.AdvisorId={0}", parameterName));
+                parameters.Add(parameterName, advisorIds.ElementAt(i), DbType.Int32);
+            }
+            var advisorsQty = Query(string.Format(SELECT_PURCHASE_QTY, string.Join(" OR ", advisorRestrictions)), parameters);
+
+            Dictionary<int, int> result = new Dictionary<int, int>();
+            foreach (IDictionary<string, object> pair in advisorsQty)
+                result.Add(Convert.ToInt32(pair["AdvisorId"]), Convert.ToInt32(pair["Qty"]));
+
+            return result;
         }
     }
 }

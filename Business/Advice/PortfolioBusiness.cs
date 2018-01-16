@@ -69,7 +69,7 @@ namespace Auctus.Business.Advice
             if (portfolio == null)
                 throw new ArgumentException("Invalid portfolio.");
 
-            if (!Data.ListByAdvisor(portfolio.AdvisorId).Any(c => c.Id != portfolio.Id))
+            if (!List(portfolio.AdvisorId).Any(c => c.Id != portfolio.Id))
                 throw new ArgumentException("Unique advisor's portfolio cannot be disabled.");
 
             portfolio.Disabled = DateTime.UtcNow;
@@ -84,7 +84,7 @@ namespace Auctus.Business.Advice
                 portfolios = MemoryCache.Get<List<Portfolio>>(defaultPortfoliosKey);
             if (portfolios == null)
             {
-                portfolios = Data.ListByAdvisor(advisorId);
+                portfolios = List(advisorId);
                 if (advisorId == AdvisorBusiness.DefaultAdvisorId)
                     MemoryCache.Set<List<Portfolio>>(defaultPortfoliosKey, portfolios);
             }
@@ -129,8 +129,19 @@ namespace Auctus.Business.Advice
 
         public List<Portfolio> List(int advisorId)
         {
-            var portfolio = Data.ListByAdvisor(advisorId);
+            return List(new int[] { advisorId }).Single().Value;
+        }
+
+        public List<Portfolio> ListComplete(int advisorId)
+        {
+            var portfolio = List(advisorId);
             return FillPortfoliosDistribution(portfolio);
+        }
+
+        public Dictionary<int, List<Portfolio>> List(IEnumerable<int> advisorId)
+        {
+            var portfolio = Data.ListByAdvisor(advisorId);
+            return portfolio.GroupBy(c => c.AdvisorId, c => c, (k, v) => new KeyValuePair<int, List<Portfolio>>(k, v.ToList())).ToDictionary(c => c.Key, c => c.Value);
         }
 
         private List<Portfolio> FillPortfoliosDistribution(List<Portfolio> portfolio)
