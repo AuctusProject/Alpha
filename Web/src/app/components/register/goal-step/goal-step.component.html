@@ -1,23 +1,21 @@
 <form #goalForm="ngForm" (ngSubmit)="onSubmit()">
-    <div fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="column" fxLayoutGap="20px" (window:resize)="onResize($event)">
         <div fxLayout="row">
-            <span fxFlex fxLayoutAlign="center center">What are you saving for?</span>
+            <h2 class="bold" fxFlex fxLayoutAlign="center center">What are you saving for?</h2>
         </div>
 
-        <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-            <mat-button-toggle-group [(ngModel)]="model.goalOption.id" (change)="onOptionChange($event)" name="GoalOption" ngDefaultControl
-                required>
-                <mat-button-toggle *ngFor="let option of options" [value]="option.id">{{option.description}}</mat-button-toggle>
-            </mat-button-toggle-group>
-            <div fxLayout="row" fxLayoutGap="20px">
-                <mat-form-field hintLabel="Optional">
-                    <input matInput [inputFocus]="true" placeholder="Target amount" name="TargetAmount" [(ngModel)]="model.targetAmount">
-                </mat-form-field>
-            </div>
-        </div>
+        <mat-grid-list [style.width]="width" [style.margin]="'0 auto'" [cols]="cols" rowHeight="106px" gutterSize="10px">
+            <mat-grid-tile
+                *ngFor="let option of options"
+                [colspan]="1"
+                [rowspan]="1"
+                [style.width]="107">
+              <goal-option [value]="option.id" [label]="option.description" (click)="onOptionChange(option.id)"></goal-option>
+            </mat-grid-tile>
+          </mat-grid-list>
 
-        <div fxLayout="row">
-            <button mat-button type="submit" [disabled]="!goalForm.form.valid">Next</button>
+        <div fxLayout="row" fxLayoutAlign="end center">
+            <button class="next" mat-button type="submit" [disabled]="!selected"></button>
         </div>
     </div>
 </form>

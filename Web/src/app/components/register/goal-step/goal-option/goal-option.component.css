@@ -1,0 +1,30 @@
+.goal-option{
+    background: white;
+    border: solid 1px #ebeaea;
+    max-width: 107px;
+    width: 107px;
+    height: 105px;
+    cursor: pointer;
+}
+
+.goal-option span{
+    color: #4a4a4a;
+    font-size: 11px;
+}
+
+.goal-option:hover{
+    border-color: #a1a0a0 !important;
+}
+
+.goal-option:active,
+.goal-option.active,
+.goal-option:focus{
+    outline: 0;
+    border-color: #4a90e2 !important;
+}
+
+.goal-option
+
+.goal-option img{
+    object-fit: none;
+}

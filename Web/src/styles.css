@@ -136,11 +136,11 @@ button.is-loading .btn-spinner {
 
 /* angular material stepper */
 
-.mat-stepper-horizontal-line{
+.register-stepper .mat-stepper-horizontal-line{
     display: none !important;
 }
 
-.mat-step-header .mat-step-icon-not-touched{
+.register-stepper .mat-step-header .mat-step-icon-not-touched{
     width: 40px !important;
     height: 40px !important;
     border-radius: 100px !important;
@@ -149,7 +149,7 @@ button.is-loading .btn-spinner {
     color: #ebeaea !important;
   }
 
-  .mat-step-header[ng-reflect-selected="true"] .mat-step-icon{
+.register-stepper .mat-step-header[ng-reflect-selected="true"] .mat-step-icon{
     width: 40px !important;
     height: 40px !important;
     border-radius: 100px !important;
@@ -158,7 +158,7 @@ button.is-loading .btn-spinner {
     color: white !important;
   }
 
-  .mat-step-header[ng-reflect-selected="false"] .mat-step-icon{
+.register-stepper .mat-step-header[ng-reflect-selected="false"] .mat-step-icon{
     width: 40px !important;
     height: 40px !important;
     border-radius: 100px !important;
@@ -167,11 +167,15 @@ button.is-loading .btn-spinner {
     color: #4a90e2 !important;
   }
 
-  body, p, span {
-    font-family: 'HelveticaNeue', 'Helvetica', sans-serif;
-  }
+.register-stepper .mat-horizontal-stepper-header-container{
+    margin: 0 auto !important;
+}
 
-  h1 {
+body, p, span {
+    font-family: 'HelveticaNeue', 'Helvetica', sans-serif;
+}
+
+h1 {
     font-family: 'HelveticaNeue', 'Helvetica', sans-serif;
     font-size: 56px;
     font-weight: bold;
@@ -180,13 +184,22 @@ button.is-loading .btn-spinner {
     line-height: 1.11;
     letter-spacing: normal;
     color: #4a4a4a;
-  }
+}
 
-  h1.bold {
+h1.bold {
     font-family: 'HelveticaNeueBold' !important;
-  }
+}
 
-  h3 {
+h2 {
+    font-family: 'HelveticaNeue';
+    font-size: 20px;
+    color: #4a4a4a;
+}
+h2.bold {
+    font-family: 'HelveticaNeueBold'
+}
+
+h3 {
     font-family: 'HelveticaNeue';
     font-size: 14px;
     font-weight: normal;
@@ -195,32 +208,33 @@ button.is-loading .btn-spinner {
     line-height: 1.71;
     letter-spacing: normal;
     color: #55606e;
-  }
+}
 
-  button {
-      font-size: 14px;
-  }
+button {
+    font-size: 14px;
+    font-weight: 500;
+}
 
-  .primary-button {
+.primary-button {
     border-radius: 100px;
     border: solid 1px #3c91e6;
     background: white;
     padding: 12px 35px;
     color: #3c91e6;
     cursor: pointer;
-  }
-  .primary-button.bold {
+}
+.primary-button.bold {
     font-family: 'HelveticaNeueBold';
-  }
+}
 
-  button.no-border {
+button.no-border {
     background: white;
     padding: 10px 35px;
     color: #3c91e6;
     cursor: pointer;
     border: 0px;
-  }
+}
 
-  button.no-border.bold{
+button.no-border.bold{
     font-family: 'HelveticaNeueBold';
-  }
+}

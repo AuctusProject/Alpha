@@ -37,6 +37,8 @@ import { PaddingDirective } from './directives/padding.directive';
 import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
 import { GoalHeaderComponent } from './components/dashboard/goal-header/goal-header.component';
 import { ProjectionTabComponent } from './components/dashboard/projection-tab/projection-tab.component';
+import { GoalOptionComponent } from './components/register/goal-step/goal-option/goal-option.component';
+import { WindowRefService } from './services/window-ref.service';
 
 
 @NgModule({
@@ -61,7 +63,8 @@ import { ProjectionTabComponent } from './components/dashboard/projection-tab/pr
     PaddingDirective,
     DashboardComponent,
     GoalHeaderComponent,
-    ProjectionTabComponent
+    ProjectionTabComponent,
+    GoalOptionComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +85,7 @@ import { ProjectionTabComponent } from './components/dashboard/projection-tab/pr
     }),
     SimpleNotificationsModule.forRoot()
   ],
-  providers: [LoginService, HttpService, AccountService, AdviceService],
+  providers: [LoginService, HttpService, AccountService, AdviceService, WindowRefService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

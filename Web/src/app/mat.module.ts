@@ -6,6 +6,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSliderModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material';
 import { MatIconModule } from '@angular/material';
+import { MatGridListModule } from '@angular/material';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { MatIconModule } from '@angular/material';
     MatInputModule, 
     MatSliderModule, 
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatGridListModule
   ],
   exports: [
     MatButtonModule, 
@@ -29,7 +31,8 @@ import { MatIconModule } from '@angular/material';
     MatInputModule, 
     MatSliderModule, 
     MatToolbarModule,
-    MatIconModule
+    MatIconModule,
+    MatGridListModule
   ],
   declarations: []
 })

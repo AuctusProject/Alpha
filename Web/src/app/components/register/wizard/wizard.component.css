@@ -4,3 +4,7 @@
   border-radius: 100px !important;
   border: solid 1px #ebeaea !important;
 }
+
+.mat-horizontal-stepper-header-container{
+  margin: 0 auto !important;
+}
