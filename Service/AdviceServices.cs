@@ -36,7 +36,7 @@ namespace Auctus.Service
 
         public List<Portfolio> ListPortfolio(int advisorId)
         {
-            return PortfolioBusiness.List(advisorId);
+            return PortfolioBusiness.ListComplete(advisorId);
         }
 
         public void DisablePortfolio(string email, int portfolioId)
@@ -75,9 +75,9 @@ namespace Auctus.Service
             return DistributionBusiness.ListPortfolioDistribution(email);
         }
 
-        public IEnumerable<Advisor> ListAdvisors()
+        public IEnumerable<Model.Advisor> ListAdvisors(string email)
         {
-            return AdvisorBusiness.ListAvailable();
+            return AdvisorBusiness.ListAvailable(email);
         }
     }
 }

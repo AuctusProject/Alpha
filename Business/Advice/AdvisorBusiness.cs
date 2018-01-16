@@ -5,7 +5,9 @@ using Auctus.Util;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Auctus.Business.Advice
 {
@@ -49,9 +51,27 @@ namespace Auctus.Business.Advice
             return advisor;
         }
 
-        public IEnumerable<Advisor> ListAvailable()
+        public IEnumerable<Model.Advisor> ListAvailable(string email)
         {
-            return Data.ListAvailable();
+            var user = UserBusiness.GetValidUser(email);
+            var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+            var advisors = Data.ListAvailable();
+            var advisorsQty = Task.Factory.StartNew(() => BuyBusiness.ListAdvisorsPurchases(advisors.Select(c => c.Id)));
+            var portfolios = Task.Factory.StartNew(() => PortfolioBusiness.List(advisors.Select(c => c.Id)));
+
+            Task.WaitAll(purchases, advisorsQty, portfolios);
+            
+            return advisors.Select(c => new Model.Advisor()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Detail.Description,
+                Period = c.Detail.Period,
+                Price = c.Detail.Price,
+                Purchased = purchases.Result.Any(x => x.AdvisorId == c.Id),
+                PurchaseQuantity = advisorsQty.Result[c.Id],
+                RiskProjection = portfolios.Result[c.Id].Select(x => new KeyValuePair<int, double>(x.Risk, x.Projection.ProjectionValue)).ToDictionary(x => x.Key, x => x.Value)
+            });
         }
     }
 }
