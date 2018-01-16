@@ -13,7 +13,7 @@ namespace Auctus.Service
     {
         public AdviceServices(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
-        public Advisor CreateAdvisor(string email, string name, string description, int period, double price)
+        public Auctus.DomainObjects.Advice.Advisor CreateAdvisor(string email, string name, string description, int period, double price)
         {
             return AdvisorBusiness.Create(email, name, description, period, price);
         }

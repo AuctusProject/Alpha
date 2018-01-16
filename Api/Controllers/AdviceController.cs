@@ -29,7 +29,7 @@ namespace Api.Controllers
             if (advisorRequest == null)
                 return BadRequest();
 
-            Advisor advisor;
+            Auctus.DomainObjects.Advice.Advisor advisor;
             try
             {
                 advisor = AdviceService.CreateAdvisor(GetUser(), advisorRequest.Name, advisorRequest.Description, advisorRequest.Period, advisorRequest.Price);
