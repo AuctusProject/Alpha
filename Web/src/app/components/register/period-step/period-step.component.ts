@@ -20,4 +20,8 @@ export class PeriodStepComponent implements OnInit {
   onSubmit(){
     this.onSubmitted.emit(true);
   }
+
+  onChangeSlider(){
+    console.log(this.model);
+  }
 }

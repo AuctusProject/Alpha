@@ -252,6 +252,17 @@ h3 {
   color: #55606e;
 }
 
+
+h4 {
+  font-family: 'HelveticaNeue';
+  font-size: 10px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  letter-spacing: normal;
+  color: #4a4a4a;
+}
+
 button {
   font-size: 14px;
   font-weight: 500;
@@ -281,3 +292,23 @@ button.no-border {
   button.no-border.bold {
     font-family: 'HelveticaNeueBold';
   }
+
+  button.next{
+    border-radius: 100px;
+    background-color: #4a90e2;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+}
+
+button.next:disabled,
+button.next[disabled]{
+    opacity: 0.5;
+    background-color: rgb(172, 171, 171);
+}
+
+.wizard-buttons
+{
+    margin-right: 25%;
+    margin-top: 30px;
+}

@@ -11,6 +11,8 @@ export class Goal {
   goalOption: GoalOption;
   
   constructor() {
+    this.startingAmount = 10000;
+    this.monthlyContribution = 300;
     this.goalOption = new GoalOption();
   }
 }

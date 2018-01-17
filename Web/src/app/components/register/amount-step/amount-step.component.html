@@ -1,24 +1,34 @@
-<form #amountForm="ngForm" (ngSubmit)="onSubmit()">
+<form #amountForm="ngForm" (ngSubmit)="onSubmit()" class="amount-step">
   <div fxLayout="column" fxLayoutGap="20px">
+
     <div fxLayout="row">
-      <span fxFlex fxLayoutAlign="center center">How much can you invest?</span>
+      <h2 class="bold" fxFlex fxLayoutAlign="center center">Tell us about your goals</h2>
     </div>
 
-    <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+    <div fxLayout="row">
+      <h2 fxFlex fxLayoutAlign="center center">How much can you invest?</h2>
+    </div>
+
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
       <div fxLayout="row" fxLayoutGap="20px">
-        <mat-form-field hintLabel="Optional">
-          <input matInput placeholder="Starting amount" [inputFocus]="true" name="StartingAmount" [(ngModel)]="model.startingAmount" required>
+        <mat-form-field>
+          <input matInput placeholder="Starting amount" [inputFocus]="true" name="StartingAmount" [(ngModel)]="model.startingAmount"
+            required>
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="20px">
-        <mat-form-field hintLabel="Optional">
+        <mat-form-field>
           <input matInput placeholder="Monthly contribution" name="MonthlyContribution" [(ngModel)]="model.monthlyContribution" required>
         </mat-form-field>
       </div>
     </div>
 
     <div fxLayout="row">
-      <button mat-button type="submit" [disabled]="!amountForm.form.valid">Next</button>
+      <h4 fxFlex fxLayoutAlign="center center">Monthly contributions can be changed at any time</h4>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center" class="wizard-buttons">
+        <button class="next" mat-button type="submit" [disabled]="!amountForm.form.valid"></button>
     </div>
   </div>
 </form>

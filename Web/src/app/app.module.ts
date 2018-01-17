@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +18,7 @@ import { GoalStepComponent } from './components/register/goal-step/goal-step.com
 import { PeriodStepComponent } from './components/register/period-step/period-step.component';
 import { AmountStepComponent } from './components/register/amount-step/amount-step.component';
 import { RiskStepComponent } from './components/register/risk-step/risk-step.component';
-import { MatModule } from './/mat.module';
+import { MatModule } from './mat.module';
 
 import { AppComponent } from './app.component';
 import { AccountService } from './services/account.service';
@@ -43,6 +43,7 @@ import { ActionBarComponent } from './components/dashboard/action-bar/action-bar
 import { PortfolioTabComponent } from './components/dashboard/portfolio-tab/portfolio-tab.component';
 import { HistoricalTabComponent } from './components/dashboard/historical-tab/historical-tab.component';
 
+import 'hammerjs';
 
 @NgModule({
   declarations: [
@@ -73,8 +74,8 @@ import { HistoricalTabComponent } from './components/dashboard/historical-tab/hi
     HistoricalTabComponent
   ],
   imports: [
-    BrowserModule,
     BrowserAnimationsModule,
+    BrowserModule,
     MatModule,
     FormsModule,
     ReactiveFormsModule,
