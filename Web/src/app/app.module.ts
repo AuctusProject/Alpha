@@ -2,6 +2,7 @@ import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser'
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChartsModule } from 'ng2-charts';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
@@ -83,6 +84,7 @@ import 'hammerjs';
     HttpClientModule,
     AppRoutingModule,
     FlexLayoutModule,
+    ChartsModule,
     Angular2PromiseButtonModule
       .forRoot({
         spinnerTpl: '<span class="btn-spinner"></span>',
