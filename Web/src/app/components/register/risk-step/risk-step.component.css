@@ -1,0 +1,50 @@
+/deep/ .risk-step .mat-slider{
+    width: 500px !important;
+}
+
+/deep/ .risk-step .mat-accent .mat-slider-thumb{
+    top: -15px !important;
+    width: 30px !important;
+    height: 30px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 4px 0 rgba(140, 140, 140, 0.3), 0 -2px 4px 0 rgba(140, 140, 140, 0.2);
+}
+
+/deep/ .risk-step .mat-slider-horizontal .mat-slider-wrapper{
+    height: 8px !important;
+}
+
+/deep/ .risk-step .mat-slider-horizontal .mat-slider-track-wrapper{
+    height: 8px !important;
+}
+
+/deep/ .risk-step .mat-slider-horizontal .mat-slider-track-fill{
+    height: 8px !important;
+}
+
+/deep/ .risk-step .mat-slider-horizontal .mat-slider-ticks{
+    height: 8px !important;
+}
+
+/deep/ .risk-step .mat-slider-horizontal .mat-slider-ticks-container{
+    height: 8px !important;
+}
+
+/deep/ .risk-step .mat-slider-horizontal .mat-slider-track-background{
+    height: 8px !important;
+    border-radius: 100px !important;
+}
+
+/deep/ .risk-step .mat-slider-horizontal .mat-slider-track-fill{
+    height: 8px !important;
+    border-radius: 100px !important;
+    background: #3c91e6;
+}
+
+/deep/ .risk-step .mat-accent .mat-slider-thumb-label{
+    background: #3c91e6;
+}
+
+/deep/ .risk-step span.mat-slider-thumb-label-text{
+    color: white !important;
+}

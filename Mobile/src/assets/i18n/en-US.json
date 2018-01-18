@@ -1,0 +1,15 @@
+{
+  "CANCEL": "Cancel",
+  "ERROR": "Error",
+  "EMAIL": "E-mail",
+  "INFO": "Info",
+  "INVALID_EMAIL": "Invalid email",
+  "LOGIN": "Log in",
+  "LOGIN_PAGE_TITLE":"Inform your crendentials to login",
+  "NO": "No",
+  "OK": "Ok",
+  "REQUIRED_FIELD": "Required field",
+  "PASSWORD": "Password",
+  "SYSTEM_ERROR":"System error. Try again",
+  "YES": "Yes"
+}

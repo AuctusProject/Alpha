@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-navbar>
+    <img alt="logo" height="40" src="assets/imgs/logo.png">
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-row padding>
+    <ion-col>
+      <div text-center>
+        {{"LOGIN_PAGE_TITLE" | translate}}
+      </div>
+    </ion-col>
+  </ion-row>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label floating>
+        {{"EMAIL" | translate}}
+      </ion-label>
+      <ion-input type="email" formControlName="email" [(ngModel)]="login.email" required>
+      </ion-input>
+    </ion-item>
+    <field-error [control]="loginForm.controls.email" [isSubmitted]="isSubmittedForm"></field-error>
+    <ion-item>
+      <ion-label floating>
+        {{"PASSWORD" | translate}}
+      </ion-label>
+      <ion-input type="password" formControlName="password" [(ngModel)]="login.password">
+      </ion-input>
+    </ion-item>
+    <field-error [control]="loginForm.controls.password" [isSubmitted]="isSubmittedForm"></field-error>
+    <ion-item>
+      <button type="submit" ion-button color="default" round large full icon-end>
+        {{"LOGIN" | translate}}
+      </button>
+    </ion-item>
+  </form>
+</ion-content>

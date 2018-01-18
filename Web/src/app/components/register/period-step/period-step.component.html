@@ -1,4 +1,4 @@
-<form #periodForm="ngForm" (ngSubmit)="onSubmit()">
+<form class="period-step" #periodForm="ngForm" (ngSubmit)="onSubmit()">
   <div fxLayout="column" fxLayoutGap="20px">
 
     <div fxLayout="row">
@@ -9,12 +9,13 @@
       <h2 fxFlex fxLayoutAlign="center center">How many years do you plan to invest for?</h2>
     </div>
 
-    <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-      <div fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="column" fxLayoutMargin fxLayoutAlign="space-evenly center">
+      <div fxLayout="column" fxLayoutAlign="center center">
         <mat-slider class="example-margin" [invert]="false" [max]="50" [min]="0" [step]="1" [thumb-label]="true" [(ngModel)]="model.timeframe" [vertical]="false" name="timeframe" (change)="onChangeSlider()">
         </mat-slider>
-        <mat-form-field>
-          <input matInput placeholder="Years" [inputFocus]="true" name="Years" [(ngModel)]="model.timeframe" required>
+        <h4 fxFlex [style.color]="'#4a90e2'">The longer the better</h4>
+        <mat-form-field class="period-input">
+          <input matInput [inputFocus]="true" name="Years" [(ngModel)]="model.timeframe" required>
         </mat-form-field>
       </div>
     </div>
