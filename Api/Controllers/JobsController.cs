@@ -48,7 +48,7 @@ namespace Api.Controllers
                 try
                 {
                     Logger.LogTrace($"Job {action.Method.Name} started.");
-                    AssetServices.UpdateAllAssetsValues();
+                    action();
                     Logger.LogTrace($"Job {action.Method.Name} ended.");
                 }
                 catch (Exception e)

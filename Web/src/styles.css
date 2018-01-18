@@ -20,6 +20,16 @@
   url('/assets/fonts/HelveticaNeueRegular.svg#svgFontName') format('svg'); /* Legacy iOS */
 }
 
+@font-face {
+  font-family: "HelveticaNeueMedium";
+  src: url('/assets/fonts/HelveticaNeueMedium.eot'); /* IE9 Compat Modes */
+  src: url('/assets/fonts/HelveticaNeueMedium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/assets/fonts/HelveticaNeueMedium.woff2') format('woff2'), /* Super Modern Browsers */
+  url("/assets/fonts/HelveticaNeueMedium.woff") format("woff"), /* Pretty Modern Browsers */
+  url("/assets/fonts/HelveticaNeueMedium.ttf") format("truetype"), /* Safari, Android, iOS */ 
+  url('/assets/fonts/HelveticaNeueMedium.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
 @-webkit-keyframes three-quarters {
   0% {
     -webkit-transform: rotate(0deg);
@@ -167,45 +177,21 @@ button.is-loading .btn-spinner {
   margin: 0 auto !important;
 }
 
-.action-bar {
-  border-bottom: none;
+.dashboard-tab-title {
+  font-family: 'HelveticaNeueMedium';
+  font-size: 24px;
+  font-weight: 500;
+  color: #aaaaaa;
 }
 
-  .action-bar .mat-tab-links {
-    background-color: #e9eff4 !important;
-    padding: 0px 72px !important;
-    border-bottom: none;
-  }
-
-  .action-bar .mat-tab-link {
-    height: 42px !important;
-    text-align: left !important;
-    justify-content: unset !important;
-    padding: 0;
-    font-size: 12px;
-    color: #4a4a4a;
-    opacity: unset !important;
-  }
-
-  .action-bar .create-auctus.mat-tab-link {
-    text-align: right !important;
-    min-width:100px;
-  }
-
-  .action-bar .mat-tab-link-active {
-    color: #0243b7 !important;
-    font-weight: 500;
-  }
-
-  .action-bar .mat-tab-link:focus {
-    background-color: inherit !important;
-  }
-
-
-  .action-bar .mat-tab-body-wrapper {
-    padding: 0px 72px !important;
-  }
-
+.dashboard-tab-subtitle {
+  font-family: 'HelveticaNeue';
+  font-size: 14px;
+  text-align: left;
+  margin-top:8px;
+  margin-bottom:60px;
+  color: #4a4a4a;
+}
 
 .pull-right {
   float: right;

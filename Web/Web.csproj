@@ -29,6 +29,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="src\app\model\account\forgotPasswordReset.ts" />
     <TypeScriptCompile Include="src\app\model\account\forgotPasswordEmail.ts" />
+    <TypeScriptCompile Include="src\app\model\account\loginResult.ts" />
     <TypeScriptCompile Include="src\app\model\account\login.ts" />
   </ItemGroup>
 </Project>
