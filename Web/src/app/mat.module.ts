@@ -6,7 +6,8 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatSliderModule } from '@angular/material';
 import { MatToolbarModule } from '@angular/material';
 import { MatIconModule } from '@angular/material';
-import { MatGridListModule } from '@angular/material';
+import { MatGridListModule, } from '@angular/material';
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { MatGridListModule } from '@angular/material';
     MatSliderModule, 
     MatToolbarModule,
     MatIconModule,
-    MatGridListModule
+    MatGridListModule,
+    MatTabsModule
   ],
   exports: [
     MatButtonModule, 
@@ -32,7 +34,8 @@ import { MatGridListModule } from '@angular/material';
     MatSliderModule, 
     MatToolbarModule,
     MatIconModule,
-    MatGridListModule
+    MatGridListModule,
+    MatTabsModule
   ],
   declarations: []
 })

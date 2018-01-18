@@ -1,7 +1,8 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChartsModule } from 'ng2-charts';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
@@ -18,7 +19,7 @@ import { GoalStepComponent } from './components/register/goal-step/goal-step.com
 import { PeriodStepComponent } from './components/register/period-step/period-step.component';
 import { AmountStepComponent } from './components/register/amount-step/amount-step.component';
 import { RiskStepComponent } from './components/register/risk-step/risk-step.component';
-import { MatModule } from './/mat.module';
+import { MatModule } from './mat.module';
 
 import { AppComponent } from './app.component';
 import { AccountService } from './services/account.service';
@@ -39,7 +40,11 @@ import { GoalHeaderComponent } from './components/dashboard/goal-header/goal-hea
 import { ProjectionTabComponent } from './components/dashboard/projection-tab/projection-tab.component';
 import { GoalOptionComponent } from './components/register/goal-step/goal-option/goal-option.component';
 import { WindowRefService } from './services/window-ref.service';
+import { ActionBarComponent } from './components/dashboard/action-bar/action-bar.component';
+import { PortfolioTabComponent } from './components/dashboard/portfolio-tab/portfolio-tab.component';
+import { HistoricalTabComponent } from './components/dashboard/historical-tab/historical-tab.component';
 
+import 'hammerjs';
 
 @NgModule({
   declarations: [
@@ -64,11 +69,14 @@ import { WindowRefService } from './services/window-ref.service';
     DashboardComponent,
     GoalHeaderComponent,
     ProjectionTabComponent,
-    GoalOptionComponent
+    GoalOptionComponent,
+    ActionBarComponent,
+    PortfolioTabComponent,
+    HistoricalTabComponent
   ],
   imports: [
-    BrowserModule,
     BrowserAnimationsModule,
+    BrowserModule,
     MatModule,
     FormsModule,
     ReactiveFormsModule,
@@ -76,6 +84,7 @@ import { WindowRefService } from './services/window-ref.service';
     HttpClientModule,
     AppRoutingModule,
     FlexLayoutModule,
+    ChartsModule,
     Angular2PromiseButtonModule
       .forRoot({
         spinnerTpl: '<span class="btn-spinner"></span>',

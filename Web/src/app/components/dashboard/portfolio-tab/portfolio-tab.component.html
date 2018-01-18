@@ -1,0 +1,14 @@
+<p>
+  portfolio-tab works!
+</p>
+
+
+<div style="display: block">
+  <canvas baseChart
+          [data]="pieChartData"
+          [labels]="pieChartLabels"
+          [options]="pieChartOptions"
+          [chartType]="pieChartType"
+          (chartHover)="chartHovered($event)"
+          (chartClick)="chartClicked($event)"></canvas>
+</div>

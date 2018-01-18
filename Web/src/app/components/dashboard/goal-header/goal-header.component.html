@@ -1,4 +1,24 @@
-<p>
-  goal-header works!
-  <span *ngIf="model">{{model.targetAmount}}</span>
-</p>
+<mat-toolbar class="goal-header">
+  <span>
+    <img src="../../../../assets/logo.png" class="landing-logo">
+  </span>
+  <span class="spacer"></span>
+  <div *ngIf="model" class="menu" fxLayout="row" fxLayoutGap="60px" fxLayoutAlign="space-around center">
+    <div *ngIf="model.timeframe" class="goal-item">
+      <div class="goal-item-value">{{model.timeframe}} years</div>
+      <div class="goal-item-description">Timeframe</div>
+    </div>
+    <div class="goal-item">
+      <div class="goal-item-value">${{model.startingAmount}}</div>
+      <div class="goal-item-description">Starting</div>
+    </div>
+    <div class="goal-item">
+      <div class="goal-item-value">${{model.monthlyContribution}}</div>
+      <div class="goal-item-description">Monthly</div>
+    </div>
+    <div class="goal-item">
+      <div class="goal-item-value">{{model.risk}}/5</div>
+      <div class="goal-item-description">Risk</div>
+    </div>
+  </div>
+</mat-toolbar>

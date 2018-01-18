@@ -23,8 +23,8 @@ export class AdviceService {
     return this.httpService.get(this.listAdvisorsUrl);
   }
 
-  getAdvisorPortfolios(advisorId : number): Observable<Portfolio[]> {
-    return this.httpService.get(this.getAdvisorPortfoliosUrl + "/" + advisorId + "/portfolios");
+  getAdvisorDetails(advisorId : number): Observable<Portfolio[]> {
+    return this.httpService.get(this.getAdvisorPortfoliosUrl + "/" + advisorId + "/details");
   }
 
   getProjections(): Observable<Projections> {

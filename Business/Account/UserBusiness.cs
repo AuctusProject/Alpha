@@ -26,8 +26,8 @@ namespace Auctus.Business.Account
             EmailValidation(email);
 
             var user = Data.Get(email);
-            if (user.Password != Security.Encrypt(password))
-                throw new ArgumentException("Password are invalid.");
+            if (Security.Decrypt(user.Password) != (password))
+                throw new ArgumentException("Password is invalid.");
             else if (user.ConfirmationDate.HasValue)
                 MemoryCache.Set<User>(user.Email, user);
 

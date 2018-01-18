@@ -17,7 +17,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.adviceService.getProjections().subscribe(
       projections => {
-        this.projections = projections
+        if (projections!=undefined)
+          this.projections = projections
       }
     )
   }

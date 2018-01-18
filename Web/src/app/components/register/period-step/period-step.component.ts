@@ -15,9 +15,14 @@ export class PeriodStepComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.model.timeframe = 0;
   }
 
   onSubmit(){
     this.onSubmitted.emit(true);
+  }
+
+  onChangeSlider(){
+    console.log(this.model);
   }
 }

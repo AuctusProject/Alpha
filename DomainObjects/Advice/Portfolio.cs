@@ -26,5 +26,6 @@ namespace Auctus.DomainObjects.Advice
         public Advisor Advisor { get; set; }
         public Projection Projection { get; set; }
         public List<Projection> Projections { get; set; }
+        public List<PortfolioHistory> PortfolioHistory { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Auctus.Business.Advice
 {
@@ -69,7 +70,7 @@ namespace Auctus.Business.Advice
             if (portfolio == null)
                 throw new ArgumentException("Invalid portfolio.");
 
-            if (!Data.ListByAdvisor(portfolio.AdvisorId).Any(c => c.Id != portfolio.Id))
+            if (!List(portfolio.AdvisorId).Any(c => c.Id != portfolio.Id))
                 throw new ArgumentException("Unique advisor's portfolio cannot be disabled.");
 
             portfolio.Disabled = DateTime.UtcNow;
@@ -84,7 +85,7 @@ namespace Auctus.Business.Advice
                 portfolios = MemoryCache.Get<List<Portfolio>>(defaultPortfoliosKey);
             if (portfolios == null)
             {
-                portfolios = Data.ListByAdvisor(advisorId);
+                portfolios = List(advisorId);
                 if (advisorId == AdvisorBusiness.DefaultAdvisorId)
                     MemoryCache.Set<List<Portfolio>>(defaultPortfoliosKey, portfolios);
             }
@@ -129,8 +130,26 @@ namespace Auctus.Business.Advice
 
         public List<Portfolio> List(int advisorId)
         {
+            return List(new int[] { advisorId }).Single().Value;
+        }
+
+        public List<Portfolio> ListWithHistory(int advisorId)
+        {
+            var portfolios = List(advisorId);
+            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
+            foreach (Portfolio portfolio in portfolios)
+                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
+            
+            Task.WaitAll(histories.ToArray());
+
+            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+            return portfolios;
+        }
+
+        public Dictionary<int, List<Portfolio>> List(IEnumerable<int> advisorId)
+        {
             var portfolio = Data.ListByAdvisor(advisorId);
-            return FillPortfoliosDistribution(portfolio);
+            return portfolio.GroupBy(c => c.AdvisorId, c => c, (k, v) => new KeyValuePair<int, List<Portfolio>>(k, v.ToList())).ToDictionary(c => c.Key, c => c.Value);
         }
 
         private List<Portfolio> FillPortfoliosDistribution(List<Portfolio> portfolio)

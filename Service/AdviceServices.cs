@@ -13,7 +13,7 @@ namespace Auctus.Service
     {
         public AdviceServices(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
-        public Advisor CreateAdvisor(string email, string name, string description, int period, double price)
+        public DomainObjects.Advice.Advisor CreateAdvisor(string email, string name, string description, int period, double price)
         {
             return AdvisorBusiness.Create(email, name, description, period, price);
         }
@@ -34,9 +34,9 @@ namespace Auctus.Service
             return PortfolioBusiness.List(email);
         }
 
-        public List<Portfolio> ListPortfolio(int advisorId)
+        public Model.Advisor ListAdvisorDetails(string email, int advisorId)
         {
-            return PortfolioBusiness.List(advisorId);
+            return AdvisorBusiness.ListDetails(email, advisorId);
         }
 
         public void DisablePortfolio(string email, int portfolioId)
@@ -65,9 +65,9 @@ namespace Auctus.Service
             return ProjectionBusiness.GetProjections(email);
         }
 
-        public List<Model.PortfolioHistory> ListPortfolioHistory(string email)
+        public List<Model.PortfolioHistory> ListHistory(string email)
         {
-            return PortfolioHistoryBusiness.ListPortfolioHistory(email);
+            return PortfolioHistoryBusiness.ListHistory(email);
         }
 
         public List<Model.PortfolioDistribution> ListPortfolioDistribution(string email)
@@ -75,9 +75,9 @@ namespace Auctus.Service
             return DistributionBusiness.ListPortfolioDistribution(email);
         }
 
-        public IEnumerable<Advisor> ListAdvisors()
+        public IEnumerable<Model.Advisor> ListAdvisors(string email)
         {
-            return AdvisorBusiness.ListAvailable();
+            return AdvisorBusiness.ListAvailable(email);
         }
     }
 }

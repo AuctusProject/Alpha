@@ -9,6 +9,16 @@ import { AdvisorDetailComponent } from './components/advice/advisor-detail/advis
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { HomeComponent } from "./components/home/home.component";
 import { DashboardComponent } from "./components/dashboard/dashboard/dashboard.component";
+import { ProjectionTabComponent } from "./components/dashboard/projection-tab/projection-tab.component";
+import { PortfolioTabComponent } from "./components/dashboard/portfolio-tab/portfolio-tab.component";
+import { HistoricalTabComponent } from "./components/dashboard/historical-tab/historical-tab.component";
+
+export const DASHBOARD_TABS_ROUTES: Routes = [
+  { path: '', redirectTo: 'projection', pathMatch: 'full' },
+  { path: 'projection', component: ProjectionTabComponent },
+  { path: 'portfolio', component: PortfolioTabComponent },
+  { path: 'history', component: HistoricalTabComponent },
+];
 
 const routes: Routes = [
     { path: '', component: HomeComponent },
@@ -19,8 +29,10 @@ const routes: Routes = [
     { path: 'confirm', component: ConfirmEmailComponent },
     { path: 'advisors', component: AdvisorsComponent },
     { path: 'advisor/:id', component: AdvisorDetailComponent },
-    { path: 'dashboard', component: DashboardComponent }
+    { path: 'dashboard', component: DashboardComponent, children: DASHBOARD_TABS_ROUTES }
 ];
+
+
 
 @NgModule({
     exports: [RouterModule],
