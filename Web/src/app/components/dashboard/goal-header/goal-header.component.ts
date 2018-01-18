@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AdviceService } from "../../../services/advice.service";
 import { Goal } from "../../../model/goal";
 
 @Component({
@@ -10,7 +9,7 @@ import { Goal } from "../../../model/goal";
 export class GoalHeaderComponent implements OnInit {
   @Input() model: Goal;
 
-  constructor(private adviceService: AdviceService) {
+  constructor() {
     this.model = new Goal();
   }
 

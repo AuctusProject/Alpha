@@ -1,0 +1,19 @@
+<nav mat-tab-nav-bar class="action-bar" disableRipple="true">
+  <a mat-tab-link [routerLink]="['projection']"
+    [routerLinkActive]="['mat-tab-link-active']"
+     #rla="routerLinkActive"
+    [active]="rla.isActive">Projection</a>
+  <a mat-tab-link [routerLink]="['portfolio']"
+     [routerLinkActive]="['mat-tab-link-active']"
+     #rla="routerLinkActive"
+     [routerLinkActiveOptions]="{exact: true}"
+     [active]="rla.isActive">Portfolio</a>
+  <a mat-tab-link [routerLink]="['history']"
+     [routerLinkActive]="['mat-tab-link-active']"
+     #rla="routerLinkActive"
+     [active]="rla.isActive">History</a>
+  <a mat-tab-link [routerLink]="['./account/create']"
+     [routerLinkActive]="['mat-tab-link-active']"
+      #rla="routerLinkActive"
+     [active]="rla.isActive" class="pull-right create-auctus">Create Auctus account</a>
+</nav>

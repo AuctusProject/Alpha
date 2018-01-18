@@ -1,20 +1,20 @@
 <div fxLayout="column">
-<wizard-header fxFlex="100%"></wizard-header>
-<mat-horizontal-stepper class="register-stepper" fxFlex="100%" fxLayout="column" [linear]="isLinear" #stepper (selectionChange)="onStepChange()">
-    <mat-step>
-        <goal-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></goal-step>
-    </mat-step>
-    <mat-step>
-        <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
-    </mat-step>
-    <mat-step>
-        <amount-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></amount-step>
-    </mat-step>
-    <mat-step>
-        <risk-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></risk-step>
-    </mat-step>
-    <mat-step>
-        <register-step [(model)]="goal"></register-step>
-    </mat-step>
-</mat-horizontal-stepper>
+    <wizard-header fxFlex="100%"></wizard-header>
+    <mat-horizontal-stepper class="register-stepper" fxFlex="100%" fxLayout="column" [linear]="isLinear" #stepper (selectionChange)="onStepChange()">
+        <mat-step>
+            <goal-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></goal-step>
+        </mat-step>
+        <mat-step>
+            <amount-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></amount-step>
+        </mat-step>
+        <mat-step>
+            <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
+        </mat-step>
+        <mat-step>
+            <risk-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></risk-step>
+        </mat-step>
+        <mat-step>
+            <register-step [(model)]="goal"></register-step>
+        </mat-step>
+    </mat-horizontal-stepper>
 </div>
