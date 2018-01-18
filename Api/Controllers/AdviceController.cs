@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Cors;
 
 namespace Api.Controllers
 {
@@ -168,7 +169,7 @@ namespace Api.Controllers
             List<Auctus.Model.PortfolioHistory> portfolioHistory;
             try
             {
-                portfolioHistory = AdviceService.ListPortfolioHistory(GetUser());
+                portfolioHistory = AdviceService.ListHistory(GetUser());
             }
             catch (ArgumentException ex)
             {
@@ -210,26 +211,23 @@ namespace Api.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
-            
         }
 
-        [Route("advisors/{advisorId}/portfolios")]
+        [Route("advisors/{advisorId}/details")]
         [HttpGet]
         [Authorize("Bearer")]
-        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult ListarPortfolios([FromRoute]int advisorId)
+        public IActionResult ListarAdvisorDetails([FromRoute]int advisorId)
         {
             try
             {
-                var portfolios = AdviceService.ListPortfolio(advisorId);
-                return Ok(portfolios);
+                var advisor = AdviceService.ListAdvisorDetails(GetUser(), advisorId);
+                return Ok(advisor);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
-
         }
     }
 }

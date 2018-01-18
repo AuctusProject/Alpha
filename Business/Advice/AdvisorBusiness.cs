@@ -60,7 +60,7 @@ namespace Auctus.Business.Advice
             var portfolios = Task.Factory.StartNew(() => PortfolioBusiness.List(advisors.Select(c => c.Id)));
 
             Task.WaitAll(purchases, advisorsQty, portfolios);
-            
+
             return advisors.Select(c => new Model.Advisor()
             {
                 Id = c.Id,
@@ -70,8 +70,102 @@ namespace Auctus.Business.Advice
                 Price = c.Detail.Price,
                 Purchased = purchases.Result.Any(x => x.AdvisorId == c.Id),
                 PurchaseQuantity = advisorsQty.Result[c.Id],
-                RiskProjection = portfolios.Result[c.Id].Select(x => new KeyValuePair<int, double>(x.Risk, x.Projection.ProjectionValue)).ToDictionary(x => x.Key, x => x.Value)
+                Projection = portfolios.Result[c.Id].Select(x => new Model.Advisor.RiskProjection()
+                {
+                    Risk = x.Risk,
+                    ProjectionValue = x.Projection.ProjectionValue,
+                    OptimisticProjection = x.Projection.OptimisticProjection,
+                    PessimisticProjection = x.Projection.PessimisticProjection
+                }).ToList()
             });
+        }
+
+        public Model.Advisor ListDetails(string email, int advisorId)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var advisor = Task.Factory.StartNew(() => GetWithDetail(advisorId));
+            var purchases = Task.Factory.StartNew(() => BuyBusiness.ListUserAdvisorPurchases(user.Id, advisorId));
+            var advisorQty = Task.Factory.StartNew(() => BuyBusiness.ListAdvisorsPurchases(new int[] { advisorId }));
+            var portfolios = PortfolioBusiness.ListWithHistory(advisorId);
+
+            Task.WaitAll(advisor, purchases, advisorQty);
+
+            var purchase = purchases.Result.SingleOrDefault(c => c.ExpirationDate > DateTime.UtcNow);
+            var result = new Model.Advisor()
+            {
+                Id = advisor.Result.Id,
+                Name = advisor.Result.Name,
+                Description = advisor.Result.Detail.Description,
+                Period = advisor.Result.Detail.Period,
+                Price = advisor.Result.Detail.Price,
+                Purchased = purchase != null,
+                PurchaseQuantity = advisorQty.Result[advisorId],
+                Projection = portfolios.Select(x => new Model.Advisor.RiskProjection()
+                {
+                    Risk = x.Risk,
+                    ProjectionValue = x.Projection.ProjectionValue,
+                    OptimisticProjection = x.Projection.OptimisticProjection,
+                    PessimisticProjection = x.Projection.PessimisticProjection
+                }).ToList(),
+                Detail = new Model.Advisor.Details()
+                {
+                    PurchaseInfo = new Model.Advisor.Purchase()
+                    {
+                        QtyAlreadyPurchased = purchases.Result.Count,
+                        ExpirationTime = purchase != null ? purchase.ExpirationDate : (DateTime?)null,
+                        Risk = purchase != null ? purchase.Goal.Risk : (int?)null
+                    }
+                }
+            };
+            result.Detail.PortfolioHistory = new List<Model.Advisor.History>();
+            foreach(Portfolio portfolio in portfolios)
+            {
+                result.Detail.PortfolioHistory.Add(new Model.Advisor.History()
+                {
+                    Risk = portfolio.Risk,
+                    LastDay = GetHistoryResult(1, portfolio.PortfolioHistory),
+                    Last7Days = GetHistoryResult(7, portfolio.PortfolioHistory),
+                    Last30Days = GetHistoryResult(30, portfolio.PortfolioHistory),
+                    Histogram = GetHistogram(portfolio.PortfolioHistory)
+                });
+            }
+            return result;
+        }
+
+        private List<Model.Advisor.Distribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)
+        {
+            var minValue = portfolioHistory.Min(c => c.RealValue);
+            var maxValue = portfolioHistory.Max(c => c.RealValue);
+            var normalizedMinValue = Convert.ToInt32(minValue >= 0 ? Math.Ceiling(minValue) : Math.Floor(minValue));
+            var normalizedMaxValue = Convert.ToInt32(maxValue >= 0 ? Math.Ceiling(maxValue) : Math.Floor(maxValue));
+            if (normalizedMaxValue == normalizedMinValue)
+                normalizedMaxValue++;
+
+            List<Model.Advisor.Distribution> result = new List<Model.Advisor.Distribution>();
+            for (int i = normalizedMinValue; i < normalizedMaxValue; ++i)
+            {
+                result.Add(new Model.Advisor.Distribution()
+                {
+                    GreaterOrEqual = i,
+                    Lesser = i + 1,
+                    Quantity = portfolioHistory.Count(c => c.RealValue >= i && c.RealValue < (i + 1))
+                });
+            }
+            return result;
+        }
+
+        private Model.Advisor.HistoryResult GetHistoryResult(int days, IEnumerable<PortfolioHistory> portfolioHistory)
+        {
+            var history = portfolioHistory.Where(c => c.Date >= DateTime.UtcNow.AddDays(-days).Date);
+            return new Model.Advisor.HistoryResult()
+            {
+                Value = (history.Select(c => 1 + (c.RealValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                ExpectedValue = (history.Select(c => 1 + (c.ProjectionValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                OptimisticExpectation = history.Any(c => !c.OptimisticProjectionValue.HasValue) ? (double?)null : 
+                                        (history.Select(c => 1 + (c.OptimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                PessimisticExpectation = history.Any(c => !c.PessimisticProjectionValue.HasValue) ? (double?)null :
+                                        (history.Select(c => 1 + (c.PessimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100
+            };
         }
     }
 }

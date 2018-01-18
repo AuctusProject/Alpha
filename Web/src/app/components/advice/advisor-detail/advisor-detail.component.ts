@@ -24,7 +24,7 @@ export class AdvisorDetailComponent implements OnInit {
 
   getPortfolios():void{
     this.advisorId = +this.route.snapshot.paramMap.get('id');
-    this.adviceService.getAdvisorPortfolios(this.advisorId).subscribe(portfolios => this.portfolios = portfolios);
+    this.adviceService.getAdvisorDetails(this.advisorId).subscribe(portfolios => this.portfolios = portfolios);
   }
 
 }

@@ -75,7 +75,7 @@ namespace Api
             services.AddCors(options =>
             {
                 options.AddPolicy("Default", builder => 
-                    builder.WithOrigins(Config.WEB_URL)
+                    builder.WithOrigins(Config.WEB_URL, "http://auctusalphaweb.azurewebsites.net")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials());
