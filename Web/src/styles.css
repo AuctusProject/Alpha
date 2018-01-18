@@ -312,3 +312,8 @@ button.next[disabled]{
     margin-right: 25%;
     margin-top: 30px;
 }
+
+
+.amount-step .mat-input-underline{
+  background-color: #d8d8d8 !important;
+}

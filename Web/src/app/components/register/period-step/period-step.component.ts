@@ -15,6 +15,7 @@ export class PeriodStepComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.model.timeframe = 0;
   }
 
   onSubmit(){
