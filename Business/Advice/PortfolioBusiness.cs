@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Auctus.Business.Advice
 {
@@ -132,10 +133,17 @@ namespace Auctus.Business.Advice
             return List(new int[] { advisorId }).Single().Value;
         }
 
-        public List<Portfolio> ListComplete(int advisorId)
+        public List<Portfolio> ListWithHistory(int advisorId)
         {
-            var portfolio = List(advisorId);
-            return FillPortfoliosDistribution(portfolio);
+            var portfolios = List(advisorId);
+            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
+            foreach (Portfolio portfolio in portfolios)
+                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
+            
+            Task.WaitAll(histories.ToArray());
+
+            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+            return portfolios;
         }
 
         public Dictionary<int, List<Portfolio>> List(IEnumerable<int> advisorId)

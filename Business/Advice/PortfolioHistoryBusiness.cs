@@ -17,7 +17,7 @@ namespace Auctus.Business.Advice
         public void UpdatePortfolioHistory(Portfolio portfolio)
         {
             var lastUpdatedValue = LastPortfolioHistoryDate(portfolio.Id);
-            if (lastUpdatedValue >= DateTime.Now.Date)
+            if (lastUpdatedValue >= DateTime.UtcNow.Date)
             {
                 return;
             }
@@ -84,11 +84,11 @@ namespace Auctus.Business.Advice
 
         private DateTime? LastPortfolioHistoryDate(int id)
         {
-            var portfolioHistory = Data.LastPortfolioHistory(id);
+            var portfolioHistory = Data.LastHistory(id);
             return portfolioHistory?.Date;
         }
 
-        public List<Model.PortfolioHistory> ListPortfolioHistory(string email)
+        public List<Model.PortfolioHistory> ListHistory(string email)
         {
             var user = UserBusiness.GetValidUser(email);
             var purchases = BuyBusiness.ListPurchasesWithPortfolio(user.Id);
@@ -97,7 +97,7 @@ namespace Auctus.Business.Advice
             {
                 Model.PortfolioHistory portfolioHistory = new Model.PortfolioHistory();
                 portfolioHistory.AdvisorId = buy.AdvisorId;
-                portfolioHistory.Values = ListPortfolioHistory(buy.Projection.PortfolioId).Select(c => new Model.PortfolioHistory.HistoryValue()
+                portfolioHistory.Values = ListHistory(buy.Projection.PortfolioId).Select(c => new Model.PortfolioHistory.HistoryValue()
                 {
                     Date = c.Date,
                     Value = c.RealValue
@@ -107,13 +107,13 @@ namespace Auctus.Business.Advice
             return result;
         }
 
-        private List<DomainObjects.Advice.PortfolioHistory> ListPortfolioHistory(int portfolioId)
+        public List<DomainObjects.Advice.PortfolioHistory> ListHistory(int portfolioId)
         {
             string cacheKey = string.Format("PortfolioHistory{0}", portfolioId);
             var portfolioHistory = MemoryCache.Get<List<DomainObjects.Advice.PortfolioHistory>>(cacheKey);
             if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != DateTime.UtcNow.Date)
             {
-                portfolioHistory = Data.ListPortfolioHistory(portfolioId);
+                portfolioHistory = Data.ListHistory(portfolioId);
                 if (portfolioHistory == null)
                     throw new ArgumentException("Portfolio history cannot be found.");
                 else if (portfolioHistory.Last().Date.Date == DateTime.UtcNow.Date)
