@@ -123,9 +123,11 @@ namespace Auctus.Business.Advice
                 result.Detail.PortfolioHistory.Add(new Model.Advisor.History()
                 {
                     Risk = portfolio.Risk,
+                    TotalDays = portfolio.PortfolioHistory.Count,
                     LastDay = GetHistoryResult(1, portfolio.PortfolioHistory),
                     Last7Days = GetHistoryResult(7, portfolio.PortfolioHistory),
                     Last30Days = GetHistoryResult(30, portfolio.PortfolioHistory),
+                    AllDays = GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.PortfolioHistory.Min(c => c.Date)).TotalDays) + 1, portfolio.PortfolioHistory),
                     Histogram = GetHistogram(portfolio.PortfolioHistory)
                 });
             }
@@ -134,21 +136,36 @@ namespace Auctus.Business.Advice
 
         private List<Model.Advisor.Distribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)
         {
-            var minValue = portfolioHistory.Min(c => c.RealValue);
-            var maxValue = portfolioHistory.Max(c => c.RealValue);
-            var normalizedMinValue = Convert.ToInt32(minValue >= 0 ? Math.Ceiling(minValue) : Math.Floor(minValue));
-            var normalizedMaxValue = Convert.ToInt32(maxValue >= 0 ? Math.Ceiling(maxValue) : Math.Floor(maxValue));
-            if (normalizedMaxValue == normalizedMinValue)
-                normalizedMaxValue++;
-
+            double minValue = 0, maxValue = 0, rangeGroup = 0, summedVariation = 0;
+            var values = portfolioHistory.OrderBy(c => c.RealValue).Select(c => c.RealValue);
+            for (int i = 0; i < values.Count(); ++i)
+            {
+                if (i == 0)
+                    minValue = values.ElementAt(i);
+                if ((i + 1) < values.Count())
+                    summedVariation += Math.Abs(values.ElementAt(i + 1) - values.ElementAt(i));
+                else 
+                {
+                    if (summedVariation == 0)
+                    {
+                        rangeGroup = 1;
+                        maxValue = minValue;
+                    }
+                    else
+                    {
+                        rangeGroup = 1.5 * summedVariation / values.Count();
+                        maxValue = Math.Ceiling((values.ElementAt(i) - minValue) / rangeGroup) * rangeGroup;
+                    }
+                }
+            }
             List<Model.Advisor.Distribution> result = new List<Model.Advisor.Distribution>();
-            for (int i = normalizedMinValue; i < normalizedMaxValue; ++i)
+            for (double i = minValue; i <= maxValue; i = i + rangeGroup)
             {
                 result.Add(new Model.Advisor.Distribution()
                 {
                     GreaterOrEqual = i,
-                    Lesser = i + 1,
-                    Quantity = portfolioHistory.Count(c => c.RealValue >= i && c.RealValue < (i + 1))
+                    Lesser = i + rangeGroup,
+                    Quantity = portfolioHistory.Count(c => c.RealValue >= i && c.RealValue < (i + rangeGroup))
                 });
             }
             return result;
@@ -164,7 +181,8 @@ namespace Auctus.Business.Advice
                 OptimisticExpectation = history.Any(c => !c.OptimisticProjectionValue.HasValue) ? (double?)null : 
                                         (history.Select(c => 1 + (c.OptimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
                 PessimisticExpectation = history.Any(c => !c.PessimisticProjectionValue.HasValue) ? (double?)null :
-                                        (history.Select(c => 1 + (c.PessimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100
+                                        (history.Select(c => 1 + (c.PessimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                HitPercentage = (double)history.Count(c => c.RealValue >= c.ProjectionValue) / (double)history.Count()
             };
         }
     }

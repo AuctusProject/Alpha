@@ -33,16 +33,18 @@ namespace Auctus.Model
         public class History
         {
             public int Risk { get; set; }
+            public int TotalDays { get; set; }
             public HistoryResult LastDay { get; set; }
             public HistoryResult Last7Days { get; set; }
             public HistoryResult Last30Days { get; set; }
+            public HistoryResult AllDays { get; set; }
             public List<Distribution> Histogram { get; set; }
         }
 
         public class Distribution
         {
-            public int GreaterOrEqual { get; set; }
-            public int Lesser { get; set; }
+            public double GreaterOrEqual { get; set; }
+            public double Lesser { get; set; }
             public int Quantity { get; set; }
         }
 
@@ -52,6 +54,7 @@ namespace Auctus.Model
             public double ExpectedValue { get; set; }
             public double? OptimisticExpectation { get; set; }
             public double? PessimisticExpectation { get; set; }
+            public double HitPercentage { get; set; }
         }
 
         public class Purchase
