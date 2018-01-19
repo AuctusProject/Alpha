@@ -188,9 +188,13 @@ button.is-loading .btn-spinner {
   font-family: 'HelveticaNeue';
   font-size: 14px;
   text-align: left;
-  margin-top:8px;
-  margin-bottom:60px;
+  margin-top: 8px;
+  margin-bottom: 60px;
   color: #4a4a4a;
+}
+
+.dashboard-tab-container {
+  padding: 32px 72px;
 }
 
 .pull-right {

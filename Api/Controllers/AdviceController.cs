@@ -200,7 +200,7 @@ namespace Api.Controllers
         [HttpGet]
         [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult ListarAdvisors()
+        public IActionResult ListAdvisors()
         {
             try
             {
@@ -217,7 +217,7 @@ namespace Api.Controllers
         [HttpGet]
         [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult ListarAdvisorDetails([FromRoute]int advisorId)
+        public IActionResult ListAdvisorDetails([FromRoute]int advisorId)
         {
             try
             {
