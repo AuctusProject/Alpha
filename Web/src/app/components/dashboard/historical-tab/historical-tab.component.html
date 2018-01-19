@@ -2,15 +2,13 @@
   <div class="dashboard-tab-title">Historical</div>
   <div class="dashboard-tab-subtitle">Returns of this portfolio since it was created</div>
 
-  <div style="display: block; position: relative; width:80vw">
-    <canvas baseChart height="1000" width="3000"
+  <div style="display: block; position: relative; width:100%">
+    <canvas baseChart height="1000" width="4000"
             [datasets]="historicalChartData"
             [labels]="historicalChartLabels"
             [options]="historicalChartOptions"
             [colors]="historicalChartColors"
             [legend]="false"
-            [chartType]="'line'"
-            (chartHover)="chartHovered($event)"
-            (chartClick)="chartClicked($event)"></canvas>
+            [chartType]="'line'"></canvas>
   </div>
 </div>

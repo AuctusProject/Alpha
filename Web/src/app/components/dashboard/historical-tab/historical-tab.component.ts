@@ -45,25 +45,33 @@ export class HistoricalTabComponent implements OnInit {
   public historicalChartOptions: any = {
     responsive: true,
     scales: {
-      xAxes: [{ drawBorder: true, drawOnChartArea: false, display:true, type: 'time' }],
+      xAxes: [{
+        display: true, 
+        gridLines: { drawOnChartArea: false },
+        ticks: {
+          fontFamily: 'HelveticaNeue', fontSize: 12, fontColor: '9b9b9b', padding: 20
+        },
+        type: 'time'
+      }],
       yAxes: [{
-        drawBorder: false,
-        color: ['#FF0000']
+        gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
+        ticks: {
+          fontFamily: 'HelveticaNeue', fontSize: 12, fontColor: '9b9b9b', padding: 10}
       }]
-    }
-  };
+  }
+};
 
   public lineChartLegend: boolean = true;
   public lineChartType: string = 'line';
 
-  public historicalChartColors: Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }];
+  public historicalChartColors: Array < any > = [
+  { // grey
+    backgroundColor: 'rgba(148,159,177,0.2)',
+    borderColor: 'rgba(148,159,177,1)',
+    pointBackgroundColor: 'rgba(148,159,177,1)',
+    pointBorderColor: '#fff',
+    pointHoverBackgroundColor: '#fff',
+    pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+  }];
 
 }
