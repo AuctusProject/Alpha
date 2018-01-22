@@ -109,7 +109,7 @@ namespace Auctus.DataAccess.Advice
             DynamicParameters parameters = new DynamicParameters();
             for (int i = 0; i < advisorIds.Count(); ++i)
             {
-                var parameterName = string.Format("advisor{0}", i);
+                var parameterName = string.Format("@advisor{0}", i);
                 advisorRestrictions.Add(string.Format("b.AdvisorId={0}", parameterName));
                 parameters.Add(parameterName, advisorIds.ElementAt(i), DbType.Int32);
             }

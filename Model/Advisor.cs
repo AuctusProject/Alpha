@@ -19,9 +19,9 @@ namespace Auctus.Model
         public class RiskProjection
         {
             public int Risk { get; set; }
-            public double ProjectionValue { get; set; }
-            public double? OptimisticProjection { get; set; }
-            public double? PessimisticProjection { get; set; }
+            public double ProjectionPercent { get; set; }
+            public double? OptimisticPercent { get; set; }
+            public double? PessimisticPercent { get; set; }
         }
 
         public class Details

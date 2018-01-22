@@ -1,5 +1,7 @@
+import { AdvisorPurchaseInfo } from "./advisorPurchaseInfo";
+
 export class AdvisorDetail {
-  id: number;
+  purchaseInfo: AdvisorPurchaseInfo;
   advisorId: number;
   date: Date;
   description: number;

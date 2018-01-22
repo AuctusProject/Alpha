@@ -5,11 +5,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { NotificationsService } from "angular2-notifications";
 import { environment } from '../../environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class HttpService {
 
-  constructor(private http: HttpClient, private notificationService: NotificationsService) { }
+  constructor(private http: HttpClient, private notificationService: NotificationsService, private router: Router) { }
 
   private jwt: string = "auc_jwt";
 
@@ -73,7 +74,9 @@ export class HttpService {
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (response: any): Observable<T> => {
-
+      if (response.status == "401") {
+        this.router.navigateByUrl('home');
+      }
       // TODO: send the error to remote logging infrastructure
       if (response.status == "400"){
         if (response.error){
