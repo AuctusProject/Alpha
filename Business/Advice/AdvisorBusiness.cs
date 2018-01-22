@@ -117,10 +117,16 @@ namespace Auctus.Business.Advice
                     }
                 }
             };
-            result.Detail.PortfolioHistory = new List<Model.Advisor.History>();
-            foreach(Portfolio portfolio in portfolios)
+            result.Detail.PortfolioHistory = GetPortfolioHistory(portfolios);
+            return result;
+        }
+
+        public List<Model.Advisor.History> GetPortfolioHistory(IEnumerable<Portfolio> portfolios)
+        {
+            List<Model.Advisor.History> result = new List<Model.Advisor.History>();
+            foreach (Portfolio portfolio in portfolios)
             {
-                result.Detail.PortfolioHistory.Add(new Model.Advisor.History()
+                result.Add(new Model.Advisor.History()
                 {
                     Risk = portfolio.Risk,
                     TotalDays = portfolio.PortfolioHistory.Count,

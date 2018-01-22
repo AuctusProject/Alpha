@@ -92,18 +92,18 @@ namespace Auctus.Business.Advice
         {
             var user = UserBusiness.GetValidUser(email);
             var purchases = BuyBusiness.ListPurchasesWithPortfolio(user.Id);
+            purchases.ForEach(c => c.Projection.Portfolio.PortfolioHistory = ListHistory(c.Projection.PortfolioId));
             List<Model.PortfolioHistory> result = new List<Model.PortfolioHistory>();
-            foreach (Buy buy in purchases)
+            result.AddRange(purchases.Select(c => new Model.PortfolioHistory()
             {
-                Model.PortfolioHistory portfolioHistory = new Model.PortfolioHistory();
-                portfolioHistory.AdvisorId = buy.AdvisorId;
-                portfolioHistory.Values = ListHistory(buy.Projection.PortfolioId).Select(c => new Model.PortfolioHistory.HistoryValue()
+                AdvisorId = c.AdvisorId,
+                Values = c.Projection.Portfolio.PortfolioHistory.Select(g => new Model.PortfolioHistory.HistoryValue()
                 {
-                    Date = c.Date,
-                    Value = c.RealValue
-                }).ToList();
-                result.Add(portfolioHistory);
-            }
+                    Date = g.Date,
+                    Value = g.RealValue
+                }).ToList(),
+                History = AdvisorBusiness.GetPortfolioHistory(new Portfolio[] { c.Projection.Portfolio })
+            }));
             return result;
         }
 
