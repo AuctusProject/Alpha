@@ -99,7 +99,7 @@ namespace Auctus.Business.Advice
                 Period = advisor.Result.Detail.Period,
                 Price = advisor.Result.Detail.Price,
                 Purchased = purchase != null,
-                PurchaseQuantity = advisorQty.Result[advisorId],
+                PurchaseQuantity = advisorQty.Result.ContainsKey(advisorId) ? advisorQty.Result[advisorId] : 0,
                 Projection = portfolios.Select(x => new Model.Advisor.RiskProjection()
                 {
                     Risk = x.Risk,
@@ -180,6 +180,8 @@ namespace Auctus.Business.Advice
         private Model.Advisor.HistoryResult GetHistoryResult(int days, IEnumerable<PortfolioHistory> portfolioHistory)
         {
             var history = portfolioHistory.Where(c => c.Date >= DateTime.UtcNow.AddDays(-days).Date);
+            if (!history.Any())
+                return null;
             return new Model.Advisor.HistoryResult()
             {
                 Value = (history.Select(c => 1 + (c.RealValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
