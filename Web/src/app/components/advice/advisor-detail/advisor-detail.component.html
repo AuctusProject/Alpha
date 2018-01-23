@@ -1,7 +1,4 @@
 {{advisorId}}
 
-<ul class="portfolios">
-  <li *ngFor="let portfolio of portfolios" (click)="onSelect(portfolio)">
-    {{portfolio.projection.projectionValue}}
-  </li>
-</ul>
+
+<portfolio-histogram *ngIf="advisor" [histogram]="advisor.detail.portfolioHistory[0].histogram"></portfolio-histogram>

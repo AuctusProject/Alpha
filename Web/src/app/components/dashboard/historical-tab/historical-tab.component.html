@@ -1,6 +1,6 @@
-<div *ngIf="historicalChartData" class="dashboard-tab-container">
+<div class="dashboard-tab-container">
   <div class="dashboard-tab-title">Historical</div>
   <div class="dashboard-tab-subtitle">Returns of this portfolio since it was created</div>
 
-  <portfolio-history-chart [portfolioHistoryModel]="portfoliosHistoryModel[0]"></portfolio-history-chart>
+  <portfolio-history-chart *ngIf="portfoliosHistoryModel" [portfolioHistoryModel]="portfoliosHistoryModel[0]"></portfolio-history-chart>
 </div>

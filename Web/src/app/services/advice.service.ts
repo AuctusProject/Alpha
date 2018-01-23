@@ -23,7 +23,7 @@ export class AdviceService {
     return this.httpService.get(this.listAdvisorsUrl);
   }
 
-  getAdvisorDetails(advisorId : number): Observable<Portfolio[]> {
+  getAdvisorDetails(advisorId: number): Observable<Advisor> {
     return this.httpService.get(this.getAdvisorPortfoliosUrl + "/" + advisorId + "/details");
   }
 

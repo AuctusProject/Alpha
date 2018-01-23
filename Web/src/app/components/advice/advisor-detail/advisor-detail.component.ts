@@ -13,18 +13,17 @@ export class AdvisorDetailComponent implements OnInit {
 
   @Input() advisor: Advisor;
   advisorId: number;
-  portfolios: Portfolio[];
 
   constructor(private adviceService: AdviceService,
     private route: ActivatedRoute) { } 
 
   ngOnInit() {
-    this.getPortfolios();
+    this.getDetails();
   }
 
-  getPortfolios():void{
+  getDetails():void{
     this.advisorId = +this.route.snapshot.paramMap.get('id');
-    this.adviceService.getAdvisorDetails(this.advisorId).subscribe(portfolios => this.portfolios = portfolios);
+    this.adviceService.getAdvisorDetails(this.advisorId).subscribe(advisor => this.advisor = advisor);
   }
 
 }
