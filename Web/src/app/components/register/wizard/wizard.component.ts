@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Goal } from "../../../model/goal";
-import { GoalOption } from '../../../model/goalOption';
+import { Goal } from "../../../model/account/goal";
+import { GoalOption } from '../../../model/account/goalOption';
 import { MatStepper } from "@angular/material";
 
 @Component({

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Projections } from "../../../model/advice/projections";
-import { PortfolioDistribution } from "../../../model/advice/portfolioDistribution";
-import { PortfolioHistory } from "../../../model/advice/portfolioHistory";
+import { Projections } from "../../../model/portfolio/projections";
+import { PortfolioDistribution } from "../../../model/portfolio/portfolioDistribution";
+import { PortfolioHistory } from "../../../model/portfolio/portfolioHistory";
 
 @Component({
   selector: 'action-bar',

@@ -7,7 +7,7 @@ import { HttpService } from './http.service';
 @Injectable()
 export class LoginService {
 
-  private loginUrl = this.httpService.apiUrl("account/login");
+  private loginUrl = this.httpService.apiUrl("accounts/v1/login");
 
   constructor(private httpService : HttpService)
   { }

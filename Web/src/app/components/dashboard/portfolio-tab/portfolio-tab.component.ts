@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AdviceService } from "../../../services/advice.service";
-import { PortfolioDistribution } from "../../../model/advice/portfolioDistribution";
+import { PortfolioService } from "../../../services/portfolio.service";
+import { PortfolioDistribution } from "../../../model/portfolio/portfolioDistribution";
 import { MatTableDataSource } from '@angular/material';
 import { AssetDistribution } from "../../../model/asset/assetDistribution";
 
@@ -15,12 +15,12 @@ export class PortfolioTabComponent implements OnInit {
   portfolioDataSource: MatTableDataSource<AssetDistribution>;
   colors = CHART_COLORS;
   
-  constructor(private adviceService: AdviceService) {
+  constructor(private portfolioService: PortfolioService) {
     this.portfolioDistributionModel = [];
   }
 
   ngOnInit() {
-    this.adviceService.getPortfoliosDistribution().subscribe(
+    this.portfolioService.getPortfoliosDistribution().subscribe(
       portfoliosDistribution => {
         if (portfoliosDistribution != undefined) {
           this.portfolioDistributionModel = portfoliosDistribution;

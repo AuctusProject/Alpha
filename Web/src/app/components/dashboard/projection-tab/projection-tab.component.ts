@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AdviceService } from "../../../services/advice.service";
-import { Projections } from "../../../model/advice/projections";
+import { PortfolioService } from "../../../services/portfolio.service";
+import { Projections } from "../../../model/portfolio/projections";
 
 @Component({
   selector: 'app-projection-tab',
@@ -10,12 +10,12 @@ import { Projections } from "../../../model/advice/projections";
 export class ProjectionTabComponent implements OnInit {
   projections: Projections;
 
-  constructor(private adviceService: AdviceService) {
+  constructor(private portfolioService: PortfolioService) {
     this.projections = new Projections();
   }
 
   ngOnInit() {
-    this.adviceService.getProjections().subscribe(
+    this.portfolioService.getProjections().subscribe(
       projections => {
         if (projections != undefined)
           this.projections = projections

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Goal } from "../../../model/goal";
+import { Goal } from "../../../model/account/goal";
 
 @Component({
   selector: 'amount-step',

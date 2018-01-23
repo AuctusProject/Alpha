@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Goal } from "../../../model/goal";
+import { Goal } from "../../../model/account/goal";
 import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 
 @Component({

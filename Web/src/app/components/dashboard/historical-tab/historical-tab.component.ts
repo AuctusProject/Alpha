@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { PortfolioHistory } from "../../../model/advice/portfolioHistory";
-import { HistoryValues } from "../../../model/advice/historyValues";
-import { AdviceService } from "../../../services/advice.service";
+import { PortfolioHistory } from "../../../model/portfolio/portfolioHistory";
+import { HistoryValues } from "../../../model/advisor/historyValues";
+import { PortfolioService } from "../../../services/portfolio.service";
 import { MatTableDataSource } from '@angular/material';
 
 @Component({
@@ -15,10 +15,10 @@ export class HistoricalTabComponent implements OnInit {
   public historicalChartData: Array<any>;
   public historicalChartLabels: Array<any>;
 
-  constructor(private adviceService: AdviceService) { }
+  constructor(private portfolioService: PortfolioService) { }
 
   ngOnInit() {
-    this.adviceService.getPortfoliosHistory().subscribe(
+    this.portfolioService.getPortfoliosHistory().subscribe(
       portfoliosHistory => {
         if (portfoliosHistory != undefined) {
           this.portfoliosHistoryModel = portfoliosHistory;

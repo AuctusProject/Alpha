@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { PortfolioDistribution } from "../../../model/advice/portfolioDistribution";
+import { PortfolioDistribution } from "../../../model/portfolio/portfolioDistribution";
 import { MatTableDataSource } from '@angular/material';
 import { AssetDistribution } from "../../../model/asset/assetDistribution";
 

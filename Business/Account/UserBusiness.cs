@@ -26,7 +26,7 @@ namespace Auctus.Business.Account
             EmailValidation(email);
 
             var user = Data.Get(email);
-            if (Security.Decrypt(user.Password) != (password))
+            if (user.Password != Security.Hash(password))
                 throw new ArgumentException("Password is invalid.");
             else if (user.ConfirmationDate.HasValue)
                 MemoryCache.Set<User>(user.Email, user);
@@ -94,7 +94,7 @@ namespace Auctus.Business.Account
             BasePasswordValidation(password);
             PasswordValidation(password);
 
-            user.Password = Security.Encrypt(password);
+            user.Password = Security.Hash(password);
             Data.Update(user);
         }
         
@@ -142,7 +142,7 @@ namespace Auctus.Business.Account
             user = new User();
             user.Email = email.ToLower().Trim();
             user.CreationDate = DateTime.UtcNow;
-            user.Password = Security.Encrypt(password);
+            user.Password = Security.Hash(password);
             user.ConfirmationCode = Guid.NewGuid().ToString();
             return user;
         }

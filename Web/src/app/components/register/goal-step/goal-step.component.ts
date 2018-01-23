@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Goal } from "../../../model/goal";
+import { Goal } from "../../../model/account/goal";
 import { AccountService } from "../../../services/account.service";
-import { GoalOption } from '../../../model/goalOption';
+import { GoalOption } from '../../../model/account/goalOption';
 import { MatStepper } from "@angular/material";
 import { WindowRefService } from "../../../services/window-ref.service";
 

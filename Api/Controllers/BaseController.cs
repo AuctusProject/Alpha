@@ -84,6 +84,7 @@ namespace Api.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
         protected bool IsValidRecaptcha(string recaptchaResponse)
         {
             string url = string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", Config.GOOGLE_CAPTCHA_SECRET, recaptchaResponse);
@@ -100,7 +101,7 @@ namespace Api.Controllers
         }
 
         protected AccountServices AccountServices { get { return new AccountServices(LoggerFactory, MemoryCache); } }
-        protected AdviceServices AdviceService { get { return new AdviceServices(LoggerFactory, MemoryCache); } }
+        protected AdvisorServices AdvisorServices { get { return new AdvisorServices(LoggerFactory, MemoryCache); } }
         protected AssetServices AssetServices { get { return new AssetServices(LoggerFactory, MemoryCache); } }
         protected PortfolioServices PortfolioServices { get { return new PortfolioServices(LoggerFactory, MemoryCache); } }
     }

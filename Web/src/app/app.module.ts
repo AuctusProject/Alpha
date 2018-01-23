@@ -27,9 +27,10 @@ import { StepperComponent } from './components/ui/stepper/stepper.component';
 import { RegisterStepComponent } from './components/register/register-step/register-step.component';
 import { ForgotPasswordEmailComponent } from './components/account/forgot-password-email/forgot-password-email.component';
 import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
-import { AdvisorDetailComponent } from './components/advice/advisor-detail/advisor-detail.component';
-import { AdvisorsComponent } from './components/advice/advisors/advisors.component';
-import { AdviceService } from './services/advice.service';
+import { AdvisorDetailComponent } from './components/advisor/advisor-detail/advisor-detail.component';
+import { AdvisorsComponent } from './components/advisor/advisors/advisors.component';
+import { AdvisorService } from './services/advisor.service';
+import { PortfolioService } from './services/portfolio.service';
 import { FocusDirective } from './directives/focus.directive';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { WizardHeaderComponent } from './components/register/wizard-header/wizard-header.component';
@@ -100,7 +101,7 @@ import { PortfolioHistogramComponent } from './components/dashboard/portfolio-hi
     }),
     SimpleNotificationsModule.forRoot()
   ],
-  providers: [LoginService, HttpService, AccountService, AdviceService, WindowRefService],
+  providers: [LoginService, HttpService, AccountService, AdvisorService, PortfolioService, WindowRefService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

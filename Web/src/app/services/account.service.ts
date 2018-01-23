@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
-import { GoalOption } from "../model/goalOption";
+import { GoalOption } from "../model/account/goalOption";
 import { FullRegister } from "../model/account/fullRegister";
 
 @Injectable()
 export class AccountService {
 
-  private listGoalOptionsUrl = this.httpService.apiUrl("account/goaloptions");
-  private fullRegisterUrl = this.httpService.apiUrl("account/fullregister");
-  private confirmEmailUrl = this.httpService.apiUrl("account/confirm");
+  private listGoalOptionsUrl = this.httpService.apiUrl("accounts/v1/goals/options");
+  private fullRegisterUrl = this.httpService.apiUrl("accounts/v1/registration/full");
+  private confirmEmailUrl = this.httpService.apiUrl("accounts/v1/confirmation");
 
   constructor(private httpService : HttpService) { }
 
