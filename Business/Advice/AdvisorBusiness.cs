@@ -69,13 +69,13 @@ namespace Auctus.Business.Advice
                 Period = c.Detail.Period,
                 Price = c.Detail.Price,
                 Purchased = purchases.Result.Any(x => x.AdvisorId == c.Id),
-                PurchaseQuantity = advisorsQty.Result[c.Id],
+                PurchaseQuantity = advisorsQty.Result.ContainsKey(c.Id) ? advisorsQty.Result[c.Id] : 0,
                 Projection = portfolios.Result[c.Id].Select(x => new Model.Advisor.RiskProjection()
                 {
                     Risk = x.Risk,
-                    ProjectionValue = x.Projection.ProjectionValue,
-                    OptimisticProjection = x.Projection.OptimisticProjection,
-                    PessimisticProjection = x.Projection.PessimisticProjection
+                    ProjectionPercent = x.Projection.ProjectionValue,
+                    OptimisticPercent= x.Projection.OptimisticProjection,
+                    PessimisticPercent = x.Projection.PessimisticProjection
                 }).ToList()
             });
         }
@@ -99,13 +99,13 @@ namespace Auctus.Business.Advice
                 Period = advisor.Result.Detail.Period,
                 Price = advisor.Result.Detail.Price,
                 Purchased = purchase != null,
-                PurchaseQuantity = advisorQty.Result[advisorId],
+                PurchaseQuantity = advisorQty.Result.ContainsKey(advisorId) ? advisorQty.Result[advisorId] : 0,
                 Projection = portfolios.Select(x => new Model.Advisor.RiskProjection()
                 {
                     Risk = x.Risk,
-                    ProjectionValue = x.Projection.ProjectionValue,
-                    OptimisticProjection = x.Projection.OptimisticProjection,
-                    PessimisticProjection = x.Projection.PessimisticProjection
+                    ProjectionPercent = x.Projection.ProjectionValue,
+                    OptimisticPercent = x.Projection.OptimisticProjection,
+                    PessimisticPercent = x.Projection.PessimisticProjection
                 }).ToList(),
                 Detail = new Model.Advisor.Details()
                 {

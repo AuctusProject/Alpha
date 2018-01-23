@@ -21,7 +21,8 @@ export const DASHBOARD_TABS_ROUTES: Routes = [
 ];
 
 const routes: Routes = [
-    { path: '', component: HomeComponent },
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent },
     { path: 'login', component: LoginComponent },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },

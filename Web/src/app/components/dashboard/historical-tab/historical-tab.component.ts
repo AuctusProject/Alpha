@@ -49,14 +49,19 @@ export class HistoricalTabComponent implements OnInit {
         display: true, 
         gridLines: { drawOnChartArea: false },
         ticks: {
-          fontFamily: 'HelveticaNeue', fontSize: 12, fontColor: '9b9b9b', padding: 20
+          fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10
         },
-        type: 'time'
+        type: 'time',
+        time: {
+          tooltipFormat: 'MMM D YYYY'
+        }
       }],
       yAxes: [{
         gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
         ticks: {
-          fontFamily: 'HelveticaNeue', fontSize: 12, fontColor: '9b9b9b', padding: 10}
+          fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10, callback: function (value, index, values) {
+            return '$' + value;
+          }}
       }]
   }
 };

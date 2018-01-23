@@ -1,0 +1,54 @@
+<div fxLayout="row" fxLayoutGap="80px">
+  <div fxLayout="column" fxLayoutGap="20px">
+    <div fxLayout="row" fxLayoutGap="20px">
+      <div style="display: block; height:200px; width:200px">
+        <canvas baseChart width="200" height="200"
+                [data]="pieChartData"
+                [labels]="pieChartLabels"
+                [legend]="false"
+                [colors]="pieColors"
+                [chartType]="pieChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+      <div>
+        <div class="portfolio-type-percentage">{{totalTraditionalPercentage}}%</div>
+        <div class="portfolio-type-description">Traditional</div>
+      </div>
+      <div>
+        <div class="portfolio-type-percentage">{{totalCryptoPercentage}}%</div>
+        <div class="portfolio-type-description">Crypto</div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="column" fxLayoutGap="20px" fxFlex="<grow>">
+    <mat-table #table [dataSource]="portfolioDataSource" width="500px">
+      <ng-container matColumnDef="color">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let element;let i = index;">
+          <div class="color-circle" [style.backgroundColor]="colors[i]"></div>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="holdings" width="40px">
+        <mat-header-cell *matHeaderCellDef> HOLDINGS </mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.name}} ({{element.code}})</mat-cell>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="percentage">
+        <mat-header-cell *matHeaderCellDef> PERCENTAGE </mat-header-cell>
+        <mat-cell *matCellDef="let element;let i = index;">
+          <div class="percentage-value">{{element.percentage}}%</div>
+          <div class="percentage-color-bar" [style.width.px]="element.percentage * 2" [style.backgroundColor]="colors[i]"></div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="['color', 'holdings', 'percentage']"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['color', 'holdings', 'percentage'];"></mat-row>
+    </mat-table>
+  </div>
+</div>

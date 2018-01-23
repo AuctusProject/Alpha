@@ -45,6 +45,9 @@ import { PortfolioTabComponent } from './components/dashboard/portfolio-tab/port
 import { HistoricalTabComponent } from './components/dashboard/historical-tab/historical-tab.component';
 
 import 'hammerjs';
+import { PortfolioHistoryChartComponent } from './components/dashboard/portfolio-history-chart/portfolio-history-chart.component';
+import { PortfolioDistributionComponent } from './components/dashboard/portfolio-distribution/portfolio-distribution.component';
+import { PortfolioHistogramComponent } from './components/dashboard/portfolio-histogram/portfolio-histogram.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +75,10 @@ import 'hammerjs';
     GoalOptionComponent,
     ActionBarComponent,
     PortfolioTabComponent,
-    HistoricalTabComponent
+    HistoricalTabComponent,
+    PortfolioHistoryChartComponent,
+    PortfolioDistributionComponent,
+    PortfolioHistogramComponent
   ],
   imports: [
     BrowserAnimationsModule,
