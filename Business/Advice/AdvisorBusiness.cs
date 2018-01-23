@@ -148,20 +148,14 @@ namespace Auctus.Business.Advice
             {
                 if (i == 0)
                     minValue = values.ElementAt(i);
-                if ((i + 1) < values.Count())
-                    summedVariation += Math.Abs(values.ElementAt(i + 1) - values.ElementAt(i));
-                else 
+                if ((i + 1) == values.Count())
                 {
-                    if (summedVariation == 0)
-                    {
+                    maxValue = values.ElementAt(i);
+                    var difference = maxValue - minValue;
+                    if (difference == 0)
                         rangeGroup = 1;
-                        maxValue = minValue;
-                    }
                     else
-                    {
-                        rangeGroup = 1.5 * summedVariation / values.Count();
-                        maxValue = Math.Ceiling((values.ElementAt(i) - minValue) / rangeGroup) * rangeGroup;
-                    }
+                        rangeGroup = difference / 15.0;
                 }
             }
             List<Model.Advisor.Distribution> result = new List<Model.Advisor.Distribution>();
@@ -180,7 +174,7 @@ namespace Auctus.Business.Advice
         private Model.Advisor.HistoryResult GetHistoryResult(int days, IEnumerable<PortfolioHistory> portfolioHistory)
         {
             var history = portfolioHistory.Where(c => c.Date >= DateTime.UtcNow.AddDays(-days).Date);
-            return new Model.Advisor.HistoryResult()
+            return !history.Any() ? null : new Model.Advisor.HistoryResult()
             {
                 Value = (history.Select(c => 1 + (c.RealValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
                 ExpectedValue = (history.Select(c => 1 + (c.ProjectionValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
