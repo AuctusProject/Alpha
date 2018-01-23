@@ -11,7 +11,7 @@
 
     <div fxLayout="column" fxLayoutMargin fxLayoutAlign="space-evenly center">
       <div fxLayout="column" fxLayoutAlign="center center">
-        <mat-slider class="example-margin" [invert]="false" [max]="50" [min]="0" [step]="1" [thumb-label]="true" [(ngModel)]="model.timeframe" [vertical]="false" name="timeframe" (change)="onChangeSlider()">
+        <mat-slider [ngClass]="{'xs' : media.isActive('xs')}" [invert]="false" [max]="50" [min]="0" [step]="1" [thumb-label]="true" [(ngModel)]="model.timeframe" [vertical]="false" name="timeframe" (change)="onChangeSlider()">
         </mat-slider>
         <h4 fxFlex [style.color]="'#4a90e2'">The longer the better</h4>
         <mat-form-field class="period-input">

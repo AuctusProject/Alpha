@@ -1,6 +1,13 @@
 .wizard-header {
     background-color: white;
-    padding: 50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+@media (min-width: 480px) {
+    .wizard-header {
+        padding: 50px !important;
+    }
 }
 
 .wizard-header a{

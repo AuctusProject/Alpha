@@ -9,7 +9,7 @@
       <h2 fxFlex fxLayoutAlign="center center">How much can you invest?</h2>
     </div>
 
-    <div fxLayout="row" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field>
           <input matInput placeholder="Starting amount" [inputFocus]="true" name="StartingAmount" [(ngModel)]="model.startingAmount"

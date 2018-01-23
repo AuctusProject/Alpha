@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 
 @Component({
   selector: 'wizard-header',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WizardHeaderComponent implements OnInit {
 
-  constructor() { }
+  constructor(public media: ObservableMedia) { }
 
   ngOnInit() {
   }

@@ -63,6 +63,11 @@ export class GoalStepComponent implements OnInit {
 
     if (width < 550) {
       this.width = '100%';
+      this.cols = 2;
+    }
+
+    if (width < 350) {
+      this.width = '100%';
       this.cols = 1;
     }
   }

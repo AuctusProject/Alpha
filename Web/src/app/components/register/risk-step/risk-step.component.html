@@ -5,15 +5,18 @@
     </div>
 
     <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-      <div fxLayout="row" fxLayoutGap="20px">
-        <mat-slider class="example-margin" [invert]="false" [max]="5" [min]="0" [step]="1" [thumb-label]="false"
-          [tick-interval]="1" [(ngModel)]="model.risk" [vertical]="false" name="risk" (change)="onChangeSlider()">
+      <div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="space-evenly center">
+        <div class="description" fxLayoutAlign="center center">
+          <span ng-show="riskDescription" class="risk-description">{{riskDescription}}</span>
+        </div>
+        <mat-slider [ngClass]="{'xs' : media.isActive('xs')}" [invert]="false" [max]="5" [min]="0" [step]="1" [thumb-label]="true" 
+        [(ngModel)]="model.risk" [vertical]="false" name="risk" (change)="onChangeSlider()">
         </mat-slider>
       </div>
     </div>
 
-    <div fxLayout="row">
-      <button mat-button type="submit" [disabled]="!riskForm.form.valid">Next</button>
-    </div>
+    <div fxLayout="row" fxLayoutAlign="end center" class="wizard-buttons">
+        <button class="next" mat-button type="submit" [disabled]="!riskForm.form.valid"></button>
+      </div>
   </div>
 </form>

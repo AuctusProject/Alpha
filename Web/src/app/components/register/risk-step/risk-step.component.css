@@ -1,5 +1,9 @@
 /deep/ .risk-step .mat-slider{
-    width: 500px !important;
+    width: 350px !important;
+}
+
+/deep/ .risk-step .mat-slider.xs{
+    width: 280px !important;
 }
 
 /deep/ .risk-step .mat-accent .mat-slider-thumb{
@@ -32,12 +36,12 @@
 
 /deep/ .risk-step .mat-slider-horizontal .mat-slider-track-background{
     height: 8px !important;
-    border-radius: 100px !important;
+    /* border-radius: 100px !important; */
 }
 
 /deep/ .risk-step .mat-slider-horizontal .mat-slider-track-fill{
     height: 8px !important;
-    border-radius: 100px !important;
+    /* border-radius: 100px !important; */
     background: #3c91e6;
 }
 
@@ -47,4 +51,17 @@
 
 /deep/ .risk-step span.mat-slider-thumb-label-text{
     color: white !important;
+}
+
+.risk-description {
+    font-family: 'HelveticaNeueBold';
+    font-size: 16px;
+    color: #4a90e2;
+}
+
+.description{
+    height: 20px;
+    min-height: 20px;
+    margin-bottom: 20px !important;
+    margin-top: 10px;
 }
