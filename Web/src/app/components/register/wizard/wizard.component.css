@@ -8,3 +8,11 @@
 .mat-horizontal-stepper-header-container{
   margin: 0 auto !important;
 }
+
+/deep/ .wizard .mat-horizontal-stepper-header{
+  padding: 0px !important;
+}
+
+/deep/ .wizard .mat-step-label{
+  min-width: 10px;
+}

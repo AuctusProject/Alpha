@@ -20,6 +20,10 @@ input{
     width: 350px !important;
 }
 
+/deep/ .period-step .mat-slider.xs{
+    width: 280px !important;
+}
+
 /deep/ .period-step .mat-accent .mat-slider-thumb{
     top: -15px !important;
     width: 30px !important;

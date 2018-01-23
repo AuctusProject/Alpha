@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Goal } from "../../../model/goal";
+import {MediaChange, ObservableMedia} from "@angular/flex-layout";
 
 @Component({
   selector: 'period-step',
@@ -12,7 +13,7 @@ export class PeriodStepComponent implements OnInit {
   @Output() modelChange = new EventEmitter<Goal>();
   @Output() onSubmitted = new EventEmitter<boolean>();
 
-  constructor() { }
+  constructor(public media: ObservableMedia) { }
 
   ngOnInit() {
     this.model.timeframe = 0;
