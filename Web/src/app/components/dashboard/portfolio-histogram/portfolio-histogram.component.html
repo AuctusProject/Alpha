@@ -1,3 +1,8 @@
-<p>
-  portfolio-histogram works!
-</p>
+<div style="display: block; position: relative; width:100%">
+  <canvas baseChart height="1000" width="4000"
+          [datasets]="histogramData"
+          [labels]="histogramLabels"
+          [options]="histogramOptions"
+          [legend]="showLegend"
+          [chartType]="'bar'"></canvas>
+</div>

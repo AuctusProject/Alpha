@@ -73,4 +73,4 @@ export class PortfolioDistributionComponent implements OnInit {
 
 }
 
-const CHART_COLORS: string[] = ['#4bebee', '#14bdc0', '#9a43e7', '#9013fe', '#5a44ba', '#4e2aa2', '#0243b7', '#3c91e6'];
+const CHART_COLORS: string[] = ['#14bdc0', '#9a43e7', '#4bebee', '#9013fe', '#5a44ba', '#4e2aa2', '#0243b7', '#3c91e6'];

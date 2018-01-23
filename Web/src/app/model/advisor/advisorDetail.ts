@@ -1,4 +1,5 @@
 import { AdvisorPurchaseInfo } from "./advisorPurchaseInfo";
+import { AdvisorHistory } from "./advisorHistory";
 
 export class AdvisorDetail {
   purchaseInfo: AdvisorPurchaseInfo;
@@ -8,4 +9,5 @@ export class AdvisorDetail {
   price: number;
   period: number;
   enabled: boolean;
+  portfolioHistory: AdvisorHistory[]
 }
