@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
 import { Advisor } from "../model/advisor/advisor";
-import { Portfolio } from "../model/portfolio/portfolio";
 
 @Injectable()
 export class AdvisorService {
@@ -16,7 +15,7 @@ export class AdvisorService {
     return this.httpService.get(this.baseGetAdvisorsUrl);
   }
 
-  getAdvisorDetails(advisorId : number): Observable<Portfolio[]> {
+  getAdvisorDetails(advisorId: number): Observable<Advisor> {
     return this.httpService.get(this.baseGetAdvisorsUrl + "/" + advisorId);
   }
 }
