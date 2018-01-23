@@ -142,25 +142,19 @@ namespace Auctus.Business.Advice
 
         private List<Model.Advisor.Distribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)
         {
-            double minValue = 0, maxValue = 0, rangeGroup = 0;
             var values = portfolioHistory.OrderBy(c => c.RealValue).Select(c => c.RealValue);
-            for (int i = 0; i < values.Count(); ++i)
-            {
-                if (i == 0)
-                    minValue = values.ElementAt(i);
-                if ((i + 1) == values.Count())
-                {
-                    maxValue = values.ElementAt(i);
-                    var difference = maxValue - minValue;
-                    if (difference == 0)
-                        rangeGroup = 1;
-                    else
-                        rangeGroup = difference / (values.Count() > 75 ? 15.0 : Math.Floor(values.Count() / 5.0));
+            var minValue = values.First();
+            var maxValue = values.Last();
+            var difference = maxValue - minValue;
+            double rangeGroup;
+            if (difference == 0)
+                rangeGroup = 1;
+            else
+                rangeGroup = difference / (values.Count() > 75 ? 15.0 : Math.Floor(values.Count() / 5.0));
 
-                    minValue = minValue - (rangeGroup / 1.5);
-                    maxValue = maxValue + (rangeGroup / 1.5);
-                }
-            }
+            minValue = minValue - (rangeGroup / 1.5);
+            maxValue = maxValue + (rangeGroup / 1.5);
+
             List<Model.Advisor.Distribution> result = new List<Model.Advisor.Distribution>();
             for (double i = minValue; i <= maxValue; i = i + rangeGroup)
             {
