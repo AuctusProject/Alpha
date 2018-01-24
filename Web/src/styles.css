@@ -270,6 +270,9 @@ button {
   .primary-button.bold {
     font-family: 'HelveticaNeueBold';
   }
+  .primary-button:hover {
+    background-color:lightcyan;
+  }
 
 button.no-border {
   background: white;
@@ -305,4 +308,8 @@ button.next[disabled]{
 
 .amount-step .mat-input-underline{
   background-color: #d8d8d8 !important;
+}
+
+.element-margin-top {
+  margin-top: 15px;
 }

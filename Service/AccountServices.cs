@@ -17,9 +17,9 @@ namespace Auctus.Service
             UserBusiness.ChangePassword(email, password);
         }
 
-        public void RecoverPassword(string email, string code, string password)
+        public void RecoverPassword(string code, string password)
         {
-            PasswordRecoveryBusiness.RecoverPassword(email, code, password);
+            PasswordRecoveryBusiness.RecoverPassword(code, password);
         }
 
         public void ConfirmEmail(string code)

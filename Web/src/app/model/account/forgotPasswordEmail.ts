@@ -1,3 +1,4 @@
 export class ForgotPasswordEmail {
-    email: string;
+  email: string;
+  emailSent: boolean;
 }

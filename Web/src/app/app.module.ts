@@ -27,6 +27,7 @@ import { StepperComponent } from './components/ui/stepper/stepper.component';
 import { RegisterStepComponent } from './components/register/register-step/register-step.component';
 import { ForgotPasswordEmailComponent } from './components/account/forgot-password-email/forgot-password-email.component';
 import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
+import { PendingEmailConfirmationComponent } from './components/account/pending-email-confirmation/pending-email-confirmation.component';
 import { AdvisorDetailComponent } from './components/advisor/advisor-detail/advisor-detail.component';
 import { AdvisorsComponent } from './components/advisor/advisors/advisors.component';
 import { AdvisorService } from './services/advisor.service';
@@ -63,6 +64,7 @@ import { PortfolioHistogramComponent } from './components/dashboard/portfolio-hi
     RegisterStepComponent,
     ForgotPasswordEmailComponent,
     ForgotPasswordResetComponent,
+    PendingEmailConfirmationComponent,
     AdvisorDetailComponent,
     AdvisorsComponent,
     FocusDirective,

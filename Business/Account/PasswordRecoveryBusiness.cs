@@ -36,18 +36,15 @@ namespace Auctus.Business.Account
             await SendForgottenPassword(email, recovery.Token);
         }
         
-        public void RecoverPassword(string email, string code, string password)
+        public void RecoverPassword(string code, string password)
         {
-            var user = UserBusiness.GetValidUser(email);
-            var recovery = Data.Get(user.Id);
+            var recovery = Data.Get(code);
             if (recovery == null)
                 throw new ArgumentException("There is no request for recover password.");
-            if (code != recovery.Token)
-                throw new ArgumentException("Invalid recover password code.");
             if (DateTime.UtcNow > recovery.Date.AddMinutes(60))
                 throw new ArgumentException("Recover password code is expired.");
-
-            UserBusiness.UpdatePassword(user, password);
+            
+            UserBusiness.UpdatePassword(UserBusiness.Get(recovery.UserId), password);
         }
         
         private async Task SendForgottenPassword(string email, string code)
@@ -55,7 +52,7 @@ namespace Auctus.Business.Account
             await Email.SendAsync(
                 new string[] { email },
                 "Recover your password from Auctus Alpha",
-                string.Format("To recover your password from Auctus Alpha <a href='{0}/recoverpassword?c={1}&e={2}' target='_blank'>click here</a><br/><br/><small>If you did not ask for a password reset, please ignore this message.</small>", Config.WEB_URL, code, email));
+                string.Format("To recover your password from Auctus Alpha <a href='{0}/forgot-password-reset?c={1}' target='_blank'>click here</a><br/><br/><small>If you did not ask for a password reset, please ignore this message.</small>", Config.WEB_URL, code));
         }
     }
 }

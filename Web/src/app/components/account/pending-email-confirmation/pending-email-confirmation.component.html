@@ -1,0 +1,16 @@
+<div *ngIf="!emailSent" fxLayout="column" class="main-content" fxLayoutAlign="space-evenly center">
+  <div fxLayout="row" fxLayoutGap="20px">
+    <label>Your account is pending email confirmation. Please, confirm your email to login. If you did not receive, try to resend email confirmation.</label>
+  </div>
+  <div fxLayout="row" fxLayoutGap="20px">
+    <input type="button" class="primary-button bold element-margin-top" (click)="onResendEmailClick()" value="Resend Confirmation" />
+  </div>
+</div>
+<div *ngIf="emailSent" fxLayout="column" class="main-content" fxLayoutAlign="space-evenly center">
+  <div fxLayout="row" fxLayoutGap="20px">
+    <strong>Please, check your mail box.</strong>
+  </div>
+  <div fxLayout="row" fxLayoutGap="20px">
+    <label class="element-margin-top">An email was sent to <i>{{email}}</i>. Follow email instructions to confirm your account.</label>
+  </div>
+</div>

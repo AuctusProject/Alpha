@@ -31,7 +31,7 @@ namespace Api.Controllers
             }
             if (!user.ConfirmationDate.HasValue)
             {
-                return Ok(new { logged = false, message = "Pending email confirmation." });
+                return Ok(new { logged = false, error = "Pending email confirmation." });
             }
             return Ok(new { logged = true, jwt = GenerateToken(loginRequest.Email.ToLower().Trim()), email = user.Email });
         }
@@ -77,11 +77,14 @@ namespace Api.Controllers
             return Ok(new { jwt = GenerateToken(registerRequest.User.Email.ToLower().Trim()), email = user.Email });
         }
 
-        protected virtual async Task<IActionResult> ForgotPassword(string email)
+        protected virtual async Task<IActionResult> ForgotPassword(EmailRequest forgotPasswordRequest)
         {
+            if (forgotPasswordRequest == null || forgotPasswordRequest.Email == null)
+                return BadRequest();
+
             try
             {
-                await AccountServices.SendEmailForForgottenPassword(email);
+                await AccountServices.SendEmailForForgottenPassword(forgotPasswordRequest.Email);
             }
             catch (ArgumentException ex)
             {
@@ -92,7 +95,7 @@ namespace Api.Controllers
 
         protected virtual IActionResult ConfirmEmail(ConfirmEmailRequest confirmEmailRequest)
         {
-            if (confirmEmailRequest.Code == null)
+            if (confirmEmailRequest == null || confirmEmailRequest.Code == null)
                 return BadRequest();
 
             try
@@ -136,11 +139,14 @@ namespace Api.Controllers
             return Ok();
         }
 
-        protected virtual async Task<IActionResult> SendConfirmEmail(string email)
+        protected virtual async Task<IActionResult> SendConfirmEmail(EmailRequest sendConfirmEmailRequest)
         {
+            if (sendConfirmEmailRequest == null || sendConfirmEmailRequest.Email == null)
+                return BadRequest();
+
             try
             {
-                await AccountServices.ResendEmailConfirmation(email);
+                await AccountServices.ResendEmailConfirmation(sendConfirmEmailRequest.Email);
             }
             catch (ArgumentException ex)
             {
@@ -156,11 +162,11 @@ namespace Api.Controllers
 
             try
             {
-                AccountServices.RecoverPassword(recoverPasswordRequest.Email, recoverPasswordRequest.Code, recoverPasswordRequest.Password);
+                AccountServices.RecoverPassword(recoverPasswordRequest.Code, recoverPasswordRequest.Password);
             }
             catch (ArgumentException ex)
             {
-                return BadRequest(new { error = "Recover password could not be validated." });
+                return BadRequest(new { error = ex.Message });
             }
             return Ok();
         }

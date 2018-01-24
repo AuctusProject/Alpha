@@ -18,5 +18,12 @@ namespace Auctus.DataAccess.Account
             parameters.Add("UserId", userId, DbType.Int32);
             return SelectByParameters<PasswordRecovery>(parameters).SingleOrDefault();
         }
+
+        public PasswordRecovery Get(string token)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Token", token, DbType.AnsiString);
+            return SelectByParameters<PasswordRecovery>(parameters).SingleOrDefault();
+        }
     }
 }

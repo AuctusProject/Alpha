@@ -119,7 +119,12 @@ namespace Auctus.Business.Account
         {
             return Data.Get(guid);
         }
-        
+
+        public User Get(int id)
+        {
+            return Data.Get(id);
+        }
+
         private async Task SendEmailConfirmation(string email, string code)
         {
             await Email.SendAsync(
