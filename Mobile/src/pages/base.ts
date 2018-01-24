@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NavController, NavParams, ModalController, ViewController, ActionSheetController } from 'ionic-angular';
 
 import * as _ from 'lodash';
+import moment from 'moment';
 
 export class BasePage {
 
@@ -37,6 +38,8 @@ export class BasePage {
     //lodash
     protected lodash: any;
 
+    protected moment: any;
+
     protected translateService: TranslateService
 
     constructor(protected injector: Injector) {
@@ -62,6 +65,8 @@ export class BasePage {
 
         //lodash
         this.lodash = _;
+
+        this.moment = moment;
 
         this.translateService = this.injector.get(TranslateService);
     }

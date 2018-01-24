@@ -1,3 +1,4 @@
+import { StorageHelper } from './../helpers/storage-helper';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
@@ -13,9 +14,11 @@ export class BaseService {
     }
 
     private http: HttpClient;
+    private storageHelper: StorageHelper;
 
     constructor(protected injector: Injector) {
         this.http = this.injector.get(HttpClient);
+        this.storageHelper = this.injector.get(StorageHelper);
     }
 
     protected httpGet(url: string, params: any): Observable<any> {
@@ -49,18 +52,38 @@ export class BaseService {
     }
 
     private handleSuccess(response) {
+
+        console.log('handleSuccess:');
+        console.log(response);
+
+        if(response && response.jwt) {
+            this.storageHelper.setLoginToken(response.jwt);
+        }
+
         return response;
     }
 
     private handleError(response) {
-        console.log(response);
+        console.log('handleError');
+        console.log( response);
+
+        if(response.status == 401) {
+            this.storageHelper.setLoginToken(undefined);
+            location.href = '/'
+        }
 
         let message = response.error && response.error.error ? response.error.error : 'SYSTEM_ERROR';
         return Observable.throw(message);
     }
 
-    private getHttpHeaders() {
-        let headers = new HttpHeaders();
-        return headers;
+    private getHttpHeaders() {        
+
+        let token = this.storageHelper.getLoginToken();
+        let header = {
+            'Content-Type': 'application/json',
+            'Authorization': ('Bearer ' + token)
+          };
+
+        return header;
     }
 }

@@ -7,23 +7,23 @@ import { TabsPage } from '../tabs/tabs';
 
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+    selector: 'page-home',
+    templateUrl: 'home.html'
 })
 
 export class HomePage {
 
-  public pushPage: any;
+    public pushPage: any;
 
-  constructor(public navCtrl: NavController,
-    public storageHelper: StorageHelper) {
-    this.pushPage = LoginPage
-  }
-
-  ionViewDidEnter() {
-    if(this.storageHelper.getLoginToken()){
-      this.navCtrl.push(TabsPage);
+    constructor(public navCtrl: NavController,
+        public storageHelper: StorageHelper) {
+        this.pushPage = LoginPage
     }
-  }
+
+    ionViewDidEnter() {
+        if (this.storageHelper.getLoginToken() !== 'undefined') {
+            this.navCtrl.push(TabsPage);
+        }
+    }
 
 }

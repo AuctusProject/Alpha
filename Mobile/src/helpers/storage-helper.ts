@@ -7,11 +7,11 @@ export class StorageHelper {
     constructor() {
     }
 
-    public getLoginToken(): string {
+    public getLoginToken(): any {
         return localStorage.getItem('loginToken');
     }
 
-    public setLoginToken(loginToken: string) {
+    public setLoginToken(loginToken: any) {
         localStorage.setItem('loginToken', loginToken);
     }
 

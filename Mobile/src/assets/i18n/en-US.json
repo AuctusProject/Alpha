@@ -10,6 +10,7 @@
   "OK": "Ok",
   "REQUIRED_FIELD": "Required field",
   "PASSWORD": "Password",
+  "PROJECTION": "Projection",
   "SYSTEM_ERROR":"System error. Try again",
   "YES": "Yes"
 }

@@ -7,13 +7,12 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
-
 import { MyApp } from './app.component';
-
 import { AboutPage } from '../pages/about/about';
 import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from './../pages/login/login';
+import { ProjectionPage } from '../pages/projection/projection';
 import { TabsPage } from '../pages/tabs/tabs';
 
 import { AsyncChartComponent } from '../pages/components/async-chart.component';
@@ -27,8 +26,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { ChartistModule } from 'angular2-chartist';
 import { ChartsModule } from 'ng2-charts';
 
-
 import { AccountService } from './../services/account.service';
+import { AdviceService } from './../services/advice.service';
 import { BaseService } from './../services/base.service';
 
 import { AlertHelper } from './../helpers/alert-helper';
@@ -47,6 +46,7 @@ export function createTranslateLoader(http: HttpClient) {
     ContactPage,
     HomePage,
     LoginPage,
+    ProjectionPage,
     TabsPage,
 
     AsyncChartComponent,
@@ -75,6 +75,7 @@ export function createTranslateLoader(http: HttpClient) {
     ContactPage,
     HomePage,
     LoginPage,
+    ProjectionPage,
     TabsPage,
 
     AsyncChartComponent,
@@ -87,6 +88,7 @@ export function createTranslateLoader(http: HttpClient) {
     SplashScreen,
 
     AccountService,
+    AdviceService,
     BaseService,
 
     AlertHelper,
