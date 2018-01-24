@@ -8,7 +8,7 @@ namespace Auctus.Model
     {
         public int AdvisorId { get; set; }
         public List<HistoryValue> Values { get; set; }
-        public List<Advisor.History> History { get; set; }
+        public Advisor.History History { get; set; }
 
         public class HistoryValue
         {

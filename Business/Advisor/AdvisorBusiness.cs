@@ -179,7 +179,7 @@ namespace Auctus.Business.Advisor
                                         (history.Select(c => 1 + (c.OptimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
                 PessimisticExpectation = history.Any(c => !c.PessimisticProjectionValue.HasValue) ? (double?)null :
                                         (history.Select(c => 1 + (c.PessimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
-                HitPercentage = (double)history.Count(c => c.RealValue >= c.ProjectionValue) / (double)history.Count()
+                HitPercentage = (double)history.Count(c => c.RealValue >= c.ProjectionValue) / (double)history.Count() * 100
             };
         }
     }
