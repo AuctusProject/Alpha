@@ -36,4 +36,8 @@
         url("/assets/fonts/HelveticaNeueRegular.ttf") format("truetype"), /* Safari, Android, iOS */
         url('/assets/fonts/HelveticaNeueRegular.svg#svgFontName') format('svg'); /* Legacy iOS */
   }
+ 
   
+  ion-app {
+    font-family: 'HelveticaNeue'!important;
+  }

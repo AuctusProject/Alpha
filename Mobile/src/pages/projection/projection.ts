@@ -1,3 +1,4 @@
+import { PortifolioService } from './../../services/portifolio.service';
 import { Projection } from './../../models/projection.model';
 
 import { Component, Injector } from '@angular/core';
@@ -18,8 +19,6 @@ import { FormatHelper } from '../../helpers/format-helper';
 })
 
 export class ProjectionPage extends BasePage {
-
-
 
   public chartData: Array<any> = [];
   public chartLabels: Array<any> = [];
@@ -103,7 +102,7 @@ export class ProjectionPage extends BasePage {
 
   public projection: Projection;
 
-  constructor(public injector: Injector, private adviceService: AdviceService) {
+  constructor(public injector: Injector, private portifolioService: PortifolioService) {
     super(injector);
     this.getProjections();
   }
@@ -111,7 +110,7 @@ export class ProjectionPage extends BasePage {
   private getProjections() {
 
     this.loadingHelper.showLoading();
-    this.adviceService.getProjections().subscribe(success.bind(this), error.bind(this));
+    this.portifolioService.getProjections().subscribe(success.bind(this), error.bind(this));
 
     function success(response) {
 

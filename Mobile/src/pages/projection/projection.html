@@ -1,18 +1,15 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{"PROJECTION" | translate}}</ion-title>
+    <ion-title>{{'PROJECTION' | translate}}</ion-title>
   </ion-navbar>
-
 </ion-header>
-
 
 <ion-content padding>
   <div *ngIf="projection">
     <ion-row>
       <ion-col col-4 text-center>
         <ion-label ion-text color="primary">
-          Timeframe
+          {{'TIMEFRAME' | translate}}
         </ion-label>
         <ion-label>
           {{projection.currentGoal.timeframe}} years
@@ -20,7 +17,7 @@
       </ion-col>
       <ion-col col-4 text-center>
         <ion-label ion-text color="primary">
-          Starting
+          {{'STARTING' | translate}}
         </ion-label>
         <ion-label>
           {{projection.currentGoal.startingAmount | currency}}
@@ -28,7 +25,7 @@
       </ion-col>
       <ion-col col-4 text-center>
         <ion-label ion-text color="primary">
-          Monthy
+          {{'MONTHY' | translate}}
         </ion-label>
         <ion-label>
           {{projection.currentGoal.monthlyContribution | currency}}
@@ -38,7 +35,7 @@
     <ion-row>
       <ion-col col-6 text-center>
         <ion-label ion-text color="primary">
-          Target
+          {{'TARGET' | translate}}
         </ion-label>
         <ion-label>
           {{projection.currentGoal.targetAmount | currency}}
@@ -46,7 +43,7 @@
       </ion-col>
       <ion-col col-6 text-center>
         <ion-label ion-text color="primary">
-          Risk
+          {{'RISK' | translate}}
         </ion-label>
         <ion-label>
           {{projection.currentGoal.risk}}/5
@@ -56,25 +53,23 @@
   </div>
   <hr/>
 
-  <ion-row *ngIf='chartData.length > 0'>
+  <ion-row *ngIf='chartData.length > 0' text-wrap>
     <ion-col col-4 text-center>
-      <ion-label ion-text >
-          <ion-icon name="remove-circle" class="less-likely"></ion-icon>
-        Less Likely
+      <ion-label ion-text class="less-likely">
+        <ion-icon name="remove-circle" ></ion-icon>
+        {{'LESS_LIKELY' | translate}}
       </ion-label>
     </ion-col>
-    <ion-col col-4 text-center>
-      <ion-label ion-text >
-          <ion-icon name="remove-circle" class="more-likely"></ion-icon>
-        More Likely
+    <ion-col col-4 text-center class="more-likely">
+      <ion-label ion-text>
+        <ion-icon name="remove-circle" ></ion-icon>
+        {{'MORE_LIKELY' | translate}}
       </ion-label>
     </ion-col>
-    <ion-col col-4 text-center>
-      <ion-label ion-text >
-        <b>
-            <ion-icon name="remove-circle" class="contributed"></ion-icon>
-        </b>
-        Contributed
+    <ion-col col-4 text-center class="contributed">
+      <ion-label ion-text>
+        <ion-icon name="remove-circle" ></ion-icon>
+        {{'CONTRIBUTED' | translate}}
       </ion-label>
     </ion-col>
     <ion-col col-12>

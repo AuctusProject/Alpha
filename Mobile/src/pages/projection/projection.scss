@@ -1,14 +1,38 @@
 page-projection {
 
-    .contributed{
-        color:#4a90e2;
+  .contributed {
+    font-size: 12px !important;
+
+    ion-icon {
+      color: #4a90e2;
     }
 
-    .less-likely{
-        color: #BCFFF8;
+    @media screen and (min-height : 600px) {
+      font-size: 15px !important;
+    }
+  }
+
+  .less-likely {
+    font-size: 12px !important;
+
+    ion-icon {
+      color: #BCFFF8;
     }
 
-    .more-likely{
-        color: #0FD7B9;
+    @media screen and (min-height : 600px) {
+      font-size: 15px !important;
     }
+  }
+
+  .more-likely {
+    font-size: 12px !important;
+
+    ion-icon {
+      color: #0FD7B9;
+    }
+
+    @media screen and (min-height : 600px) {
+      font-size: 15px !important;
+    }
+  }
 }
