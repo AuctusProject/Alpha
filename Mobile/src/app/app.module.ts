@@ -1,3 +1,4 @@
+
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -8,16 +9,12 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { MyApp } from './app.component';
-import { AboutPage } from '../pages/about/about';
-import { ContactPage } from '../pages/contact/contact';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from './../pages/login/login';
 import { ProjectionPage } from '../pages/projection/projection';
+import { PortifolioPage } from './../pages/portifolio/portifolio';
 import { TabsPage } from '../pages/tabs/tabs';
 
-import { AsyncChartComponent } from '../pages/components/async-chart.component';
-import { DynamicChartComponent } from '../pages/components/dynamic-chart.component';
-import { LiveChartComponent } from '../pages/components/live-chart.component';
 import { FieldErrorComponent } from './../components/field-error/field-error';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -29,6 +26,7 @@ import { ChartsModule } from 'ng2-charts';
 import { AccountService } from './../services/account.service';
 import { AdviceService } from './../services/advice.service';
 import { BaseService } from './../services/base.service';
+import { PortifolioService } from '../services/portifolio.service';
 
 import { AlertHelper } from './../helpers/alert-helper';
 import { LoadingHelper } from '../helpers/loading-helper';
@@ -42,17 +40,12 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     LoginPage,
     ProjectionPage,
+    PortifolioPage,
     TabsPage,
-
-    AsyncChartComponent,
-    DynamicChartComponent,
-    FieldErrorComponent,
-    LiveChartComponent
+    FieldErrorComponent
   ],
   imports: [
     BrowserModule,
@@ -71,17 +64,12 @@ export function createTranslateLoader(http: HttpClient) {
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    AboutPage,
-    ContactPage,
     HomePage,
     LoginPage,
     ProjectionPage,
+    PortifolioPage,
     TabsPage,
-
-    AsyncChartComponent,
-    DynamicChartComponent,
     FieldErrorComponent,
-    LiveChartComponent
   ],
   providers: [
     StatusBar,
@@ -90,6 +78,7 @@ export function createTranslateLoader(http: HttpClient) {
     AccountService,
     AdviceService,
     BaseService,
+    PortifolioService,
 
     AlertHelper,
     LoadingHelper,
