@@ -14,6 +14,7 @@ import { PortfolioTabComponent } from "./components/dashboard/portfolio-tab/port
 import { HistoricalTabComponent } from "./components/dashboard/historical-tab/historical-tab.component";
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
+import { ApiDocComponent } from './components/api-doc/api-doc.component';
 
 export const DASHBOARD_TABS_ROUTES: Routes = [
   { path: '', redirectTo: 'projection', pathMatch: 'full' },
@@ -34,7 +35,8 @@ const routes: Routes = [
     { path: 'advisor/:id', component: AdvisorDetailComponent },
     { path: 'dashboard', component: DashboardComponent, children: DASHBOARD_TABS_ROUTES },
     { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'manage-api', component: ManageApiComponent }
+    { path: 'manage-api', component: ManageApiComponent },
+    { path: 'api-doc', component: ApiDocComponent }
 ];
 
 

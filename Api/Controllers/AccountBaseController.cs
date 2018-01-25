@@ -193,5 +193,32 @@ namespace Api.Controllers
             }
             return Ok(new { key = apiAccess.ApiKey });
         }
+
+        protected virtual IActionResult GetLastApiAccess()
+        {
+            ApiAccess apiAccess;
+            try
+            {
+                apiAccess = AccountServices.GetLastApiAccess(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { key = apiAccess?.ApiKey });
+        }
+
+        protected virtual IActionResult DeleteApiAccess()
+        {
+            try
+            {
+                AccountServices.DeleteApiAccess(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
     }
 }

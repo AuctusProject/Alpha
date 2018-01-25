@@ -121,5 +121,23 @@ namespace Api.Controllers
         {
             return base.GenerateApiAccess();
         }
+
+        [Route("apikeys/last")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetLastApiAccess()
+        {
+            return base.GetLastApiAccess();
+        }
+
+        [Route("apikeys")]
+        [HttpDelete]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult DeleteApiAccess()
+        {
+            return base.DeleteApiAccess();
+        }
     }
 }

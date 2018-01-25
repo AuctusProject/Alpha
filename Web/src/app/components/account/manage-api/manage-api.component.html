@@ -1,3 +1,24 @@
-<p>
-  manage-api works!
-</p>
+<account-header></account-header>
+
+<div fxLayout="column" fxLayoutGap="15px" fxLayoutAlign="space-evenly center">
+  <div *ngIf="apiKey" fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="space-evenly center">
+    <label>YOUR API KEY IS: <strong>{{apiKey}}</strong></label>
+    <input type="button" class="warning-button bold" (click)="onRevokeClick()" value="Revoke" />
+  </div>
+  <label *ngIf="apiKey">Keep your API key safe as your password. If you suspect that it has been compromised, revoke it immediately.</label>
+  <label *ngIf="!apiKey">YOU DO NOT HAVE AN API KEY AVAILABLE</label>
+  <input type="button" class="primary-button bold" (click)="onGenerateApiKeyClick()" value="Generate new API key" />
+  <label>NOTE: when you generate a new Api Key all old keys automatically become invalids.</label>
+  <div fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="space-around start" class="element-margin-top">
+    <label>With our Api you are able to use your robo advisor to rebalance and create portfolios to guarantee always the best investment following your rules.</label>
+    <label>Through the Api Key you have programatically access to your own Advisors:</label>
+    <ul>
+      <li>List all informations.</li>
+      <li>Update information about Advisor.</li>
+      <li>Create new portfolios.</li>
+      <li>Update portfolio's assets distribution.</li>
+    </ul>
+    <label class="element-margin-top">See <a target="_blank" routerLink="/api-doc">API Document</a>.</label>
+  </div>
+</div>
+
