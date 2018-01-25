@@ -18,7 +18,7 @@
     </div>
 
     <div fxLayout="row" fxLayoutAlign="end center" class="wizard-buttons">
-      <button class="next" mat-icon-button type="submit" [disabled]="!registerForm.valid">
+      <button class="next" mat-icon-button [promiseBtn]="promise" type="submit" [disabled]="!registerForm.valid">
         <mat-icon>arrow_forward</mat-icon>
       </button>
     </div>
