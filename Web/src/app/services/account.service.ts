@@ -13,6 +13,7 @@ export class AccountService {
   private forgotPasswordUrl = this.httpService.apiUrl("accounts/v1/password/forgotten");
   private resetPasswordUrl = this.httpService.apiUrl("accounts/v1/password/recovery");
   private resendConfirmationUrl = this.httpService.apiUrl("accounts/v1/confirmation/resend");
+  private changePasswordUrl = this.httpService.apiUrl("accounts/v1/password/change");
 
   constructor(private httpService : HttpService) { }
 
@@ -51,5 +52,13 @@ export class AccountService {
       Email: email
     }
     return this.httpService.post(this.resendConfirmationUrl, resendConfirmationRequest);
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    let changePasswordRequest = {
+      CurrentPassword: currentPassword,
+      NewPassword: newPassword
+    }
+    return this.httpService.post(this.changePasswordUrl, changePasswordRequest);
   }
 }
