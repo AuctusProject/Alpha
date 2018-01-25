@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Goal } from "../../../model/account/goal";
 import {MediaChange, ObservableMedia} from "@angular/flex-layout";
+import { Subscription } from 'rxjs/Subscription';
+import { AccountService } from "../../../services/account.service";
+import { NotificationsService } from "angular2-notifications";
 
 @Component({
   selector: 'risk-step',
@@ -13,8 +16,11 @@ export class RiskStepComponent implements OnInit {
   @Output() modelChange = new EventEmitter<Goal>();
   @Output() onSubmitted = new EventEmitter<boolean>();
   riskDescription: string;
+  promise : Subscription;
 
-  constructor(public media: ObservableMedia) { }
+  constructor(public media: ObservableMedia, 
+      public accountService : AccountService,
+      public notificationService : NotificationsService) { }
 
   ngOnInit() {
     this.setDescription();
@@ -43,7 +49,13 @@ export class RiskStepComponent implements OnInit {
   }
 
   onSubmit(){
-    this.onSubmitted.emit(true);
+    let onSubmitted = this.onSubmitted;
+    this.promise = this.accountService.setGoal(this.model).subscribe(
+      ret => {
+        this.notificationService.success("Success", "Goal saved");
+        onSubmitted.emit(true);
+      }
+    );
   }
 
 }
