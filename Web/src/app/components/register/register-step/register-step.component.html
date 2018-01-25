@@ -1,24 +1,26 @@
 <form #registerForm="ngForm" (ngSubmit)="onSubmit()">
   <div fxLayout="column" fxLayoutGap="20px">
     <div fxLayout="row">
-      <span fxFlex fxLayoutAlign="center center">Register</span>
+      <h2 class="bold" fxFlex fxLayoutAlign="center center">Just one more step!</h2>
     </div>
 
-    <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+    <div fxLayout="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="center center">
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field>
-          <input matInput placeholder="Email" [inputFocus]="true" name="email" [(ngModel)]="fullRegisterDTO.user.email">
+          <input matInput placeholder="Email" [inputFocus]="true" name="email" [(ngModel)]="fullRegisterDTO.user.email" required>
         </mat-form-field>
       </div>
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field>
-          <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="fullRegisterDTO.user.password">
+          <input matInput type="password" placeholder="Password" name="password" [(ngModel)]="fullRegisterDTO.user.password" required>
         </mat-form-field>
       </div>
     </div>
 
-    <div fxLayout="row">
-      <button mat-button type="submit" [promiseBtn]="promise" [disabled]="!registerForm.form.valid">Register</button>
+    <div fxLayout="row" fxLayoutAlign="end center" class="wizard-buttons">
+      <button class="next" mat-icon-button [promiseBtn]="promise" type="submit" [disabled]="!registerForm.valid">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
     </div>
   </div>
 </form>

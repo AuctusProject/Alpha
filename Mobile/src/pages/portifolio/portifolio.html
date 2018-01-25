@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{'PORTIFOLIO' | translate}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="distribution">
+    <ion-row *ngIf="chartData">
+      <ion-col>
+        <canvas baseChart width="100" height="100" [data]="chartData" [labels]="chartLabels" [legend]="false" [colors]="chartColors"
+          [chartType]="chartType"></canvas>
+      </ion-col>
+    </ion-row>
+    <ion-row text-center>
+      <ion-col col-6>
+        <label class="total-percentage">
+          {{totalTraditionalPercentage}}%
+        </label>
+        <br/>
+        <label class="total-percentage-label">
+          {{'TRADITIONAL' | translate}}
+        </label>
+      </ion-col>
+      <ion-col col-6>
+        <label class="total-percentage">
+          {{totalCryptoPercentage}}%
+        </label>
+        <br/>
+        <label class="total-percentage-label">
+          {{'CRYPTO' | translate}}
+        </label>
+      </ion-col>
+    </ion-row>
+    <hr/>
+    <ion-row>
+      <ion-col col-8 text-left class="asset-header">
+          {{'HOLDINGS' | translate}}
+      </ion-col>
+      <ion-col col-4 text-right class="asset-header">
+          {{'PERCENTAGE' | translate}}
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let asset of distribution; let i = index;">
+      <ion-col col-8 text-left class="asset-item">
+        <ion-icon name="square" [style.color]="assetColors[i]"></ion-icon>
+        {{asset.name}} ({{asset.code}})
+      </ion-col>
+      <ion-col col-4 text-right>
+        {{asset.percentage}}%
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

@@ -14,11 +14,17 @@ export class GoalOptionComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    if (this.label == 'Child'){
-      this.icon = "assets/icons/child.png";
+    if (this.label == 'Other'){
+      this.icon = "assets/icons/other.png";
     }
-    else {
-      this.icon = "assets/icons/child.png";
+    else if (this.label == 'Retirement'){
+      this.icon = "assets/icons/retirement.png";
+    }
+    else if (this.label == 'College Savings'){
+      this.icon = "assets/icons/college-savings.png";
+    }
+    else{
+      this.icon = "assets/icons/house.png";
     }
   }
 

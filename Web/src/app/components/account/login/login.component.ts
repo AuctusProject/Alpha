@@ -17,21 +17,20 @@ export class LoginComponent implements OnInit {
   constructor(private loginService: LoginService, private notificationService: NotificationsService, private router: Router) { }
 
   ngOnInit() {
-    
+    this.login.pendingConfirmation = false;
   } 
 
   onLoginClick(): void {
-    console.log(this.login);
     this.loginService.login(this.login)
       .subscribe(response => {
         if (response.logged) {
+          this.loginService.setUser(this.login.email);
           this.router.navigateByUrl('dashboard');
         }
         else {
-          this.notificationService.error("Error", response.error);
+          this.login.pendingConfirmation = true;
+          this.notificationService.info("Info", response.error);
         }
-        console.log(response);
       });
   }
-
 }

@@ -5,7 +5,6 @@ import { Injectable, Injector } from '@angular/core';
 import { BaseService } from './base.service';
 import { Login } from '../models/login.model';
 
-
 @Injectable()
 export class AccountService extends BaseService {
 

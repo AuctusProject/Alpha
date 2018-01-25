@@ -84,9 +84,12 @@ namespace Auctus.Business.Account
             Data.Update(user);
         }
         
-        public void ChangePassword(string email, string password)
+        public void ChangePassword(string email, string currentPassword, string newPassword)
         {
-            UpdatePassword(GetValidUser(email), password);
+            var user = GetValidUser(email);
+            if (user.Password != Security.Hash(currentPassword))
+                throw new ArgumentException("Current password is incorrect.");
+            UpdatePassword(user, newPassword);
         }
 
         public void UpdatePassword(User user, string password)
@@ -119,7 +122,12 @@ namespace Auctus.Business.Account
         {
             return Data.Get(guid);
         }
-        
+
+        public User Get(int id)
+        {
+            return Data.Get(id);
+        }
+
         private async Task SendEmailConfirmation(string email, string code)
         {
             await Email.SendAsync(

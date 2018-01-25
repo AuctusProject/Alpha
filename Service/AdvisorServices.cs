@@ -26,9 +26,9 @@ namespace Auctus.Service
             return AdvisorBusiness.ListDetails(email, advisorId);
         }
 
-        public Buy Buy(string email, int advisorId)
+        public Buy Buy(string email, int advisorId, int? risk = null)
         {
-            return BuyBusiness.Create(email, advisorId);
+            return BuyBusiness.Create(email, advisorId, risk);
         }
 
         public IEnumerable<Model.Advisor> ListAdvisors(string email)

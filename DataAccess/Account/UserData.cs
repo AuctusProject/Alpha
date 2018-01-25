@@ -23,6 +23,13 @@ namespace Auctus.DataAccess.Account
             return SelectByParameters<User>(parameters).SingleOrDefault();
         }
 
+        public User Get(int id)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+            return SelectByParameters<User>(parameters).SingleOrDefault();
+        }
+
         public User GetByConfirmationCode(string confirmationCode)
         {
             DynamicParameters parameters = new DynamicParameters();

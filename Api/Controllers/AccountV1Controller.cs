@@ -55,9 +55,9 @@ namespace Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new async Task<IActionResult> ForgotPassword([FromBody]string email)
+        public new async Task<IActionResult> ForgotPassword([FromBody]EmailRequest forgotPasswordRequest)
         {
-            return await base.ForgotPassword(email);
+            return await base.ForgotPassword(forgotPasswordRequest);
         }
 
         [Route("confirmation")]
@@ -73,9 +73,9 @@ namespace Api.Controllers
         [HttpPost]
         [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult ChangePassword([FromBody]string password)
+        public new IActionResult ChangePassword([FromBody]ChangePasswordRequest changePasswordRequest)
         {
-            return base.ChangePassword(password);
+            return base.ChangePassword(changePasswordRequest);
         }
 
         [Route("goals")]
@@ -91,9 +91,9 @@ namespace Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new async Task<IActionResult> SendConfirmEmail([FromBody]string email)
+        public new async Task<IActionResult> SendConfirmEmail([FromBody]EmailRequest sendConfirmEmailRequest)
         {
-            return await base.SendConfirmEmail(email);
+            return await base.SendConfirmEmail(sendConfirmEmailRequest);
         }
 
         [Route("password/recovery")]

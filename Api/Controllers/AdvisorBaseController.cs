@@ -51,11 +51,14 @@ namespace Api.Controllers
             return Ok(new { id = advisorDetail.Id });
         }
         
-        protected virtual IActionResult Buy(int advisorId)
+        protected virtual IActionResult Buy(BuyRequest buyRequest)
         {
+            if (buyRequest == null)
+                return BadRequest();
+
             try
             {
-                AdvisorServices.Buy(GetUser(), advisorId);
+                AdvisorServices.Buy(GetUser(), buyRequest.AdvisorId, buyRequest.Risk);
             }
             catch (ArgumentException ex)
             {

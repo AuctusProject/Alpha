@@ -38,9 +38,9 @@ namespace Api.Controllers
         [Route("purchase")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult Buy([FromBody]int advisorId)
+        public new IActionResult Buy([FromBody]BuyRequest buyRequest)
         {
-            return base.Buy(advisorId);
+            return base.Buy(buyRequest);
         }
         
         [HttpGet]

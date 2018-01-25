@@ -10,6 +10,10 @@ export class AccountService {
   private listGoalOptionsUrl = this.httpService.apiUrl("accounts/v1/goals/options");
   private fullRegisterUrl = this.httpService.apiUrl("accounts/v1/registration/full");
   private confirmEmailUrl = this.httpService.apiUrl("accounts/v1/confirmation");
+  private forgotPasswordUrl = this.httpService.apiUrl("accounts/v1/password/forgotten");
+  private resetPasswordUrl = this.httpService.apiUrl("accounts/v1/password/recovery");
+  private resendConfirmationUrl = this.httpService.apiUrl("accounts/v1/confirmation/resend");
+  private changePasswordUrl = this.httpService.apiUrl("accounts/v1/password/change");
 
   constructor(private httpService : HttpService) { }
 
@@ -26,5 +30,35 @@ export class AccountService {
       Code: code
     }
     return this.httpService.post(this.confirmEmailUrl, confirmationRequest);
+  }
+
+  recoverPassword(emailAccount: string): Observable<any> {
+    let recoverPasswordRequest = {
+      Email: emailAccount
+    }
+    return this.httpService.post(this.forgotPasswordUrl, recoverPasswordRequest);
+  }
+
+  resetPassword(code: string, password: string): Observable<any> {
+    let resetPasswordRequest = {
+      Code: code,
+      Password: password
+    }
+    return this.httpService.post(this.resetPasswordUrl, resetPasswordRequest);
+  }
+
+  resendConfirmation(email: string): Observable<any> {
+    let resendConfirmationRequest = {
+      Email: email
+    }
+    return this.httpService.post(this.resendConfirmationUrl, resendConfirmationRequest);
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<any> {
+    let changePasswordRequest = {
+      CurrentPassword: currentPassword,
+      NewPassword: newPassword
+    }
+    return this.httpService.post(this.changePasswordUrl, changePasswordRequest);
   }
 }

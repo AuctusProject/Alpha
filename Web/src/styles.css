@@ -206,6 +206,24 @@ body, p, span {
   margin: 0px;
 }
 
+.medium {
+  font-family: 'HelveticaNeueMedium';
+}
+
+.bold {
+  font-family: 'HelveticaNeueBold';
+}
+
+.mat-form-field-label.mat-input-placeholder.mat-form-field-placeholder {
+  font-family: 'HelveticaNeueMedium' !important;
+}
+
+.input-label{
+  font-family: 'HelveticaNeueMedium', 'Helvetica', sans-serif;
+  font-size: 14px;
+  color: #4a4a4a;
+}
+
 h1 {
   font-family: 'HelveticaNeue', 'Helvetica', sans-serif;
   font-size: 56px;
@@ -222,7 +240,8 @@ h1 {
   }
 
 h2 {
-  font-family: 'HelveticaNeue';
+  font-family: 'HelveticaNeueMedium';
+  font-weight: normal;
   font-size: 20px;
   color: #4a4a4a;
 }
@@ -270,6 +289,9 @@ button {
   .primary-button.bold {
     font-family: 'HelveticaNeueBold';
   }
+  .primary-button:hover {
+    background-color:lightcyan;
+  }
 
 button.no-border {
   background: white;
@@ -297,12 +319,22 @@ button.next[disabled]{
     background-color: rgb(172, 171, 171);
 }
 
-.wizard-buttons
-{
-    margin-right: 25%;
+@media (min-width: 800px) {
+  .wizard-buttons
+  {
+    /* margin-right: 25%; */
+    max-width: 75%;
+  }
+}
+.wizard-buttons mat-icon{
+  color: white;
 }
 
 
 .amount-step .mat-input-underline{
   background-color: #d8d8d8 !important;
+}
+
+.element-margin-top {
+  margin-top: 15px;
 }
