@@ -26,7 +26,7 @@
   src: url('/assets/fonts/HelveticaNeueMedium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
   url('/assets/fonts/HelveticaNeueMedium.woff2') format('woff2'), /* Super Modern Browsers */
   url("/assets/fonts/HelveticaNeueMedium.woff") format("woff"), /* Pretty Modern Browsers */
-  url("/assets/fonts/HelveticaNeueMedium.ttf") format("truetype"), /* Safari, Android, iOS */ 
+  url("/assets/fonts/HelveticaNeueMedium.ttf") format("truetype"), /* Safari, Android, iOS */
   url('/assets/fonts/HelveticaNeueMedium.svg#svgFontName') format('svg'); /* Legacy iOS */
 }
 
@@ -218,7 +218,7 @@ body, p, span {
   font-family: 'HelveticaNeueMedium' !important;
 }
 
-.input-label{
+.input-label {
   font-family: 'HelveticaNeueMedium', 'Helvetica', sans-serif;
   font-size: 14px;
   color: #4a4a4a;
@@ -286,11 +286,26 @@ button {
   cursor: pointer;
 }
 
-  .primary-button.bold {
+  .primary-button.bold, .primary-blue-button.bold {
     font-family: 'HelveticaNeueBold';
   }
+
   .primary-button:hover {
-    background-color:lightcyan;
+    background-color: lightcyan;
+  }
+
+.primary-blue-button {
+  background-color: #3c91e6;
+  border: solid 1px #3c91e6;
+  color: #ffffff;
+  border-radius: 100px;
+  padding: 12px 35px;
+  cursor: pointer;
+}
+
+  .primary-blue-button:hover {
+    background-color: #3786d4;
+    border: solid 1px #3786d4;
   }
 
 .warning-button {
@@ -322,33 +337,33 @@ button.no-border {
     font-family: 'HelveticaNeueBold';
   }
 
-  button.next{
-    border-radius: 100px;
-    background-color: #4a90e2;
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
+button.next {
+  border-radius: 100px;
+  background-color: #4a90e2;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
 }
 
-button.next:disabled,
-button.next[disabled]{
+  button.next:disabled,
+  button.next[disabled] {
     opacity: 0.5;
     background-color: rgb(172, 171, 171);
-}
+  }
 
 @media (min-width: 800px) {
-  .wizard-buttons
-  {
+  .wizard-buttons {
     /* margin-right: 25%; */
     max-width: 75%;
   }
 }
-.wizard-buttons mat-icon{
+
+.wizard-buttons mat-icon {
   color: white;
 }
 
 
-.amount-step .mat-input-underline{
+.amount-step .mat-input-underline {
   background-color: #d8d8d8 !important;
 }
 

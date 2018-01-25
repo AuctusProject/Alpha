@@ -7,3 +7,14 @@
 .buttons {
     margin-top: 40px;
 }
+
+
+.create-account {
+  width: 400px;
+  background-color: #e9eff4;
+  padding: 40px 24px;
+}
+
+.create-account-button{
+  padding-top:40px;
+}

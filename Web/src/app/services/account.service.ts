@@ -3,12 +3,14 @@ import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
 import { GoalOption } from "../model/account/goalOption";
 import { FullRegister } from "../model/account/fullRegister";
+import { Goal } from '../model/account/goal';
 
 @Injectable()
 export class AccountService {
 
   private listGoalOptionsUrl = this.httpService.apiUrl("accounts/v1/goals/options");
   private fullRegisterUrl = this.httpService.apiUrl("accounts/v1/registration/full");
+  private setGoalUrl = this.httpService.apiUrl("accounts/v1/goals");
   private confirmEmailUrl = this.httpService.apiUrl("accounts/v1/confirmation");
   private forgotPasswordUrl = this.httpService.apiUrl("accounts/v1/password/forgotten");
   private resetPasswordUrl = this.httpService.apiUrl("accounts/v1/password/recovery");
@@ -26,6 +28,10 @@ export class AccountService {
 
   fullRegister(fullRegisterDTO : FullRegister): Observable<FullRegister> {
     return this.httpService.post(this.fullRegisterUrl, fullRegisterDTO);
+  }
+
+  setGoal(goalDTO : Goal): Observable<Goal> {
+    return this.httpService.post(this.setGoalUrl, goalDTO);
   }
 
   confirmEmail(code : string): Observable<any> {

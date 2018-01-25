@@ -11,10 +11,7 @@
             <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
         </mat-step>
         <mat-step>
-            <risk-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></risk-step>
-        </mat-step>
-        <mat-step>
-            <register-step [(model)]="goal"></register-step>
+            <risk-step [(model)]="goal"></risk-step>
         </mat-step>
     </mat-horizontal-stepper>
 </div>
