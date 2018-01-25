@@ -50,6 +50,8 @@ import 'hammerjs';
 import { PortfolioHistoryChartComponent } from './components/dashboard/portfolio-history-chart/portfolio-history-chart.component';
 import { PortfolioDistributionComponent } from './components/dashboard/portfolio-distribution/portfolio-distribution.component';
 import { PortfolioHistogramComponent } from './components/dashboard/portfolio-histogram/portfolio-histogram.component';
+import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
+import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,9 @@ import { PortfolioHistogramComponent } from './components/dashboard/portfolio-hi
     HistoricalTabComponent,
     PortfolioHistoryChartComponent,
     PortfolioDistributionComponent,
-    PortfolioHistogramComponent
+    PortfolioHistogramComponent,
+    ChangePasswordComponent,
+    ManageApiComponent
   ],
   imports: [
     BrowserAnimationsModule,

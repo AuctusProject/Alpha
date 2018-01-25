@@ -73,9 +73,9 @@ namespace Api.Controllers
         [HttpPost]
         [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult ChangePassword([FromBody]string password)
+        public new IActionResult ChangePassword([FromBody]ChangePasswordRequest changePasswordRequest)
         {
-            return base.ChangePassword(password);
+            return base.ChangePassword(changePasswordRequest);
         }
 
         [Route("goals")]

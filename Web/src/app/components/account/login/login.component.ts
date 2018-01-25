@@ -24,6 +24,7 @@ export class LoginComponent implements OnInit {
     this.loginService.login(this.login)
       .subscribe(response => {
         if (response.logged) {
+          this.loginService.setUser(this.login.email);
           this.router.navigateByUrl('dashboard');
         }
         else {

@@ -12,9 +12,9 @@ namespace Auctus.Service
     {
         public AccountServices(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
-        public void ChangePassword(string email, string password)
+        public void ChangePassword(string email, string currentPassword, string newPassword)
         {
-            UserBusiness.ChangePassword(email, password);
+            UserBusiness.ChangePassword(email, currentPassword, newPassword);
         }
 
         public void RecoverPassword(string code, string password)

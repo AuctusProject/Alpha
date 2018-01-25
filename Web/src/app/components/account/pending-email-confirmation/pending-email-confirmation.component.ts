@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AccountService } from '../../../services/account.service';
 import { NotificationsService } from "angular2-notifications";
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pending-email-confirmation-component',
@@ -13,7 +12,7 @@ export class PendingEmailConfirmationComponent implements OnInit {
   @Input() emailSent: boolean;
   @Input() email: string;
 
-  constructor(private accountService: AccountService, private notificationService: NotificationsService, private router: Router) { }
+  constructor(private accountService: AccountService, private notificationService: NotificationsService) { }
 
   ngOnInit() {
     this.emailSent = false;

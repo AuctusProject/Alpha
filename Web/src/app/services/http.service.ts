@@ -13,13 +13,39 @@ export class HttpService {
   constructor(private http: HttpClient, private notificationService: NotificationsService, private router: Router) { }
 
   private jwt: string = "auc_jwt";
+  private user: string = "auc_user";
 
   private getAccessToken(): string {
-    return window ? window.localStorage.getItem(this.jwt) : null;
+    return (this.getLocalStorage(this.jwt) as string);
   }
 
   private setAccessToken(newJwt: string): void {
-    if (window) window.localStorage.setItem(this.jwt, newJwt);
+    this.setLocalStorage(this.jwt, newJwt);
+  }
+  
+  private setLocalStorage(key: string, value: any): void {
+    if (window) window.localStorage.setItem(key, value);
+  }
+
+  private getLocalStorage(key: string): any {
+    return window ? window.localStorage.getItem(key) : null;
+  }
+
+  private removeLocalStorage(key: string): void {
+    if (window) window.localStorage.removeItem(key);
+  }
+
+  getUser(): string {
+    return (this.getLocalStorage(this.user) as string);
+  }
+
+  setUser(email: string): void {
+    if (email) this.setLocalStorage(this.user, email.toLowerCase().trim());
+  }
+
+  logout(): void {
+    this.removeLocalStorage(this.user);
+    this.removeLocalStorage(this.jwt);
   }
 
   apiUrl(route: string): string {
@@ -40,14 +66,18 @@ export class HttpService {
     return new HttpHeaders(header);
   }
 
-  post<T>(url: string, model: T, httpOptions: any = {}): Observable<any> {
+  getHttpOptions(httpOptions: any): any {
     if (!httpOptions) {
       httpOptions = { headers: this.baseHttpHeaders() };
     }
     else if (!httpOptions["headers"]) {
       httpOptions["headers"] = this.baseHttpHeaders();
     }
-    return this.http.post<any>(url, model, httpOptions).pipe(
+    return httpOptions;
+  }
+
+  post<T>(url: string, model: T, httpOptions: any = {}): Observable<any> {
+    return this.http.post<any>(url, model, this.getHttpOptions(httpOptions)).pipe(
       tap((response: any) => {
         if (response && response.jwt) this.setAccessToken(response.jwt);
       }),
@@ -56,20 +86,33 @@ export class HttpService {
   }
 
   get<T>(url: string, httpOptions: any = {}): Observable<any> {
-    if (!httpOptions) {
-      httpOptions = { headers: this.baseHttpHeaders() };
-    }
-    else if (!httpOptions["headers"]) {
-      httpOptions["headers"] = this.baseHttpHeaders();
-    }
-    return this.http
-    .get<any>(url, httpOptions)
-    .pipe(
+    return this.http.get<any>(url, this.getHttpOptions(httpOptions))
+      .pipe(
+        tap((response: any) => {
+          if (response && response.jwt) this.setAccessToken(response.jwt);
+        }),
+        catchError(this.handleError<T>(url))
+      );
+  }
+
+  put<T>(url: string, model: T, httpOptions: any = {}): Observable<any> {
+    return this.http.put<any>(url, model, this.getHttpOptions(httpOptions))
+      .pipe(
       tap((response: any) => {
         if (response && response.jwt) this.setAccessToken(response.jwt);
       }),
       catchError(this.handleError<T>(url))
-    );
+      );
+  }
+
+  patch<T>(url: string, model: T, httpOptions: any = {}): Observable<any> {
+    return this.http.patch<any>(url, model, this.getHttpOptions(httpOptions))
+      .pipe(
+      tap((response: any) => {
+        if (response && response.jwt) this.setAccessToken(response.jwt);
+      }),
+      catchError(this.handleError<T>(url))
+      );
   }
 
   private handleError<T>(operation = 'operation', result?: T) {

@@ -109,11 +109,14 @@ namespace Api.Controllers
             return Ok();
         }
 
-        protected virtual IActionResult ChangePassword(string password)
+        protected virtual IActionResult ChangePassword(ChangePasswordRequest changePasswordRequest)
         {
+            if (changePasswordRequest == null || changePasswordRequest.CurrentPassword == null || changePasswordRequest.NewPassword == null)
+                return BadRequest();
+
             try
             {
-                AccountServices.ChangePassword(GetUser(), password);
+                AccountServices.ChangePassword(GetUser(), changePasswordRequest.CurrentPassword, changePasswordRequest.NewPassword);
             }
             catch (ArgumentException ex)
             {
