@@ -9,7 +9,7 @@ import { NotificationsService } from "angular2-notifications";
 })
 export class AppComponent implements OnInit {
 
-  public options = {
+  public notificationOptions = {
     position: ["bottom", "left"],
     timeOut: 2500,
     maxStack: 1,
