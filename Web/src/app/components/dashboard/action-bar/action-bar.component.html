@@ -1,8 +1,8 @@
 <nav mat-tab-nav-bar class="action-bar" disableRipple="true">
   <a mat-tab-link [routerLink]="['projection']"
-    [routerLinkActive]="['mat-tab-link-active']"
+     [routerLinkActive]="['mat-tab-link-active']"
      #rla="routerLinkActive"
-    [active]="rla.isActive">Projection</a>
+     [active]="rla.isActive">Projection</a>
   <a mat-tab-link [routerLink]="['portfolio']"
      [routerLinkActive]="['mat-tab-link-active']"
      #rla="routerLinkActive"
@@ -12,8 +12,18 @@
      [routerLinkActive]="['mat-tab-link-active']"
      #rla="routerLinkActive"
      [active]="rla.isActive">History</a>
-  <a mat-tab-link [routerLink]="['./account/create']"
+  <a *ngIf="!user" mat-tab-link [routerLink]="['./account/create']"
      [routerLinkActive]="['mat-tab-link-active']"
-      #rla="routerLinkActive"
+     #rla="routerLinkActive"
      [active]="rla.isActive" class="pull-right create-auctus">Create Auctus account</a>
+  <div *ngIf="user" class="pull-right create-auctus">
+    <mat-menu #appMenu="matMenu">
+      <button mat-menu-item routerLink="/login"> Change password </button>
+      <button mat-menu-item routerLink="/login"> Api </button>
+      <button mat-menu-item (click)="logout()"> Logout </button>
+    </mat-menu>
+    <button mat-button [matMenuTriggerFor]="appMenu">
+      {{user}}
+    </button>
+  </div>
 </nav>
