@@ -14,7 +14,7 @@ namespace Auctus.Business.Advisor
     {
         public BuyBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
 
-        public Buy Create(string email, int advisorId)
+        public Buy Create(string email, int advisorId, int? risk = null)
         {
             var advisor = AdvisorBusiness.GetWithDetail(advisorId);
             var user = UserBusiness.GetValidUser(email);
@@ -26,7 +26,7 @@ namespace Auctus.Business.Advisor
                 throw new ArgumentException("Advisor already bought.");
 
             var goal = GoalBusiness.GetCurrent(user.Id);
-            var portfolio = PortfolioBusiness.GetByRisk(advisorId, RiskType.Get(goal.Risk, goal.GoalOption.Risk));
+            var portfolio = PortfolioBusiness.GetByRisk(advisorId, risk.HasValue ? RiskType.Get(risk.Value) : RiskType.Get(goal.Risk, goal.GoalOption.Risk));
 
             var buy = SetNew(advisorId, portfolio.ProjectionId.Value, goal.Id, advisor.Detail.Period);
             Data.Insert(buy);
