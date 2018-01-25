@@ -132,7 +132,7 @@ namespace Api.Controllers
 
             try
             {
-                AccountServices.CreateGoal(GetUser(), setGoalRequest.GoalOptionId, setGoalRequest.Timeframe, setGoalRequest.Risk,
+                AccountServices.CreateGoal(GetUser(), setGoalRequest.GoalOption.Id, setGoalRequest.Timeframe, setGoalRequest.Risk,
                     setGoalRequest.TargetAmount, setGoalRequest.StartingAmount, setGoalRequest.MonthlyContribution);
             }
             catch (ArgumentException ex)
@@ -192,6 +192,33 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
             return Ok(new { key = apiAccess.ApiKey });
+        }
+
+        protected virtual IActionResult GetLastApiAccess()
+        {
+            ApiAccess apiAccess;
+            try
+            {
+                apiAccess = AccountServices.GetLastApiAccess(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { key = apiAccess?.ApiKey });
+        }
+
+        protected virtual IActionResult DeleteApiAccess()
+        {
+            try
+            {
+                AccountServices.DeleteApiAccess(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
         }
     }
 }

@@ -19,7 +19,7 @@
   <div *ngIf="user" class="pull-right create-auctus">
     <mat-menu #appMenu="matMenu">
       <button mat-menu-item routerLink="../change-password"> Change password </button>
-      <button mat-menu-item routerLink="../manage-api"> Manage Api </button>
+      <button mat-menu-item routerLink="../manage-api"> Manage API </button>
       <button mat-menu-item (click)="logout()"> Logout </button>
     </mat-menu>
     <button mat-button [matMenuTriggerFor]="appMenu">

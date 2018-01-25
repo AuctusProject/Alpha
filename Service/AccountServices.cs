@@ -62,6 +62,16 @@ namespace Auctus.Service
             return ApiAccessBusiness.Create(email);
         }
 
+        public ApiAccess GetLastApiAccess(string email)
+        {
+            return ApiAccessBusiness.GetLast(email);
+        }
+
+        public void DeleteApiAccess(string email)
+        {
+            ApiAccessBusiness.Delete(email);
+        }
+
         public User Login(string email, string password)
         {
             return UserBusiness.Login(email, password);

@@ -52,6 +52,8 @@ import { PortfolioDistributionComponent } from './components/dashboard/portfolio
 import { PortfolioHistogramComponent } from './components/dashboard/portfolio-histogram/portfolio-histogram.component';
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
+import { AccountHeaderComponent } from './components/account/account-header/account-header.component';
+import { ApiDocComponent } from './components/api-doc/api-doc.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +87,9 @@ import { ManageApiComponent } from './components/account/manage-api/manage-api.c
     PortfolioDistributionComponent,
     PortfolioHistogramComponent,
     ChangePasswordComponent,
-    ManageApiComponent
+    ManageApiComponent,
+    AccountHeaderComponent,
+    ApiDocComponent
   ],
   imports: [
     BrowserAnimationsModule,
