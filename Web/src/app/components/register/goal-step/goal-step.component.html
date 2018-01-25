@@ -4,18 +4,26 @@
             <h2 class="bold" fxFlex fxLayoutAlign="center center">What are you saving for?</h2>
         </div>
 
-        <mat-grid-list [style.width]="width" [style.margin]="'0 auto'" [cols]="cols" rowHeight="106px" gutterSize="10px">
-            <mat-grid-tile
-                *ngFor="let option of options"
-                [colspan]="1"
-                [rowspan]="1"
-                [style.width]="107">
-              <goal-option [value]="option.id" [label]="option.description" (click)="onOptionChange(option.id)"></goal-option>
-            </mat-grid-tile>
-          </mat-grid-list>
+        <div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <mat-grid-list [style.width]="width" [style.margin]="'0 auto'" [cols]="cols" rowHeight="106px" gutterSize="10px">
+                <mat-grid-tile *ngFor="let option of options" [colspan]="1" [rowspan]="1" [style.width]="107">
+                    <goal-option [ngClass]="{'selected': model.goalOption.id == option.id}" [value]="option.id" [label]="option.description" (click)="onOptionChange(option.id)"></goal-option>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <div class="target-amount" fxLayout="column" fxLayoutAlign="center center">
+                <span class="input-label">Target Amount</span>
+                <mat-form-field>
+                    <mat-icon matPrefix>attach_money</mat-icon>
+                    <input type="number" matInput [inputFocus]="true" name="TargetAmount" [(ngModel)]="model.targetAmount">
+                    <mat-hint>Optional</mat-hint>
+                </mat-form-field>
+            </div>
+        </div>
 
         <div fxLayout="row" fxLayoutAlign="end center" class="wizard-buttons">
-            <button class="next" mat-button type="submit" [disabled]="!selected"></button>
+            <button class="next" mat-icon-button type="submit" [disabled]="!selected">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
         </div>
     </div>
 </form>

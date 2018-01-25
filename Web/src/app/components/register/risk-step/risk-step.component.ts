@@ -17,9 +17,14 @@ export class RiskStepComponent implements OnInit {
   constructor(public media: ObservableMedia) { }
 
   ngOnInit() {
+    this.setDescription();
   }
 
   onChangeSlider(){
+    this.setDescription();
+  }
+
+  setDescription(){
     if (this.model.risk == 1){
       this.riskDescription = "1 Avoiding loss is the priority";
     }

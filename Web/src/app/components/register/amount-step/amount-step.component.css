@@ -3,6 +3,11 @@
     color: #4a90e2;
 }
 
+mat-form-field mat-icon{
+    color: #4a90e2;
+    font-size: 34px;
+}
+
 /* .amount-step .mat-form-field-underline {
     background-color: #ebeaea !important;
 } */

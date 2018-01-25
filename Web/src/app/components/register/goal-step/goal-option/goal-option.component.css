@@ -1,6 +1,6 @@
 .goal-option{
     background: white;
-    border: solid 1px #ebeaea;
+    border: solid 2px #ebeaea;
     max-width: 107px;
     width: 107px;
     height: 105px;
@@ -19,6 +19,11 @@
 .goal-option:active,
 .goal-option.active,
 .goal-option:focus{
+    outline: 0;
+    border-color: #4a90e2 !important;
+}
+
+/deep/ goal-option.selected .goal-option{
     outline: 0;
     border-color: #4a90e2 !important;
 }
