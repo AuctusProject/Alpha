@@ -2,5 +2,7 @@
   <div class="dashboard-tab-title">Historical</div>
   <div class="dashboard-tab-subtitle">Returns of this portfolio since it was created</div>
 
+  <div></div>
   <portfolio-history-chart *ngIf="portfoliosHistoryModel" [portfolioHistoryModel]="portfoliosHistoryModel[0]"></portfolio-history-chart>
+  <portfolio-histogram *ngIf="portfoliosHistoryModel" [histogram]="portfoliosHistoryModel[0].history.histogram"></portfolio-histogram>
 </div>

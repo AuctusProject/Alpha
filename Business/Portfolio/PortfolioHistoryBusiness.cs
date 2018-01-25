@@ -69,7 +69,7 @@ namespace Auctus.Business.Portfolio
                     {
                         Date = date,
                         PortfolioId = portfolio.Id,
-                        RealValue = portfolioRealValue,
+                        RealValue = portfolioRealValue - 100.0,
                         ProjectionValue = projection.ProjectionValue,
                         OptimisticProjectionValue = projection.OptimisticProjection,
                         PessimisticProjectionValue = projection.PessimisticProjection
@@ -101,7 +101,7 @@ namespace Auctus.Business.Portfolio
                     Date = g.Date,
                     Value = g.RealValue
                 }).ToList(),
-                History = AdvisorBusiness.GetPortfolioHistory(new DomainObjects.Portfolio.Portfolio[] { c.Projection.Portfolio })
+                History = AdvisorBusiness.GetPortfolioHistory(new DomainObjects.Portfolio.Portfolio[] { c.Projection.Portfolio }).FirstOrDefault()
             }));
             return result;
         }

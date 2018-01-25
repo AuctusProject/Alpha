@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PortfolioHistory } from "../../../model/portfolio/portfolioHistory";
 import { HistoryValues } from "../../../model/advisor/historyValues";
-import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'portfolio-history-chart',
@@ -10,7 +9,6 @@ import { MatTableDataSource } from '@angular/material';
 })
 export class PortfolioHistoryChartComponent implements OnInit {
   @Input() portfolioHistoryModel: PortfolioHistory;
-  historyDataSource: MatTableDataSource<HistoryValues>;
   public historicalChartData: Array<any>;
   public historicalChartLabels: Array<any>;
 
@@ -21,16 +19,11 @@ export class PortfolioHistoryChartComponent implements OnInit {
       this.historicalChartData = [{ data: [] }];
       this.historicalChartLabels = [];
       var i = 0;
-      var acum = 0;
+      var acum = 100;
       for (let value of this.portfolioHistoryModel.values) {
-        if (i == 0) {
-          acum = value.value;
-        }
-        else {
-          acum = (acum * value.value / 100.0);
-        }
+        acum = acum * (1 + (value.value / 100.0));
         i++;
-        this.historicalChartData[0].data.push(acum);
+        this.historicalChartData[0].data.push(acum.toFixed(2));
         this.historicalChartLabels.push(value.date);
       }
     }
