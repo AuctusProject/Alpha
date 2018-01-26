@@ -53,6 +53,12 @@ import { PortfolioHistogramComponent } from './components/dashboard/portfolio-hi
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
 
+import { IconsModule } from './icons.module';
+import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
+import { Step1Component } from './components/account/advisor-wizard/step1/step1.component';
+import { Step2Component } from './components/account/advisor-wizard/step2/step2.component';
+import { Step3Component } from './components/account/advisor-wizard/step3/step3.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -85,7 +91,11 @@ import { ManageApiComponent } from './components/account/manage-api/manage-api.c
     PortfolioDistributionComponent,
     PortfolioHistogramComponent,
     ChangePasswordComponent,
-    ManageApiComponent
+    ManageApiComponent,
+    AdvisorWizardComponent,
+    Step1Component,
+    Step2Component,
+    Step3Component
   ],
   imports: [
     BrowserAnimationsModule,
@@ -98,6 +108,7 @@ import { ManageApiComponent } from './components/account/manage-api/manage-api.c
     AppRoutingModule,
     FlexLayoutModule,
     ChartsModule,
+    IconsModule,
     Angular2PromiseButtonModule
       .forRoot({
         spinnerTpl: '<span class="btn-spinner"></span>',

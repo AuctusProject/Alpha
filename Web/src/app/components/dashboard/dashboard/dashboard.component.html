@@ -1,3 +1,5 @@
-<goal-header *ngIf="projections" [(model)]="projections.currentGoal"></goal-header>
-<action-bar [(projectionsModel)]="projections"></action-bar>
-<router-outlet></router-outlet>
+<goal-header [(model)]="currentGoal"></goal-header>
+<action-bar [(tabs)]="tabs" (onTabSelected)="onTabSelected($event)"></action-bar>
+<projection-tab *ngIf="shouldLoadTab(0)" [hidden]="selectedTab != 0" [(projections)]="projections"></projection-tab>
+<portfolio-tab *ngIf="shouldLoadTab(1)" [hidden]="selectedTab != 1"></portfolio-tab>
+<historical-tab *ngIf="shouldLoadTab(2)" [hidden]="selectedTab != 2"></historical-tab>

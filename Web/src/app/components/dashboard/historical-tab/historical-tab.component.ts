@@ -4,7 +4,7 @@ import { HistoryValues } from "../../../model/advisor/historyValues";
 import { PortfolioService } from "../../../services/portfolio.service";
 
 @Component({
-  selector: 'app-historical-tab',
+  selector: 'historical-tab',
   templateUrl: './historical-tab.component.html',
   styleUrls: ['./historical-tab.component.css']
 })

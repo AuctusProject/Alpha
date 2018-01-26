@@ -1,7 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Projections } from "../../../model/portfolio/projections";
-import { PortfolioDistribution } from "../../../model/portfolio/portfolioDistribution";
-import { PortfolioHistory } from "../../../model/portfolio/portfolioHistory";
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { LoginService } from '../../../services/login.service';
 
 @Component({
@@ -10,10 +7,10 @@ import { LoginService } from '../../../services/login.service';
   styleUrls: ['./action-bar.component.css']
 })
 export class ActionBarComponent implements OnInit {
-  @Input() projectionsModel: Projections;
-  @Input() portfolioDistributionModel: PortfolioDistribution;
-  @Input() portfolioHistoryModel: PortfolioHistory;
+  @Input() tabs: any; 
   @Input() user: string = null;
+  @Output() onTabSelected = new EventEmitter<number>();
+  public selectedTab = 0;
 
   constructor(private loginService: LoginService) { }
 
@@ -21,7 +18,14 @@ export class ActionBarComponent implements OnInit {
     this.user = this.loginService.getUser();
   }
 
+
+
   logout(): void {
     this.loginService.logout();
+  }
+
+  public tabClick(index: number) {
+    this.selectedTab = index;
+    this.onTabSelected.emit(index);
   }
 }

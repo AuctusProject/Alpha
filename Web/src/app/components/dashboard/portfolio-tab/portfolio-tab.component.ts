@@ -3,7 +3,7 @@ import { PortfolioService } from "../../../services/portfolio.service";
 import { PortfolioDistribution } from "../../../model/portfolio/portfolioDistribution";
 
 @Component({
-  selector: 'app-portfolio-tab',
+  selector: 'portfolio-tab',
   templateUrl: './portfolio-tab.component.html',
   styleUrls: ['./portfolio-tab.component.css']
 })

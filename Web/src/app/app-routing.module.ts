@@ -14,13 +14,7 @@ import { PortfolioTabComponent } from "./components/dashboard/portfolio-tab/port
 import { HistoricalTabComponent } from "./components/dashboard/historical-tab/historical-tab.component";
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
-
-export const DASHBOARD_TABS_ROUTES: Routes = [
-  { path: '', redirectTo: 'projection', pathMatch: 'full' },
-  { path: 'projection', component: ProjectionTabComponent },
-  { path: 'portfolio', component: PortfolioTabComponent },
-  { path: 'history', component: HistoricalTabComponent },
-];
+import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -32,12 +26,11 @@ const routes: Routes = [
     { path: 'confirm', component: ConfirmEmailComponent },
     { path: 'advisors', component: AdvisorsComponent },
     { path: 'advisor/:id', component: AdvisorDetailComponent },
-    { path: 'dashboard', component: DashboardComponent, children: DASHBOARD_TABS_ROUTES },
+    { path: 'dashboard', component: DashboardComponent },
     { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'manage-api', component: ManageApiComponent }
+    { path: 'manage-api', component: ManageApiComponent },
+    { path: 'become-advisor', component: AdvisorWizardComponent },
 ];
-
-
 
 @NgModule({
     exports: [RouterModule],
