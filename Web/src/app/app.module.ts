@@ -53,7 +53,6 @@ import { PortfolioHistogramComponent } from './components/dashboard/portfolio-hi
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
 import { AccountHeaderComponent } from './components/account/account-header/account-header.component';
-import { ApiDocComponent } from './components/api-doc/api-doc.component';
 
 import { IconsModule } from './icons.module';
 import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
@@ -62,6 +61,7 @@ import { Step2Component } from './components/account/advisor-wizard/step2/step2.
 import { Step3Component } from './components/account/advisor-wizard/step3/step3.component';
 import { NameStepComponent } from './components/account/advisor-wizard/step1/name-step/name-step.component';
 import { DescriptionStepComponent } from './components/account/advisor-wizard/step1/description-step/description-step.component';
+import { LoadingBlockComponent } from './components/ui/loading-block/loading-block.component';
 
 @NgModule({
   declarations: [
@@ -97,13 +97,13 @@ import { DescriptionStepComponent } from './components/account/advisor-wizard/st
     ChangePasswordComponent,
     ManageApiComponent,
     AccountHeaderComponent,
-    ApiDocComponent,
     AdvisorWizardComponent,
     Step1Component,
     Step2Component,
     Step3Component,
     NameStepComponent,
-    DescriptionStepComponent
+    DescriptionStepComponent,
+    LoadingBlockComponent
   ],
   imports: [
     BrowserAnimationsModule,

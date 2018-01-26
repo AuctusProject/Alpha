@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+/* @import "~@angular/material/prebuilt-themes/deeppurple-amber.css"; */
 
 @font-face {
   font-family: "HelveticaNeueBold";
@@ -112,7 +112,7 @@ button .btn-spinner {
   -ms-animation: three-quarters 1250ms infinite linear;
   -o-animation: three-quarters 1250ms infinite linear;
   animation: three-quarters 1250ms infinite linear;
-  border: 3px solid #8c024c;
+  border: 3px solid #2196F3;
   border-right-color: transparent;
   border-radius: 100%;
   box-sizing: border-box;

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, Output, EventEmitter } from '@angular/core';
 import { Goal } from "../../../model/account/goal";
 import { AccountService } from "../../../services/account.service";
 import { GoalOption } from '../../../model/account/goalOption';
@@ -19,34 +19,41 @@ export class GoalStepComponent implements OnInit {
   @Output() onSubmitted = new EventEmitter<boolean>();
   selected: boolean = false;
   width: string = '40%';
-  cols : number = 4;
-  
+  cols: number = 4;
+
   options: GoalOption[];
 
-  constructor(private accountService: AccountService, private winRef: WindowRefService) { }
-
-  ngOnInit() {
+  constructor(private accountService: AccountService, private winRef: WindowRefService) {
     this.accountService.listGoalOptions().subscribe(
       options => {
         this.options = options
       }
     )
+  }
+
+  ngOnInit() {
+
+  }
+
+  ngAfterViewInit() {
+    //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
+    //Add 'implements AfterViewInit' to the class.
     let windowWidth = this.winRef.nativeWindow.innerWidth;
     this.onWidth(innerWidth);
   }
 
-  onOptionChange(optionId){
+  onOptionChange(optionId) {
     this.model.goalOption = this.options.filter(option => option.id == optionId)[0];
     this.selected = true;
   }
 
-  onSubmit(){
-    if (this.selected){
+  onSubmit() {
+    if (this.selected) {
       this.onSubmitted.emit(true);
     }
   }
 
-  onWidth(width){
+  onWidth(width) {
     if (width < 950) {
       this.cols = 3;
     }

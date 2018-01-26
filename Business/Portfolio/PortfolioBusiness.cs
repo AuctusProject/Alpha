@@ -19,7 +19,7 @@ namespace Auctus.Business.Portfolio
         public DomainObjects.Portfolio.Portfolio Create(string email, int advisorId, int risk, double projectionValue, double? optimisticProjection,
             double? pessimisticProjection, Dictionary<int, double> distribution)
         {
-            if (risk < 0 || risk > 100)
+            if (risk < 1 || risk > 5)
                 throw new ArgumentException("Inavild risk.");
 
             var advisor = AdvisorBusiness.GetWithOwner(advisorId, email);
