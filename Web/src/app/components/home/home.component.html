@@ -1,6 +1,6 @@
 <wizard-header></wizard-header>
 <div fxLayout="column" class="main-content">
-  <div fxLayout="row" fxLayout.sm="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+  <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="120px" fxLayoutMargin >
     <div fxLayout="row" fxLayoutGap="100px">
       <div fxLayout="column">
         <h1 class="bold">How do you imagine your life in the future?</h1>
@@ -13,26 +13,26 @@
     <div fxLayout="row">
       <div fxLayout="column" fxLayoutAlign="center center">
         <div class="create-account">
-          <div fxLayout="row" fxLayout.sm="column" fxLayoutGap="24px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+          <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="24px" fxLayoutGap.sm="0px" fxLayoutGap.xs="0px" fxLayoutMargin>
             <mat-form-field fxFlex>
-              <input placeholder="First Name" matInput [inputFocus]="true" name="StartingAmount" required>
+              <input placeholder="First Name" matInput [inputFocus]="true" name="FirstName" required>
             </mat-form-field>
             <mat-form-field fxFlex>
-              <input placeholder="Last Name" matInput name="MonthlyContribution" required>
+              <input placeholder="Last Name" matInput name="LastName" required>
             </mat-form-field>
           </div>
           <div fxLayout="row">
             <mat-form-field fxFlex="100">
-              <input placeholder="Email" matInput [inputFocus]="true" name="StartingAmount" required>
+              <input placeholder="Email" matInput name="Email" required>
             </mat-form-field>
           </div>
           <div fxLayout="row">
             <mat-form-field fxFlex="100">
-              <input matInput placeholder="Password" matInput [inputFocus]="true" name="StartingAmount" required [type]="show ? 'text' : 'password' ">
+              <input matInput placeholder="Password" name="Password" required [type]="show ? 'text' : 'password' ">
               <mat-icon matSuffix (click)="show = !show">{{show ? 'visibility_off' : 'visibility' }}</mat-icon>
             </mat-form-field>
           </div>
-          <div class="create-account-button" fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
+          <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
             <button class="primary-blue-button bold" routerLink="/login">CREATE ACCOUNT</button>
           </div>
         </div>

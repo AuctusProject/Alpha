@@ -22,7 +22,7 @@ export class HttpService {
   private setAccessToken(newJwt: string): void {
     this.setLocalStorage(this.jwt, newJwt);
   }
-  
+
   private setLocalStorage(key: string, value: any): void {
     if (window) window.localStorage.setItem(key, value);
   }
@@ -88,10 +88,10 @@ export class HttpService {
   get<T>(url: string, httpOptions: any = {}): Observable<any> {
     return this.http.get<any>(url, this.getHttpOptions(httpOptions))
       .pipe(
-        tap((response: any) => {
-          if (response && response.jwt) this.setAccessToken(response.jwt);
-        }),
-        catchError(this.handleError<T>(url))
+      tap((response: any) => {
+        if (response && response.jwt) this.setAccessToken(response.jwt);
+      }),
+      catchError(this.handleError<T>(url))
       );
   }
 
@@ -121,7 +121,7 @@ export class HttpService {
       tap((response: any) => {
         if (response && response.jwt) this.setAccessToken(response.jwt);
       }),
-        catchError(this.handleError<T>(url))
+      catchError(this.handleError<T>(url))
       );
   }
 
@@ -132,20 +132,19 @@ export class HttpService {
         this.router.navigateByUrl('../login');
       }
       // TODO: send the error to remote logging infrastructure
-      if (response.status == "400"){
-        if (response.error){
+      if (response.status == "400") {
+        if (response.error) {
           this.notificationService.error("Error", response.error.error);
         }
         else {
-          this.notificationService.error("Error", "Error on request.");
+          this.notificationService.error("Error", "An unexpected error happened.");
         }
+      }
+      else if (!response.ok) {
+        this.notificationService.error("Error", "An unexpected error happened.");
       }
       console.error(response); // log to console instead
 
-      // TODO: better job of transforming error for user consumption
-      //this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
       return of(result as T);
     };
   }

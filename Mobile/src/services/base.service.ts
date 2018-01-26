@@ -31,7 +31,7 @@ export class BaseService {
             .catch(error => this.handleError(error));
     }
 
-    protected httpPost(url: string, data: any, params: HttpParams) : Observable<any> {
+    protected httpPost(url: string, data: any, params: HttpParams): Observable<any> {
 
         let headers = this.getHttpHeaders();
         let options = { headers: headers, params: params };
@@ -41,7 +41,7 @@ export class BaseService {
             .catch(error => this.handleError(error))
     }
 
-    protected httpPut(url: string, data: any, params: HttpParams) : Observable<any> {
+    protected httpPut(url: string, data: any, params: HttpParams): Observable<any> {
 
         let headers = this.getHttpHeaders();
         let options = { headers: headers, params: params };
@@ -56,7 +56,7 @@ export class BaseService {
         console.log('handleSuccess:');
         console.log(response);
 
-        if(response && response.jwt) {
+        if (response && response.jwt) {
             this.storageHelper.setLoginToken(response.jwt);
         }
 
@@ -65,9 +65,9 @@ export class BaseService {
 
     private handleError(response) {
         console.log('handleError');
-        console.log( response);
+        console.log(response);
 
-        if(response.status == 401) {
+        if (response.status == 401) {
             this.storageHelper.setLoginToken(undefined);
             location.href = '/'
         }
@@ -76,13 +76,12 @@ export class BaseService {
         return Observable.throw(message);
     }
 
-    private getHttpHeaders() {        
+    private getHttpHeaders() {
 
         let token = this.storageHelper.getLoginToken();
-        let header = {
-            'Content-Type': 'application/json',
-            'Authorization': ('Bearer ' + token)
-          };
+        let header = new HttpHeaders()
+            .append('Content-Type', 'application/json')
+            .append('Authorization', 'Bearer ' + token);
 
         return header;
     }

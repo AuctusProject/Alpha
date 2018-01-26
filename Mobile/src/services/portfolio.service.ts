@@ -7,10 +7,11 @@ import { BaseService } from './base.service';
 
 
 @Injectable()
-export class PortifolioService extends BaseService {
+export class PortfolioService extends BaseService {
 
-    private getDistributionUrl =  this.apiUrl("portfolios/v1/distribution");
-    private projectionsUrl = this.apiUrl("portfolios/v1/projections");
+    private getDistributionUrl = this.apiUrl("portfolios/v1/distribution");
+    private getHistoryUrl = this.apiUrl("portfolios/v1/history");
+    private getProjectionsUrl = this.apiUrl("portfolios/v1/projections");
 
     constructor(protected injector: Injector) {
         super(injector);
@@ -23,6 +24,11 @@ export class PortifolioService extends BaseService {
 
     public getProjections() {
         let params = new HttpParams();
-        return this.httpGet(this.projectionsUrl, params);
+        return this.httpGet(this.getProjectionsUrl, params);
+    }
+
+    public getHistory() {
+        let params = new HttpParams();
+        return this.httpGet(this.getHistoryUrl, params);
     }
 }

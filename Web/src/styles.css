@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+/* @import "~@angular/material/prebuilt-themes/deeppurple-amber.css"; */
 
 @font-face {
   font-family: "HelveticaNeueBold";
@@ -13,11 +13,12 @@
 
 @font-face {
   font-family: "HelveticaNeue";
-  src: url('/assets/fonts/HelveticaNeueRegular.eot'); /* IE9 Compat Modes */
-  src: url('/assets/fonts/HelveticaNeueRegular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-  url("/assets/fonts/HelveticaNeueRegular.woff") format("woff"), /* Pretty Modern Browsers */
-  url("/assets/fonts/HelveticaNeueRegular.ttf") format("truetype"), /* Safari, Android, iOS */
-  url('/assets/fonts/HelveticaNeueRegular.svg#svgFontName') format('svg'); /* Legacy iOS */
+  src: url('/assets/fonts/HelveticaNeueMedium.eot'); /* IE9 Compat Modes */
+  src: url('/assets/fonts/HelveticaNeueMedium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/assets/fonts/HelveticaNeueMedium.woff2') format('woff2'), /* Super Modern Browsers */
+  url("/assets/fonts/HelveticaNeueMedium.woff") format("woff"), /* Pretty Modern Browsers */
+  url("/assets/fonts/HelveticaNeueMedium.ttf") format("truetype"), /* Safari, Android, iOS */
+  url('/assets/fonts/HelveticaNeueMedium.svg#svgFontName') format('svg'); /* Legacy iOS */
 }
 
 @font-face {
@@ -111,7 +112,7 @@ button .btn-spinner {
   -ms-animation: three-quarters 1250ms infinite linear;
   -o-animation: three-quarters 1250ms infinite linear;
   animation: three-quarters 1250ms infinite linear;
-  border: 3px solid #8c024c;
+  border: 3px solid #2196F3;
   border-right-color: transparent;
   border-radius: 100%;
   box-sizing: border-box;
@@ -226,7 +227,7 @@ body, p, span {
 
 h1 {
   font-family: 'HelveticaNeue', 'Helvetica', sans-serif;
-  font-size: 56px;
+  font-size: 36px;
   font-weight: bold;
   font-style: normal;
   font-stretch: normal;

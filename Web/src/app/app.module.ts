@@ -54,6 +54,13 @@ import { ChangePasswordComponent } from './components/account/change-password/ch
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
 import { AccountHeaderComponent } from './components/account/account-header/account-header.component';
 
+import { IconsModule } from './icons.module';
+import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
+import { Step1Component } from './components/account/advisor-wizard/step1/step1.component';
+import { Step2Component } from './components/account/advisor-wizard/step2/step2.component';
+import { Step3Component } from './components/account/advisor-wizard/step3/step3.component';
+import { LoadingBlockComponent } from './components/ui/loading-block/loading-block.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -87,7 +94,12 @@ import { AccountHeaderComponent } from './components/account/account-header/acco
     PortfolioHistogramComponent,
     ChangePasswordComponent,
     ManageApiComponent,
-    AccountHeaderComponent
+    AccountHeaderComponent,
+    AdvisorWizardComponent,
+    Step1Component,
+    Step2Component,
+    Step3Component,
+    LoadingBlockComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -100,6 +112,7 @@ import { AccountHeaderComponent } from './components/account/account-header/acco
     AppRoutingModule,
     FlexLayoutModule,
     ChartsModule,
+    IconsModule,
     Angular2PromiseButtonModule
       .forRoot({
         spinnerTpl: '<span class="btn-spinner"></span>',

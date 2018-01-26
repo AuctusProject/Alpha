@@ -17,27 +17,20 @@
 
 
 @font-face {
-    font-family: "HelveticaNeueBold";
-    src: url('/assets/fonts/HelveticaNeueBold.eot'); /* IE9 Compat Modes */
-    src: 
-        url('/assets/fonts/HelveticaNeueBold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-        url('/assets/fonts/HelveticaNeueBold.woff2') format('woff2'), /* Super Modern Browsers */
-        url("/assets/fonts/HelveticaNeueBold.woff") format("woff"), /* Pretty Modern Browsers */
-        url("/assets/fonts/HelveticaNeueBold.ttf") format("truetype"), /* Safari, Android, iOS */
-        url('/assets/fonts/HelveticaNeueBold.svg#svgFontName') format('svg'); /* Legacy iOS */
-  }
+  font-family: "HelveticaNeueBold";
+  src: url('../assets/fonts/HelveticaNeueBold.eot'); /* IE9 Compat Modes */
+  src: url('../assets/fonts/HelveticaNeueBold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('../assets/fonts/HelveticaNeueBold.woff2') format('woff2'), /* Super Modern Browsers */
+  url("../assets/fonts/HelveticaNeueBold.woff") format("woff"), /* Pretty Modern Browsers */
+  url("../assets/fonts/HelveticaNeueBold.ttf") format("truetype"), /* Safari, Android, iOS */
+  url('../assets/fonts/HelveticaNeueBold.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
 
-  @font-face {
-    font-family: "HelveticaNeue";
-    src: url('/assets/fonts/HelveticaNeueRegular.eot'); /* IE9 Compat Modes */
-    src: 
-        url('/assets/fonts/HelveticaNeueRegular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-        url("/assets/fonts/HelveticaNeueRegular.woff") format("woff"), /* Pretty Modern Browsers */
-        url("/assets/fonts/HelveticaNeueRegular.ttf") format("truetype"), /* Safari, Android, iOS */
-        url('/assets/fonts/HelveticaNeueRegular.svg#svgFontName') format('svg'); /* Legacy iOS */
-  }
- 
-  
-  ion-app {
-    font-family: 'HelveticaNeue'!important;
-  }
+@font-face {
+  font-family: "HelveticaNeue";
+  src: url('../assets/fonts/HelveticaNeueRegular.eot'); /* IE9 Compat Modes */
+  src: url('../assets/fonts/HelveticaNeueRegular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url("../assets/fonts/HelveticaNeueRegular.woff") format("woff"), /* Pretty Modern Browsers */
+  url("../assets/fonts/HelveticaNeueRegular.ttf") format("truetype"), /* Safari, Android, iOS */
+  url('../assets/fonts/HelveticaNeueRegular.svg#svgFontName') format('svg'); /* Legacy iOS */
+}

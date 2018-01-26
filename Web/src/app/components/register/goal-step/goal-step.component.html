@@ -5,9 +5,15 @@
         </div>
 
         <div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
-            <mat-grid-list [style.width]="width" [style.margin]="'0 auto'" [cols]="cols" rowHeight="106px" gutterSize="10px">
+            <mat-grid-list *ngIf="options" [style.width]="width" [style.margin]="'0 auto'" [cols]="cols" rowHeight="106px" gutterSize="10px">
                 <mat-grid-tile *ngFor="let option of options" [colspan]="1" [rowspan]="1" [style.width]="107">
-                    <goal-option [ngClass]="{'selected': model.goalOption.id == option.id}" [value]="option.id" [label]="option.description" (click)="onOptionChange(option.id)"></goal-option>
+                    <goal-option [ngClass]="{'selected': model.goalOption.id == option.id}" [value]="option.id" [label]="option.description"
+                        (click)="onOptionChange(option.id)"></goal-option>
+                </mat-grid-tile>
+            </mat-grid-list>
+            <mat-grid-list *ngIf="!options" [style.width]="width" [style.margin]="'0 auto'" [cols]="cols" rowHeight="106px" gutterSize="10px">
+                <mat-grid-tile *ngFor="let number of [0,1,2,3]" [colspan]="1" [rowspan]="1" [style.width]="107">
+                    <loading-block [width]="107" [height]="107"></loading-block>
                 </mat-grid-tile>
             </mat-grid-list>
             <div class="target-amount" fxLayout="column" fxLayoutAlign="center center">

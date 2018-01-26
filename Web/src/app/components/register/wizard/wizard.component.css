@@ -16,3 +16,7 @@
 /deep/ .wizard .mat-step-label{
   min-width: 10px;
 }
+
+/deep/ .wizard .mat-step-header:hover{
+  background: white;
+}

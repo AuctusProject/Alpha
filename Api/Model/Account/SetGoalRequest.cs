@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Auctus.DomainObjects.Account;
 
 namespace Api.Model.Account
 {
@@ -13,6 +12,6 @@ namespace Api.Model.Account
         public double? MonthlyContribution { get; set; }
         public int? Timeframe { get; set; }
         public int Risk { get; set; }
-        public GoalOption GoalOption { get; set; }
+        public int GoalOptionId { get; set; }
     }
 }

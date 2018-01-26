@@ -8,7 +8,7 @@ import { Login } from '../models/login.model';
 @Injectable()
 export class AccountService extends BaseService {
 
-    private loginUrl = this.apiUrl("account/login");
+    private loginUrl = this.apiUrl("accounts/v1/login");
 
     constructor(protected injector: Injector) {
         super(injector);

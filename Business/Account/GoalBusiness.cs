@@ -21,9 +21,53 @@ namespace Auctus.Business.Account
 
         public Goal Create(int userId, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
+            GoalOptionValidation(goalOptionId);
+            RiskValidation(risk);
+            TimeFrameValidation(timeframe);
+            StartAmountValidation(startingAmount);
+            MonthlyContributionValidation(monthlyContribution);
+
             var goal = SetNew(userId, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
             Data.Insert(goal);
             return goal;
+        }
+
+        private void MonthlyContributionValidation(double? monthlyContribution)
+        {
+            if (!monthlyContribution.HasValue)
+            {
+                throw new ArgumentException("Monthly contribution must be filled.");
+            }
+        }
+
+        private void StartAmountValidation(double? startingAmount)
+        {
+            if (!startingAmount.HasValue)
+            {
+                throw new ArgumentException("Starting amount must be filled.");
+            }
+        }
+
+        private void TimeFrameValidation(int? timeFrame)
+        {
+            if (!timeFrame.HasValue || timeFrame.Value == 0)
+            {
+                throw new ArgumentException("Years must be filled and more than 0 (zero).");
+            }
+        }
+
+        private void RiskValidation(int risk)
+        {
+            if (risk == 0) {
+                throw new ArgumentException("Risk must be filled.");
+            }
+        }
+
+        private void GoalOptionValidation(int goalOptionId)
+        {
+            if (goalOptionId == 0) {
+                throw new ArgumentException("Goal option must be filled.");
+            }
         }
 
         public Goal GetCurrent(int userId)
