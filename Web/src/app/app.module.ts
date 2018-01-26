@@ -53,7 +53,6 @@ import { PortfolioHistogramComponent } from './components/dashboard/portfolio-hi
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
 import { AccountHeaderComponent } from './components/account/account-header/account-header.component';
-import { ApiDocComponent } from './components/api-doc/api-doc.component';
 
 @NgModule({
   declarations: [
@@ -88,8 +87,7 @@ import { ApiDocComponent } from './components/api-doc/api-doc.component';
     PortfolioHistogramComponent,
     ChangePasswordComponent,
     ManageApiComponent,
-    AccountHeaderComponent,
-    ApiDocComponent
+    AccountHeaderComponent
   ],
   imports: [
     BrowserAnimationsModule,

@@ -29,7 +29,7 @@ namespace Auctus.DataAccess.Portfolio
                                                       INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
                                                       INNER JOIN [User] u ON u.Id = a.UserId  
                                                       WHERE 
-                                                      u.Email = @Email AND p.Disabled IS NULL AND d.Enabled = 1
+                                                      u.Email = @Email AND p.Disabled IS NULL AND 
                                                       d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id)";
 
         private const string SELECT_LIST_BY_ADVISOR = @"SELECT p.*, j.* FROM 

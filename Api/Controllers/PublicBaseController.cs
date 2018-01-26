@@ -52,7 +52,8 @@ namespace Api.Controllers
                             name = p.Advisor.Name,
                             price = p.Advisor.Detail.Price,
                             description = p.Advisor.Detail.Description,
-                            period = p.Advisor.Detail.Period
+                            period = p.Advisor.Detail.Period,
+                            enabled = p.Advisor.Detail.Enabled
                         },
                         distribution = p.Projection.Distribution.Select(d => new
                         {

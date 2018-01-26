@@ -128,7 +128,8 @@ export class HttpService {
   private handleError<T>(operation = 'operation', result?: T) {
     return (response: any): Observable<T> => {
       if (response.status == "401") {
-        this.router.navigateByUrl('home');
+        this.logout();
+        this.router.navigateByUrl('../login');
       }
       // TODO: send the error to remote logging infrastructure
       if (response.status == "400"){
@@ -136,7 +137,7 @@ export class HttpService {
           this.notificationService.error("Error", response.error.error);
         }
         else {
-          this.notificationService.error("Error", "Error on request");
+          this.notificationService.error("Error", "Error on request.");
         }
       }
       console.error(response); // log to console instead
