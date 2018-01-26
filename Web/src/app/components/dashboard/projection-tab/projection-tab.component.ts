@@ -3,23 +3,16 @@ import { PortfolioService } from "../../../services/portfolio.service";
 import { Projections } from "../../../model/portfolio/projections";
 
 @Component({
-  selector: 'app-projection-tab',
+  selector: 'projection-tab',
   templateUrl: './projection-tab.component.html',
   styleUrls: ['./projection-tab.component.css']
 })
 export class ProjectionTabComponent implements OnInit {
-  projections: Projections;
+  @Input() projections: Projections;
 
   constructor(private portfolioService: PortfolioService) {
-    this.projections = new Projections();
   }
 
   ngOnInit() {
-    this.portfolioService.getProjections().subscribe(
-      projections => {
-        if (projections != undefined)
-          this.projections = projections
-      }
-    )
   }
 }

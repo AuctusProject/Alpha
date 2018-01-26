@@ -1,13 +1,18 @@
 .wizard-header {
-    background-color: white;
-    padding-top: 50px;
-    padding-bottom: 50px;
+  background-color: white;
+  padding-top: 28px;
+  padding-bottom: 28px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.mat-toolbar-row{
+  height: 40px !important;
 }
 
 @media (min-width: 480px) {
-    .wizard-header {
-        padding: 50px !important;
-    }
+  .wizard-header {
+    padding: 28px 54px !important;
+  }
 }
 
 .wizard-header a{

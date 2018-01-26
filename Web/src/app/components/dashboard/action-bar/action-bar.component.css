@@ -24,7 +24,7 @@
   min-width: 100px;
 }
 
-/deep/ .action-bar .mat-tab-link-active {
+/deep/ .action-bar .mat-tab-label-active {
   color: #0243b7 !important;
   font-weight: 500;
 }
@@ -36,4 +36,9 @@
 
 /deep/ .action-bar .mat-tab-body-wrapper {
   padding: 0px 72px !important;
+}
+
+
+/deep/ .action-bar .mat-ink-bar {
+  display: none !important;
 }
