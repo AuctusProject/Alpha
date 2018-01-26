@@ -1,14 +1,10 @@
-.main-content{
-  padding-top:72px;
-}
-
 
 /deep/ .mat-horizontal-stepper-header-container{
   display:none !important ;
 }
 
 .name-step {
-  margin: 50px;
+  margin-top: 50px;
 }
 
 .name-step-title {
@@ -23,11 +19,12 @@
   width: 350px;
 }
 
-/deep/ mat-form-field.mat-form-field {
+/deep/ advisor-step1 mat-form-field.mat-form-field {
   font-size: 32px;
   text-align: center;
+  color: #4a90e2;
 }
 
-  /deep/ mat-form-field.mat-form-field input {
-    text-align: center;
-  }
+/deep/ mat-form-field.mat-form-field input {
+  text-align: center;
+}

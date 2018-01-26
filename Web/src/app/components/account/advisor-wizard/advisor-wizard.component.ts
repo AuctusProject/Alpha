@@ -21,7 +21,7 @@ export class AdvisorWizardComponent implements OnInit {
   }
 
   public saveCurrentStep() {
-    if (this.currentStep > this.editingStep)
+    if (this.currentStep == this.editingStep)
       this.currentStep++;
   }
 

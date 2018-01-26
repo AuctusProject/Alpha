@@ -4,14 +4,14 @@
       <img src="../../../../assets/logo.png" class="landing-logo">
     </span>
     <span class="spacer"></span>
-    <div *ngIf="!media.isActive('xs')">
+    <div fxHide.lt-md>
       <div class="menu" fxLayout="row" fxLayoutGap="60px" fxLayoutAlign="space-around center">
         <a href="">What is Auctus</a>
         <a href="">Contact us</a>
         <a routerLink="/login">Login</a>
       </div>
     </div>
-    <div *ngIf="media.isActive('xs')">
+    <div fxHide.gt-sm>
       <mat-menu #appMenu="matMenu">
         <button mat-menu-item> What is Auctus </button>
         <button mat-menu-item> Contact Us </button>

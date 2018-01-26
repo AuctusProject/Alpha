@@ -62,6 +62,7 @@ import { Step3Component } from './components/account/advisor-wizard/step3/step3.
 import { NameStepComponent } from './components/account/advisor-wizard/step1/name-step/name-step.component';
 import { DescriptionStepComponent } from './components/account/advisor-wizard/step1/description-step/description-step.component';
 import { LoadingBlockComponent } from './components/ui/loading-block/loading-block.component';
+import { EthMachineComponent } from './components/eth-machine/eth-machine.component';
 
 @NgModule({
   declarations: [
@@ -103,7 +104,8 @@ import { LoadingBlockComponent } from './components/ui/loading-block/loading-blo
     Step3Component,
     NameStepComponent,
     DescriptionStepComponent,
-    LoadingBlockComponent
+    LoadingBlockComponent,
+    EthMachineComponent
   ],
   imports: [
     BrowserAnimationsModule,

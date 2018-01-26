@@ -1,5 +1,9 @@
+
+
+
 .advisor-price {
-  width: 360px;
+  max-width: 360px;
+  width: calc(100% - 80px);
   padding: 24px;
   background-color: #f3f5f8;
   margin: 40px;

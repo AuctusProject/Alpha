@@ -1,5 +1,14 @@
-.main-content {
+.advisor-steps-main-content {
   padding: 70px;
+}
+
+h1, h3{
+  margin: 0;
+}
+
+h3 {
+  margin-top: 24px;
+  margin-bottom: 16px
 }
 
 .buttons {
@@ -21,7 +30,8 @@
   margin-top: 24px;
   padding-bottom: 24px;
   border-bottom: rgba(74, 74, 74, 0.1) solid 1px;
-  width: 350px;
+  max-width: 350px;
+  width: 100%;
 }
 
 .step-number {
@@ -52,15 +62,11 @@
 }
 
 .step-next-button {
-  width: 128px;
+  width: 104px;
   border-radius: 3px;
-  background-color: #3c91e6;
-  border: solid 1px #3c91e6;
   font-size: 14px;
-  color: #ffffff;
   text-align: center;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding: 12px;
 }
 
 

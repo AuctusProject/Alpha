@@ -359,7 +359,8 @@ button.back {
 .advisor-wizard-buttons {
   width: 600px;
   max-width: 100%;
-  margin: 20px;
+  padding-top:0px;
+  padding: 20px;
 }
 
 @media (min-width: 800px) {
@@ -388,4 +389,17 @@ button.back {
   font-size: 32px;
   text-align: center;
   color: #4a4a4a;
+}
+
+
+.advisor-steps-main-content {
+  padding-top: 72px;
+}
+
+@media (max-width: 650px) {
+  .advisor-steps-main-content {
+    padding-top: 30px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
 }
