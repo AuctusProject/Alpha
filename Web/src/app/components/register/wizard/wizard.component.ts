@@ -33,6 +33,9 @@ export class WizardComponent implements OnInit {
   }
 
   onStepChange(){
-    console.log("step change")
+  }
+
+  goToStep(step : number, stepper : MatStepper){
+    stepper.selectedIndex = step;
   }
 }

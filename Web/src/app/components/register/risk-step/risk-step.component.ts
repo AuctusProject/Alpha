@@ -15,6 +15,7 @@ export class RiskStepComponent implements OnInit {
   @Input() model: Goal;
   @Output() modelChange = new EventEmitter<Goal>();
   @Output() onSubmitted = new EventEmitter<boolean>();
+  @Output() onValidationFail = new EventEmitter<number>();
   riskDescription: string;
   promise : Subscription;
 
@@ -32,30 +33,90 @@ export class RiskStepComponent implements OnInit {
 
   setDescription(){
     if (this.model.risk == 1){
-      this.riskDescription = "1 Avoiding loss is the priority";
+      this.riskDescription = "1 - Conservative";
     }
     else if (this.model.risk == 2){
-
+      this.riskDescription = "2 - Moderately Conservative";
     }
     else if (this.model.risk == 3){
-      
+      this.riskDescription = "3 - Moderately Aggressive";
     }
     else if (this.model.risk == 4){
-
+      this.riskDescription = "4 - Aggressive";
     }
     else if (this.model.risk == 5){
-      this.riskDescription = "5 High risk"
+      this.riskDescription = "5 - Very Aggressive"
     }
   }
 
   onSubmit(){
     let onSubmitted = this.onSubmitted;
-    this.promise = this.accountService.setGoal(this.model).subscribe(
+    var goal : any = this.model;
+    goal.goalOptionId = this.model.goalOption.id;
+    if (!this.validFields()){
+      return;
+    }
+    this.promise = this.accountService.setGoal(goal).subscribe(
       ret => {
-        this.notificationService.success("Success", "Goal saved");
-        onSubmitted.emit(true);
+        if (ret){
+          this.notificationService.success("Success", "Goal saved");
+          onSubmitted.emit(true);
+        }
       }
     );
+  }
+
+  validFields() : boolean{
+    return this.validGoalOption() && 
+           this.validStartingAmount() &&
+           this.validMonthlyContribution() &&
+           this.validTimeframe() && 
+           this.validRisk();
+  }
+
+  validGoalOption() : boolean{
+    if (this.model.goalOption && this.model.goalOption.id){
+      return true;
+    }
+    this.notificationService.error("Error", "Saving option must be filled.");
+    this.onValidationFail.emit(0);
+    return false;
+  }
+
+  validTimeframe() : boolean{
+    if (this.model.timeframe){
+      return true;
+    }
+    this.notificationService.error("Error", "Years must be more than 0 (zero).");
+    this.onValidationFail.emit(2);
+    return false;
+  }
+
+  validStartingAmount() : boolean{
+    if (this.model.startingAmount || this.model.startingAmount == 0){
+      return true;
+    }
+    this.notificationService.error("Error", "Starting amount must be filled.");
+    this.onValidationFail.emit(1);
+    return false;
+  }
+
+  validMonthlyContribution() : boolean{
+    if (this.model.monthlyContribution || this.model.monthlyContribution == 0){
+      return true;
+    }
+    this.notificationService.error("Error", "Monthly contribution must be filled.");
+    this.onValidationFail.emit(1);
+    return false;
+  }
+
+  validRisk() : boolean{
+    if (this.model.risk){
+      return true;
+    }
+    this.notificationService.error("Error", "Risk must be filled.");
+    this.onValidationFail.emit(3);
+    return false;
   }
 
 }

@@ -132,7 +132,7 @@ namespace Api.Controllers
 
             try
             {
-                AccountServices.CreateGoal(GetUser(), setGoalRequest.GoalOption.Id, setGoalRequest.Timeframe, setGoalRequest.Risk,
+                AccountServices.CreateGoal(GetUser(), setGoalRequest.GoalOptionId, setGoalRequest.Timeframe, setGoalRequest.Risk,
                     setGoalRequest.TargetAmount, setGoalRequest.StartingAmount, setGoalRequest.MonthlyContribution);
             }
             catch (ArgumentException ex)

@@ -11,7 +11,7 @@
             <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
         </mat-step>
         <mat-step>
-            <risk-step [(model)]="goal"></risk-step>
+            <risk-step [(model)]="goal" (onValidationFail)="goToStep($event, stepper)"></risk-step>
         </mat-step>
     </mat-horizontal-stepper>
 </div>
