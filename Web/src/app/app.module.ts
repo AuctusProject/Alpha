@@ -52,6 +52,8 @@ import { PortfolioDistributionComponent } from './components/dashboard/portfolio
 import { PortfolioHistogramComponent } from './components/dashboard/portfolio-histogram/portfolio-histogram.component';
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
+import { AccountHeaderComponent } from './components/account/account-header/account-header.component';
+import { ApiDocComponent } from './components/api-doc/api-doc.component';
 
 import { IconsModule } from './icons.module';
 import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
@@ -92,6 +94,8 @@ import { Step3Component } from './components/account/advisor-wizard/step3/step3.
     PortfolioHistogramComponent,
     ChangePasswordComponent,
     ManageApiComponent,
+    AccountHeaderComponent,
+    ApiDocComponent,
     AdvisorWizardComponent,
     Step1Component,
     Step2Component,

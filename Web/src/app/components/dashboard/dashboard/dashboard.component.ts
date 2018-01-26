@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PortfolioService } from "../../../services/portfolio.service";
 import { Projections } from "../../../model/portfolio/projections";
-import { Goal } from "../account/goal";
+import { Goal } from "../../../model/account/goal";
 
 @Component({
   selector: 'app-dashboard',

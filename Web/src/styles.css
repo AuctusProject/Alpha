@@ -309,6 +309,23 @@ button {
     border: solid 1px #3786d4;
   }
 
+.warning-button {
+  border-radius: 50px;
+  border: solid 1px #ff4444;
+  background: white;
+  padding: 10px 15px;
+  color: #ff4444;
+  cursor: pointer;
+}
+
+  .warning-button.bold {
+    font-family: 'HelveticaNeueBold';
+  }
+
+  .warning-button:hover {
+    background-color: #ffefef;
+  }
+
 button.no-border {
   background: white;
   padding: 10px 35px;

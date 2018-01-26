@@ -115,6 +115,16 @@ export class HttpService {
       );
   }
 
+  delete<T>(url: string, httpOptions: any = {}): Observable<any> {
+    return this.http.delete<any>(url, this.getHttpOptions(httpOptions))
+      .pipe(
+      tap((response: any) => {
+        if (response && response.jwt) this.setAccessToken(response.jwt);
+      }),
+        catchError(this.handleError<T>(url))
+      );
+  }
+
   private handleError<T>(operation = 'operation', result?: T) {
     return (response: any): Observable<T> => {
       if (response.status == "401") {

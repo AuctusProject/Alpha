@@ -27,12 +27,12 @@ export class RegisterStepComponent implements OnInit {
   }
 
   onSubmit(){
-    this.fullRegisterDTO.goal = this.model;
-    let onSubmitted = this.onSubmitted;
-    this.promise = this.accountService.fullRegister(this.fullRegisterDTO).subscribe(
-      ret => {
-        onSubmitted.emit(true);
-      }
-    );
+    // this.fullRegisterDTO.goal = this.model;
+    // let onSubmitted = this.onSubmitted;
+    // this.promise = this.accountService.fullRegister(this.fullRegisterDTO).subscribe(
+    //   ret => {
+    //     onSubmitted.emit(true);
+    //   }
+    // );
   }
 }
