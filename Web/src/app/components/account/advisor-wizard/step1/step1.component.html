@@ -1,3 +1,20 @@
-<p>
-  step1 works!
-</p>
+<div fxLayout="column" class="main-content">
+
+  <div class="inside-step-title">Introduce yourself to your investors</div>
+  <div class="name-step" fxLayout="column" fxLayoutAlign="center center">
+    <img src="assets/icons/advisor.png" />
+
+    <div class="name-step-title">First, what’s your advisor name?</div>
+    <mat-form-field fxFlex class="name-input">
+      <input matInput [inputFocus]="true" name="Name" [(ngModel)]="model.name" required>
+    </mat-form-field>
+    <div fxLayout="row" class="advisor-wizard-buttons wizard-buttons" fxLayoutAlign="space-between center">
+      <button class="back" mat-icon-button type="submit" (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button class="next" mat-icon-button type="submit" (click)="next()">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

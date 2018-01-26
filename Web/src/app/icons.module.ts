@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { IconEye, IconEyeOff, IconCheckCircle } from 'angular-feather';
+import { IconEye, IconEyeOff, IconCheckCircle, IconEdit } from 'angular-feather';
 
 
-var icons = [IconEye, IconEyeOff, IconCheckCircle];
+var icons = [IconEye, IconEyeOff, IconCheckCircle, IconEdit];
 
 @NgModule({
   imports: icons,

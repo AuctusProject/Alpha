@@ -67,3 +67,14 @@
 .blue-confirm {
   color: #3c91e6;
 }
+
+
+.periodicity-description {
+  font-size: 12px;
+}
+
+
+/deep/ .step-title svg.feather.feather-edit {
+  height: 15px;
+  color: #4a90e2;
+}

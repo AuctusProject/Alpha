@@ -1,5 +1,5 @@
 <wizard-header></wizard-header>
-<div fxLayout="column" class="main-content">
+<div fxLayout="column" class="main-content" *ngIf="editingStep == -1">
   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutMargin>
     <div fxLayout="row" fxLayoutGap="100px">
       <div fxLayout="column">
@@ -12,25 +12,39 @@
         <div fxLayout="row" fxLayoutGap="20px">
           <div fxLayout="column" class="steps">
             <div class="step-number">STEP 1</div>
-            <div class="step-title">Tell us a little about you</div>
+            <div class="step-title">
+              <span *ngIf="!model.name">Tell us a little about you</span>
+              <span *ngIf="model.name">{{model.name}} <i-edit (click)="edit(1)"></i-edit></span>
+            </div>
             <div class="step-description">Title and short description</div>
-            <div class="step-next-button">NEXT</div>
+            <div class="step-next-button" *ngIf="currentStep==1" (click)="nextStep()">NEXT</div>
           </div>
-          <div fxLayout="column"  fxLayoutAlign="space-evenly center">
+          <div *ngIf="model.name" fxLayout="column" fxLayoutAlign="space-evenly center">
             <i-check-circle class="blue-confirm"></i-check-circle>
           </div>
         </div>
-        <div fxLayout="column" class="steps disabled">
-          <div class="step-number">STEP 2</div>
-          <div class="step-title">Get ready for investitors</div>
-          <div class="step-description">Fee and pay frequency</div>
-          <div class="step-next-button">NEXT</div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <div fxLayout="column" class="steps" [class.disabled]="currentStep < 2">
+            <div class="step-number">STEP 2</div>
+            <div class="step-title">
+              <span *ngIf="!model.price">Get ready for investitors</span>
+              <span *ngIf="model.price">{{model.price}}<span class="periodicity-description"> / {{textFromPeriod()}}</span><i-edit (click)="edit(2)"></i-edit></span>
+            </div>
+            <div class="step-description">
+              <span *ngIf="!model.period">Fee and pay frequency</span>
+              <span *ngIf="model.period"></span>
+            </div>
+            <div class="step-next-button" *ngIf="currentStep==2" (click)="nextStep()">NEXT</div>
+          </div>
+          <div *ngIf="model.price" fxLayout="column" fxLayoutAlign="space-evenly center">
+            <i-check-circle class="blue-confirm"></i-check-circle>
+          </div>
         </div>
-        <div fxLayout="column" class="steps disabled">
+        <div fxLayout="column" class="steps" [class.disabled]="currentStep < 3">
           <div class="step-number">STEP 3</div>
           <div class="step-title">Set your financial portfólio</div>
           <div class="step-description">Products, percental, risk and projection</div>
-          <div class="step-next-button">NEXT</div>
+          <div class="step-next-button" *ngIf="currentStep==3" (click)="nextStep()">NEXT</div>
         </div>
       </div>
     </div>
@@ -42,3 +56,5 @@
     </div>
   </div>
 </div>
+<advisor-step1 *ngIf="editingStep == 1" [(model)]="model" (onStepFinished)="stepFinished($event, 1)"></advisor-step1>
+<advisor-step2 *ngIf="editingStep == 2" [(model)]="model" (onStepFinished)="stepFinished($event, 2)"></advisor-step2>

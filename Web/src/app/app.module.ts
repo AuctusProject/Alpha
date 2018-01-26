@@ -60,6 +60,8 @@ import { AdvisorWizardComponent } from './components/account/advisor-wizard/advi
 import { Step1Component } from './components/account/advisor-wizard/step1/step1.component';
 import { Step2Component } from './components/account/advisor-wizard/step2/step2.component';
 import { Step3Component } from './components/account/advisor-wizard/step3/step3.component';
+import { NameStepComponent } from './components/account/advisor-wizard/step1/name-step/name-step.component';
+import { DescriptionStepComponent } from './components/account/advisor-wizard/step1/description-step/description-step.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +101,9 @@ import { Step3Component } from './components/account/advisor-wizard/step3/step3.
     AdvisorWizardComponent,
     Step1Component,
     Step2Component,
-    Step3Component
+    Step3Component,
+    NameStepComponent,
+    DescriptionStepComponent
   ],
   imports: [
     BrowserAnimationsModule,

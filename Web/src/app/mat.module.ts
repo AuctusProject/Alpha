@@ -10,6 +10,7 @@ import { MatGridListModule, } from '@angular/material';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from "@angular/material";
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { MatMenuModule } from "@angular/material";
     MatGridListModule,
     MatTabsModule,
     MatTableModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule
   ],
   exports: [
     MatButtonModule, 
@@ -41,7 +43,8 @@ import { MatMenuModule } from "@angular/material";
     MatGridListModule,
     MatTabsModule,
     MatTableModule,
-    MatMenuModule
+    MatMenuModule,
+    MatSelectModule
   ],
   declarations: []
 })

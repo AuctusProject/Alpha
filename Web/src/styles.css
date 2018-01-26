@@ -338,7 +338,8 @@ button.no-border {
     font-family: 'HelveticaNeueBold';
   }
 
-button.next {
+button.next,
+button.back {
   border-radius: 100px;
   background-color: #4a90e2;
   width: 40px;
@@ -347,10 +348,19 @@ button.next {
 }
 
   button.next:disabled,
-  button.next[disabled] {
+  button.next[disabled],
+  button.back:disabled,
+  button.back[disabled] {
     opacity: 0.5;
     background-color: rgb(172, 171, 171);
   }
+
+
+.advisor-wizard-buttons {
+  width: 600px;
+  max-width: 100%;
+  margin: 20px;
+}
 
 @media (min-width: 800px) {
   .wizard-buttons {
@@ -370,4 +380,12 @@ button.next {
 
 .element-margin-top {
   margin-top: 15px;
+}
+
+
+.inside-step-title {
+  font-family: 'HelveticaNeueBold';
+  font-size: 32px;
+  text-align: center;
+  color: #4a4a4a;
 }
