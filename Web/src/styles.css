@@ -403,3 +403,31 @@ button.back {
     padding-right: 10px !important;
   }
 }
+
+.blue-box {
+  width: 400px;
+  background-color: #e9eff4;
+  padding: 40px 24px;
+}
+
+
+.rectangle-white-button {
+  border-radius: 3px;
+  border: solid 1px #3c91e6;
+  height: 40px;
+  width: 104px;
+  color: #4a90e2;
+  font-size: 12px;
+  padding-left:22px;
+}
+
+.rectangle-white-button svg.feather {
+  height: 15px;
+  padding-top: 2px;
+}
+
+.button-text{
+  margin-left: 4px;
+}
+
+

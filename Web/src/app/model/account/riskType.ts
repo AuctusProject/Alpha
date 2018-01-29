@@ -1,3 +1,4 @@
 export class RiskType {
-    value: number;
+  value: number;
+  description: string;
 }

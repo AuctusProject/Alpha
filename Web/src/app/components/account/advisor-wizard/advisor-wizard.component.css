@@ -74,13 +74,22 @@ h3 {
   color: #3c91e6;
 }
 
+.step-fee {
+  font-size: 12px;
+}
 
 .periodicity-description {
-  font-size: 12px;
+  font-size: 10px;
 }
 
 
 /deep/ .step-title svg.feather.feather-edit {
   height: 15px;
+  color: #4a90e2;
+}
+
+.edit-label {
+  font-size: 12px;
+  line-height: 24px;
   color: #4a90e2;
 }

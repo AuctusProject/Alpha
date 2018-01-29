@@ -1,20 +1,44 @@
-<div fxLayout="column" class="advisor-steps-main-content">
+<div fxLayout="column" class="advisor-steps-main-content" fxLayoutAlign="center center">
 
   <div class="inside-step-title">Introduce yourself to your investors</div>
-  <div class="name-step" fxLayout="column" fxLayoutAlign="center center">
-    <img src="assets/icons/advisor.png" />
-
-    <div class="name-step-title">First, what’s your advisor name?</div>
-    <mat-form-field fxFlex class="name-input">
-      <input matInput [inputFocus]="true" name="Name" [(ngModel)]="model.name" required>
-    </mat-form-field>
-    <div fxLayout="row" class="advisor-wizard-buttons wizard-buttons" fxLayoutAlign="space-between center">
-      <button class="back" mat-icon-button type="submit" (click)="back()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <button class="next" mat-icon-button type="submit" (click)="next()">
-        <mat-icon>arrow_forward</mat-icon>
-      </button>
+  <div class="name-step blue-box" fxLayout="column" fxLayoutGap="12px">
+    <div fxLayout="row">
+      <mat-form-field fxFlex>
+        <input matInput placeholder="Advisor name" [inputFocus]="true" name="Name" [(ngModel)]="model.name" required>
+      </mat-form-field>
     </div>
+    <div fxLayout="row">
+      <mat-form-field fxFlex>
+        <textarea matInput maxlength="300" placeholder="Description" name="Description" [(ngModel)]="model.description" required matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="3"></textarea>
+        <mat-hint align="end"><span *ngIf="model.description">{{model.description.length}}</span><span *ngIf="!model.description">0</span> / 300</mat-hint>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column">
+      <div class="fee-title bold">Fee and pay frequency</div>
+      <div class="fee-description">You can choose how much and the frequency you want charge the investitors for your investiment advises</div>
+    </div>
+    <div fxLayout="row">
+      <mat-form-field fxFlex>
+        <input matInput placeholder="Price" name="Price" required [(ngModel)]="model.price">
+        <span matSuffix>AUC&nbsp;</span>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row">
+      <mat-form-field fxFlex>
+        <mat-select placeholder="Pay frequency" required [(ngModel)]="model.period">
+          <mat-option *ngFor="let payFrequency of payFrequencies" [value]="payFrequency.value">
+            {{ payFrequency.viewValue }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxLayout="row" class="advisor-wizard-buttons wizard-buttons" fxLayoutAlign="space-between center">
+    <button class="back" mat-icon-button type="submit" (click)="back()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button class="next" mat-icon-button type="submit" (click)="next()">
+      <mat-icon>arrow_forward</mat-icon>
+    </button>
   </div>
 </div>

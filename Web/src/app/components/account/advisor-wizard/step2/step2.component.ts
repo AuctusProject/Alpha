@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Advisor } from '../../../../model/advisor/advisor'
+import { RiskType } from '../../../../model/account/riskType'
 
 @Component({
   selector: 'advisor-step2',
@@ -7,10 +8,14 @@ import { Advisor } from '../../../../model/advisor/advisor'
   styleUrls: ['./step2.component.css']
 })
 export class Step2Component implements OnInit {
-  payFrequencies = [
-    { value: '7', viewValue: 'Weekly' },
-    { value: '30', viewValue: 'Monthly' }
-  ];
+  portfolioRisks: RiskType[] =
+  [
+    { value: 1, description: "Conservative"},
+    { value: 2, description: "Moderately Conservative" },
+    { value: 3, description: "Moderately Aggressive" },
+    { value: 4, description: "Aggressive" },
+    { value: 5, description: "Very Aggressive"}
+  ]; 
 
   @Input() model: Advisor;
   @Output() onStepFinished = new EventEmitter<Advisor>();

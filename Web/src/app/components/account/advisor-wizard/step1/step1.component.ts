@@ -7,6 +7,11 @@ import { Advisor } from '../../../../model/advisor/advisor'
   styleUrls: ['./step1.component.css']
 })
 export class Step1Component implements OnInit {
+  payFrequencies = [
+    { value: '7', viewValue: 'Weekly' },
+    { value: '30', viewValue: 'Monthly' }
+  ];
+
   @Input() model: Advisor;
   isLinear = true;
   @Output() onStepFinished = new EventEmitter<Advisor>();

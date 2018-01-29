@@ -8,3 +8,12 @@
   background-color: #f3f5f8;
   margin: 40px;
 }
+
+.inside-step-subtitle {
+  max-width: 440px;
+  font-size: 14px;
+  line-height: 1.71;
+  color: #55606e;
+  text-align:center;
+  margin:24px;
+}

@@ -1,0 +1,22 @@
+<div class="portfolio-card" fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="portfolio-summary">
+    <div fxLayout="column">
+      <span class="risk-description bold">{{risk.description}}</span>
+      <span class="products-details">
+        No products registered
+      </span>
+    </div>
+    <div class="button">
+      <div class="step-add-button rectangle-white-button" (click)="addPortfolio()" fxLayout="row" fxLayoutAlign="none center">
+        <i-edit></i-edit><span class="button-text bold"> ADD</span>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="isEditing" class="portfolio-edition">
+    <div class="portfolio-edition-title">Build the investment plan</div>
+    <div class="portfolio-edition-subtitle">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras justo odio, dapibus ac.</div>
+    <portfolio-distribution-row></portfolio-distribution-row>
+    <div class="portfolio-edition-title">What do you think your annual return will be?</div>
+    <div class="portfolio-edition-subtitle">This is the return the investment will generate over time. Historically, the 30-year return of the S&P 500 has been roughly 11%</div>
+  </div>
+</div>

@@ -15,16 +15,15 @@
   color: #4a4a4a;
 }
 
-.name-input {
-  width: 350px;
-}
-
-/deep/ advisor-step1 mat-form-field.mat-form-field {
-  font-size: 32px;
-  text-align: center;
+.fee-title {
+  font-size: 16px;
   color: #4a90e2;
+  margin-top:12px;
+  margin-bottom:4px;
 }
 
-/deep/ mat-form-field.mat-form-field input {
-  text-align: center;
+.fee-description {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #55606e;
 }

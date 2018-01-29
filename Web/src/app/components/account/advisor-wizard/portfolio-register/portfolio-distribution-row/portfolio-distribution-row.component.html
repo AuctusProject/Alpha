@@ -1,0 +1,19 @@
+<div fxLayout="row" class="portfolio-distribution-row" fxLayoutGap="16px">
+  <mat-form-field class="asset-selection" floatLabel="never" fxLayout="row" fxLayoutAlign="none end" fxFlex="65">
+    <input type="text" placeholder="Select an asset" aria-label="Number" matInput [formControl]="productForm" [matAutocomplete]="auto" fxFlex required>
+    <i-chevron-down matSuffix></i-chevron-down>
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let asset of filteredAssets | async" [value]="nameAndCode(asset)">
+        {{nameAndCode(asset)}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <mat-form-field class="percentage-value" fxFlex="16">
+    <input matInput class="percentage-input" value="100">
+    <span matSuffix>%</span>
+  </mat-form-field>
+  <div fxLayout="row" fxFlex fxLayoutAlign="end center" fxLayoutGap="18px">
+    <i-minus-circle (click)="removeRowClick()"></i-minus-circle>
+    <i-plus-circle (click)="addNewRowClick()"></i-plus-circle>
+  </div>
+</div>

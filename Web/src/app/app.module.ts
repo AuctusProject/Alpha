@@ -58,11 +58,10 @@ import { IconsModule } from './icons.module';
 import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
 import { Step1Component } from './components/account/advisor-wizard/step1/step1.component';
 import { Step2Component } from './components/account/advisor-wizard/step2/step2.component';
-import { Step3Component } from './components/account/advisor-wizard/step3/step3.component';
-import { NameStepComponent } from './components/account/advisor-wizard/step1/name-step/name-step.component';
-import { DescriptionStepComponent } from './components/account/advisor-wizard/step1/description-step/description-step.component';
 import { LoadingBlockComponent } from './components/ui/loading-block/loading-block.component';
 import { EthMachineComponent } from './components/eth-machine/eth-machine.component';
+import { PortfolioRegisterComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-register.component';
+import { PortfolioDistributionRowComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-distribution-row/portfolio-distribution-row.component';
 
 @NgModule({
   declarations: [
@@ -101,11 +100,10 @@ import { EthMachineComponent } from './components/eth-machine/eth-machine.compon
     AdvisorWizardComponent,
     Step1Component,
     Step2Component,
-    Step3Component,
-    NameStepComponent,
-    DescriptionStepComponent,
     LoadingBlockComponent,
-    EthMachineComponent
+    EthMachineComponent,
+    PortfolioRegisterComponent,
+    PortfolioDistributionRowComponent
   ],
   imports: [
     BrowserAnimationsModule,
