@@ -74,5 +74,4 @@ export class BasePage {
     protected closeView() {
         this.navCtrl.pop()
     }
-
 }

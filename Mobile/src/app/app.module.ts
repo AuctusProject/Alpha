@@ -9,14 +9,17 @@ import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { MyApp } from './app.component';
+import { EvolutionPage } from '../pages/evolution/evolution';
 import { HistoricalPage } from '../pages/historical/historical';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from './../pages/login/login';
 import { ProjectionPage } from '../pages/projection/projection';
+import { PurchaseSelectPage } from '../pages/purchase-select/purchase-select';
 import { PortfolioPage } from './../pages/portfolio/portfolio';
 import { TabsPage } from '../pages/tabs/tabs';
 
 import { FieldErrorComponent } from './../components/field-error/field-error';
+import { NavbarComponent } from './../components/navbar/navbar';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -41,13 +44,17 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
     declarations: [
         MyApp,
+        EvolutionPage,
         HistoricalPage,
         HomePage,
         LoginPage,
         PortfolioPage,
         ProjectionPage,
+        PurchaseSelectPage,
         TabsPage,
-        FieldErrorComponent
+
+        FieldErrorComponent,
+        NavbarComponent
     ],
     imports: [
         BrowserModule,
@@ -66,13 +73,17 @@ export function createTranslateLoader(http: HttpClient) {
     bootstrap: [IonicApp],
     entryComponents: [
         MyApp,
+        EvolutionPage,
         HistoricalPage,
         HomePage,
         LoginPage,
         PortfolioPage,
         ProjectionPage,
+        PurchaseSelectPage,
         TabsPage,
+
         FieldErrorComponent,
+        NavbarComponent
     ],
     providers: [
         StatusBar,

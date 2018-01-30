@@ -15,4 +15,13 @@ export class StorageHelper {
         localStorage.setItem('loginToken', loginToken);
     }
 
+    public getSelectedPurchase(): Number {
+        let selectedPurchase = localStorage.getItem('selectedPurchase');
+        return Number.parseInt(selectedPurchase);
+    }
+
+    public setSelectedPurchase(loginToken: any) {
+        localStorage.setItem('selectedPurchase', loginToken);
+    }
+
 }

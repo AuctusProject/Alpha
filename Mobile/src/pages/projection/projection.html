@@ -1,8 +1,7 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>{{'PROJECTION' | translate}}</ion-title>
-  </ion-navbar>
+  <navbar title="PROJECTION" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
 </ion-header>
+
 <ion-content padding>
   <div *ngIf="projection">
     <ion-row>
@@ -72,16 +71,14 @@
     </ion-col>
     <ion-col col-12>
       <canvas baseChart
-              width="100"
-              height="100"
+              width="100" height="100"
+              [chartType]="chartType"
+              [colors]="chartColors"
               [datasets]="chartData"
               [labels]="chartLabels"
-              [options]="chartOptions"
-              [colors]="chartColors"
               [legend]="chartLegend"
-              [chartType]="chartType"
-              (chartHover)="chartHovered($event)"
-              (chartClick)="chartClicked($event)"></canvas>
+              [options]="chartOptions">
+      </canvas>
     </ion-col>
   </ion-row>
 </ion-content>

@@ -1,0 +1,26 @@
+page-evolution {
+    .projection-label {
+        font-size: 15px !important;
+    
+        ion-icon {
+            color: #4a90e2;
+          }      
+      }
+    
+      .historical-label {
+        font-size: 15px !important;
+    
+        ion-icon {
+          color: #0FD7B9;
+        }
+    
+      }
+
+      .loss{
+        color: rgba(255, 0, 0, 0.767);
+      }
+
+      .profit{
+        color: rgba(52, 221, 0, 0.836);
+      }
+}

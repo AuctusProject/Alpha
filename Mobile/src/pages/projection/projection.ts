@@ -1,11 +1,9 @@
+import { Purchase } from './../../models/purchase.model';
 import { Component, Injector } from '@angular/core';
 
 import { BasePage } from './../base';
-
 import { FormatHelper } from '../../helpers/format-helper';
-
 import { PortfolioService } from './../../services/portfolio.service';
-
 import { Projection } from './../../models/projection.model';
 
 import Chart from 'chart.js';
@@ -19,47 +17,6 @@ import moment from 'moment';
 })
 
 export class ProjectionPage extends BasePage {
-
-    public chartData: Array<any> = [];
-    public chartLabels: Array<any> = [];
-
-    public chartOptions: any = {
-        responsive: true,
-        scales: {
-            xAxes: [{
-                drawBorder: true,
-                drawOnChartArea: false,
-                display: true,
-                type: 'time'
-            }],
-            yAxes: [{
-                drawBorder: false,
-                color: ['#FF0000'],
-                ticks: {
-                    callback: function (label, index, labels) {
-                        return FormatHelper.formatToShortCurrency(label, '$');
-                    }
-                }
-            }]
-        },
-        legend: {
-            display: false
-        },
-        tooltips: {
-            enabled: true,
-            mode: 'single',
-            callbacks: {
-                title: function (tooltipItems, data) {
-                    return moment(tooltipItems[0].xLabel).format('MMMM YYYY');
-                },
-                label: function (tooltipItems, data) {
-                    let formatValue = FormatHelper.formatToShortCurrency(tooltipItems.yLabel, '$');
-                    return data.datasets[tooltipItems.datasetIndex].label + ":" + formatValue;
-                }
-            }
-        },
-        annotation: null
-    };
 
     public chartColors: Array<any> = [
         {
@@ -87,51 +44,88 @@ export class ProjectionPage extends BasePage {
             fill: 'origin'
         }
     ];
+    public chartData: Array<any> = new Array<any>();
+    public chartLabels: Array<string> = new Array<string>();
     public chartLegend: boolean = true;
+    public chartOptions: any = {
+        responsive: true,
+        scales: {
+            xAxes: [{
+                drawBorder: true,
+                drawOnChartArea: false,
+                display: true,
+                type: 'time',
+                ticks: {
+                    fontFamily: 'HelveticaNeue', 
+                },
+            }],
+            yAxes: [{
+                drawBorder: false,
+                color: ['#FF0000'],
+                ticks: {
+                    fontFamily: 'HelveticaNeue',
+                    callback: function (label, index, labels) {
+                        return FormatHelper.formatCurrency(label, '$');
+                    }
+                }
+            }]
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            enabled: true,
+            mode: 'single',
+            callbacks: {
+                title: function (tooltipItems, data) {
+                    return moment(tooltipItems[0].xLabel).format('MMMM YYYY');
+                },
+                label: function (tooltipItems, data) {
+                    let formatValue = FormatHelper.formatCurrency(tooltipItems.yLabel, '$');
+                    return data.datasets[tooltipItems.datasetIndex].label + ":" + formatValue;
+                }
+            }
+        },
+        annotation: null
+    };
     public chartType: string = 'line';
 
-    // events
-    public chartClicked(e: any): void {
-        console.log(e);
-    }
-
-    public chartHovered(e: any): void {
-        console.log(e);
-    }
-
-
     public projection: Projection;
+    public purchase: Purchase;
+    public onPurchaseSelectClose: Function;
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
-        this.getProjections();
+        this.getProjection();
+        this.onPurchaseSelectClose = this.updateProjection.bind(this);
     }
 
-    private getProjections() {
+    public updateProjection() {
 
+        let selectedPurchase = this.storageHelper.getSelectedPurchase();
+        this.purchase = this.lodash.find(this.projection.purchases, { 'advisorId': selectedPurchase })
+        this.buildChart();
+    }
+
+    private getProjection() {
         this.loadingHelper.showLoading();
-        this.portfolioService.getProjections().subscribe(
+        this.portfolioService.getProjection().subscribe(
             success => {
                 this.projection = success;
-                this.buildChart();
+                this.updateProjection();
                 this.loadingHelper.hideLoading();
             },
             error => {
                 this.loadingHelper.hideLoading();
             });
-
-
     }
 
     private buildChart() {
-
         this.buildChartLabels();
-
         this.buildMonthyContributionChart();
-        this.buildChartData(this.projection.purchases[0].projectionData.pessimisticPercent, 'Pessimistic');
-        this.buildChartData(this.projection.purchases[0].projectionData.projectionPercent, 'Projection');
-        this.buildChartData(this.projection.purchases[0].projectionData.optimisticPercent, 'Optimistic');
-
+        this.buildChartData(this.purchase.projectionData.pessimisticPercent, 'Pessimistic');
+        this.buildChartData(this.purchase.projectionData.projectionPercent, 'Projection');
+        this.buildChartData(this.purchase.projectionData.optimisticPercent, 'Optimistic');
         this.buildTargetLine();
     }
 
@@ -163,7 +157,7 @@ export class ProjectionPage extends BasePage {
     }
 
     private getPurchaseDate() {
-        return this.moment(this.projection.purchases[0].purchaseDate);
+        return this.moment(this.purchase.purchaseDate);
     }
 
     private getGoalDate() {
@@ -218,7 +212,6 @@ export class ProjectionPage extends BasePage {
         }
 
         this.chartData.push({ data: chartData, label: label })
-
     }
 
     private buildMonthyContributionChart() {
@@ -237,6 +230,5 @@ export class ProjectionPage extends BasePage {
         }
 
         this.chartData.push({ data: chartData, label: 'Contributed' })
-
     }
 }

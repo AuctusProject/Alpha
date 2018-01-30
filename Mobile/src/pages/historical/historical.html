@@ -1,21 +1,19 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>{{'HISTORICAL' | translate}}</ion-title>
-  </ion-navbar>
+  <navbar title="HISTORICAL" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
 </ion-header>
 
 <ion-content padding>
   <ion-row *ngIf="history">
     <ion-col col-12>
       <canvas baseChart
-              height="100"
-              width="100"
-              [datasets]="historicalChartData"
-              [labels]="historicalChartLabels"
-              [options]="historicalChartOptions"
-              [colors]="historicalChartColors"
-              [legend]="false"
-              [chartType]="'line'"></canvas>
+              height="100" width="100"
+              [chartType]="chartType"
+              [colors]="chartColors"
+              [datasets]="chartData"
+              [labels]="chartLabels"
+              [legend]="chartLegend"
+              [options]="chartOptions">
+      </canvas>
     </ion-col>
   </ion-row>
 </ion-content>

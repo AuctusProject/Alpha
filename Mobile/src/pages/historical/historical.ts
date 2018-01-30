@@ -2,7 +2,6 @@
 import { Component, Injector } from '@angular/core';
 
 import { BasePage } from './../base';
-
 import { FormatHelper } from './../../helpers/format-helper';
 import { PortfolioService } from './../../services/portfolio.service';
 
@@ -14,14 +13,25 @@ import moment from 'moment';
 })
 export class HistoricalPage extends BasePage {
 
-    public historicalChartOptions: any = {
+    public chartColors: Array<any> = [{
+        backgroundColor: 'rgba(148,159,177,0.2)',
+        borderColor: 'rgba(148,159,177,1)',
+        pointBackgroundColor: 'rgba(148,159,177,1)',
+        pointBorderColor: '#fff',
+        pointHoverBackgroundColor: '#fff',
+        pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    }];
+    public chartData: Array<any> = new Array<any>();
+    public chartLabels: Array<string> = new Array<string>();
+    public chartLegend: boolean = true;
+    public chartOptions: any = {
         responsive: true,
         scales: {
             xAxes: [{
                 display: true,
                 gridLines: { drawOnChartArea: false },
                 ticks: {
-                    //fontFamily: 'HelveticaNeue', 
+                    fontFamily: 'HelveticaNeue', 
                 },
                 type: 'time',
                 time: { tooltipFormat: 'MMM D YYYY' }
@@ -34,12 +44,15 @@ export class HistoricalPage extends BasePage {
                     color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb']
                 },
                 ticks: {
-                    //fontFamily: 'HelveticaNeue',
+                    fontFamily: 'HelveticaNeue',
                     callback: function (label, index, labels) {
-                        return FormatHelper.formatToShortCurrency(label, '$');
+                        return FormatHelper.formatCurrency(label, '$');
                     }
                 }
             }],
+        },
+        legend: {
+            display: false
         },
         tooltips: {
             enabled: true,
@@ -49,31 +62,25 @@ export class HistoricalPage extends BasePage {
                     return moment(tooltipItems[0].xLabel).format('MMMM DD YYYY');
                 },
                 label: function (tooltipItems, data) {
-                    let formatValue = FormatHelper.formatToShortCurrency(tooltipItems.yLabel, '$');
+                    let formatValue = FormatHelper.formatCurrency(tooltipItems.yLabel, '$');
                     return formatValue;
                 }
             }
         }
     }
-    public lineChartLegend: boolean = true;
-    public lineChartType: string = 'line';
-    public historicalChartColors: Array<any> = [{
-        backgroundColor: 'rgba(148,159,177,0.2)',
-        borderColor: 'rgba(148,159,177,1)',
-        pointBackgroundColor: 'rgba(148,159,177,1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }];
-
-    public historicalChartData: Array<any> = new Array<any>();
-    public historicalChartLabels: Array<any> = new Array<any>();
+    public chartType: string = 'line';
 
     public history: any;
+    public onPurchaseSelectClose: Function;
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
-        this.getPortfolioHistory()
+        this.getPortfolioHistory();
+        this.onPurchaseSelectClose = this.updateHistorical.bind(this);
+    }
+
+    public updateHistorical() {
+        console.log("historical:" + this.storageHelper.getSelectedPurchase());
     }
 
     private getPortfolioHistory() {
@@ -91,20 +98,16 @@ export class HistoricalPage extends BasePage {
 
     private buildChart() {
         if (this.history != undefined) {
-
             let chartData = [];
             let chartLabels = [];
-
             var acum = 100;
             for (let i = 0; i < this.history.values.length; i++) {
                 acum = acum * (1 + (this.history.values[i].value / 100.0));
                 chartData.push(acum.toFixed(2));
                 chartLabels.push(this.history.values[i].date);
             }
-
-            this.historicalChartLabels = chartLabels;
-            this.historicalChartData.push({ data: chartData });
+            this.chartLabels = chartLabels;
+            this.chartData.push({ data: chartData });
         }
     }
-
 }

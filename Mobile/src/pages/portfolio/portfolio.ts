@@ -1,9 +1,9 @@
 
 
 import { Component, Injector } from '@angular/core';
+
 import { BasePage } from './../base';
 import { PortfolioService } from './../../services/portfolio.service';
-
 
 @Component({
     selector: 'page-portfolio',
@@ -11,22 +11,35 @@ import { PortfolioService } from './../../services/portfolio.service';
 })
 export class PortfolioPage extends BasePage {
 
-    public assetColors = ['#14bdc0', '#9a43e7', '#4bebee', '#9013fe', '#5a44ba', '#4e2aa2', '#0243b7', '#3c91e6'];
+    public assetColors: Array<string> = ['#14bdc0', '#9a43e7', '#4bebee', '#9013fe', '#5a44ba', '#4e2aa2', '#0243b7', '#3c91e6'];
+
+    public chartBorder: Array<number> = [0, 0, 0];
+    public chartColors: Array<any> = [{ backgroundColor: this.assetColors, borderWidth: [0, 0, 0] }];
+    public chartData: Array<number> = new Array<number>();
+    public chartLabels: Array<string> = new Array<string>();
+    public chartLegend: boolean = true;
+    public chartOptions: any = {
+        responsive: true, 
+        legend: {
+            display: false
+        }
+    };
+    public chartType: string = 'pie';
 
     public distribution: any;
-    public totalTraditionalPercentage = 0;
-    public totalCryptoPercentage = 0;
+    public totalTraditionalPercentage: number = 0;
+    public totalCryptoPercentage: number = 0;
 
-    public chartLabels: string[] = [];
-    public chartData: number[] = [];
-    public chartOptions: any = [{ layout: { padding: { left: 50, right: 0, top: 100, bottom: 0 } } }];
-    public chartBorder: number[] = [0, 0, 0];
-    public chartType: string = 'pie';
-    public chartColors = [{ backgroundColor: this.assetColors, borderWidth: [0, 0, 0] }];
+    public onPurchaseSelectClose: Function;
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
         this.getPortfolioDistribution();
+        this.onPurchaseSelectClose = this.updateDistribution.bind(this);
+    }
+
+    public updateDistribution() {
+        console.log("Distribution:" + this.storageHelper.getSelectedPurchase());
     }
 
     private getPortfolioDistribution() {

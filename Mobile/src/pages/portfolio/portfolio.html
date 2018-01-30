@@ -1,14 +1,14 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>{{'PORTFOLIO' | translate}}</ion-title>
-  </ion-navbar>
+    <navbar title="PORTFOLIO" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
 </ion-header>
+
 <ion-content padding>
   <div *ngIf="distribution">
     <ion-row *ngIf="chartData">
       <ion-col>
-        <canvas baseChart width="100" height="100" [data]="chartData" [labels]="chartLabels" [legend]="false" [colors]="chartColors"
-                [chartType]="chartType"></canvas>
+        <canvas baseChart height="100" width="100" [chartType]="chartType" [colors]="chartColors" [data]="chartData" [labels]="chartLabels"
+          [legend]="chartLegend" [options]="chartOptions">
+        </canvas>
       </ion-col>
     </ion-row>
     <ion-row text-center>

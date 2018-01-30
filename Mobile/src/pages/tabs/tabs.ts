@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 
+import { EvolutionPage } from './../evolution/evolution';
 import { ProjectionPage } from '../projection/projection';
 import { PortfolioPage } from './../portfolio/portfolio';
 import { HistoricalPage } from './../historical/historical';
@@ -9,6 +10,7 @@ import { HistoricalPage } from './../historical/historical';
 })
 export class TabsPage {
 
+    evolutionTab = EvolutionPage
     projectionTab = ProjectionPage;
     portfolioTab = PortfolioPage;
     historicalTab = HistoricalPage

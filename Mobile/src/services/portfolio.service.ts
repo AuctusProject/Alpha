@@ -22,7 +22,7 @@ export class PortfolioService extends BaseService {
         return this.httpGet(this.getDistributionUrl, params);
     }
 
-    public getProjections() {
+    public getProjection() {
         let params = new HttpParams();
         return this.httpGet(this.getProjectionsUrl, params);
     }

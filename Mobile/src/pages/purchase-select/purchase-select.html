@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button icon-left (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+        {{"CLOSE" | translate}}
+      </button>
+    </ion-buttons>
+    <ion-title>{{"PURCHASES" | translate }}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <ion-list radio-group [(ngModel)]="selectedPurchase" *ngIf="projection" (ionChange)="onPurchaseClick()">
+    <ion-item *ngFor="let item of projection.purchases">
+      <ion-label>{{item.name}}</ion-label>
+      <ion-radio value="{{item.advisorId}}"></ion-radio>
+    </ion-item>
+  </ion-list>
+</ion-content>
