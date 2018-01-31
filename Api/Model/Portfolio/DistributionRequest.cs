@@ -8,6 +8,6 @@ namespace Api.Model.Portfolio
     public class DistributionRequest
     {
         public int AssetId { get; set; }
-        public double Percent { get; set; }
+        public double Percentage { get; set; }
     }
 }

@@ -12,20 +12,20 @@
         <div fxLayout="column" class="steps">
           <div class="step-number">STEP 1</div>
           <div class="step-title">
-            <span *ngIf="!model.name">Tell us a little about you</span>
-            <span *ngIf="model.name">{{model.name}}</span>
+            <span *ngIf="!step1Model.name">Tell us a little about you</span>
+            <span *ngIf="step1Model.name">{{step1Model.name}}</span>
           </div>
           <div class="step-description">
-            <span *ngIf="!model.description">Title, description, fee and pay frequency</span>
-            <span *ngIf="model.description">{{model.description}}</span>
+            <span *ngIf="!step1Model.description">Title, description, fee and pay frequency</span>
+            <span *ngIf="step1Model.description">{{step1Model.description}}</span>
           </div>
-          <div class="step-fee" *ngIf="model.price">
-            <span>{{model.price}} AUC<span class="periodicity-description"> / {{textFromPeriod()}}</span></span>
+          <div class="step-fee" *ngIf="step1Model.price">
+            <span>{{step1Model.price}} AUC<span class="periodicity-description"> / {{textFromPeriod(step1Model)}}</span></span>
           </div>
           <div class="step-next-button primary-blue-button bold" *ngIf="currentStep==1" (click)="nextStep()">Continue</div>
 
         </div>
-        <div *ngIf="model.name" fxLayout="row" fxLayoutAlign="space-evenly center">
+        <div *ngIf="step1Model.name" fxLayout="row" fxLayoutAlign="space-evenly center">
           <a (click)="edit(1)" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
             <i-check-circle class="blue-confirm"></i-check-circle>
             <span class="edit-label bold">EDIT</span>
@@ -39,8 +39,8 @@
           <div class="step-description">Products, percental, risk and projection</div>
           <div class="step-next-button primary-blue-button bold" *ngIf="currentStep==2" (click)="nextStep()">Continue</div>
         </div>
-        <div *ngIf="model.name" fxLayout="row" fxLayoutAlign="space-evenly center">
-          <a (click)="edit(1)" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
+        <div *ngIf="step2Model.name" fxLayout="row" fxLayoutAlign="space-evenly center">
+          <a (click)="edit(2)" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
             <i-check-circle class="blue-confirm"></i-check-circle>
             <span class="edit-label bold">EDIT</span>
           </a>
@@ -51,5 +51,5 @@
 
   </div>
 </div>
-<advisor-step1 *ngIf="editingStep == 1" [(model)]="model" (onStepFinished)="stepFinished($event, 1)"></advisor-step1>
-<advisor-step2 *ngIf="editingStep == -1" [(model)]="model" (onStepFinished)="stepFinished($event, 2)"></advisor-step2>
+<advisor-step1 *ngIf="editingStep == 1" [model]="step1EditingModel" (onStepFinished)="stepFinished($event, 1)"></advisor-step1>
+<advisor-step2 *ngIf="editingStep == -1" [model]="step2EditingModel" (onStepFinished)="stepFinished($event, 2)"></advisor-step2>

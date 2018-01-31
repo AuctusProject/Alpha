@@ -29,6 +29,7 @@ namespace Auctus.Business.Advisor
             using (var transaction = new TransactionalDapperCommand())
             {
                 advisor.Name = name;
+                advisor.UserId = user.Id;
                 transaction.Insert(advisor);
                 var detail = AdvisorDetailBusiness.SetNew(advisor.Id, description, period, price, false);
                 transaction.Insert(detail);
