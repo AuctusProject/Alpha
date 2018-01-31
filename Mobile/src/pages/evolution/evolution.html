@@ -1,7 +1,5 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>{{'EVOLUTION' | translate}}</ion-title>
-  </ion-navbar>
+  <navbar title="EVOLUTION" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
 </ion-header>
 
 <ion-content padding>
@@ -13,7 +11,7 @@
         </b>
       </h2>
       <p>
-        Follow your purchase evolution and projection expected
+        {{'EVOLUTION_SUBTITLE' | translate}}
       </p>
     </ion-col>
   </ion-row>
@@ -59,7 +57,7 @@
     </ion-col>
     <ion-col col-4 text-center>
       <h5>
-          {{'HISTORICAL' | translate}}
+        {{'HISTORICAL' | translate}}
       </h5>
       <p *ngIf="summary.today.historical">
         {{ summary.today.historical | currency }}
@@ -70,7 +68,7 @@
     </ion-col>
     <ion-col col-4 text-center>
       <h4>
-          {{'PROJECTION' | translate}}
+        {{'PROJECTION' | translate}}
       </h4>
       <p *ngIf="summary.today.projection">
         {{ summary.today.projection | currency }}
@@ -81,7 +79,7 @@
     </ion-col>
     <ion-col col-4 text-center>
       <h4>
-          {{'LOSS_PROFIT' | translate}}
+        {{'LOSS_PROFIT' | translate}}
       </h4>
       <p *ngIf="summary.today.projection && summary.today.historical" ion-text [ngClass]="{'profit': summary.today.lossProfit > 0, 'loss': summary.today.lossProfit < 0}">
         <b>

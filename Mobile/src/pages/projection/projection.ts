@@ -56,7 +56,7 @@ export class ProjectionPage extends BasePage {
                 display: true,
                 type: 'time',
                 ticks: {
-                    fontFamily: 'HelveticaNeue', 
+                    fontFamily: 'HelveticaNeue',
                 },
             }],
             yAxes: [{
@@ -93,18 +93,24 @@ export class ProjectionPage extends BasePage {
     public projection: Projection;
     public purchase: Purchase;
     public onPurchaseSelectClose: Function;
+    public selectedPurchase: Number;
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
-        this.getProjection();
-        this.onPurchaseSelectClose = this.updateProjection.bind(this);
+        this.onPurchaseSelectClose = this.buildProjection.bind(this);
     }
 
-    public updateProjection() {
+    ionViewWillEnter() {
+        if (this.storageHelper.getSelectedPurchase()) {
+            this.buildProjection();
+        }
+    }
 
-        let selectedPurchase = this.storageHelper.getSelectedPurchase();
-        this.purchase = this.lodash.find(this.projection.purchases, { 'advisorId': selectedPurchase })
-        this.buildChart();
+    public buildProjection() {
+        if (this.selectedPurchase != this.storageHelper.getSelectedPurchase()) {
+            this.selectedPurchase = this.storageHelper.getSelectedPurchase();
+            this.getProjection();
+        }
     }
 
     private getProjection() {
@@ -112,7 +118,8 @@ export class ProjectionPage extends BasePage {
         this.portfolioService.getProjection().subscribe(
             success => {
                 this.projection = success;
-                this.updateProjection();
+                this.purchase = this.lodash.find(this.projection.purchases, { 'advisorId': this.selectedPurchase })
+                this.buildChart();
                 this.loadingHelper.hideLoading();
             },
             error => {
