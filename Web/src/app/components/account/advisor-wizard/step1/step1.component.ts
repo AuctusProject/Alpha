@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Advisor } from '../../../../model/advisor/advisor'
+import { AdvisorService } from '../../../../services/advisor.service'
+
 
 @Component({
   selector: 'advisor-step1',
@@ -15,7 +17,7 @@ export class Step1Component implements OnInit {
   @Input() model: Advisor;
   isLinear = true;
   @Output() onStepFinished = new EventEmitter<Advisor>();
-  constructor() { }
+  constructor(private advisorService : AdvisorService) { }
 
   ngOnInit() {
   }
@@ -26,6 +28,21 @@ export class Step1Component implements OnInit {
 
   public next() {
     this.onStepFinished.emit(this.model);
+  }
+
+  onSubmit() {
+    if (this.model.id) {
+      this.advisorService.updateAdvisor(this.model).subscribe(val => this.next());
+    }
+    else {
+      this.advisorService.createAdvisor(this.model).subscribe(
+        advisor => this.afterSave(advisor));
+    }
+  }
+
+  afterSave(advisor) {
+    this.model.id = advisor.id;
+    this.next();
   }
 
 }

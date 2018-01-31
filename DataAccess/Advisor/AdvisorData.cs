@@ -30,7 +30,7 @@ namespace Auctus.DataAccess.Advisor
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("Id", id, DbType.Int32);
-            parameters.Add("Email", id, DbType.AnsiString);
+            parameters.Add("Email", email, DbType.AnsiString);
             return Query<DomainObjects.Advisor.Advisor>(SELECT_WITH_OWNER, parameters).SingleOrDefault();
         }
 

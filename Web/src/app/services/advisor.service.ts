@@ -18,4 +18,12 @@ export class AdvisorService {
   getAdvisorDetails(advisorId: number): Observable<Advisor> {
     return this.httpService.get(this.baseGetAdvisorsUrl + "/" + advisorId);
   }
+
+  createAdvisor(advisor: Advisor): Observable<Advisor> {
+    return this.httpService.post(this.baseGetAdvisorsUrl, advisor);
+  }
+
+  updateAdvisor(advisor: Advisor): Observable<void> {
+    return this.httpService.patch(this.baseGetAdvisorsUrl + "/" + advisor.id, advisor);
+  }
 }

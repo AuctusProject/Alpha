@@ -3,7 +3,7 @@
   <div class="inside-step-title">Create your financial portfolio</div>
   <div class="inside-step-subtitle">Nullam quis risus eget urna mollis ornare vel eu leo. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Aenean lacinia bibendum nulla sed consectetur.</div>
   <div class="portfolio-risks" fxLayout="column" fxLayoutGap="24px">
-    <portfolio-register *ngFor="let portfolioRisk of portfolioRisks" [risk]="portfolioRisk"></portfolio-register>
+    <portfolio-register *ngFor="let portfolioRisk of portfolioRisks" [risk]="portfolioRisk" [assets]="assets"></portfolio-register>
   </div>
 
   <div fxLayout="row" class="advisor-wizard-buttons wizard-buttons" fxLayoutAlign="space-between center">
