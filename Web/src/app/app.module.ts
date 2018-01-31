@@ -62,6 +62,7 @@ import { LoadingBlockComponent } from './components/ui/loading-block/loading-blo
 import { EthMachineComponent } from './components/eth-machine/eth-machine.component';
 import { PortfolioRegisterComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-register.component';
 import { PortfolioDistributionRowComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-distribution-row/portfolio-distribution-row.component';
+import { Web3Service } from './services/web3.service';
 
 @NgModule({
   declarations: [
@@ -126,7 +127,7 @@ import { PortfolioDistributionRowComponent } from './components/account/advisor-
     }),
     SimpleNotificationsModule.forRoot()
   ],
-  providers: [LoginService, HttpService, AccountService, AdvisorService, PortfolioService, WindowRefService],
+  providers: [LoginService, HttpService, AccountService, AdvisorService, PortfolioService, WindowRefService, Web3Service],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
