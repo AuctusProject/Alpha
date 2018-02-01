@@ -13,7 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
     <ProjectReference Include="..\DomainObjects\DomainObjects.csproj" />
-    <ProjectReference Include="..\EthereumProxy\EthereumProxy.csproj" />
     <ProjectReference Include="..\Model\Model.csproj" />
     <ProjectReference Include="..\Util\Util.csproj" />
   </ItemGroup>

@@ -37,6 +37,23 @@
                                     (onAddFormControls)="addFormControls(i, $event)"
                                     (onRemoveFormControls)="removeFormControls(i)"
                                     ></portfolio-distribution-row>
+        <div class="total-percentage" [class.success]="this.totalDistributionPercentage == 100" [class.error]="this.totalDistributionPercentage != 100" fxLayout="row" fxLayoutAlign="none center" >
+          <div fxLayout="row" fxFlex="65" fxLayoutAlign="none center">
+            <i-alert-triangle class="icon" *ngIf="this.totalDistributionPercentage != 100"></i-alert-triangle>
+            <i-check class="icon" *ngIf="this.totalDistributionPercentage == 100"></i-check>
+            <div class="total-label" fxLayout="column">
+              <input name="TotalPercentage" [(ngModel)]="totalDistributionPercentage" [formControl]="totalPercentageForm" hidden/>
+              <span>Total</span>
+              <span class="error-message" *ngIf="totalPercentageForm.hasError('min')">
+                The total is lower than 100%
+              </span>
+              <span class="error-message" *ngIf="totalPercentageForm.hasError('max')">
+                The total is greater than 100%
+              </span>
+            </div>
+          </div>
+          <div fxFlex="16" class="total-percentage-value">{{this.totalDistributionPercentage}}%</div>
+        </div>
       </div>
       <div class="portfolio-edition-title">What do you think your annual return will be?</div>
       <div class="portfolio-edition-subtitle">This is the return the investment will generate over time. Historically, the 30-year return of the S&P 500 has been roughly 11%</div>

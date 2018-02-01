@@ -9,7 +9,7 @@
     </mat-autocomplete>
   </mat-form-field>
   <mat-form-field class="percentage-value" fxFlex="16">
-    <input type="number" name="Percentage" matInput class="percentage-input" [formControl]="percentageForm" [(ngModel)]="assetDistribution.percentage" required>
+    <input type="number" name="Percentage" matInput class="percentage-input" [formControl]="percentageForm" [(ngModel)]="assetDistribution.percentage" min="0" max="100" required>
     <span matSuffix>%</span>
   </mat-form-field>
   <div class="portfolio-distribution-buttons" fxLayout="row" fxFlex fxLayoutAlign="end center" fxLayoutGap="18px">

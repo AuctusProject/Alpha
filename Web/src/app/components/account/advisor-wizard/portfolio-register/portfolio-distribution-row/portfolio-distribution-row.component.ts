@@ -25,7 +25,7 @@ export class PortfolioDistributionRowComponent implements OnChanges, OnInit {
   @Output() onRemoveFormControls = new EventEmitter();
 
   productForm: FormControl = new FormControl();
-  percentageForm: FormControl = new FormControl();
+  percentageForm: FormControl = new FormControl("Percentage["+this.rowNumber+"]", [Validators.required, Validators.min(0), Validators.max(100)]);
 
   filteredAssets: Observable<Asset[]>;
 
