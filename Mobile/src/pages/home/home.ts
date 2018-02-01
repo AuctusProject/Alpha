@@ -21,7 +21,8 @@ export class HomePage {
     }
 
     ionViewDidEnter() {
-        if (this.storageHelper.getLoginToken() !== 'undefined') {
+        let token: string = this.storageHelper.getLoginToken()
+        if (token.length > 0) {
             this.navCtrl.push(TabsPage);
         }
     }

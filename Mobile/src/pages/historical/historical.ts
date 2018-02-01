@@ -31,7 +31,7 @@ export class HistoricalPage extends BasePage {
                 display: true,
                 gridLines: { drawOnChartArea: false },
                 ticks: {
-                    fontFamily: 'HelveticaNeue', 
+                    fontFamily: 'HelveticaNeue',
                 },
                 type: 'time',
                 time: { tooltipFormat: 'MMM D YYYY' }
@@ -71,19 +71,29 @@ export class HistoricalPage extends BasePage {
     public chartType: string = 'line';
 
     public history: any;
+
     public onPurchaseSelectClose: Function;
+    public selectedPurchase: Number;
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
-        this.getPortfolioHistory();
-        this.onPurchaseSelectClose = this.updateHistorical.bind(this);
+        this.onPurchaseSelectClose = this.buildHistorical.bind(this);
     }
 
-    public updateHistorical() {
-        console.log("historical:" + this.storageHelper.getSelectedPurchase());
+    ionViewWillEnter() {
+        if (this.storageHelper.getSelectedPurchase()) {
+            this.buildHistorical();
+        }
     }
 
-    private getPortfolioHistory() {
+    public buildHistorical() {
+        if (this.selectedPurchase != this.storageHelper.getSelectedPurchase()) {
+            this.selectedPurchase = this.storageHelper.getSelectedPurchase();
+            this.getHistorical();
+        }
+    }
+
+    private getHistorical() {
         this.loadingHelper.showLoading();
         this.portfolioService.getHistory().subscribe(
             success => {

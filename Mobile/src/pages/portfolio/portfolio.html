@@ -1,8 +1,20 @@
 <ion-header>
-    <navbar title="PORTFOLIO" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
+  <navbar title="PORTFOLIO" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
 </ion-header>
 
 <ion-content padding>
+  <ion-row>
+    <ion-col>
+      <h2>
+        <b>
+          {{'PORTFOLIO' | translate}}
+        </b>
+      </h2>
+      <p>
+        {{'PORTFOLIO_SUBTITLE' | translate}}
+      </p>
+    </ion-col>
+  </ion-row>
   <div *ngIf="distribution">
     <ion-row *ngIf="chartData">
       <ion-col>

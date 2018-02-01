@@ -3,16 +3,22 @@
 </ion-header>
 
 <ion-content padding>
+  <ion-row>
+    <ion-col>
+      <h2>
+        <b>
+          {{'HISTORICAL' | translate}}
+        </b>
+      </h2>
+      <p>
+        {{'HISTORICAL_SUBTITLE' | translate}}
+      </p>
+    </ion-col>
+  </ion-row>
   <ion-row *ngIf="history">
     <ion-col col-12>
-      <canvas baseChart
-              height="100" width="100"
-              [chartType]="chartType"
-              [colors]="chartColors"
-              [datasets]="chartData"
-              [labels]="chartLabels"
-              [legend]="chartLegend"
-              [options]="chartOptions">
+      <canvas baseChart height="100" width="100" [chartType]="chartType" [colors]="chartColors" [datasets]="chartData" [labels]="chartLabels"
+        [legend]="chartLegend" [options]="chartOptions">
       </canvas>
     </ion-col>
   </ion-row>
