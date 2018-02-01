@@ -8,14 +8,15 @@ using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 
 namespace Api.Controllers
 {
     public class PortfolioBaseController : BaseController
     {
-        protected PortfolioBaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider) : base(loggerFactory, cache, serviceProvider) { }
-        
+        protected PortfolioBaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }
+
         protected virtual IActionResult Portfolio(PortfolioRequest portfolioRequest)
         {
             if (portfolioRequest == null || portfolioRequest.Distribution == null)

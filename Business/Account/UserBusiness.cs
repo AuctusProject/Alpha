@@ -4,6 +4,7 @@ using Auctus.DomainObjects.Account;
 using Auctus.Util;
 using Auctus.Util.NotShared;
 using Dapper;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace Auctus.Business.Account
 {
     public class UserBusiness : BaseBusiness<User, UserData>
     {
-        public UserBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public UserBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public User Login(string email, string password)
         {

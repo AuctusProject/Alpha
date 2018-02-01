@@ -2,6 +2,7 @@
 using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Advisor;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Auctus.Business.Advisor
 {
     public class BuyBusiness : BaseBusiness<Buy, BuyData>
     {
-        public BuyBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public BuyBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public Buy Create(string email, int advisorId, int? risk = null)
         {

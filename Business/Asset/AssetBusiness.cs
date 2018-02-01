@@ -1,5 +1,6 @@
 ﻿using Auctus.DataAccess.Asset;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Auctus.Business.Asset
 {
     public class AssetBusiness : BaseBusiness<Auctus.DomainObjects.Asset.Asset, AssetData>
     {
-        public AssetBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public AssetBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public List<Auctus.DomainObjects.Asset.Asset> ListAssets()
         {

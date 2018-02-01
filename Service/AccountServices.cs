@@ -1,5 +1,6 @@
 ﻿using Auctus.DomainObjects.Account;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace Auctus.Service
 {
     public class AccountServices : BaseServices
     {
-        public AccountServices(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public AccountServices(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public void ChangePassword(string email, string currentPassword, string newPassword)
         {

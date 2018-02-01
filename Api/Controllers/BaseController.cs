@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Auctus.Util;
 using Api.Model;
 using Auctus.Service;
+using Microsoft.AspNetCore.NodeServices;
 
 namespace Api.Controllers
 {
@@ -26,10 +27,12 @@ namespace Api.Controllers
         protected readonly ILoggerFactory LoggerFactory;
         protected readonly ILogger Logger;
         protected readonly Cache MemoryCache;
+        protected readonly INodeServices NodeServices;
 
-        protected BaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider)
+        protected BaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices)
         {
             MemoryCache = cache;
+            NodeServices = nodeServices;
             LoggerFactory = loggerFactory;
             Logger = loggerFactory.CreateLogger(GetType().Namespace);
         }
@@ -101,9 +104,9 @@ namespace Api.Controllers
             }
         }
 
-        protected AccountServices AccountServices { get { return new AccountServices(LoggerFactory, MemoryCache); } }
-        protected AdvisorServices AdvisorServices { get { return new AdvisorServices(LoggerFactory, MemoryCache); } }
-        protected AssetServices AssetServices { get { return new AssetServices(LoggerFactory, MemoryCache); } }
-        protected PortfolioServices PortfolioServices { get { return new PortfolioServices(LoggerFactory, MemoryCache); } }
+        protected AccountServices AccountServices { get { return new AccountServices(LoggerFactory, MemoryCache, NodeServices); } }
+        protected AdvisorServices AdvisorServices { get { return new AdvisorServices(LoggerFactory, MemoryCache, NodeServices); } }
+        protected AssetServices AssetServices { get { return new AssetServices(LoggerFactory, MemoryCache, NodeServices); } }
+        protected PortfolioServices PortfolioServices { get { return new PortfolioServices(LoggerFactory, MemoryCache, NodeServices); } }
     }
 }
