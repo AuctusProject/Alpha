@@ -9,14 +9,15 @@ using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 
 namespace Api.Controllers
 {
     public class PublicBaseController : BaseController
     {
-        protected PublicBaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider) : base(loggerFactory, cache, serviceProvider) { }
-        
+        protected PublicBaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }
+
         protected virtual IActionResult Assets()
         {
             var assets = AssetServices.ListAssets();
