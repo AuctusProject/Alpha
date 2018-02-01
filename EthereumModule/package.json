@@ -1,0 +1,99 @@
+{
+    "name": "auctusapi",
+    "version": "0.1.0-alpha",
+    "description": "Auctus API",
+    "main": "index.ts",
+    "scripts": {
+        "clean": "rimraf dist",
+        "swagger:swagger": "tsoa swagger",
+        "swagger:routes": "tsoa routes",
+        "swagger:all": "npm run swagger:swagger && npm run swagger:routes",
+        "build": "npm run clean && npm run swagger:all",
+        "build:dev": "npm run clean && npm run swagger:all",
+        "start": "npm run build && node dist/auctus.js",
+        "start:dev": "npm run build:dev && cross-env DEBUG=*"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/AuctusProject/Alpha.git"
+    },
+    "author": "Auctus",
+    "license": "",
+    "bugs": {
+        "url": "https://github.com/AuctusProject/Alpha/issues"
+    },
+    "homepage": "https://auctus.org",
+    "devDependencies": {
+        "@types/bignumber.js": "^4.0.3",
+        "@types/body-parser": "^1.16.5",
+        "@types/chai": "^4.0.4",
+        "@types/chai-subset": "^1.3.1",
+        "@types/chai-things": "0.0.32",
+        "@types/config": "0.0.33",
+        "@types/cors": "^2.8.1",
+        "@types/debug": "0.0.30",
+        "@types/express": "^4.0.37",
+        "@types/lodash": "^4.14.78",
+        "@types/mocha": "^2.2.43",
+        "@types/node": "^8.0.46",
+        "@types/sinon": "^2.3.7",
+        "@types/sinon-chai": "^2.7.29",
+        "@types/supertest": "^2.0.3",
+        "chai": "^4.1.2",
+        "chai-subset": "^1.6.0",
+        "chai-things": "^0.2.0",
+        "copy": "^0.3.1",
+        "cross-env": "^5.1.3",
+        "file-loader": "^1.1.5",
+        "nodemon-webpack-plugin": "^0.1.5",
+        "nyc": "^11.3.0",
+        "rimraf": "^2.6.2",
+        "sinon": "^4.1.2",
+        "sinon-chai": "^2.14.0",
+        "source-map-support": "^0.5.0",
+        "supertest": "^3.0.0",
+        "ts-loader": "^3.0.5",
+        "ts-node": "^3.3.0",
+        "tslint": "^5.8.0",
+        "tslint-loader": "^3.5.3",
+        "typescript": "^2.5.3",
+        "uglifyjs-webpack-plugin": "^1.0.1",
+        "web3-typescript-typings": "^0.7.1"
+    },
+    "dependencies": {
+        "bignumber.js": "^4.1.0",
+        "body-parser": "^1.18.2",
+        "config": "^1.27.0",
+        "cors": "^2.8.4",
+        "debug": "^3.1.0",
+        "ethereumjs-util": "^5.1.2",
+        "ethereumjs-wallet": "^0.6.0",
+        "express": "^4.16.2",
+        "express-ping": "^1.4.0",
+        "inversify": "^4.3.0",
+        "inversify-binding-decorators": "^3.0.0",
+        "lodash": "^4.17.4",
+        "moment": "^2.19.1",
+        "reflect-metadata": "^0.1.10",
+        "supports-color": "^5.0.0",
+        "swagger-ui-express": "^2.0.8",
+        "tsoa": "^2.0.1",
+        "web3": "^1.0.0-beta.24",
+        "web3-provider-engine": "^13.3.3"
+    },
+    "nyc": {
+        "extension": [
+            ".ts"
+        ],
+        "exclude": [
+            "**/*.d.ts",
+            "**/dist/**",
+            "**/coverage/**",
+            "webpack.*.config.js"
+        ],
+        "reporter": [
+            "text"
+        ],
+        "all": true
+    }
+}
