@@ -1,58 +1,65 @@
-<div class="portfolio-card" fxLayout="column">
-  <div fxLayout="row" fxLayoutAlign="space-between center" class="portfolio-summary">
-    <div fxLayout="column">
-      <span class="risk-description bold">{{risk.description}}</span>
-      <span class="products-details">
-        No products registered
-      </span>
+<form #portfolioRegisterForm="ngForm" (ngSubmit)="onSubmit()">
+  <div class="portfolio-card" fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="space-between center" class="portfolio-summary">
+      <div fxLayout="column">
+        <span class="risk-description bold">{{risk.description}}</span>
+        <span class="products-details">
+          No products registered
+        </span>
+      </div>
+      <div class="button">
+        <div *ngIf="!isEditing" class="step-add-button rectangle-white-button" (click)="addPortfolio()" fxLayout="row" fxLayoutAlign="none center">
+          <i-plus></i-plus><span class="button-text bold"> ADD</span>
+        </div>
+        <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid" *ngIf="isEditing" class="step-save-button rectangle-blue-button" (click)="savePortfolio()" fxLayout="row" fxLayoutAlign="none center">
+          <i-save></i-save><span class="button-text bold"> SAVE</span>
+        </button>
+        <div *ngIf="false" class="step-edit-button rectangle-white-button" (click)="editPortfolio()" fxLayout="row" fxLayoutAlign="none center">
+          <i-edit></i-edit><span class="button-text bold"> EDIT</span>
+        </div>
+      </div>
     </div>
-    <div class="button">
-      <div *ngIf="!isEditing" class="step-add-button rectangle-white-button" (click)="addPortfolio()" fxLayout="row" fxLayoutAlign="none center">
-        <i-plus></i-plus><span class="button-text bold"> ADD</span>
+    <div *ngIf="isEditing" class="portfolio-edition">
+      <div class="portfolio-edition-title">Build the investment plan</div>
+      <div class="portfolio-edition-subtitle">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras justo odio, dapibus ac.</div>
+      <div *ngIf="!assets">Loading</div>
+      <div *ngIf="assets">
+        <portfolio-distribution-row *ngFor="let assetDistribution of assetsDistributionRows; let i = index"
+                                    [rowNumber]="i"
+                                    [assetDistribution]="assetDistribution"
+                                    [availableAssets]="assets"
+                                    [disableRemoveButton]="assetsDistributionRows.length <= 1"
+                                    [showAddButton]="(i+1) == assetsDistributionRows.length"
+                                    [formGroup]="portfolioRegisterForm.control"
+                                    (addNewRow)="addNewRow(i)"
+                                    (removeRow)="!(assetsDistributionRows.length <= 1) && removeRow(i)"
+                                    (assetDistributionChanged)="onAssetDistributionChanged($event, i)"
+                                    (onAddFormControls)="addFormControls(i, $event)"
+                                    (onRemoveFormControls)="removeFormControls(i)"
+                                    ></portfolio-distribution-row>
       </div>
-      <div *ngIf="isEditing" class="step-save-button rectangle-blue-button" (click)="savePortfolio()" fxLayout="row" fxLayoutAlign="none center">
-        <i-save></i-save><span class="button-text bold"> SAVE</span>
-      </div>
-      <div *ngIf="false" class="step-edit-button rectangle-white-button" (click)="editPortfolio()" fxLayout="row" fxLayoutAlign="none center">
-        <i-edit></i-edit><span class="button-text bold"> EDIT</span>
+      <div class="portfolio-edition-title">What do you think your annual return will be?</div>
+      <div class="portfolio-edition-subtitle">This is the return the investment will generate over time. Historically, the 30-year return of the S&P 500 has been roughly 11%</div>
+      <div fxLayout="row" fxLayoutGap="32px" class="expected-returns">
+        <div fxLayout="column" fxFlex="20">
+          <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
+            <input type="number" aria-label="pessimistLabel" placeholder="Pessimistic" matInput class="percentage-input" name="Pessimistic" [(ngModel)]="model.pessimisticProjection" required>
+            <span matSuffix>%</span>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="20">
+          <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
+            <input type="number" aria-label="realisticLabel" placeholder="Realistic" matInput class="percentage-input" name="Realistic" [(ngModel)]="model.projectionValue" required>
+            <span matSuffix>%</span>
+          </mat-form-field>
+        </div>
+        <div fxLayout="column" fxFlex="20">
+          <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
+            <input type="number" aria-label="optimisticLabel" placeholder="Optimistic" matInput class="percentage-input" name="Optimistic" [(ngModel)]="model.optimisticProjection" required>
+            <span matSuffix>%</span>
+          </mat-form-field>
+        </div>
       </div>
     </div>
   </div>
-  <div *ngIf="isEditing" class="portfolio-edition">
-    <div class="portfolio-edition-title">Build the investment plan</div>
-    <div class="portfolio-edition-subtitle">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras justo odio, dapibus ac.</div>
-    <div *ngIf="!assets">Loading</div>
-    <div *ngIf="assets">
-      <portfolio-distribution-row *ngFor="let assetDistribution of assetsDistributionRows; let i = index"
-                                  [assetDistribution]="assetDistribution"
-                                  [availableAssets]="assets"
-                                  [disableRemoveButton]="assetsDistributionRows.length <= 1"
-                                  [showAddButton]="(i+1) == assetsDistributionRows.length"
-                                  (addNewRow)="addNewRow(i)"
-                                  (removeRow)="!(assetsDistributionRows.length <= 1) && removeRow(i)"
-                                  (assetDistributionChanged)="onAssetDistributionChanged($event, i)"></portfolio-distribution-row>
-    </div>
-    <div class="portfolio-edition-title">What do you think your annual return will be?</div>
-    <div class="portfolio-edition-subtitle">This is the return the investment will generate over time. Historically, the 30-year return of the S&P 500 has been roughly 11%</div>
-    <div fxLayout="row" fxLayoutGap="32px" class="expected-returns">
-      <div fxLayout="column" fxFlex="20">
-        <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
-          <input aria-label="pessimistLabel" placeholder="Pessimistic" matInput class="percentage-input" name="Pessimistic" required>
-          <span matSuffix>%</span>
-        </mat-form-field>
-      </div>
-      <div fxLayout="column" fxFlex="20">
-        <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
-          <input aria-label="realisticLabel" placeholder="Realistic" matInput class="percentage-input" name="Realistic" required>
-          <span matSuffix>%</span>
-        </mat-form-field>
-      </div>
-      <div fxLayout="column" fxFlex="20">
-        <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
-          <input aria-label="optimisticLabel" placeholder="Optimistic" matInput class="percentage-input" name="Optimistic" [(ngModel)]="model.optimisticProjection" required>
-          <span matSuffix>%</span>
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
-</div>
+</form>

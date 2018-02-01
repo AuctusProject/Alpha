@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Asset } from '../../../../model/asset/asset';
 import { RiskType } from '../../../../model/account/riskType'
 import { AssetDistribution } from '../../../../model/asset/assetDistribution'
 import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
 import { PublicService } from '../../../../services/public.service'
+
 
 @Component({
   selector: 'portfolio-register',
@@ -16,7 +18,7 @@ export class PortfolioRegisterComponent implements OnInit {
   @Input() assets: Asset[];
   assetsDistributionRows: AssetDistribution[];
   @Input() model: PortfolioRequest;
-
+  @ViewChild('portfolioRegisterForm') portfolioRegisterForm;
   isEditing = false;
 
   constructor() { }
@@ -42,27 +44,21 @@ export class PortfolioRegisterComponent implements OnInit {
     }
   }
 
-  public currentAvailableAssets(currentAssetDistributionRow: AssetDistribution): Asset[] {
-    var availableAssets: Asset[] = [];
-    for (let asset of this.assets) {
-      var isAssetInUse = false;
-      var isAssetFromCurrentRow = asset.id == currentAssetDistributionRow.id;
-      if (!isAssetFromCurrentRow) {
-        for (let assetDistribution of this.assetsDistributionRows) {
-          if (asset.id == assetDistribution.id) {
-            isAssetInUse = true;
-          }
-        }
-      }
-      if (!isAssetInUse || isAssetFromCurrentRow) {
-        availableAssets.push(asset);
-      }
-    }
-    return availableAssets;
-  }
-
   public onAssetDistributionChanged(assetDistribution: AssetDistribution, assetRow: number) {
     this.assetsDistributionRows[assetRow] = assetDistribution;
   }
 
+  onSubmit() {
+  }
+
+
+  addFormControls(rowNumber, event) {
+    this.portfolioRegisterForm.control.addControl("Product[" + rowNumber + "]", event.productForm);
+    this.portfolioRegisterForm.control.addControl("Percentage[" + rowNumber + "]", event.percentageForm);
+  }
+
+  removeFormControls(rowNumber) {
+    this.portfolioRegisterForm.control.removeControl("Product[" + rowNumber + "]");
+    this.portfolioRegisterForm.control.removeControl("Percentage[" + rowNumber + "]");
+  }
 }
