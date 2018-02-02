@@ -1,6 +1,14 @@
-<form #portfolioRegisterForm="ngForm" (ngSubmit)="onSubmit()">
+<form #portfolioRegisterForm="ngForm" (ngSubmit)="onSubmit()" fxLayout="row">
+  <div class="portfolio-card-pre-elements" fxLayout="column">
+    <div class="portfolio-card-pre-elements" fxLayout="row">
+      <div class="portfolio-card-risk-description"><span *ngIf="index==0">Low risk</span><span *ngIf="index==4">High risk</span>&nbsp;</div>      
+      <div class="portfolio-card-circle white bold">{{index + 1}}</div>
+    </div>
+    <div class="portfolio-card-line"></div>
+  </div>
   <div class="portfolio-card" fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="space-between center" class="portfolio-summary">
+
       <div fxLayout="column">
         <span class="risk-description bold">{{risk.description}}</span>
         <span class="products-details">
@@ -12,7 +20,7 @@
         <div *ngIf="!isEditing" class="step-add-button rectangle-white-button" (click)="addPortfolio()" fxLayout="row" fxLayoutAlign="none center">
           <i-plus></i-plus><span class="button-text bold"> ADD</span>
         </div>
-        <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="isEditing" class="step-save-button rectangle-blue-button" (click)="savePortfolio()" fxLayout="row" fxLayoutAlign="none center">
+        <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="isEditing" class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center">
           <i-save></i-save><span class="button-text bold"> SAVE</span>
         </button>
         <div *ngIf="false" class="step-edit-button rectangle-white-button" (click)="editPortfolio()" fxLayout="row" fxLayoutAlign="none center">
@@ -36,14 +44,13 @@
                                     (removeRow)="!(assetsDistributionRows.length <= 1) && removeRow(i)"
                                     (assetDistributionChanged)="onAssetDistributionChanged($event, i)"
                                     (onAddFormControls)="addFormControls(i, $event)"
-                                    (onRemoveFormControls)="removeFormControls(i)"
-                                    ></portfolio-distribution-row>
-        <div class="total-percentage" [class.success]="this.totalDistributionPercentage == 100" [class.error]="this.totalDistributionPercentage != 100" fxLayout="row" fxLayoutAlign="none center" >
+                                    (onRemoveFormControls)="removeFormControls(i)"></portfolio-distribution-row>
+        <div class="total-percentage" [class.success]="this.totalDistributionPercentage == 100" [class.error]="this.totalDistributionPercentage != 100" fxLayout="row" fxLayoutAlign="none center">
           <div fxLayout="row" fxFlex="65" fxLayoutAlign="none center">
             <i-alert-triangle class="icon" *ngIf="this.totalDistributionPercentage != 100"></i-alert-triangle>
             <i-check class="icon" *ngIf="this.totalDistributionPercentage == 100"></i-check>
             <div class="total-label" fxLayout="column">
-              <input name="TotalPercentage" [(ngModel)]="totalDistributionPercentage" [formControl]="totalPercentageForm" hidden/>
+              <input name="TotalPercentage" [(ngModel)]="totalDistributionPercentage" [formControl]="totalPercentageForm" hidden />
               <span>Total</span>
               <span class="error-message" *ngIf="totalPercentageForm.hasError('min')">
                 The total is lower than 100%

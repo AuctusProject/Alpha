@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
 import { Portfolio } from "../model/portfolio/portfolio";
+import { PortfolioRequest } from "../model/portfolio/portfolioRequest";
 import { Projections } from "../model/portfolio/projections";
 import { PortfolioHistory } from "../model/portfolio/portfolioHistory";
 import { PortfolioDistribution } from "../model/portfolio/portfolioDistribution";
@@ -12,7 +13,7 @@ export class PortfolioService {
   private getProjectionsUrl = this.httpService.apiUrl("portfolios/v1/projections");
   private getPortfoliosHistoryUrl = this.httpService.apiUrl("portfolios/v1/history");
   private getPortfoliosDistributionUrl = this.httpService.apiUrl("portfolios/v1/distribution");
-
+  private savePortfolioUrl = this.httpService.apiUrl("portfolios/v1/");
 
   constructor(private httpService: HttpService) { }
 
@@ -26,5 +27,9 @@ export class PortfolioService {
 
   getPortfoliosDistribution(): Observable<PortfolioDistribution[]> {
     return this.httpService.get(this.getPortfoliosDistributionUrl);
+  }
+
+  savePortfolio(portfolioRequest: PortfolioRequest): Observable<PortfolioRequest> {
+    return this.httpService.post(this.savePortfolioUrl, portfolioRequest);
   }
 }

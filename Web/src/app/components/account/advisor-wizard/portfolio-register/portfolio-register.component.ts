@@ -4,7 +4,8 @@ import { Asset } from '../../../../model/asset/asset';
 import { RiskType } from '../../../../model/account/riskType'
 import { AssetDistribution } from '../../../../model/asset/assetDistribution'
 import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
-import { PublicService } from '../../../../services/public.service'
+import { DistributionRequest } from '../../../../model/portfolio/distributionRequest'
+import { PortfolioService } from '../../../../services/portfolio.service'
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
@@ -13,7 +14,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
   styleUrls: ['./portfolio-register.component.css']
 })
 export class PortfolioRegisterComponent implements OnInit {
-  riskDescription = "Conservative";
+  @Input() index: number;
   @Input() risk: RiskType;
   @Input() assets: Asset[];
   assetsDistributionRows: AssetDistribution[];
@@ -23,7 +24,7 @@ export class PortfolioRegisterComponent implements OnInit {
   totalDistributionPercentage = 0;
   totalPercentageForm: FormControl = new FormControl("", [Validators.required, Validators.min(100), Validators.max(100)]);
 
-  constructor(private ref: ChangeDetectorRef, private appRef: ApplicationRef) { }
+  constructor(private ref: ChangeDetectorRef, private portfolioService: PortfolioService) { }
 
   ngOnInit() {
     this.model = new PortfolioRequest();
@@ -82,9 +83,6 @@ export class PortfolioRegisterComponent implements OnInit {
     return availableAssets;
   }
 
-  onSubmit() {
-  }
-
   addFormControls(rowNumber, event) {
     this.portfolioRegisterForm.control.addControl("Product[" + rowNumber + "]", event.productForm);
     this.portfolioRegisterForm.control.addControl("Percentage[" + rowNumber + "]", event.percentageForm);
@@ -104,7 +102,10 @@ export class PortfolioRegisterComponent implements OnInit {
   }
 
 
-  savePortfolio() {
-
+  onSubmit() {
+    for (let row of this.assetsDistributionRows) {
+      this.model.distribution.push(new DistributionRequest(){assetId: row.id, percentage: row.percentage });
+    }
+    this.portfolioService.savePortfolio(this.model).subscribe(model => console.log(model.id));
   }
 }
