@@ -56,14 +56,14 @@ export class ProjectionPage extends BasePage {
                 display: true,
                 type: 'time',
                 ticks: {
-                    fontFamily: 'HelveticaNeue',
+                    fontFamily: 'HelveticaNeueMedium',
                 },
             }],
             yAxes: [{
                 drawBorder: false,
                 color: ['#FF0000'],
                 ticks: {
-                    fontFamily: 'HelveticaNeue',
+                    fontFamily: 'HelveticaNeueMedium',
                     callback: function (label, index, labels) {
                         return FormatHelper.formatCurrency(label, '$');
                     }
@@ -92,8 +92,6 @@ export class ProjectionPage extends BasePage {
 
     public projection: Projection;
     public purchase: Purchase;
-    public onPurchaseSelectClose: Function;
-    public selectedPurchase: Number;
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
@@ -103,6 +101,8 @@ export class ProjectionPage extends BasePage {
     ionViewWillEnter() {
         if (this.storageHelper.getSelectedPurchase()) {
             this.buildProjection();
+        } else {
+            this.openPurchaseSelect();
         }
     }
 
@@ -181,21 +181,29 @@ export class ProjectionPage extends BasePage {
         let purchaseDate = this.getPurchaseDate();
         let goalDate = this.getGoalDate();
 
-        return goalDate.diff(purchaseDate, 'months') * 1.1;
+        return goalDate.diff(purchaseDate, 'months');
+    }
+
+    private getExtensionChartPoint() {
+        return Math.round(this.getEstimatedMonths() * 1.2);
     }
 
     private buildChartLabels() {
 
         let purchaseDate = this.getPurchaseDate();
         let estimatedMonths = this.getEstimatedMonths();
+        let extensionChartPoint = this.getExtensionChartPoint();
 
         let chartLabels = [];
         chartLabels.push(purchaseDate.toDate());
 
-        for (let month = 1; month <= estimatedMonths; month++) {
+        for (let month = 1; month <= extensionChartPoint; month++) {
 
             let date = purchaseDate.add('month', 1).toDate();
-            chartLabels.push(date);
+
+            if ((month <= estimatedMonths && (month % this.projection.currentGoal.timeframe == 0 || month == estimatedMonths)) || month == extensionChartPoint) {
+                chartLabels.push(date);
+            }
         }
 
         this.chartLabels = chartLabels;
@@ -204,18 +212,25 @@ export class ProjectionPage extends BasePage {
     private buildChartData(monthPercent, label) {
 
         let estimatedMonths = this.getEstimatedMonths();
+        let extensionChartPoint = this.getExtensionChartPoint();
 
-        var chartData = [];
+        var projectionValue = [];
+        projectionValue.push(this.projection.currentGoal.startingAmount);
+
+        let chartData = [];
         chartData.push(this.projection.currentGoal.startingAmount);
 
-        for (let month = 1; month <= estimatedMonths; month++) {
+        for (let month = 1; month <= extensionChartPoint; month++) {
 
-            let beforeValue = chartData[month - 1];
+            let beforeValue = projectionValue[month - 1];
             let currencyValue = beforeValue + (beforeValue * monthPercent / 100);
 
             currencyValue += this.projection.currentGoal.monthlyContribution;
+            projectionValue.push(currencyValue);
 
-            chartData.push(currencyValue);
+            if (month % this.projection.currentGoal.timeframe == 0 || month == estimatedMonths) {
+                chartData.push(currencyValue);
+            }
         }
 
         this.chartData.push({ data: chartData, label: label })
@@ -225,17 +240,26 @@ export class ProjectionPage extends BasePage {
 
         let estimatedMonths = this.getEstimatedMonths();
 
-        var chartData = [];
+        var projectionValue = [];
+        projectionValue.push(0);
+
+        let chartData = [];
         chartData.push(0);
 
-        for (let month = 1; month <= estimatedMonths; month++) {
+        let extensionChartPoint = this.getExtensionChartPoint();
 
-            let beforeValue = chartData[month - 1];
+        for (let month = 1; month <= extensionChartPoint; month++) {
+
+            let beforeValue = projectionValue[month - 1];
             let currencyValue = beforeValue + this.projection.currentGoal.monthlyContribution;
+            projectionValue.push(currencyValue);
 
-            chartData.push(currencyValue);
+            if (month % this.projection.currentGoal.timeframe == 0 || month == estimatedMonths) {
+                chartData.push(currencyValue);
+            }
         }
 
         this.chartData.push({ data: chartData, label: 'Contributed' })
     }
+
 }

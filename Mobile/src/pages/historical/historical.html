@@ -1,5 +1,5 @@
 <ion-header>
-  <navbar title="HISTORICAL" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
+  <navbar [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
 </ion-header>
 
 <ion-content padding>
@@ -16,6 +16,19 @@
     </ion-col>
   </ion-row>
   <ion-row *ngIf="history">
+    <ion-col col-12>
+      <ion-segment [(ngModel)]="filterSelected" (ionChange)="filterChanged($event)">
+        <ion-segment-button value="days">
+          {{'LAST_THIRTY_DAYS' |  translate}}
+        </ion-segment-button>
+        <ion-segment-button value="months">
+            {{'LAST_SIX_MONTHS' |  translate}}
+        </ion-segment-button>
+        <ion-segment-button value="all">
+            {{'ALL_TIME' |  translate}}
+        </ion-segment-button>
+      </ion-segment>
+    </ion-col>
     <ion-col col-12>
       <canvas baseChart height="100" width="100" [chartType]="chartType" [colors]="chartColors" [datasets]="chartData" [labels]="chartLabels"
         [legend]="chartLegend" [options]="chartOptions">

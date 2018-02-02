@@ -41,7 +41,7 @@ export class EvolutionPage extends BasePage {
                 display: true,
                 type: 'time',
                 ticks: {
-                    fontFamily: 'HelveticaNeue',
+                    fontFamily: 'HelveticaNeueMedium',
                 },
             }],
             yAxes: [{
@@ -79,9 +79,6 @@ export class EvolutionPage extends BasePage {
         }
     }
 
-    public onPurchaseSelectClose: Function;
-    public selectedPurchase: Number;
-
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
         this.onPurchaseSelectClose = this.buildEvolution.bind(this);
@@ -90,6 +87,8 @@ export class EvolutionPage extends BasePage {
     ionViewWillEnter() {
         if (this.storageHelper.getSelectedPurchase()) {
             this.buildEvolution();
+        } else {
+            this.openPurchaseSelect();
         }
     }
 

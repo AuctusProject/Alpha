@@ -1,4 +1,5 @@
 {
+  "ALL_TIME": "All time",
   "CANCEL": "Cancel",
   "CLOSE": "Close",
   "CONTRIBUTED": "Contributed",
@@ -13,6 +14,8 @@
   "HOLDINGS": "Holdings",
   "INFO": "Info",
   "INVALID_EMAIL": "Invalid email",
+  "LAST_SIX_MONTHS": "Last 6 months",
+  "LAST_THIRTY_DAYS":"Last 30 days",
   "LESS_LIKELY": "Less Likely",
   "LOGIN": "Log in",
   "LOGIN_PAGE_TITLE": "Inform your crendentials to login",

@@ -1,5 +1,5 @@
 <ion-header>
-  <navbar title="PORTFOLIO" [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
+  <navbar [onPurchaseSelectClose]="onPurchaseSelectClose"></navbar>
 </ion-header>
 
 <ion-content padding>
@@ -18,8 +18,8 @@
   <div *ngIf="distribution">
     <ion-row *ngIf="chartData">
       <ion-col>
-        <canvas baseChart height="100" width="100" [chartType]="chartType" [colors]="chartColors" [data]="chartData" [labels]="chartLabels"
-          [legend]="chartLegend" [options]="chartOptions">
+        <canvas baseChart [chartType]="chartType" [colors]="chartColors" [data]="chartData" [labels]="chartLabels" [legend]="chartLegend"
+          [options]="chartOptions">
         </canvas>
       </ion-col>
     </ion-row>

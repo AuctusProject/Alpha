@@ -31,7 +31,7 @@ export class HistoricalPage extends BasePage {
                 display: true,
                 gridLines: { drawOnChartArea: false },
                 ticks: {
-                    fontFamily: 'HelveticaNeue',
+                    fontFamily: 'HelveticaNeueMedium',
                 },
                 type: 'time',
                 time: { tooltipFormat: 'MMM D YYYY' }
@@ -44,7 +44,7 @@ export class HistoricalPage extends BasePage {
                     color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb']
                 },
                 ticks: {
-                    fontFamily: 'HelveticaNeue',
+                    fontFamily: 'HelveticaNeueMedium',
                     callback: function (label, index, labels) {
                         return FormatHelper.formatCurrency(label, '$');
                     }
@@ -71,18 +71,19 @@ export class HistoricalPage extends BasePage {
     public chartType: string = 'line';
 
     public history: any;
-
-    public onPurchaseSelectClose: Function;
-    public selectedPurchase: Number;
+    public filterSelected: string;
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
         this.onPurchaseSelectClose = this.buildHistorical.bind(this);
+        this.filterSelected = 'days';
     }
 
     ionViewWillEnter() {
         if (this.storageHelper.getSelectedPurchase()) {
             this.buildHistorical();
+        } else {
+            this.openPurchaseSelect();
         }
     }
 
@@ -108,16 +109,57 @@ export class HistoricalPage extends BasePage {
 
     private buildChart() {
         if (this.history != undefined) {
+
             let chartData = [];
             let chartLabels = [];
-            var acum = 100;
-            for (let i = 0; i < this.history.values.length; i++) {
-                acum = acum * (1 + (this.history.values[i].value / 100.0));
-                chartData.push(acum.toFixed(2));
-                chartLabels.push(this.history.values[i].date);
+            let acum = 100;
+            let filterConfig = this.getFilterConfig();
+
+            let historyValuesList = this.lodash.filter(this.history.values, function (item) {
+                return moment(item.date) >= filterConfig.date;
+            });
+
+            for (let index = 0; index < historyValuesList.length; index++) {
+                acum = acum * (1 + (historyValuesList[index].value / 100.0));
+
+                if (index % filterConfig.pointIndex == 0) {
+                    chartData.push(acum.toFixed(2));
+                    chartLabels.push(this.history.values[index].date);
+                }
             }
+
             this.chartLabels = chartLabels;
-            this.chartData.push({ data: chartData });
+            this.chartData[0] = { data: chartData };
         }
+    }
+
+    public filterChanged(event) {
+        this.buildChart();
+    }
+
+    private getFilterConfig(): any {
+        switch (this.filterSelected) {
+            case 'days': {
+                return {
+                    date: this.moment().add('days', -30),
+                    pointIndex: 1
+                }
+            }
+            case 'months': {
+                return {
+                    date: this.moment().add('month', -6),
+                    pointIndex: 6
+                }
+            }
+            case 'all': {
+                let totalDays = this.moment().diff(this.moment(this.history.values[0].date), 'days');
+
+                return {
+                    date: this.moment(this.history.values[0].date),
+                    pointIndex: totalDays < 30 ? 1 : totalDays < 360 ? 6 : 15
+                }
+            }
+        }
+
     }
 }

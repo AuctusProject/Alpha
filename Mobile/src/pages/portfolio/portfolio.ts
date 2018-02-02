@@ -30,9 +30,6 @@ export class PortfolioPage extends BasePage {
     public totalTraditionalPercentage: number = 0;
     public totalCryptoPercentage: number = 0;
 
-    public onPurchaseSelectClose: Function;
-    public selectedPurchase: Number;
-
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
         this.onPurchaseSelectClose = this.buildDistribution.bind(this);
@@ -41,6 +38,8 @@ export class PortfolioPage extends BasePage {
     ionViewWillEnter() {
         if (this.storageHelper.getSelectedPurchase()) {
             this.buildDistribution();
+        } else {
+            this.openPurchaseSelect();
         }
     }
 

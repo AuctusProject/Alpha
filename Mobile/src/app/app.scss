@@ -27,6 +27,16 @@
 }
 
 @font-face {
+  font-family: "HelveticaNeueMedium";
+  src: url('/assets/fonts/HelveticaNeueMedium.eot'); /* IE9 Compat Modes */
+  src: url('/assets/fonts/HelveticaNeueMedium.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('/assets/fonts/HelveticaNeueMedium.woff2') format('woff2'), /* Super Modern Browsers */
+  url("/assets/fonts/HelveticaNeueMedium.woff") format("woff"), /* Pretty Modern Browsers */
+  url("/assets/fonts/HelveticaNeueMedium.ttf") format("truetype"), /* Safari, Android, iOS */
+  url('/assets/fonts/HelveticaNeueMedium.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
   font-family: "HelveticaNeue";
   src: url('../assets/fonts/HelveticaNeueRegular.eot'); /* IE9 Compat Modes */
   src: url('../assets/fonts/HelveticaNeueRegular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */

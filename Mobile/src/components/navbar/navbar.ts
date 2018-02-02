@@ -10,7 +10,6 @@ import { PurchaseSelectPage } from './../../pages/purchase-select/purchase-selec
 })
 export class NavbarComponent {
 
-  @Input() public title: string;
   @Input() public onPurchaseSelectClose: Function;
 
   constructor(public modalCtrl: ModalController) {
