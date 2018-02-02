@@ -5,6 +5,7 @@ using Auctus.DomainObjects.Advisor;
 using Auctus.DomainObjects.Portfolio;
 using Auctus.Model;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Auctus.Business.Portfolio
 {
     public class ProjectionBusiness : BaseBusiness<Projection, ProjectionData>
     {
-        public ProjectionBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public ProjectionBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public Projection Create(string email, int portfolioId, double projectionValue, double? optimisticProjection,
             double? pessimisticProjection, Dictionary<int, double> distribution)

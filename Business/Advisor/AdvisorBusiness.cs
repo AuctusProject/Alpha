@@ -2,6 +2,7 @@
 using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,7 @@ namespace Auctus.Business.Advisor
     {
         public int DefaultAdvisorId { get { return 1; } }
 
-        public AdvisorBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public AdvisorBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public DomainObjects.Advisor.Advisor Create(string email, string name, string description, int period, double price)
         {

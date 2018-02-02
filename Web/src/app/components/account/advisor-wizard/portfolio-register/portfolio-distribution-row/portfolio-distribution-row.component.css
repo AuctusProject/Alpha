@@ -24,3 +24,7 @@
 .new-row-icon-wrapper{
   width: 24px;
 }
+
+.percentage-input {
+  text-align: right;
+}

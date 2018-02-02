@@ -7,13 +7,14 @@ using Auctus.DomainObjects.Account;
 using Auctus.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 
 namespace Api.Controllers
 {
     public class AccountBaseController : BaseController
     {
-        protected AccountBaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider) : base(loggerFactory, cache, serviceProvider) { }
+        protected AccountBaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }
 
         protected virtual IActionResult Login(LoginRequest loginRequest)
         {

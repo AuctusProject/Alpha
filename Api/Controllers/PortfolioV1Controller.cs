@@ -7,6 +7,7 @@ using Auctus.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 
 namespace Api.Controllers
@@ -16,8 +17,8 @@ namespace Api.Controllers
     [Authorize("Bearer")]
     public class PortfolioV1Controller : PortfolioBaseController
     {
-        public PortfolioV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider) : base(loggerFactory, cache, serviceProvider) { }
-        
+        public PortfolioV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult Portfolio([FromBody]PortfolioRequest portfolioRequest)

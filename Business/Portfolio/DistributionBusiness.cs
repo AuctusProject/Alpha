@@ -2,6 +2,7 @@
 using Auctus.DomainObjects.Advisor;
 using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Auctus.Business.Portfolio
 {
     public class DistributionBusiness : BaseBusiness<Distribution, DistributionData>
     {
-        public DistributionBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public DistributionBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public List<Distribution> Create(string email, int portfolioId, Dictionary<int, double> distribution)
         {

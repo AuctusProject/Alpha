@@ -3,6 +3,7 @@ using Auctus.DataAccess.Portfolio;
 using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace Auctus.Business.Portfolio
 {
     public class PortfolioBusiness : BaseBusiness<DomainObjects.Portfolio.Portfolio, PortfolioData>
     {
-        public PortfolioBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public PortfolioBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public DomainObjects.Portfolio.Portfolio Create(string email, int advisorId, int risk, double projectionValue, double? optimisticProjection,
             double? pessimisticProjection, Dictionary<int, double> distribution)

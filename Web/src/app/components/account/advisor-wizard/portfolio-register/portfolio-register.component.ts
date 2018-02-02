@@ -1,9 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Asset } from '../../../../model/asset/asset';
 import { RiskType } from '../../../../model/account/riskType'
 import { AssetDistribution } from '../../../../model/asset/assetDistribution'
 import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
 import { PublicService } from '../../../../services/public.service'
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'portfolio-register',
@@ -16,16 +18,19 @@ export class PortfolioRegisterComponent implements OnInit {
   @Input() assets: Asset[];
   assetsDistributionRows: AssetDistribution[];
   @Input() model: PortfolioRequest;
-
+  @ViewChild('portfolioRegisterForm') portfolioRegisterForm;
   isEditing = false;
+  totalDistributionPercentage = 0;
+  totalPercentageForm: FormControl = new FormControl("", [Validators.required, Validators.min(100), Validators.max(100)]);
 
-  constructor() { }
+  constructor(private ref: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.model = new PortfolioRequest();
     this.assetsDistributionRows = [];
     this.assetsDistributionRows.push(new AssetDistribution());
     this.assetsDistributionRows[0].percentage = 100;
+    this.portfolioRegisterForm.control.addControl("TotalPercentage", this.totalPercentageForm);
   }
 
   public addPortfolio() {
@@ -39,30 +44,57 @@ export class PortfolioRegisterComponent implements OnInit {
   public removeRow(rowIndex: number) {
     if (rowIndex > -1) {
       this.assetsDistributionRows.splice(rowIndex, 1);
+      this.calculateTotalDistributionPercentage();
     }
-  }
-
-  public currentAvailableAssets(currentAssetDistributionRow: AssetDistribution): Asset[] {
-    var availableAssets: Asset[] = [];
-    for (let asset of this.assets) {
-      var isAssetInUse = false;
-      var isAssetFromCurrentRow = asset.id == currentAssetDistributionRow.id;
-      if (!isAssetFromCurrentRow) {
-        for (let assetDistribution of this.assetsDistributionRows) {
-          if (asset.id == assetDistribution.id) {
-            isAssetInUse = true;
-          }
-        }
-      }
-      if (!isAssetInUse || isAssetFromCurrentRow) {
-        availableAssets.push(asset);
-      }
-    }
-    return availableAssets;
   }
 
   public onAssetDistributionChanged(assetDistribution: AssetDistribution, assetRow: number) {
     this.assetsDistributionRows[assetRow] = assetDistribution;
+    this.calculateTotalDistributionPercentage();
   }
 
+  calculateTotalDistributionPercentage() {
+    var total = 0;
+    for (let distribution of this.assetsDistributionRows) {
+      if (distribution.percentage)
+        total += distribution.percentage;
+    }
+    this.totalDistributionPercentage = total;
+    //if (this.totalDistributionPercentage > 100) {
+    //  this.totalPercentageForm.setErrors({ "greater": this.totalDistributionPercentage > 100 });
+    //}
+    //else if (this.totalDistributionPercentage < 100) {
+    //  this.totalPercentageForm.setErrors({ "lower": this.totalDistributionPercentage < 100 });
+    //}
+    //else {
+    //  this.totalPercentageForm.setErrors(null);
+    //}
+    this.ref.detectChanges();
+  }
+
+  public findInvalidControls() {
+    const invalid = [];
+    const controls = this.portfolioRegisterForm.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    return invalid;
+  }
+
+  onSubmit() {
+  }
+
+  addFormControls(rowNumber, event) {
+    this.portfolioRegisterForm.control.addControl("Product[" + rowNumber + "]", event.productForm);
+    this.portfolioRegisterForm.control.addControl("Percentage[" + rowNumber + "]", event.percentageForm);
+  }
+
+  removeFormControls(rowNumber) {
+    this.portfolioRegisterForm.control.removeControl("Product[" + rowNumber + "]");
+    this.portfolioRegisterForm.control.removeControl("Percentage[" + rowNumber + "]");
+  }
+
+  
 }

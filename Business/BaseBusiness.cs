@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.NodeServices;
 
 namespace Auctus.Business
 {
@@ -16,7 +17,8 @@ namespace Auctus.Business
         protected readonly ILoggerFactory LoggerFactory;
         protected readonly ILogger Logger;
         protected readonly Cache MemoryCache;
-        
+        protected readonly INodeServices NodeServices;
+
         protected D Data => new D();
 
         private UserBusiness _userBusiness;
@@ -34,9 +36,10 @@ namespace Auctus.Business
         private AssetValueBusiness _assetValueBusiness;
         private ApiAccessBusiness _apiAccessBusiness;
 
-        protected BaseBusiness(ILoggerFactory loggerFactory, Cache cache)
+        protected BaseBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices)
         {
             MemoryCache = cache;
+            NodeServices = nodeServices;
             LoggerFactory = loggerFactory;
             Logger = loggerFactory.CreateLogger(GetType().Namespace);
         }
@@ -66,7 +69,7 @@ namespace Auctus.Business
             get
             {
                 if (_userBusiness == null)
-                    _userBusiness = new UserBusiness(LoggerFactory, MemoryCache);
+                    _userBusiness = new UserBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _userBusiness;
             }
         }
@@ -76,7 +79,7 @@ namespace Auctus.Business
             get
             {
                 if (_passwordRecoveryBusiness == null)
-                    _passwordRecoveryBusiness = new PasswordRecoveryBusiness(LoggerFactory, MemoryCache);
+                    _passwordRecoveryBusiness = new PasswordRecoveryBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _passwordRecoveryBusiness;
             }
         }
@@ -86,7 +89,7 @@ namespace Auctus.Business
             get
             {
                 if (_goalOptionsBusiness == null)
-                    _goalOptionsBusiness = new GoalOptionBusiness(LoggerFactory, MemoryCache);
+                    _goalOptionsBusiness = new GoalOptionBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _goalOptionsBusiness;
             }
         }
@@ -96,7 +99,7 @@ namespace Auctus.Business
             get
             {
                 if (_goalBusiness == null)
-                    _goalBusiness = new GoalBusiness(LoggerFactory, MemoryCache);
+                    _goalBusiness = new GoalBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _goalBusiness;
             }
         }
@@ -106,7 +109,7 @@ namespace Auctus.Business
             get
             {
                 if (_advisorBusiness == null)
-                    _advisorBusiness = new AdvisorBusiness(LoggerFactory, MemoryCache);
+                    _advisorBusiness = new AdvisorBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _advisorBusiness;
             }
         }
@@ -116,7 +119,7 @@ namespace Auctus.Business
             get
             {
                 if (_advisorDetailBusiness == null)
-                    _advisorDetailBusiness = new AdvisorDetailBusiness(LoggerFactory, MemoryCache);
+                    _advisorDetailBusiness = new AdvisorDetailBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _advisorDetailBusiness;
             }
         }
@@ -126,7 +129,7 @@ namespace Auctus.Business
             get
             {
                 if (_buyBusiness == null)
-                    _buyBusiness = new BuyBusiness(LoggerFactory, MemoryCache);
+                    _buyBusiness = new BuyBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _buyBusiness;
             }
         }
@@ -136,7 +139,7 @@ namespace Auctus.Business
             get
             {
                 if (_distributionBusiness == null)
-                    _distributionBusiness = new DistributionBusiness(LoggerFactory, MemoryCache);
+                    _distributionBusiness = new DistributionBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _distributionBusiness;
             }
         }
@@ -146,7 +149,7 @@ namespace Auctus.Business
             get
             {
                 if (_portfolioBusiness == null)
-                    _portfolioBusiness = new PortfolioBusiness(LoggerFactory, MemoryCache);
+                    _portfolioBusiness = new PortfolioBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _portfolioBusiness;
             }
         }
@@ -156,7 +159,7 @@ namespace Auctus.Business
             get
             {
                 if (_portfolioHistoryBusiness == null)
-                    _portfolioHistoryBusiness = new PortfolioHistoryBusiness(LoggerFactory, MemoryCache);
+                    _portfolioHistoryBusiness = new PortfolioHistoryBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _portfolioHistoryBusiness;
             }
         }
@@ -166,7 +169,7 @@ namespace Auctus.Business
             get
             {
                 if (_projectionBusiness == null)
-                    _projectionBusiness = new ProjectionBusiness(LoggerFactory, MemoryCache);
+                    _projectionBusiness = new ProjectionBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _projectionBusiness;
             }
         }
@@ -176,7 +179,7 @@ namespace Auctus.Business
             get
             {
                 if (_assetBusiness == null)
-                    _assetBusiness = new AssetBusiness(LoggerFactory, MemoryCache);
+                    _assetBusiness = new AssetBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _assetBusiness;
             }
         }
@@ -186,7 +189,7 @@ namespace Auctus.Business
             get
             {
                 if (_assetValueBusiness == null)
-                    _assetValueBusiness = new AssetValueBusiness(LoggerFactory, MemoryCache);
+                    _assetValueBusiness = new AssetValueBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _assetValueBusiness;
             }
         }
@@ -196,7 +199,7 @@ namespace Auctus.Business
             get
             {
                 if (_apiAccessBusiness == null)
-                    _apiAccessBusiness = new ApiAccessBusiness(LoggerFactory, MemoryCache);
+                    _apiAccessBusiness = new ApiAccessBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _apiAccessBusiness;
             }
         }

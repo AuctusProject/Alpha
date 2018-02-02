@@ -2,6 +2,7 @@
 using Auctus.DomainObjects.Account;
 using Auctus.Util;
 using Auctus.Util.NotShared;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace Auctus.Business.Account
 {
     public class PasswordRecoveryBusiness : BaseBusiness<PasswordRecovery, PasswordRecoveryData>
     {
-        public PasswordRecoveryBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public PasswordRecoveryBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public async Task SendEmailForForgottenPassword(string email)
         {

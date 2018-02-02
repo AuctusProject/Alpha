@@ -1,5 +1,6 @@
 ﻿using Auctus.DomainObjects.Advisor;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Auctus.Service
 {
     public class AdvisorServices : BaseServices
     {
-        public AdvisorServices(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public AdvisorServices(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public Advisor CreateAdvisor(string email, string name, string description, int period, double price)
         {

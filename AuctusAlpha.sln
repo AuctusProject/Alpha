@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{7D0ACDB6-F39F-4A54-8463-706B0EF4E5D9}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -11,10 +11,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{EC352D3E-2B07-45E3-A9C0-A8BB705CD76F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{41F3272E-33E2-4079-A53B-364B6B1E0212} = {41F3272E-33E2-4079-A53B-364B6B1E0212}
-		{17D7D4E6-2AD2-4C0B-A250-81E8593B0B39} = {17D7D4E6-2AD2-4C0B-A250-81E8593B0B39}
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EthereumProxy", "EthereumProxy\EthereumProxy.csproj", "{17D7D4E6-2AD2-4C0B-A250-81E8593B0B39}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{41F3272E-33E2-4079-A53B-364B6B1E0212}"
 EndProject
@@ -47,10 +44,6 @@ Global
 		{EC352D3E-2B07-45E3-A9C0-A8BB705CD76F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC352D3E-2B07-45E3-A9C0-A8BB705CD76F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC352D3E-2B07-45E3-A9C0-A8BB705CD76F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{17D7D4E6-2AD2-4C0B-A250-81E8593B0B39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{17D7D4E6-2AD2-4C0B-A250-81E8593B0B39}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{17D7D4E6-2AD2-4C0B-A250-81E8593B0B39}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{17D7D4E6-2AD2-4C0B-A250-81E8593B0B39}.Release|Any CPU.Build.0 = Release|Any CPU
 		{41F3272E-33E2-4079-A53B-364B6B1E0212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{41F3272E-33E2-4079-A53B-364B6B1E0212}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41F3272E-33E2-4079-A53B-364B6B1E0212}.Release|Any CPU.ActiveCfg = Release|Any CPU

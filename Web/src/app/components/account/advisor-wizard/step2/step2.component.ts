@@ -36,8 +36,4 @@ export class Step2Component implements OnInit {
   public next() {
     this.onStepFinished.emit(this.model);
   }
-
-  onSubmit() {
-    this.next();
-  }
 }

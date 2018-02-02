@@ -2,6 +2,7 @@
 using Auctus.DomainObjects.Asset;
 using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace Auctus.Business.Portfolio
 {
     public class PortfolioHistoryBusiness : BaseBusiness<PortfolioHistory, PortfolioHistoryData>
     {
-        public PortfolioHistoryBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public PortfolioHistoryBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public void UpdatePortfolioHistory(DomainObjects.Portfolio.Portfolio portfolio)
         {

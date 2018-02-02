@@ -14,11 +14,11 @@
 .risk-description {
   font-size: 20px;
   color: #4a90e2;
-  margin-top:12px;
+  margin-top: 12px;
 }
 
 .products-details {
-  margin-top:2px;
+  margin-top: 2px;
   margin-bottom: 16px;
   font-size: 12px;
   line-height: 1.5;
@@ -38,8 +38,8 @@
 }
 
 .portfolio-edition-title {
-  margin-top:24px;
-  margin-bottom:8px;
+  margin-top: 24px;
+  margin-bottom: 8px;
   font-size: 16px;
   color: #4a4a4a;
 }
@@ -98,3 +98,34 @@
 .percentage-input {
   text-align: right;
 }
+
+.total-percentage {
+  border-top: solid 1px #e9eff4;
+  padding-top: 16px;
+  margin-top: 8px;
+}
+
+  .total-percentage.error {
+    color: #f85843;
+  }
+
+  .total-percentage.success {
+    color: #4a90e2;
+  }
+
+  .total-percentage .icon{
+    height:24px;
+  }
+
+.total-percentage-value {
+  padding-right: 10px;
+  text-align: right;
+}
+
+.total-label {
+  margin-left: 15px;
+}
+
+  .total-label .error-message {
+    font-size: 10px;
+  }
