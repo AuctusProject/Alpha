@@ -1,15 +1,15 @@
 <div fxLayout="row" class="portfolio-distribution-row" fxLayoutGap="16px">
   <mat-form-field class="asset-selection" floatLabel="never" fxLayout="row" fxLayoutAlign="none end" fxFlex="65">
-    <input type="text" name="Asset" placeholder="Select an asset" aria-label="Number" matInput [formControl]="productForm" [matAutocomplete]="auto" fxFlex required>
+    <input type="text" name="Asset" placeholder="Select an asset" aria-label="Number" matInput [formControl]="productForm" (blur)="onAssetInputBlur()" [matAutocomplete]="auto" fxFlex required>
     <i-chevron-down matSuffix></i-chevron-down>
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="nameAndCode">
-      <mat-option *ngFor="let asset of filteredAssets | async" [value]="asset">
+      <mat-option *ngFor="let asset of filteredAssets | async" [value]="asset" [title]="nameAndCode(asset)">
         {{nameAndCode(asset)}}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <mat-form-field class="percentage-value" fxFlex="16">
-    <input type="number" name="Percentage" matInput class="percentage-input" [formControl]="percentageForm" [(ngModel)]="assetDistribution.percentage" min="0" max="100" required>
+  <mat-form-field class="percentage-value" fxFlex="16" floatLabel="never" >
+    <input type="number" name="Percentage" placeholder=" " matInput class="percentage-input" [formControl]="percentageForm" [(ngModel)]="assetDistribution.percentage" min="0" max="100" required>
     <span matSuffix>%</span>
   </mat-form-field>
   <div class="portfolio-distribution-buttons" fxLayout="row" fxFlex fxLayoutAlign="end center" fxLayoutGap="18px">

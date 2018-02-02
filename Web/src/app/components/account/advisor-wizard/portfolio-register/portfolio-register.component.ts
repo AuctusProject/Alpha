@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Asset } from '../../../../model/asset/asset';
 import { RiskType } from '../../../../model/account/riskType'
@@ -23,7 +23,7 @@ export class PortfolioRegisterComponent implements OnInit {
   totalDistributionPercentage = 0;
   totalPercentageForm: FormControl = new FormControl("", [Validators.required, Validators.min(100), Validators.max(100)]);
 
-  constructor(private ref: ChangeDetectorRef) { }
+  constructor(private ref: ChangeDetectorRef, private appRef: ApplicationRef) { }
 
   ngOnInit() {
     this.model = new PortfolioRequest();
@@ -44,8 +44,8 @@ export class PortfolioRegisterComponent implements OnInit {
   public removeRow(rowIndex: number) {
     if (rowIndex > -1) {
       this.assetsDistributionRows.splice(rowIndex, 1);
-      this.calculateTotalDistributionPercentage();
     }
+    this.calculateTotalDistributionPercentage();
   }
 
   public onAssetDistributionChanged(assetDistribution: AssetDistribution, assetRow: number) {
@@ -60,27 +60,26 @@ export class PortfolioRegisterComponent implements OnInit {
         total += distribution.percentage;
     }
     this.totalDistributionPercentage = total;
-    //if (this.totalDistributionPercentage > 100) {
-    //  this.totalPercentageForm.setErrors({ "greater": this.totalDistributionPercentage > 100 });
-    //}
-    //else if (this.totalDistributionPercentage < 100) {
-    //  this.totalPercentageForm.setErrors({ "lower": this.totalDistributionPercentage < 100 });
-    //}
-    //else {
-    //  this.totalPercentageForm.setErrors(null);
-    //}
     this.ref.detectChanges();
   }
 
-  public findInvalidControls() {
-    const invalid = [];
-    const controls = this.portfolioRegisterForm.controls;
-    for (const name in controls) {
-      if (controls[name].invalid) {
-        invalid.push(name);
+  public currentAvailableAssets(currentAssetDistributionRow: AssetDistribution): Asset[] {
+    var availableAssets: Asset[] = [];
+    for (let asset of this.assets) {
+      var isAssetInUse = false;
+      var isAssetFromCurrentRow = asset.id == currentAssetDistributionRow.id;
+      if (!isAssetFromCurrentRow) {
+        for (let assetDistribution of this.assetsDistributionRows) {
+          if (asset.id == assetDistribution.id) {
+            isAssetInUse = true;
+          }
+        }
+      }
+      if (!isAssetInUse || isAssetFromCurrentRow) {
+        availableAssets.push(asset);
       }
     }
-    return invalid;
+    return availableAssets;
   }
 
   onSubmit() {
@@ -96,5 +95,16 @@ export class PortfolioRegisterComponent implements OnInit {
     this.portfolioRegisterForm.control.removeControl("Percentage[" + rowNumber + "]");
   }
 
-  
+  anyEmptyRow() {
+    for (let assetDistribution of this.assetsDistributionRows) {
+      if (!assetDistribution || !assetDistribution.code)
+        return true;
+    }
+    return false;
+  }
+
+
+  savePortfolio() {
+
+  }
 }
