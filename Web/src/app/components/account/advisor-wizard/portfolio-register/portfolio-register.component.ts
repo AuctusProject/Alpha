@@ -104,8 +104,11 @@ export class PortfolioRegisterComponent implements OnInit {
 
   onSubmit() {
     for (let row of this.assetsDistributionRows) {
-      this.model.distribution.push(new DistributionRequest(){assetId: row.id, percentage: row.percentage });
+      this.model.distribution.push({
+        assetId: row.id,
+        percentage: row.percentage 
+      });
     }
-    this.portfolioService.savePortfolio(this.model).subscribe(model => console.log(model.id));
+    this.portfolioService.savePortfolio(this.model).subscribe(model => console.log(model.advisorId));
   }
 }
