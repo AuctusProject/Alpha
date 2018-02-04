@@ -1,4 +1,4 @@
-import { AssetDistribution } from "../asset/assetDistribution";
+import { DistributionRequest } from "./distributionRequest";
 
 export class PortfolioRequest {
   advisorId: number;
@@ -6,9 +6,9 @@ export class PortfolioRequest {
   projectionValue: number;
   optimisticProjection: number;
   pessimisticProjection: number;
-  distributionRequest: AssetDistribution[];
+  distribution: DistributionRequest[];
 
   constructor() {
-    this.distributionRequest = [];
+    this.distribution = [];
   }
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { Asset } from '../../../../../model/asset/asset';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup, ValidatorFn } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
@@ -11,7 +11,8 @@ import { AssetDistribution } from '../../../../../model/asset/assetDistribution'
   templateUrl: './portfolio-distribution-row.component.html',
   styleUrls: ['./portfolio-distribution-row.component.css']
 })
-export class PortfolioDistributionRowComponent implements OnInit {
+export class PortfolioDistributionRowComponent implements OnChanges, OnInit {
+  @Input() rowNumber: number;
   @Input() disableRemoveButton: boolean;
   @Input() showAddButton: boolean;
   @Input() assetDistribution: AssetDistribution;
@@ -19,9 +20,16 @@ export class PortfolioDistributionRowComponent implements OnInit {
   @Output() removeRow = new EventEmitter();
   @Output() assetDistributionChanged = new EventEmitter<AssetDistribution>();
   @Input() availableAssets: Asset[];
+  @Input() formGroup: FormGroup;
+  @Output() onAddFormControls = new EventEmitter<any>();
+  @Output() onRemoveFormControls = new EventEmitter();
 
-  productForm: FormControl = new FormControl();
-  percentageForm: FormControl = new FormControl();
+
+  selectedAssets: Asset[];
+
+
+  productForm: FormControl = new FormControl('Asset', this.selectedValidAssetValidator);
+  percentageForm: FormControl = new FormControl("Percentage["+this.rowNumber+"]", [Validators.required, this.greaterThanZero, Validators.max(100)]);
 
   filteredAssets: Observable<Asset[]>;
 
@@ -33,9 +41,58 @@ export class PortfolioDistributionRowComponent implements OnInit {
       startWith(''),
       map(val => this.filter(val))
     );
-
+    
     this.productForm.valueChanges.subscribe(val => this.assetChange(val));
     this.percentageForm.valueChanges.subscribe(val => this.percentageChange(val));
+
+    this.addFormControls(this.rowNumber);
+  }
+
+  greaterThanZero(control: FormControl) {
+    let value = control.value;
+    if (value > 0)
+      return null;
+    return {
+      zeroOrLess: true
+    };
+  }
+
+
+
+  selectedValidAssetValidator(control: FormControl) {
+    let asset = control.value;
+    if (!asset && !asset.code) {
+      return {
+        assetNotSelected: true
+      };
+    }
+    return null;
+  }
+
+  addFormControls(rowNumber) {
+    this.formGroup.addControl("Product[" + rowNumber + "]", this.productForm);
+    this.formGroup.addControl("Percentage[" + rowNumber + "]", this.percentageForm);
+  }
+
+  removeFormControls(rowNumber) {
+    this.formGroup.removeControl("Product[" + rowNumber + "]");
+    this.formGroup.removeControl("Percentage[" + rowNumber + "]");
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    const rowNumber: SimpleChange = changes.rowNumber;
+    if (rowNumber && rowNumber.previousValue && rowNumber.currentValue && rowNumber.currentValue != rowNumber.previousValue) {
+      this.removeFormControls(rowNumber.previousValue);
+      this.addFormControls(rowNumber.currentValue);
+    }
+    const availableAssets: SimpleChange = changes.availableAssets;
+    if (availableAssets && availableAssets.currentValue && availableAssets.previousValue && availableAssets.currentValue.length != availableAssets.previousValue.length) {
+      this.filteredAssets = this.productForm.valueChanges
+        .pipe(
+        startWith(''),
+        map(val => this.filter(val))
+        );
+    }
   }
 
   assetChange(val: any) {
@@ -66,7 +123,7 @@ export class PortfolioDistributionRowComponent implements OnInit {
     this.assetDistributionChanged.emit(this.assetDistribution);
   }
 
-  filter(val: string): Asset[] {
+  filter(val: any): Asset[] {
     return this.availableAssets.filter(asset =>
       this.filterAsset(asset, val));
   }
@@ -78,7 +135,7 @@ export class PortfolioDistributionRowComponent implements OnInit {
   }
 
   nameAndCode(asset: Asset) {
-    return asset != null ? asset.name + " (" + asset.code + ")" : "";
+    return (asset != null && asset.code) ? asset.code + " - " + asset.name + "" : "";
   }
 
   public addNewRowClick() {
@@ -86,6 +143,12 @@ export class PortfolioDistributionRowComponent implements OnInit {
   }
 
   public removeRowClick() {
+    this.removeFormControls(this.rowNumber);
     this.removeRow.emit();
+  }
+
+  onAssetInputBlur() {
+    if (this.productForm.value && !this.productForm.value.code)
+      this.productForm.setValue("");
   }
 }

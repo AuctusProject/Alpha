@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-buttons start>
-      <button ion-button icon-left (click)="closeModal()">
+      <button ion-button icon-left (click)="closeModal()" *ngIf="selectedPurchase > 0">
         <ion-icon name="close"></ion-icon>
         {{"CLOSE" | translate}}
       </button>

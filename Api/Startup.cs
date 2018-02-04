@@ -88,6 +88,7 @@ namespace Api
             
             services.AddMvc();
             services.AddSingleton<Cache>();
+            services.AddNodeServices();
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)

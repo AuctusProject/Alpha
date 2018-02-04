@@ -17,7 +17,7 @@ export class EvolutionPage extends BasePage {
 
     public chartColors: Array<any> = [
         {
-           //Projection
+            //Projection
             backgroundColor: 'rgb(74, 144, 226)',
             borderColor: 'rgb(74, 144, 226)',
             fill: 'false'
@@ -41,7 +41,7 @@ export class EvolutionPage extends BasePage {
                 display: true,
                 type: 'time',
                 ticks: {
-                    fontFamily: 'HelveticaNeue', 
+                    fontFamily: 'HelveticaNeueMedium',
                 },
             }],
             yAxes: [{
@@ -81,23 +81,22 @@ export class EvolutionPage extends BasePage {
 
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
-        this.getProjection();
+        this.onPurchaseSelectClose = this.buildEvolution.bind(this);
     }
 
-    ionViewDidLoad() {
+    ionViewWillEnter() {
+        if (this.storageHelper.getSelectedPurchase()) {
+            this.buildEvolution();
+        } else {
+            this.openPurchaseSelect();
+        }
     }
 
-    private getHistory() {
-        this.loadingHelper.showLoading();
-        this.portfolioService.getHistory().subscribe(
-            success => {
-                this.history = success[0];
-                this.buildHistoryChart();
-                this.loadingHelper.hideLoading();
-            }, error => {
-                this.loadingHelper.hideLoading();
-            }
-        );
+    public buildEvolution() {
+        if (this.selectedPurchase != this.storageHelper.getSelectedPurchase()) {
+            this.selectedPurchase = this.storageHelper.getSelectedPurchase();
+            this.getProjection();
+        }
     }
 
     private getProjection() {
@@ -117,22 +116,34 @@ export class EvolutionPage extends BasePage {
             });
     }
 
+    private getHistory() {
+        this.loadingHelper.showLoading();
+        this.portfolioService.getHistory().subscribe(
+            success => {
+                this.history = success[0];
+                this.buildHistoryChart();
+                this.loadingHelper.hideLoading();
+            }, error => {
+                this.loadingHelper.hideLoading();
+            }
+        );
+    }
+
     public setSelectedPurchase() {
-        let selectedPurchase = this.storageHelper.getSelectedPurchase();
-        this.purchase = this.lodash.find(this.projection.purchases, { 'advisorId': selectedPurchase })
+        this.purchase = this.lodash.find(this.projection.purchases, { 'advisorId': this.selectedPurchase })
     }
 
     private buildProjectionChart() {
-        
+
         let chartData = [];
         chartData.push(this.projection.currentGoal.startingAmount);
 
         let monthPercent = this.purchase.projectionData.projectionPercent;
 
         let estimatedTime = this.getEstimatedTime();
-        let currentMonth = this.getPurchaseDate();
+        let projectionDate = this.getPurchaseDate();
         let nextMonth = this.getPurchaseDate().add('months', 1);
-        let monthDays = nextMonth.diff(currentMonth, 'days');
+        let monthDays = nextMonth.diff(projectionDate, 'days');
 
         let dailyPercent = this.calculateDailyPercent(monthPercent, monthDays);
 
@@ -140,16 +151,16 @@ export class EvolutionPage extends BasePage {
 
             let beforeValue = chartData[time - 1];
             let currencyValue = beforeValue + (beforeValue * dailyPercent / 100);
-            currentMonth.add('days', 1);
-            if (currentMonth.format('YYYY-MM-DD') == nextMonth.format('YYYY-MM-DD')) {
+            projectionDate.add('days', 1);
+            if (projectionDate.format('YYYY-MM-DD') == nextMonth.format('YYYY-MM-DD')) {
                 nextMonth.add('months', 1);
-                monthDays = nextMonth.diff(currentMonth, 'days');
+                monthDays = nextMonth.diff(projectionDate, 'days');
                 dailyPercent = this.calculateDailyPercent(monthPercent, monthDays);
                 currencyValue += this.projection.currentGoal.monthlyContribution;
             }
             chartData.push(currencyValue);
 
-            if(currentMonth.format('YYYY-MM-DD') == this.moment().format('YYYY-MM-DD')){
+            if (projectionDate.format('YYYY-MM-DD') == this.moment().format('YYYY-MM-DD')) {
                 this.summary.today.projection = currencyValue;
                 this.calculateSummaryLossProfit();
             }
@@ -159,7 +170,7 @@ export class EvolutionPage extends BasePage {
     }
 
     public getPurchaseDate() {
-        return this.moment(this.purchase.purchaseDate).add('months', -3);
+        return this.moment(this.purchase.purchaseDate);
     }
 
     private getEstimatedTime() {
@@ -202,32 +213,32 @@ export class EvolutionPage extends BasePage {
         let chartLabels = [];
         var acum = this.projection.currentGoal.startingAmount;
 
-        let currentMonth = this.getPurchaseDate();
+        let projectionDate = this.getPurchaseDate();
         let nextMonth = this.getPurchaseDate().add('months', 1);
 
         let historyList = this.lodash.filter(this.history.values, function (item) {
-            return moment(item.date) >= currentMonth;
+            return moment(item.date) >= projectionDate;
         });
 
         for (let time = 0; time < historyList.length; time++) {
             acum = acum * (1 + (historyList[time].value / 100.0));
-            if (currentMonth.format('YYYY-MM-DD') == nextMonth.format('YYYY-MM-DD')) {
+            if (projectionDate.format('YYYY-MM-DD') == nextMonth.format('YYYY-MM-DD')) {
                 nextMonth.add('months', 1);
                 acum += this.projection.currentGoal.monthlyContribution;
             }
             chartData.push(acum.toFixed(2));
 
-            if(currentMonth.format('YYYY-MM-DD') == this.moment().format('YYYY-MM-DD')){
+            if (projectionDate.format('YYYY-MM-DD') == this.moment().format('YYYY-MM-DD')) {
                 this.summary.today.historical = acum;
                 this.calculateSummaryLossProfit();
             }
-            currentMonth.add('days', 1);
+            projectionDate.add('days', 1);
         }
         this.chartData.push({ data: chartData });
     }
 
     private calculateSummaryLossProfit() {
-        if(this.summary.today.projection && this.summary.today.historical) {
+        if (this.summary.today.projection && this.summary.today.historical) {
             let lossProfit = (this.summary.today.historical / this.summary.today.projection - 1) * 100;
             console.log(lossProfit);
             this.summary.today.lossProfit = lossProfit.toFixed(5);

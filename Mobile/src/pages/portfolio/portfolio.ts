@@ -19,7 +19,7 @@ export class PortfolioPage extends BasePage {
     public chartLabels: Array<string> = new Array<string>();
     public chartLegend: boolean = true;
     public chartOptions: any = {
-        responsive: true, 
+        responsive: true,
         legend: {
             display: false
         }
@@ -30,19 +30,27 @@ export class PortfolioPage extends BasePage {
     public totalTraditionalPercentage: number = 0;
     public totalCryptoPercentage: number = 0;
 
-    public onPurchaseSelectClose: Function;
-
     constructor(public injector: Injector, private portfolioService: PortfolioService) {
         super(injector);
-        this.getPortfolioDistribution();
-        this.onPurchaseSelectClose = this.updateDistribution.bind(this);
+        this.onPurchaseSelectClose = this.buildDistribution.bind(this);
     }
 
-    public updateDistribution() {
-        console.log("Distribution:" + this.storageHelper.getSelectedPurchase());
+    ionViewWillEnter() {
+        if (this.storageHelper.getSelectedPurchase()) {
+            this.buildDistribution();
+        } else {
+            this.openPurchaseSelect();
+        }
     }
 
-    private getPortfolioDistribution() {
+    public buildDistribution() {
+        if (this.selectedPurchase != this.storageHelper.getSelectedPurchase()) {
+            this.selectedPurchase = this.storageHelper.getSelectedPurchase();
+            this.getDistribution();
+        }
+    }
+
+    private getDistribution() {
 
         this.loadingHelper.showLoading();
 

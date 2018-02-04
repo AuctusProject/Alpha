@@ -437,8 +437,33 @@ button.back {
   padding-top: 2px;
 }
 
+button.rectangle-white-button:disabled,
+button.rectangle-white-button[disabled],
+button.rectangle-blue-button:disabled,
+button.rectangle-blue-button[disabled] {
+  opacity: 0.5;
+  background-color: rgb(172, 171, 171);
+  border: solid 1px rgb(172, 171, 171);
+}
+
 .button-text{
   margin-left: 4px;
 }
 
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+
+.mat-input-element.ng-invalid {
+  color: #f85843;
+}
+
+.portfolio-register-component:last-child .portfolio-card-line {
+  display: none;
+}

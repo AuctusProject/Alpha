@@ -1,3 +1,4 @@
+import { PurchaseSelectPage } from './purchase-select/purchase-select';
 import { Injector, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 
@@ -42,6 +43,10 @@ export class BasePage {
 
     protected translateService: TranslateService
 
+
+    public onPurchaseSelectClose: Function;
+    public selectedPurchase: Number;
+
     constructor(protected injector: Injector) {
 
         //@angular/core
@@ -73,5 +78,25 @@ export class BasePage {
 
     protected closeView() {
         this.navCtrl.pop()
+    }
+
+    protected openPurchaseSelect() {
+
+        let params = {
+        };
+
+        let options = {
+            enableBackdropDismiss: false
+        };
+
+        let purchaseSelect = this.modalCtrl.create(PurchaseSelectPage, params, options);
+
+        purchaseSelect.onDidDismiss(selectedProjection => {
+            if (this.onPurchaseSelectClose) {
+                this.onPurchaseSelectClose();
+            }
+        });
+
+        purchaseSelect.present();
     }
 }

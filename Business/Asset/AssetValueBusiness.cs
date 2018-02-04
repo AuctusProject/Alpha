@@ -3,6 +3,7 @@ using Auctus.DataAccess.Exchanges;
 using Auctus.DomainObjects.Asset;
 using Auctus.Util;
 using Dapper;
+using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Auctus.Business.Asset
 {
     public class AssetValueBusiness : BaseBusiness<AssetValue, AssetValueData>
     {
-        public AssetValueBusiness(ILoggerFactory loggerFactory, Cache cache) : base(loggerFactory, cache) { }
+        public AssetValueBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         internal AssetValue LastAssetValue(int assetId)
         {
