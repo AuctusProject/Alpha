@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Asset } from '../../../../../model/asset/asset';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { startWith } from 'rxjs/operators/startWith';
 import { map } from 'rxjs/operators/map';
+import { AssetDistribution } from '../../../../../model/asset/assetDistribution'
 
 @Component({
   selector: 'portfolio-distribution-row',
@@ -11,16 +12,16 @@ import { map } from 'rxjs/operators/map';
   styleUrls: ['./portfolio-distribution-row.component.css']
 })
 export class PortfolioDistributionRowComponent implements OnInit {
-  @Input() rowIndex: number;
-  @Output() addNewRow = new EventEmitter<number>();
+  @Input() disableRemoveButton: boolean;
+  @Input() showAddButton: boolean;
+  @Input() assetDistribution: AssetDistribution;
+  @Output() addNewRow = new EventEmitter();
+  @Output() removeRow = new EventEmitter();
+  @Output() assetDistributionChanged = new EventEmitter<AssetDistribution>();
+  @Input() availableAssets: Asset[];
 
-  assets: Asset[] = [ {
-    id: 13,
-    name: "Bitcoin",
-    code: "BTC",
-    type: 1
-  }];
   productForm: FormControl = new FormControl();
+  percentageForm: FormControl = new FormControl();
 
   filteredAssets: Observable<Asset[]>;
 
@@ -31,27 +32,60 @@ export class PortfolioDistributionRowComponent implements OnInit {
       .pipe(
       startWith(''),
       map(val => this.filter(val))
-      );
+    );
+
+    this.productForm.valueChanges.subscribe(val => this.assetChange(val));
+    this.percentageForm.valueChanges.subscribe(val => this.percentageChange(val));
+  }
+
+  assetChange(val: any) {
+    this.fillAssetDistributionWithAssetInformation(val);
+    this.emitAssetDistributionChanged();
+  }
+
+  fillAssetDistributionWithAssetInformation(val: any) {
+    if (val != null) {
+      this.assetDistribution.id = val.id;
+      this.assetDistribution.name = val.name;
+      this.assetDistribution.code = val.code;
+      this.assetDistribution.type = val.type;
+    }
+    else {
+      this.assetDistribution.id = null;
+      this.assetDistribution.name = null;
+      this.assetDistribution.code = null;
+      this.assetDistribution.type = null;
+    }
+  }
+
+  percentageChange(val: any) {
+    this.emitAssetDistributionChanged();
+  }
+
+  emitAssetDistributionChanged() {
+    this.assetDistributionChanged.emit(this.assetDistribution);
   }
 
   filter(val: string): Asset[] {
-    return this.assets.filter(asset =>
+    return this.availableAssets.filter(asset =>
       this.filterAsset(asset, val));
   }
 
-  filterAsset(asset: Asset, val: string): boolean {
+  filterAsset(asset: Asset, val: any): boolean {
+    if (val != null && val.name != null)
+      val = val.name;
     return this.nameAndCode(asset).toLowerCase().indexOf(val.toLowerCase()) != -1;
   }
 
   nameAndCode(asset: Asset) {
-    return asset.name + " (" + asset.code + ")";
+    return asset != null ? asset.name + " (" + asset.code + ")" : "";
   }
 
   public addNewRowClick() {
-    this.addNewRow.emit(this.currentRow);
+    this.addNewRow.emit();
   }
 
   public removeRowClick() {
-    this.removeRow.emit(this.currentRow);
+    this.removeRow.emit();
   }
 }

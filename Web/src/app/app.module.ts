@@ -63,6 +63,9 @@ import { EthMachineComponent } from './components/eth-machine/eth-machine.compon
 import { PortfolioRegisterComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-register.component';
 import { PortfolioDistributionRowComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-distribution-row/portfolio-distribution-row.component';
 import { Web3Service } from './services/web3.service';
+import { PublicService } from './services/public.service';
+import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
+import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 
 @NgModule({
   declarations: [
@@ -104,7 +107,8 @@ import { Web3Service } from './services/web3.service';
     LoadingBlockComponent,
     EthMachineComponent,
     PortfolioRegisterComponent,
-    PortfolioDistributionRowComponent
+    PortfolioDistributionRowComponent,
+    ProviderRequiredComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -127,7 +131,17 @@ import { Web3Service } from './services/web3.service';
     }),
     SimpleNotificationsModule.forRoot()
   ],
-  providers: [LoginService, HttpService, AccountService, AdvisorService, PortfolioService, WindowRefService, Web3Service],
+  providers: [
+    LoginService, 
+    HttpService, 
+    AccountService, 
+    AdvisorService, 
+    PortfolioService, 
+    WindowRefService, 
+    PublicService, 
+    Web3Service, 
+    CanActivateViaAuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

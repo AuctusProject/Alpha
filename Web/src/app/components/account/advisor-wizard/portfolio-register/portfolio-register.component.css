@@ -27,6 +27,7 @@
 
 .portfolio-edition {
   border-top: solid 1px #e9eff4;
+  margin-bottom: 24px;
 }
 
 .portfolio-edition-subtitle {
@@ -41,4 +42,59 @@
   margin-bottom:8px;
   font-size: 16px;
   color: #4a4a4a;
+}
+
+
+/deep/ .portfolio-card .mat-form-field-subscript-wrapper,
+/deep/ .portfolio-card .mat-form-field-underline {
+  display: none;
+}
+
+/deep/ .portfolio-card .mat-form-field-infix {
+  border: unset;
+  width: unset;
+}
+
+/deep/ .asset-selection .mat-input-infix.mat-form-field-infix {
+  position: relative;
+  top: -5px;
+}
+
+/deep/ .portfolio-card .asset-selection .mat-form-field-suffix {
+  position: relative;
+  top: 2px;
+}
+
+/deep/ .portfolio-card .percentage-value .mat-form-field-suffix {
+  top: -1px;
+  position: relative;
+}
+
+/deep/ .portfolio-card .mat-form-field-wrapper {
+  border-radius: 3px;
+  background-color: #f3f5f8;
+  padding: 3px 12px 3px 12px;
+  height: 30px;
+  flex: 1 1 100%;
+}
+
+/deep/ .mat-form-field-wrapper {
+  padding-bottom: 0px;
+}
+
+/deep/ .expected-returns .mat-form-field-label-wrapper {
+  left: -12px;
+  top: -26px;
+  min-width: 80px;
+  color: #55606e;
+}
+
+.expected-returns label {
+  font-size: 12px;
+  color: #55606e;
+  margin-bottom: 8px;
+}
+
+.percentage-input {
+  text-align: right;
 }

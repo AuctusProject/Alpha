@@ -411,17 +411,28 @@ button.back {
 }
 
 
-.rectangle-white-button {
+.rectangle-white-button, .rectangle-blue-button {
   border-radius: 3px;
   border: solid 1px #3c91e6;
   height: 40px;
   width: 104px;
-  color: #4a90e2;
   font-size: 12px;
-  padding-left:22px;
+  padding-left: 22px;
+  cursor: pointer;
 }
 
-.rectangle-white-button svg.feather {
+.rectangle-white-button{
+  color: #4a90e2;
+}
+
+
+.rectangle-blue-button {
+  background-color: #3c91e6;
+  color: white;
+}
+
+.rectangle-white-button svg.feather,
+.rectangle-blue-button svg.feather {
   height: 15px;
   padding-top: 2px;
 }

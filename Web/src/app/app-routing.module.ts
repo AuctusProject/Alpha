@@ -15,22 +15,25 @@ import { HistoricalTabComponent } from "./components/dashboard/historical-tab/hi
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
 import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
+import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
+import { ProviderRequiredComponent } from "./components/provider-required/provider-required.component";
 
 
 const routes: Routes = [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     { path: 'home', component: HomeComponent },
+    { path: 'required', component: ProviderRequiredComponent },
     { path: 'login', component: LoginComponent },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'try', component: WizardComponent },
     { path: 'confirm', component: ConfirmEmailComponent },
-    { path: 'advisors', component: AdvisorsComponent },
-    { path: 'advisor/:id', component: AdvisorDetailComponent },
-    { path: 'dashboard', component: DashboardComponent },
+    { path: 'advisors', component: AdvisorsComponent, canActivate: [CanActivateViaAuthGuard]},
+    { path: 'advisor/:id', component: AdvisorDetailComponent, canActivate: [CanActivateViaAuthGuard] },
+    { path: 'dashboard', component: DashboardComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'manage-api', component: ManageApiComponent },
-    { path: 'become-advisor', component: AdvisorWizardComponent },
+    { path: 'manage-api', component: ManageApiComponent, canActivate: [CanActivateViaAuthGuard] },
+    { path: 'become-advisor', component: AdvisorWizardComponent, canActivate: [CanActivateViaAuthGuard] },
 ];
 
 @NgModule({

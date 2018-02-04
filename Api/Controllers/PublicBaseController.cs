@@ -103,7 +103,7 @@ namespace Api.Controllers
             {
                 portfolio = PortfolioServices.CreatePortfolio(baseValidation.Email, portfolioRequest.AdvisorId, portfolioRequest.Risk, 
                     portfolioRequest.ProjectionValue, portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
-                    portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percent));
+                    portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
             catch (ArgumentException ex)
             {
@@ -126,7 +126,7 @@ namespace Api.Controllers
             {
                 PortfolioServices.CreateProjection(baseValidation.Email, portfolioId, projectionRequest.ProjectionValue,
                     projectionRequest.OptimisticProjection, projectionRequest.PessimisticProjection,
-                    projectionRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percent));
+                    projectionRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
             catch (ArgumentException ex)
             {
@@ -146,7 +146,7 @@ namespace Api.Controllers
 
             try
             {
-                PortfolioServices.CreateDistribution(baseValidation.Email, portfolioId, newDistributionRequest.ToDictionary(c => c.AssetId, c => c.Percent));
+                PortfolioServices.CreateDistribution(baseValidation.Email, portfolioId, newDistributionRequest.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
             catch (ArgumentException ex)
             {

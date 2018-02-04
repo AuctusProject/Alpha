@@ -15,6 +15,10 @@ export class HttpService {
   private jwt: string = "auc_jwt";
   private user: string = "auc_user";
 
+  public isLoggedIn(): boolean {
+    return this.getAccessToken() != null;
+  }
+
   private getAccessToken(): string {
     return (this.getLocalStorage(this.jwt) as string);
   }
