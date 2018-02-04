@@ -24,8 +24,8 @@ export class Web3Service {
 
   initProvider() {
     let web3Service = this;
-    this.web3Change$ = new Observable(observer =>
-      web3Service._observer = observer).share();
+    // this.web3Change$ = new Observable(observer =>
+    //   web3Service._observer = observer).share();
 
     window.addEventListener('load', function () {
       web3Service.loaded = true;
@@ -60,7 +60,7 @@ export class Web3Service {
     let web3Service = this;
     this.web3.version.getNetwork((err, netId) => {
       web3Service.network = netId;
-      web3Service._observer.next(null);
+      //web3Service._observer.next(null);
       switch (netId) {
         case "1":
           web3Service.redirect();
