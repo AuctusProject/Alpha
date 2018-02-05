@@ -9,6 +9,7 @@ import { Login } from '../models/login.model';
 export class AccountService extends BaseService {
 
     private loginUrl = this.apiUrl("accounts/v1/login");
+    private forgotPasswordUrl = this.apiUrl("accounts/v1/password/forgotten");
 
     constructor(protected injector: Injector) {
         super(injector);
@@ -17,5 +18,13 @@ export class AccountService extends BaseService {
     public login(login: Login) {
         let params = new HttpParams();
         return this.httpPost(this.loginUrl, login, params);
+    }
+
+    public forgotPassword(email: string) {
+        let params = new HttpParams();
+        let forgotPassword = {
+            Email: email
+          }
+        return this.httpPost(this.forgotPasswordUrl, forgotPassword, params);
     }
 }

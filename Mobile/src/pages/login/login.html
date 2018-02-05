@@ -31,10 +31,17 @@
       </ion-input>
     </ion-item>
     <field-error [control]="loginForm.controls.password" [isSubmitted]="isSubmittedForm"></field-error>
-    <ion-item>
+    <ion-item padding>
       <button type="submit" ion-button color="default" round large full icon-end>
         {{"LOGIN" | translate}}
       </button>
     </ion-item>
   </form>
+  <ion-row padding>
+    <ion-col col-12>
+      <button type="button" ion-button ion-button outline round large block [navPush]="forgotPasswordPage">
+        {{"FORGOT_LOGIN" | translate}}
+      </button>
+    </ion-col>
+  </ion-row>
 </ion-content>

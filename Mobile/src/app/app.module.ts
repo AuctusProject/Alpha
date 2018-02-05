@@ -1,4 +1,3 @@
-
 import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -10,6 +9,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { MyApp } from './app.component';
 import { EvolutionPage } from '../pages/evolution/evolution';
+import { ForgotPasswordPage } from './../pages/forgot-password/forgot-password';
 import { HistoricalPage } from '../pages/historical/historical';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from './../pages/login/login';
@@ -45,6 +45,7 @@ export function createTranslateLoader(http: HttpClient) {
     declarations: [
         MyApp,
         EvolutionPage,
+        ForgotPasswordPage,
         HistoricalPage,
         HomePage,
         LoginPage,
@@ -74,6 +75,7 @@ export function createTranslateLoader(http: HttpClient) {
     entryComponents: [
         MyApp,
         EvolutionPage,
+        ForgotPasswordPage,
         HistoricalPage,
         HomePage,
         LoginPage,

@@ -3,6 +3,7 @@ import { FormGroup } from '@angular/forms';
 
 import { BasePage } from '../base';
 import { TabsPage } from './../tabs/tabs';
+import { ForgotPasswordPage } from './../forgot-password/forgot-password';
 
 import { AccountService } from './../../services/account.service';
 
@@ -19,10 +20,13 @@ export class LoginPage extends BasePage {
 
     public loginForm: FormGroup;
 
+    public forgotPasswordPage: any;
+
     constructor(protected injector: Injector, private accountService: AccountService) {
         super(injector);
         this.login = new Login();
         this.buildForm();
+        this.forgotPasswordPage = ForgotPasswordPage;
     }
 
     private buildForm() {
@@ -31,7 +35,6 @@ export class LoginPage extends BasePage {
             password: ['', this.validators.compose([this.validators.required])],
         });
     }
-
 
 
     public onSubmit() {
