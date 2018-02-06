@@ -20,6 +20,7 @@ namespace Auctus.DomainObjects.Account
         public DateTime? ConfirmationDate { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
         public string ConfirmationCode { get; set; }
+        public Wallet Wallet { get; set; }
 
         public Goal Goal { get; set; }
     }

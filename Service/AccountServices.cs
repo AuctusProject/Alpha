@@ -38,14 +38,9 @@ namespace Auctus.Service
             await UserBusiness.ResendEmailConfirmation(email);
         }
 
-        public async Task<User> SimpleRegister(string email, string password)
+        public async Task<User> SimpleRegister(string address, string username, string email, string password)
         {
-            return await UserBusiness.SimpleRegister(email, password);
-        }
-
-        public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
-        {
-            return await UserBusiness.FullRegister(email, password, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+            return await UserBusiness.SimpleRegister(address, username, email, password);
         }
 
         public Goal CreateGoal(string email, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
@@ -73,9 +68,9 @@ namespace Auctus.Service
             ApiAccessBusiness.Delete(email);
         }
 
-        public User Login(string email, string password)
+        public User Login(string address, string emailOrUsername, string password)
         {
-            return UserBusiness.Login(email, password);
+            return UserBusiness.Login(address, emailOrUsername, password);
         }
 
         public List<GoalOption> ListGoalsOptions()

@@ -43,15 +43,6 @@ namespace Api.Controllers
             return await base.SimpleRegister(registerRequest);
         }
 
-        [Route("registration/full")]
-        [HttpPost]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new async Task<IActionResult> FullRegister([FromBody]FullRegisterRequest registerRequest)
-        {
-            return await base.FullRegister(registerRequest);
-        }
-
         [Route("password/forgotten")]
         [HttpPost]
         [AllowAnonymous]

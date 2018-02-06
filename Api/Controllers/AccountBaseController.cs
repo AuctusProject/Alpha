@@ -24,9 +24,9 @@ namespace Api.Controllers
             User user;
             try
             {
-                user = AccountServices.Login(loginRequest.Email, loginRequest.Password);
+                user = AccountServices.Login(loginRequest.Address, loginRequest.EmailOrUsername, loginRequest.Password);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return BadRequest(new { logged = false, error = "Credentials are invalid." });
             }
@@ -34,7 +34,7 @@ namespace Api.Controllers
             {
                 return Ok(new { logged = false, error = "Pending email confirmation." });
             }
-            return Ok(new { logged = true, jwt = GenerateToken(loginRequest.Email.ToLower().Trim()), email = user.Email });
+            return Ok(new { logged = true, jwt = GenerateToken(user.Email.ToLower().Trim()), email = user.Email });
         }
 
         protected virtual async Task<IActionResult> SimpleRegister(SimpleRegisterRequest registerRequest)
@@ -45,37 +45,13 @@ namespace Api.Controllers
             User user;
             try
             {
-                user = await AccountServices.SimpleRegister(registerRequest.Email, registerRequest.Password);
+                user = await AccountServices.SimpleRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
             return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), email = user.Email });
-        }
-
-        protected virtual async Task<IActionResult> FullRegister(FullRegisterRequest registerRequest)
-        {
-            if (registerRequest == null || registerRequest.User == null || registerRequest.Goal == null)
-                return BadRequest();
-
-            User user;
-            try
-            {
-                user = await AccountServices.FullRegister(registerRequest.User.Email,
-                                                            registerRequest.User.Password,
-                                                            registerRequest.Goal.GoalOption.Id,
-                                                            registerRequest.Goal.Timeframe,
-                                                            registerRequest.Goal.Risk,
-                                                            registerRequest.Goal.TargetAmount,
-                                                            registerRequest.Goal.StartingAmount,
-                                                            registerRequest.Goal.MonthlyContribution);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            return Ok(new { jwt = GenerateToken(registerRequest.User.Email.ToLower().Trim()), email = user.Email });
         }
 
         protected virtual async Task<IActionResult> ForgotPassword(EmailRequest forgotPasswordRequest)
@@ -87,7 +63,7 @@ namespace Api.Controllers
             {
                 await AccountServices.SendEmailForForgottenPassword(forgotPasswordRequest.Email);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 //return BadRequest(new { error = ex.Message });
             }
@@ -103,7 +79,7 @@ namespace Api.Controllers
             {
                 AccountServices.ConfirmEmail(confirmEmailRequest.Code);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return BadRequest(new { error = "Email could not be confirmed." });
             }
@@ -152,7 +128,7 @@ namespace Api.Controllers
             {
                 await AccountServices.ResendEmailConfirmation(sendConfirmEmailRequest.Email);
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 //return BadRequest(new { error = ex.Message });
             }

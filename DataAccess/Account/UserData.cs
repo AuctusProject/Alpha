@@ -16,11 +16,59 @@ namespace Auctus.DataAccess.Account
                                                    WHERE a.CreationDate = (SELECT max(a2.CreationDate) FROM ApiAccess a2 WHERE a2.UserId = u.Id)
                                                    AND a.ApiKey = @ApiKey";
 
+        private const string SELECT_WITH_WALLET_BY_EMAIL = @"SELECT u.*, w.* FROM [User] u INNER JOIN [Wallet] w ON w.UserId = u.Id 
+                                                   WHERE u.Email = @Email";
+
+        private const string SELECT_WITH_WALLET_BY_EMAIL_OR_USERNAME = @"SELECT u.*, w.* FROM [User] u INNER JOIN [Wallet] w ON w.UserId = u.Id 
+                                                   WHERE u.Email = @Email OR u.Username = @Username";
+
+        private const string SELECT_WITH_WALLET_BY_WALLET = @"SELECT u.*, w.* FROM [User] u INNER JOIN [Wallet] w ON w.UserId = u.Id 
+                                                   WHERE w.Address = @Address";
+
         public User Get(string email)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("Email", email.ToLower().Trim(), DbType.AnsiString);
+
+            return Query<User, Wallet, User>(SELECT_WITH_WALLET_BY_EMAIL,
+                                (user, wallet) =>
+                                {
+                                    user.Wallet = wallet;
+                                    return user;
+                                }, "UserId", parameters).SingleOrDefault();
+        }
+
+        public User GetByUsername(string username)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Username", username.ToLower().Trim(), DbType.AnsiString);
             return SelectByParameters<User>(parameters).SingleOrDefault();
+        }
+
+        public User GetByWalletAddress(string address)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Address", address.ToUpper().Trim(), DbType.AnsiString);
+            return Query<User, Wallet, User>(SELECT_WITH_WALLET_BY_WALLET,
+                                (user, wallet) =>
+                                {
+                                    user.Wallet = wallet;
+                                    return user;
+                                }, "UserId", parameters).SingleOrDefault();
+        }
+
+        public User GetByEmailOrUsername(string emailOrUsername)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Email", emailOrUsername.ToLower().Trim(), DbType.AnsiString);
+            parameters.Add("Username", emailOrUsername.ToLower().Trim(), DbType.AnsiString);
+
+            return Query<User, Wallet, User>(SELECT_WITH_WALLET_BY_EMAIL_OR_USERNAME,
+                                (user, wallet) =>
+                                {
+                                    user.Wallet = wallet;
+                                    return user;
+                                }, "UserId", parameters).SingleOrDefault();
         }
 
         public User Get(int id)
