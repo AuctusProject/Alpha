@@ -1,66 +1,68 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import Web3 from 'web3';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/share';
-import {Observer} from 'rxjs/Observer';
+import { EventsService } from 'angular-event-service';
 
 declare let window: any;
 
 @Injectable()
 export class Web3Service {
 
-  public loaded: boolean; 
+  public loaded: boolean;
   private web3: any;
   private account: string;
   private network: string;
 
-  web3Change$: Observable<any>;
-  public _observer: Observer<any>;
-
-  constructor(private router: Router) {
+  constructor(private router: Router, private eventsService: EventsService) {
     this.initProvider();
   }
 
   initProvider() {
     let web3Service = this;
-    // this.web3Change$ = new Observable(observer =>
-    //   web3Service._observer = observer).share();
 
     window.addEventListener('load', function () {
       web3Service.loaded = true;
-      // Checking if Web3 has been injected by the browser (Mist/MetaMask)
       if (typeof window.web3 !== 'undefined') {
-        // Use Mist/MetaMask's provider
         web3Service.web3 = new Web3(window.web3.currentProvider);
         web3Service.checkNetwork();
         web3Service.checkAccount();
       }
       else {
+        web3Service.eventsService.broadcast('networkCheck', -1);
+        web3Service.eventsService.broadcast('accountChange');
         web3Service.redirect();
       }
     })
   }
 
   checkAccount() {
-    var account = this.web3.eth.accounts[0];
-    this.account = account;
+    let web3Service = this;
+    this.account = this.web3.eth.accounts[0];
+    this.eventsService.broadcast('accountChange', this.account);
     var accountInterval = setInterval(function () {
-      if (this.web3.eth.accounts[0] !== account) {
-        this.account = this.web3.eth.accounts[0];
-      }
+      this.web3.eth.getAccounts(function (err, accounts) {
+        if (accounts.length > 0) {
+          web3Service.account = accounts[0];
+          web3Service.eventsService.broadcast('accountChange', accounts[0]);
+        }
+        else {
+          web3Service.redirect();
+        }
+      });
     }, 100);
   }
 
   redirect() {
-    this.router.navigate(['required'])
+    if (this.router.url != "/required") {
+      this.router.navigate(['required'])
+    }
   }
 
   checkNetwork() {
     let web3Service = this;
     this.web3.version.getNetwork((err, netId) => {
       web3Service.network = netId;
-      //web3Service._observer.next(null);
+      this.eventsService.broadcast('networkCheck', netId);
       switch (netId) {
         case "1":
           web3Service.redirect();
@@ -89,6 +91,10 @@ export class Web3Service {
 
   public isRinkeby() {
     return this.network == "4";
+  }
+
+  public getAccount() {
+    return this.account;
   }
 
 }

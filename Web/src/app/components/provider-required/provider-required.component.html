@@ -1,1 +1,3 @@
-<span>{{message}}</span>
+<ng-container *ngFor="let condition of conditions">
+    <span *ngIf="!condition.status">{{condition.message}}<br></span>
+</ng-container>

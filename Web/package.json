@@ -26,6 +26,7 @@
     "@angular/platform-browser": "^5.0.0",
     "@angular/platform-browser-dynamic": "^5.0.0",
     "@angular/router": "^5.0.0",
+    "angular-event-service": "^1.2.0",
     "angular-feather": "^3.2.2",
     "angular2-focus": "^1.1.1",
     "angular2-notifications": "^0.9.6",

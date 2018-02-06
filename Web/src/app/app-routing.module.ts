@@ -33,7 +33,7 @@ const routes: Routes = [
     { path: 'dashboard', component: DashboardComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'manage-api', component: ManageApiComponent, canActivate: [CanActivateViaAuthGuard] },
-    { path: 'become-advisor', component: AdvisorWizardComponent, canActivate: [CanActivateViaAuthGuard] },
+    { path: 'become-advisor', component: AdvisorWizardComponent },
 ];
 
 @NgModule({

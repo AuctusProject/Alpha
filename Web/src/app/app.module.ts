@@ -66,6 +66,7 @@ import { Web3Service } from './services/web3.service';
 import { PublicService } from './services/public.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
+import { EventsServiceModule } from 'angular-event-service';
 
 @NgModule({
   declarations: [
@@ -129,7 +130,8 @@ import { ProviderRequiredComponent } from './components/provider-required/provid
         btnLoadingClass: 'is-loading',
         handleCurrentBtnOnly: true,
     }),
-    SimpleNotificationsModule.forRoot()
+    SimpleNotificationsModule.forRoot(),
+    EventsServiceModule.forRoot()
   ],
   providers: [
     LoginService, 
