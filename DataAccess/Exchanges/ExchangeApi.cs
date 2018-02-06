@@ -10,18 +10,20 @@ namespace Auctus.DataAccess.Exchanges
     {
         public static IEnumerable<ExchangeApi> GetApisByCode(string coinSymbol)
         {
-            switch (coinSymbol)
-            {
-                case "BTC":
-                case "ETH":
-                    return new List<ExchangeApi> { new BinanceApi()/*, new BitfinexApi() */ };
-                default:
-                    return new List<ExchangeApi>();
-            }
+            return new List<ExchangeApi> { new BinanceApi()/*, new BitfinexApi() */ };
+        }
+
+        protected enum ApiError
+        {
+            InvalidSymbol,
+            UnknownError
         }
 
         protected abstract string API_BASE_ENDPOINT { get; }
         protected abstract string API_ENDPOINT { get; }
+
+        protected abstract string BTC_SYMBOL { get; }
+        protected abstract string USD_SYMBOL { get; }
 
         protected virtual Dictionary<DateTime, double> GetCloseAdjustedValues(DateTime date, string symbol)
         {
@@ -29,37 +31,72 @@ namespace Auctus.DataAccess.Exchanges
             var difference = utcNow - date;
             var daysToQuery = Math.Ceiling(difference.TotalDays);
             var returnDictionary = new Dictionary<DateTime, double>();
+
+            bool hasUSD = CallApi(symbol, USD_SYMBOL, utcNow).HasValue;
+
             for (var i = daysToQuery; i > 0; i--)
             {
                 var queryDate = utcNow.AddDays(-i);
-                var value = CallApiWithRetry(symbol, queryDate);
+                var value = GetValueByDate(symbol, queryDate, hasUSD);
                 if (value != null && !returnDictionary.ContainsKey(queryDate))
                     returnDictionary.Add(queryDate, value.Value);
             }
             return returnDictionary;
         }
 
-        private double? CallApiWithRetry(string symbol, DateTime queryDate)
+        private double? GetValueByDate(string symbol, DateTime queryDate, bool hasUSD = false)
         {
-            return Retry.Get().Execute<double?>((Func<string, DateTime, double?>)CallApi, symbol, queryDate);
+            double? valueToReturn;
+
+            if (hasUSD)
+            {
+                valueToReturn = CallApiWithRetry(symbol, USD_SYMBOL, queryDate);
+            }
+            else
+            {
+                double? symbolBtcValue = CallApiWithRetry(symbol, BTC_SYMBOL, queryDate);
+                double? btcUsdValue = CallApiWithRetry(BTC_SYMBOL, USD_SYMBOL, queryDate);
+
+                valueToReturn = symbolBtcValue * btcUsdValue;
+            }
+
+
+            return valueToReturn;
         }
 
-        private double? CallApi(string symbol, DateTime queryDate)
+        private double? CallApiWithRetry(string fromSymbol, string toSymbol, DateTime queryDate)
+        {
+            return Retry.Get().Execute<double?>((Func<string, string, DateTime, double?>)CallApi, fromSymbol, toSymbol, queryDate);
+        }
+
+        private double? CallApi(string fromSymbol, string toSymbol, DateTime queryDate)
         {
             using (var client = new HttpClient())
             {
+                ApiError apiError;
+
                 client.BaseAddress = new Uri(API_BASE_ENDPOINT);
-                var response = client.GetAsync(FormatRequestEndpoint(symbol, queryDate)).Result;
+                var response = client.GetAsync(FormatRequestEndpoint(fromSymbol, toSymbol, queryDate)).Result;
+
                 if (response.IsSuccessStatusCode)
-                {
                     return GetCoinValue(response);
+                else
+                    apiError = GetErrorCode(response);
+
+                switch (apiError)
+                {
+                    case ApiError.InvalidSymbol:
+                        return null;
+                    case ApiError.UnknownError:
+                    default:
+                        throw new InvalidOperationException();
                 }
-                throw new InvalidOperationException();
             }
         }
 
-        protected abstract string FormatRequestEndpoint(string symbol, DateTime queryDate);
+        protected abstract string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate);
         protected abstract double? GetCoinValue(HttpResponseMessage response);
+        protected abstract ApiError GetErrorCode(HttpResponseMessage response);
 
         public static Dictionary<DateTime, double> GetCloseCryptoValue(string code, DateTime startDate)
         {
