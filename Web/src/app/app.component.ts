@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http'
 import { NotificationsService } from "angular2-notifications";
-import { MetamaskService } from "./services/metamask.service";
+import { Web3Service } from "./services/web3.service";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
     preventLastDuplicates: "visible"
   }
 
-  constructor(private _httpService: Http, private metamaskService : MetamaskService) { 
+  constructor(private _httpService: Http, private web3 : Web3Service) { 
     
   }
 

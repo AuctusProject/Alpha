@@ -67,7 +67,6 @@ import { PublicService } from './services/public.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 import { EventsServiceModule } from 'angular-event-service';
-import { MetamaskService } from './services/metamask.service';
 
 @NgModule({
   declarations: [
@@ -143,8 +142,7 @@ import { MetamaskService } from './services/metamask.service';
     WindowRefService, 
     PublicService, 
     Web3Service, 
-    CanActivateViaAuthGuard, 
-    MetamaskService
+    CanActivateViaAuthGuard
   ],
   bootstrap: [AppComponent]
 })
