@@ -43,11 +43,23 @@ export class MetamaskAccountService {
       metamaskAccountService.web3Service.getAccount().subscribe(
         account => {
           if (metamaskAccountService.account != account){
+            if (account){
+              metamaskAccountService.checkBalance(account);
+            }
             metamaskAccountService.broadcastAccountChanged(account);
           }
           metamaskAccountService.account = account;
         })
     }, 100);
+  }
+
+  checkBalance(account){
+    let metamaskAccountService = this;
+    this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
+      balance =>{
+        metamaskAccountService.aucBalance = balance;
+        metamaskAccountService.broadcastBalanceChanged(balance);
+    });
   }
 
   checkAccountAndNetwork(): Observable<boolean> {
@@ -87,6 +99,10 @@ export class MetamaskAccountService {
           this.checkAUCBalance();
         }
       });
+  }
+
+  private broadcastBalanceChanged(balance){
+    this.eventsService.broadcast("balanceChanged", balance);
   }
 
   private broadcastAccountChanged(account){

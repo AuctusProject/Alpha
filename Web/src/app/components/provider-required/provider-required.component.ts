@@ -29,7 +29,7 @@ export class ProviderRequiredComponent implements OnInit {
     new MetamaskCondition("Install metamask", true),
     new MetamaskCondition("Select rinkeby network", true),
     new MetamaskCondition("Unlock account", true),
-    new MetamaskCondition("Minimum "+constants.minimumAUCNecessary+" AUC necessary", true)
+    new MetamaskCondition("Minimum " + constants.minimumAUCNecessary + " AUC necessary", true)
   ];
 
   constructor(
@@ -37,6 +37,7 @@ export class ProviderRequiredComponent implements OnInit {
     private eventsService: EventsService, private changeDetector: ChangeDetectorRef) {
     this.eventsService.on("loginConditionsFail", this.onLoginConditionsFail);
     this.eventsService.on("accountChanged", this.onAccountChanged);
+    this.eventsService.on("balanceChanged", this.onBalanceChanged);
   }
 
   ngOnInit() {
@@ -51,6 +52,15 @@ export class ProviderRequiredComponent implements OnInit {
 
   private onAccountChanged: Function = (account: any) => {
     this.conditions[2].status = account != null;
+    this.changeDetector.detectChanges();
+
+    if (this.satisfyAllConditions()) {
+      this.router.navigate(['home']);
+    }
+  }
+
+  private onBalanceChanged: Function = (balance: any) => {
+    this.conditions[3].status = balance > constants.minimumAUCNecessary;
     this.changeDetector.detectChanges();
 
     if (this.satisfyAllConditions()) {
