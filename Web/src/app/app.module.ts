@@ -114,7 +114,7 @@ import { UsernameRegistrationDirective } from './directives/username-registratio
     PortfolioRegisterComponent,
     PortfolioDistributionRowComponent,
     ProviderRequiredComponent,
-    MetamaskAccountMonitorComponent
+    MetamaskAccountMonitorComponent,
     EmailRegistrationDirective,
     UsernameRegistrationDirective
   ],
