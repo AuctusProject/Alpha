@@ -1,41 +1,52 @@
 <wizard-header></wizard-header>
 <div fxLayout="column" class="main-content">
   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="120px" fxLayoutMargin fxLayoutGap.sm="20px" fxLayoutGap.xs="20px">
-    <div fxLayout="row" fxLayoutGap="100px" >
+    <div fxLayout="row" fxLayoutGap="100px">
       <div fxLayout="column">
         <h1 class="bold">How do you imagine your life in the future?</h1>
         <h3>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac lectus lobortis augue lobortis vulputate. Nunc venenatis venenatis aliquet. Nam ut pulvinar augue. Sed dignissim nibh vel fringilla posuere.<br>
-          Te his cibo officiis. Viris volutpat ei per, no eum quidam volutpat. Sit ne solum noluisse. Tamquam aliquam temporibus vis cu. Vis ad summo volutpat instructior.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac lectus lobortis augue lobortis vulputate. Nunc venenatis
+          venenatis aliquet. Nam ut pulvinar augue. Sed dignissim nibh vel fringilla posuere.
+          <br> Te his cibo officiis. Viris volutpat ei per, no eum quidam volutpat. Sit ne solum noluisse. Tamquam aliquam temporibus
+          vis cu. Vis ad summo volutpat instructior.
         </h3>
       </div>
     </div>
     <div fxLayout="row">
       <div fxLayout="column" fxLayoutAlign="center center">
-        <div class="blue-box">
-          <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="24px" fxLayoutGap.sm="0px" fxLayoutGap.xs="0px" fxLayoutMargin>
-            <mat-form-field fxFlex>
-              <input placeholder="First Name" matInput [inputFocus]="true" name="FirstName" required>
-            </mat-form-field>
-            <mat-form-field fxFlex>
-              <input placeholder="Last Name" matInput name="LastName" required>
-            </mat-form-field>
+        <form [formGroup]="simpleRegisterForm" (ngSubmit)="onSubmit()">
+          <div class="blue-box">
+            <div fxLayout="row">
+              <mat-form-field fxFlex="100">
+                <input placeholder="Username" matInput [inputFocus]="true"  pattern="[a-zA-Z-_.]*" formControlName="username" [(ngModel)]="simpleRegister.username" usernameRegistration required>
+                <mat-error *ngIf="simpleRegisterForm.controls.username.invalid">
+                  {{getErrorMessage(simpleRegisterForm.controls.username)}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div fxLayout="row">
+              <mat-form-field fxFlex="100">
+                <input placeholder="Email" matInput formControlName="email" [(ngModel)]="simpleRegister.email" emailRegistration required>
+                <mat-error *ngIf="simpleRegisterForm.controls.email.invalid">
+                  {{getErrorMessage(simpleRegisterForm.controls.email)}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <div fxLayout="row">
+              <mat-form-field fxFlex="100">
+                <input matInput placeholder="Password" formControlName="password" [(ngModel)]="simpleRegister.password" required [type]="show ? 'text' : 'password' ">
+                <mat-icon matSuffix (click)="show = !show">{{show ? 'visibility_off' : 'visibility' }}</mat-icon>
+                <mat-error *ngIf="simpleRegisterForm.controls.password.invalid">
+                  {{getErrorMessage(simpleRegisterForm.controls.password)}}
+                </mat-error>
+              </mat-form-field>
+            </div>
+            <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
+              <button type="submit" class="primary-blue-button bold"[disabled]="simpleRegisterForm.invalid">CREATE ACCOUNT</button>
+            </div>
           </div>
-          <div fxLayout="row">
-            <mat-form-field fxFlex="100">
-              <input placeholder="Email" matInput name="Email" required>
-            </mat-form-field>
-          </div>
-          <div fxLayout="row">
-            <mat-form-field fxFlex="100">
-              <input matInput placeholder="Password" name="Password" required [type]="show ? 'text' : 'password' ">
-              <mat-icon matSuffix (click)="show = !show">{{show ? 'visibility_off' : 'visibility' }}</mat-icon>
-            </mat-form-field>
-          </div>
-          <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
-            <button class="primary-blue-button bold" routerLink="/login">CREATE ACCOUNT</button>
-          </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>

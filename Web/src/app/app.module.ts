@@ -67,6 +67,8 @@ import { PublicService } from './services/public.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 import { EventsServiceModule } from 'angular-event-service';
+import { EmailRegistrationDirective } from './directives/email-registration.directive';
+import { UsernameRegistrationDirective } from './directives/username-registration.directive';
 
 @NgModule({
   declarations: [
@@ -109,7 +111,9 @@ import { EventsServiceModule } from 'angular-event-service';
     EthMachineComponent,
     PortfolioRegisterComponent,
     PortfolioDistributionRowComponent,
-    ProviderRequiredComponent
+    ProviderRequiredComponent,
+    EmailRegistrationDirective,
+    UsernameRegistrationDirective
   ],
   imports: [
     BrowserAnimationsModule,

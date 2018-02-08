@@ -77,5 +77,15 @@ namespace Auctus.Service
         {
             return GoalOptionsBusiness.List();
         }
+
+        public bool IsValidEmailToRegister(string email)
+        {
+            return UserBusiness.IsValidEmailToRegister(email);
+        }
+
+        public bool IsValidUsernameToRegister(string username)
+        {
+            return UserBusiness.IsValidUsernameToRegister(username);
+        }
     }
 }

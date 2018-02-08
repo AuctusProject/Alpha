@@ -7,7 +7,7 @@ namespace Auctus.DomainObjects.Account
 {
     public class Wallet
     {
-        [DapperKey(true)]
+        [DapperKey]
         [DapperType(System.Data.DbType.Int32)]
         public int UserId { get; set; }
         [DapperType(System.Data.DbType.AnsiStringFixedLength)]

@@ -131,5 +131,22 @@ namespace Api.Controllers
         {
             return base.DeleteApiAccess();
         }
+
+        [Route("emails/{email}")]
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult IsValidEmailToRegister([FromRoute]string email)
+        {
+            return base.IsValidEmailToRegister(email);
+        }
+        [Route("usernames/{username}")]
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult IsValidUsernameToRegister([FromRoute]string username)
+        {
+            return base.IsValidUsernameToRegister(username);
+        }
     }
 }

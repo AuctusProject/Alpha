@@ -13,6 +13,8 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.AnsiString)]
         public string Email { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
+        public string Username { get; set; }
+        [DapperType(System.Data.DbType.AnsiString)]
         public string Password { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime CreationDate { get; set; }

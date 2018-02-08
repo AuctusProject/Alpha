@@ -38,7 +38,7 @@ namespace Auctus.DataAccess.Core
 
         private string GetTableName<T>(string tableName)
         {
-            return tableName ?? typeof(T).Name;
+            return string.Format("[{0}]", tableName ?? typeof(T).Name);
         }
 
         public void Dispose()
@@ -60,7 +60,7 @@ namespace Auctus.DataAccess.Core
                 throw;
             }
         }
-        
+
         public int Execute(string sql, dynamic param = null, int commandTimeout = _defaultTimeout)
         {
             return this.Execute(sql, param, commandTimeout, Transaction);

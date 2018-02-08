@@ -124,7 +124,7 @@ export class HistoricalPage extends BasePage {
 
                 if (index % filterConfig.pointIndex == 0) {
                     chartData.push(acum.toFixed(2));
-                    chartLabels.push(this.history.values[index].date);
+                    chartLabels.push(historyValuesList[index].date);
                 }
             }
 
