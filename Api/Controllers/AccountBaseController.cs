@@ -221,5 +221,40 @@ namespace Api.Controllers
             }
             return Ok();
         }
+
+        protected virtual IActionResult IsValidEmailToRegister(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return BadRequest();
+
+            bool isValid;
+            try
+            {
+                isValid = AccountServices.IsValidEmailToRegister(email);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { isValid = isValid });
+        }
+
+        protected virtual IActionResult IsValidUsernameToRegister(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+                return BadRequest();
+
+
+            bool isValid;
+            try
+            {
+                isValid = AccountServices.IsValidUsernameToRegister(username);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { isValid = isValid });
+        }
     }
 }

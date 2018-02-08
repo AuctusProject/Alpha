@@ -69,6 +69,8 @@ import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 import { EventsServiceModule } from 'angular-event-service';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
+import { EmailRegistrationDirective } from './directives/email-registration.directive';
+import { UsernameRegistrationDirective } from './directives/username-registration.directive';
 
 @NgModule({
   declarations: [
@@ -112,7 +114,9 @@ import { MetamaskAccountMonitorComponent } from './components/metamask-account-m
     PortfolioRegisterComponent,
     PortfolioDistributionRowComponent,
     ProviderRequiredComponent,
-    MetamaskAccountMonitorComponent
+    MetamaskAccountMonitorComponent,
+    EmailRegistrationDirective,
+    UsernameRegistrationDirective
   ],
   imports: [
     BrowserAnimationsModule,

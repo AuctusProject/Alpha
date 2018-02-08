@@ -38,6 +38,13 @@ namespace Auctus.DataAccess.Account
                                 }, "UserId", parameters).SingleOrDefault();
         }
 
+        public User GetByEmail(string email)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Email", email.ToLower().Trim(), DbType.AnsiString);
+            return SelectByParameters<User>(parameters).SingleOrDefault();
+        }
+
         public User GetByUsername(string username)
         {
             DynamicParameters parameters = new DynamicParameters();

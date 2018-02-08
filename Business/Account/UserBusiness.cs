@@ -73,7 +73,19 @@ namespace Auctus.Business.Account
             user.ConfirmationDate = DateTime.UtcNow;
             Data.Update(user);
         }
-        
+
+        public bool IsValidEmailToRegister(string email)
+        {
+            User user = Data.GetByEmail(email);
+            return user == null;
+        }
+
+        public bool IsValidUsernameToRegister(string username)
+        {
+            User user = Data.GetByUsername(username);
+            return user == null;
+        }
+
         public void ChangePassword(string email, string currentPassword, string newPassword)
         {
             var user = GetValidUser(email);
@@ -157,6 +169,7 @@ namespace Auctus.Business.Account
 
             user = new User();
             user.Email = email.ToLower().Trim();
+            user.Username = username.Trim();
             user.CreationDate = DateTime.UtcNow;
             user.Password = Security.Hash(password);
             user.ConfirmationCode = Guid.NewGuid().ToString();
