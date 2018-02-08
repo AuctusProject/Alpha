@@ -17,9 +17,14 @@ namespace Auctus.Service
             return AdvisorBusiness.Create(email, name, description);
         }
 
-        public AdvisorDetail UpdateAdvisor(string email, int advisorId, string name, string description, bool enabled)
+        public AdvisorDetail UpdateAdvisor(string email, int advisorId, string name, string description)
         {
-            return AdvisorDetailBusiness.Create(email, advisorId, name, description, enabled);
+            return AdvisorDetailBusiness.Create(email, advisorId, name, description);
+        }
+
+        public AdvisorDetail DisableAdvisor(string email, int advisorId)
+        {
+            return AdvisorDetailBusiness.Disable(email, advisorId);
         }
 
         //public Model.Advisor ListAdvisorDetails(string email, int advisorId)

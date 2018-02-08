@@ -25,15 +25,32 @@ namespace Auctus.Business.Advisor
             return advisorDetail;
         }
 
-        public AdvisorDetail Create(string email, int advisorId, string name, string description, bool enabled)
+        public AdvisorDetail Create(string email, int advisorId, string name, string description)
         {
             var advisor = AdvisorBusiness.GetWithOwner(advisorId, email);
             if (advisor == null)
                 throw new ArgumentException("Invalid advisor.");
 
-            var advisorDetail = SetNew(advisor.Id, name, description, enabled);
+            var advisorDetail = SetNew(advisor.Id, name, description, true);
             Data.Insert(advisorDetail);
             return advisorDetail;
+        }
+
+        public AdvisorDetail Disable(string email, int advisorId)
+        {
+            var advisor = AdvisorBusiness.GetWithOwner(advisorId, email);
+            if (advisor == null)
+                throw new ArgumentException("Invalid advisor.");
+
+            var oldDetail = GetByAdvisor(advisor.Id);
+            var advisorDetail = SetNew(advisor.Id, oldDetail.Name, oldDetail.Description, false);
+            Data.Insert(advisorDetail);
+            return advisorDetail;
+        }
+
+        private AdvisorDetail GetByAdvisor(int advisorId)
+        {
+            return Data.GetByAdvisor(advisorId);
         }
 
         private void ValidateBaseCreation(string name, string description)

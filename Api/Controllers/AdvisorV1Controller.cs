@@ -35,7 +35,15 @@ namespace Api.Controllers
         {
             return base.AdvisorUpdate(advisorId, advisorDetailRequest);
         }
-        
+
+        [Route("{advisorId}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult AdvisorDisable([FromRoute]int advisorId)
+        {
+            return base.AdvisorDisable(advisorId);
+        }
+
         [Route("purchase")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

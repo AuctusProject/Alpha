@@ -42,8 +42,7 @@ namespace Api.Controllers
             AdvisorDetail advisorDetail;
             try
             {
-                advisorDetail = AdvisorServices.UpdateAdvisor(GetUser(), advisorId, advisorDetailRequest.Name, advisorDetailRequest.Description, 
-                    advisorDetailRequest.Enabled);
+                advisorDetail = AdvisorServices.UpdateAdvisor(GetUser(), advisorId, advisorDetailRequest.Name, advisorDetailRequest.Description);
             }
             catch (ArgumentException ex)
             {
@@ -51,7 +50,23 @@ namespace Api.Controllers
             }
             return Ok(new { id = advisorDetail.Id });
         }
-        
+
+        protected virtual IActionResult AdvisorDisable(int advisorId)
+        {
+            if (advisorId == 0)
+                return BadRequest();
+            
+            try
+            {
+                AdvisorServices.DisableAdvisor(GetUser(), advisorId);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
+
         protected virtual IActionResult Buy(BuyRequest buyRequest)
         {
             if (buyRequest == null)

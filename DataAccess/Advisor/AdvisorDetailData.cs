@@ -20,11 +20,24 @@ namespace Auctus.DataAccess.Advisor
                                                      d.Enabled = 0 AND
                                                      NOT EXISTS (SELECT 1 FROM Portfolio p WHERE p.AdvisorId = d.AdvisorId)";
 
+        private const string SELECT_BY_ADVISOR = @"SELECT d.* FROM 
+                                                   AdvisorDetail d 
+                                                   WHERE 
+                                                   d.AdvisorId = @AdvisorId AND 
+                                                   d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = d.AdvisorId)";
+
         public AdvisorDetail GetForAutoEnabled(int advisorId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("AdvisorId", advisorId, DbType.Int32);
             return Query<AdvisorDetail>(SELECT_AUTO_ENABLED, parameters).SingleOrDefault();
+        }
+
+        public AdvisorDetail GetByAdvisor(int advisorId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("AdvisorId", advisorId, DbType.Int32);
+            return Query<AdvisorDetail>(SELECT_BY_ADVISOR, parameters).SingleOrDefault();
         }
     }
 }
