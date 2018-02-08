@@ -64,9 +64,11 @@ import { PortfolioRegisterComponent } from './components/account/advisor-wizard/
 import { PortfolioDistributionRowComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-distribution-row/portfolio-distribution-row.component';
 import { Web3Service } from './services/web3.service';
 import { PublicService } from './services/public.service';
+import { MetamaskAccountService } from './services/metamask-account.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 import { EventsServiceModule } from 'angular-event-service';
+import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
 import { EmailRegistrationDirective } from './directives/email-registration.directive';
 import { UsernameRegistrationDirective } from './directives/username-registration.directive';
 
@@ -112,6 +114,7 @@ import { UsernameRegistrationDirective } from './directives/username-registratio
     PortfolioRegisterComponent,
     PortfolioDistributionRowComponent,
     ProviderRequiredComponent,
+    MetamaskAccountMonitorComponent
     EmailRegistrationDirective,
     UsernameRegistrationDirective
   ],
@@ -146,7 +149,8 @@ import { UsernameRegistrationDirective } from './directives/username-registratio
     WindowRefService, 
     PublicService, 
     Web3Service, 
-    CanActivateViaAuthGuard
+    CanActivateViaAuthGuard,
+    MetamaskAccountService
   ],
   bootstrap: [AppComponent]
 })

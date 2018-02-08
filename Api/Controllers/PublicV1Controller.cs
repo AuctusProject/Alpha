@@ -30,35 +30,35 @@ namespace Api.Controllers
             return base.Assets();
         }
 
-        [Route("{guid}/portfolios")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-        public new IActionResult Portfolio([FromQuery]Guid guid)
-        {
-            return base.Portfolio(guid);
-        }
+        //[Route("{guid}/portfolios")]
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+        //public new IActionResult Portfolio([FromQuery]Guid guid)
+        //{
+        //    return base.Portfolio(guid);
+        //}
 
-        [Route("{guid}/advisors/{advisorId}")]
-        [HttpPatch]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-        public new IActionResult AdvisorUpdate([FromQuery]Guid guid, [FromQuery]int advisorId, [FromBody]AdvisorDetailRequest advisorDetailRequest)
-        {
-            return base.AdvisorUpdate(guid, advisorId, advisorDetailRequest);
-        }
+        //[Route("{guid}/advisors/{advisorId}")]
+        //[HttpPatch]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+        //public new IActionResult AdvisorUpdate([FromQuery]Guid guid, [FromQuery]int advisorId, [FromBody]AdvisorDetailRequest advisorDetailRequest)
+        //{
+        //    return base.AdvisorUpdate(guid, advisorId, advisorDetailRequest);
+        //}
 
-        [Route("{guid}/portfolios")]
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [ProducesResponseType(StatusCodes.Status429TooManyRequests)]
-        public new IActionResult Portfolio([FromQuery]Guid guid, [FromBody]PortfolioRequest portfolioRequest)
-        {
-            return base.Portfolio(guid, portfolioRequest);
-        }
+        //[Route("{guid}/portfolios")]
+        //[HttpPost]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
+        //[ProducesResponseType(StatusCodes.Status429TooManyRequests)]
+        //public new IActionResult Portfolio([FromQuery]Guid guid, [FromBody]PortfolioRequest portfolioRequest)
+        //{
+        //    return base.Portfolio(guid, portfolioRequest);
+        //}
 
         [Route("{guid}/portfolios/{portfolioId}/projections")]
         [HttpPost]

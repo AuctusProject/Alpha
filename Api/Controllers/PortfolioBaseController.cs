@@ -22,11 +22,11 @@ namespace Api.Controllers
             if (portfolioRequest == null || portfolioRequest.Distribution == null)
                 return BadRequest();
 
-            Portfolio portfolio;
+            Auctus.DomainObjects.Portfolio.Portfolio portfolio;
             try
             {
-                portfolio = PortfolioServices.CreatePortfolio(GetUser(), portfolioRequest.AdvisorId, portfolioRequest.Risk, portfolioRequest.ProjectionValue,
-                    portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
+                portfolio = PortfolioServices.CreatePortfolio(GetUser(), portfolioRequest.AdvisorId, portfolioRequest.Price, portfolioRequest.Name,
+                    portfolioRequest.Description, portfolioRequest.ProjectionValue, portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
                     portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
             catch (ArgumentException ex)
@@ -34,6 +34,23 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
             return Ok(new { id = portfolio.Id });
+        }
+
+        protected virtual IActionResult UpdatePortfolio(int portfolioId, UpdatePortfolioRequest updatePortfolioRequest)
+        {
+            if (updatePortfolioRequest == null)
+                return BadRequest();
+            
+            try
+            {
+                PortfolioServices.UpdatePortfolio(GetUser(), portfolioId, updatePortfolioRequest.Price,
+                    updatePortfolioRequest.Name, updatePortfolioRequest.Description);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
         }
 
         protected virtual IActionResult DisablePortfolio(int portfolioId)
@@ -64,47 +81,61 @@ namespace Api.Controllers
             }
             return Ok();
         }
-        
-        protected virtual IActionResult Projection()
+
+        protected virtual IActionResult ListPortfolios()
         {
-            Projections projections;
+            List<Auctus.Model.Portfolio> portfolios;
             try
             {
-                projections = PortfolioServices.GetProjections(GetUser());
+                portfolios = PortfolioServices.ListPortfolios(GetUser());
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
-            return Ok(projections);
+            return Ok(portfolios);
         }
 
-        protected virtual IActionResult PortfolioHistory()
-        {
-            List<Auctus.Model.PortfolioHistory> portfolioHistory;
-            try
-            {
-                portfolioHistory = PortfolioServices.ListHistory(GetUser());
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            return Ok(portfolioHistory);
-        }
+        //protected virtual IActionResult Projection()
+        //{
+        //    Projections projections;
+        //    try
+        //    {
+        //        projections = PortfolioServices.GetProjections(GetUser());
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //    return Ok(projections);
+        //}
 
-        protected virtual IActionResult PortfolioDistribution()
-        {
-            List<Auctus.Model.PortfolioDistribution> portfolioDistribution;
-            try
-            {
-                portfolioDistribution = PortfolioServices.ListPortfolioDistribution(GetUser());
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            return Ok(portfolioDistribution);
-        }
+        //protected virtual IActionResult PortfolioHistory()
+        //{
+        //    List<Auctus.Model.PortfolioHistory> portfolioHistory;
+        //    try
+        //    {
+        //        portfolioHistory = PortfolioServices.ListHistory(GetUser());
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //    return Ok(portfolioHistory);
+        //}
+
+        //protected virtual IActionResult PortfolioDistribution()
+        //{
+        //    List<Auctus.Model.PortfolioDistribution> portfolioDistribution;
+        //    try
+        //    {
+        //        portfolioDistribution = PortfolioServices.ListPortfolioDistribution(GetUser());
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //    return Ok(portfolioDistribution);
+        //}
     }
 }

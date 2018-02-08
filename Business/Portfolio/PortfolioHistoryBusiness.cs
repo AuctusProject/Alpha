@@ -88,24 +88,24 @@ namespace Auctus.Business.Portfolio
             return portfolioHistory?.Date;
         }
 
-        public List<Model.PortfolioHistory> ListHistory(string email)
-        {
-            var user = UserBusiness.GetValidUser(email);
-            var purchases = BuyBusiness.ListPurchasesWithPortfolio(user.Id);
-            purchases.ForEach(c => c.Projection.Portfolio.PortfolioHistory = ListHistory(c.Projection.PortfolioId));
-            List<Model.PortfolioHistory> result = new List<Model.PortfolioHistory>();
-            result.AddRange(purchases.Select(c => new Model.PortfolioHistory()
-            {
-                AdvisorId = c.AdvisorId,
-                Values = c.Projection.Portfolio.PortfolioHistory.Select(g => new Model.PortfolioHistory.HistoryValue()
-                {
-                    Date = g.Date,
-                    Value = g.RealValue
-                }).ToList(),
-                History = AdvisorBusiness.GetPortfolioHistory(new DomainObjects.Portfolio.Portfolio[] { c.Projection.Portfolio }).FirstOrDefault()
-            }));
-            return result;
-        }
+        //public List<Model.PortfolioHistory> ListHistory(string email)
+        //{
+        //    var user = UserBusiness.GetValidUser(email);
+        //    var purchases = BuyBusiness.ListPurchasesWithPortfolio(user.Id);
+        //    purchases.ForEach(c => c.Projection.Portfolio.PortfolioHistory = ListHistory(c.Projection.PortfolioId));
+        //    List<Model.PortfolioHistory> result = new List<Model.PortfolioHistory>();
+        //    result.AddRange(purchases.Select(c => new Model.PortfolioHistory()
+        //    {
+        //        AdvisorId = c.AdvisorId,
+        //        Values = c.Projection.Portfolio.PortfolioHistory.Select(g => new Model.PortfolioHistory.HistoryValue()
+        //        {
+        //            Date = g.Date,
+        //            Value = g.RealValue
+        //        }).ToList(),
+        //        History = AdvisorBusiness.GetPortfolioHistory(new DomainObjects.Portfolio.Portfolio[] { c.Projection.Portfolio }).FirstOrDefault()
+        //    }));
+        //    return result;
+        //}
 
         public List<PortfolioHistory> ListHistory(int portfolioId)
         {
@@ -120,6 +120,49 @@ namespace Auctus.Business.Portfolio
                     MemoryCache.Set<List<PortfolioHistory>>(cacheKey, portfolioHistory, 720);
             }
             return portfolioHistory;
+        }
+
+        public Model.Portfolio.HistoryResult GetHistoryResult(int days, IEnumerable<PortfolioHistory> portfolioHistory)
+        {
+            var history = portfolioHistory.Where(c => c.Date >= DateTime.UtcNow.AddDays(-days).Date);
+            return !history.Any() ? null : new Model.Portfolio.HistoryResult()
+            {
+                Value = (history.Select(c => 1 + (c.RealValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                ExpectedValue = (history.Select(c => 1 + (c.ProjectionValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                OptimisticExpectation = history.Any(c => !c.OptimisticProjectionValue.HasValue) ? (double?)null :
+                                        (history.Select(c => 1 + (c.OptimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                PessimisticExpectation = history.Any(c => !c.PessimisticProjectionValue.HasValue) ? (double?)null :
+                                        (history.Select(c => 1 + (c.PessimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                HitPercentage = (double)history.Count(c => c.RealValue >= c.ProjectionValue) / (double)history.Count() * 100
+            };
+        }
+
+        private List<Model.Portfolio.Distribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)
+        {
+            var values = portfolioHistory.OrderBy(c => c.RealValue).Select(c => c.RealValue);
+            var minValue = values.First();
+            var maxValue = values.Last();
+            var difference = maxValue - minValue;
+            double rangeGroup;
+            if (difference == 0)
+                rangeGroup = 1;
+            else
+                rangeGroup = difference / (values.Count() > 75 ? 15.0 : Math.Floor(values.Count() / 5.0));
+
+            minValue = minValue - (rangeGroup / 1.5);
+            maxValue = maxValue + (rangeGroup / 1.5);
+
+            List<Model.Portfolio.Distribution> result = new List<Model.Portfolio.Distribution>();
+            for (double i = minValue; i <= maxValue; i = i + rangeGroup)
+            {
+                result.Add(new Model.Portfolio.Distribution()
+                {
+                    GreaterOrEqual = i,
+                    Lesser = i + rangeGroup,
+                    Quantity = portfolioHistory.Count(c => c.RealValue >= i && c.RealValue < (i + rangeGroup))
+                });
+            }
+            return result;
         }
     }
 }

@@ -103,7 +103,7 @@ namespace Auctus.Business.Account
             Data.Update(user);
         }
         
-        public User GetValidUser(string email)
+        public User GetValidUser(string email, string address = null)
         {
             BaseEmailValidation(email);
             var cacheKey = email.ToLower().Trim();
@@ -114,10 +114,24 @@ namespace Auctus.Business.Account
                 user = Data.Get(email);
                 if (user == null)
                     throw new ArgumentException("User cannot be found.");
-                else if (user.ConfirmationDate.HasValue)
+
+                ValidateUserAddress(user, address);
+
+                if (user.ConfirmationDate.HasValue)
                     MemoryCache.Set<User>(cacheKey, user);
+                return user;
             }
-            return user;
+            else
+            {
+                ValidateUserAddress(user, address);
+                return user;
+            }
+        }
+
+        private void ValidateUserAddress(User user, string address)
+        {
+            if (address != null && user.Wallet.Address.ToLower() != address.ToLower())
+                throw new ArgumentException("Invalid user wallet.");
         }
         
         public User Get(Guid guid)

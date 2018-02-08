@@ -10,7 +10,7 @@ namespace Auctus.DomainObjects.Account
         [DapperKey]
         [DapperType(System.Data.DbType.Int32)]
         public int UserId { get; set; }
-        [DapperType(System.Data.DbType.AnsiStringFixedLength)]
+        [DapperType(System.Data.DbType.AnsiString)]
         public string Address { get; set; }
     }
 }

@@ -24,94 +24,94 @@ namespace Api.Controllers
             return Ok(assets.Select(c => new { id = c.Id, code = c.Code, name = c.Name }));
         }
 
-        protected virtual IActionResult Portfolio(Guid guid)
-        {
-            var baseValidation = GetBasicValidation(guid, "GetPortfolio");
-            if (baseValidation.Return != null)
-                return baseValidation.Return;
+        //protected virtual IActionResult Portfolio(Guid guid)
+        //{
+        //    var baseValidation = GetBasicValidation(guid, "GetPortfolio");
+        //    if (baseValidation.Return != null)
+        //        return baseValidation.Return;
             
-            List<Portfolio> portfolios;
-            try
-            {
-                portfolios = PortfolioServices.ListPortfolio(baseValidation.Email);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            return Ok(portfolios.Select(p =>
-                    new
-                    {
-                        id = p.Id,
-                        risk = p.Risk,
-                        projectionValue = p.Projection.ProjectionValue,
-                        pessimisticValue = p.Projection.PessimisticProjection,
-                        optimisticValue = p.Projection.OptimisticProjection,
-                        advisor = new
-                        {
-                            id = p.AdvisorId,
-                            name = p.Advisor.Name,
-                            price = p.Advisor.Detail.Price,
-                            description = p.Advisor.Detail.Description,
-                            period = p.Advisor.Detail.Period,
-                            enabled = p.Advisor.Detail.Enabled
-                        },
-                        distribution = p.Projection.Distribution.Select(d => new
-                        {
-                            asset = new
-                            {
-                                id = d.Asset.Id,
-                                name = d.Asset.Name,
-                                code = d.Asset.Code
-                            },
-                            percent = d.Percent
-                        })
-                    }));
-        }
+        //    List<Portfolio> portfolios;
+        //    try
+        //    {
+        //        portfolios = PortfolioServices.ListPortfolio(baseValidation.Email);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //    return Ok(portfolios.Select(p =>
+        //            new
+        //            {
+        //                id = p.Id,
+        //                risk = p.Risk,
+        //                projectionValue = p.Projection.ProjectionValue,
+        //                pessimisticValue = p.Projection.PessimisticProjection,
+        //                optimisticValue = p.Projection.OptimisticProjection,
+        //                advisor = new
+        //                {
+        //                    id = p.AdvisorId,
+        //                    name = p.Advisor.Name,
+        //                    price = p.Advisor.Detail.Price,
+        //                    description = p.Advisor.Detail.Description,
+        //                    period = p.Advisor.Detail.Period,
+        //                    enabled = p.Advisor.Detail.Enabled
+        //                },
+        //                distribution = p.Projection.Distribution.Select(d => new
+        //                {
+        //                    asset = new
+        //                    {
+        //                        id = d.Asset.Id,
+        //                        name = d.Asset.Name,
+        //                        code = d.Asset.Code
+        //                    },
+        //                    percent = d.Percent
+        //                })
+        //            }));
+        //}
 
-        protected virtual IActionResult AdvisorUpdate(Guid guid, int advisorId, AdvisorDetailRequest advisorDetailRequest)
-        {
-            if (advisorDetailRequest == null)
-                return BadRequest();
+        //protected virtual IActionResult AdvisorUpdate(Guid guid, int advisorId, AdvisorDetailRequest advisorDetailRequest)
+        //{
+        //    if (advisorDetailRequest == null)
+        //        return BadRequest();
 
-            var baseValidation = GetBasicValidation(guid, "AdvisorUpdate");
-            if (baseValidation.Return != null)
-                return baseValidation.Return;
+        //    var baseValidation = GetBasicValidation(guid, "AdvisorUpdate");
+        //    if (baseValidation.Return != null)
+        //        return baseValidation.Return;
 
-            try
-            {
-                AdvisorServices.UpdateAdvisor(baseValidation.Email, advisorId, advisorDetailRequest.Description,
-                    advisorDetailRequest.Period, advisorDetailRequest.Price, advisorDetailRequest.Enabled);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            return Ok();
-        }
+        //    try
+        //    {
+        //        AdvisorServices.UpdateAdvisor(baseValidation.Email, advisorId, advisorDetailRequest.Description,
+        //            advisorDetailRequest.Period, advisorDetailRequest.Price, advisorDetailRequest.Enabled);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //    return Ok();
+        //}
 
-        protected virtual IActionResult Portfolio(Guid guid, PortfolioRequest portfolioRequest)
-        {
-            if (portfolioRequest == null || portfolioRequest.Distribution == null || portfolioRequest.Distribution.Count == 0)
-                return BadRequest();
+        //protected virtual IActionResult Portfolio(Guid guid, PortfolioRequest portfolioRequest)
+        //{
+        //    if (portfolioRequest == null || portfolioRequest.Distribution == null || portfolioRequest.Distribution.Count == 0)
+        //        return BadRequest();
 
-            var baseValidation = GetBasicValidation(guid, "PostPortfolio");
-            if (baseValidation.Return != null)
-                return baseValidation.Return;
+        //    var baseValidation = GetBasicValidation(guid, "PostPortfolio");
+        //    if (baseValidation.Return != null)
+        //        return baseValidation.Return;
 
-            Portfolio portfolio;
-            try
-            {
-                portfolio = PortfolioServices.CreatePortfolio(baseValidation.Email, portfolioRequest.AdvisorId, portfolioRequest.Risk, 
-                    portfolioRequest.ProjectionValue, portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
-                    portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            return Ok(new { id = portfolio.Id });
-        }
+        //    Portfolio portfolio;
+        //    try
+        //    {
+        //        portfolio = PortfolioServices.CreatePortfolio(baseValidation.Email, portfolioRequest.AdvisorId, portfolioRequest.Risk, 
+        //            portfolioRequest.ProjectionValue, portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
+        //            portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //    return Ok(new { id = portfolio.Id });
+        //}
 
         protected virtual IActionResult Projection(Guid guid, int portfolioId, ProjectionRequest projectionRequest)
         {

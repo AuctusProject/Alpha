@@ -18,13 +18,18 @@ namespace Auctus.Service
             PortfolioBusiness.UpdateAllPortfoliosHistory();
         }
 
-        public Portfolio CreatePortfolio(string email, int advisorId, int risk, double projection, double? optimisticProjection,
-            double? pessimisticProjection, Dictionary<int, double> distribution)
+        public Portfolio CreatePortfolio(string email, int advisorId, double price, string name, string description, double projection, 
+            double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)
         {
-            return PortfolioBusiness.Create(email, advisorId, risk, projection, optimisticProjection, pessimisticProjection, distribution);
+            return PortfolioBusiness.Create(email, advisorId, price, name, description, projection, optimisticProjection, pessimisticProjection, distribution);
         }
 
-        public List<Portfolio> ListPortfolio(string email)
+        public Portfolio UpdatePortfolio(string email, int portfolioId, double price, string name, string description)
+        {
+            return PortfolioBusiness.Update(email, portfolioId, price, name, description);
+        }
+
+        public List<Model.Portfolio> ListPortfolios(string email)
         {
             return PortfolioBusiness.List(email);
         }
@@ -44,20 +49,20 @@ namespace Auctus.Service
         {
             return DistributionBusiness.Create(email, portfolioId, distribution);
         }
+        
+        //public Model.Projections GetProjections(string email)
+        //{
+        //    return ProjectionBusiness.GetProjections(email);
+        //}
 
-        public Model.Projections GetProjections(string email)
-        {
-            return ProjectionBusiness.GetProjections(email);
-        }
+        //public List<Model.PortfolioHistory> ListHistory(string email)
+        //{
+        //    return PortfolioHistoryBusiness.ListHistory(email);
+        //}
 
-        public List<Model.PortfolioHistory> ListHistory(string email)
-        {
-            return PortfolioHistoryBusiness.ListHistory(email);
-        }
-
-        public List<Model.PortfolioDistribution> ListPortfolioDistribution(string email)
-        {
-            return DistributionBusiness.ListPortfolioDistribution(email);
-        }
+        //public List<Model.PortfolioDistribution> ListPortfolioDistribution(string email)
+        //{
+        //    return DistributionBusiness.ListPortfolioDistribution(email);
+        //}
     }
 }

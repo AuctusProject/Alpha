@@ -22,12 +22,6 @@ namespace Auctus.Business.Account
 
         public Goal Create(int userId, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
-            GoalOptionValidation(goalOptionId);
-            RiskValidation(risk);
-            TimeFrameValidation(timeframe);
-            StartAmountValidation(startingAmount);
-            MonthlyContributionValidation(monthlyContribution);
-
             var goal = SetNew(userId, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
             Data.Insert(goal);
             return goal;
@@ -57,16 +51,16 @@ namespace Auctus.Business.Account
             }
         }
 
-        private void RiskValidation(int risk)
+        private void RiskValidation(int? risk)
         {
-            if (risk == 0) {
+            if (!risk.HasValue || risk == 0) {
                 throw new ArgumentException("Risk must be filled.");
             }
         }
 
-        private void GoalOptionValidation(int goalOptionId)
+        private void GoalOptionValidation(int? goalOptionId)
         {
-            if (goalOptionId == 0) {
+            if (!goalOptionId.HasValue || goalOptionId == 0) {
                 throw new ArgumentException("Goal option must be filled.");
             }
         }
@@ -82,12 +76,18 @@ namespace Auctus.Business.Account
             return goal;
         }
 
-        public Goal SetNew(int userId, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public Goal SetNew(int userId, int? goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
-            RiskType riskType = RiskType.Get(risk);
+            GoalOptionValidation(goalOptionId);
+            RiskValidation(risk);
+            TimeFrameValidation(timeframe);
+            StartAmountValidation(startingAmount);
+            MonthlyContributionValidation(monthlyContribution);
+            RiskType riskType = RiskType.Get(risk.Value);
+
             var goal = new Goal();
             goal.UserId = userId;
-            goal.GoalOptionId = goalOptionId;
+            goal.GoalOptionId = goalOptionId.Value;
             goal.CreationDate = DateTime.UtcNow;
             goal.MonthlyContribution = monthlyContribution;
             goal.StartingAmount = startingAmount;

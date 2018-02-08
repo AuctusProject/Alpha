@@ -20,7 +20,8 @@ namespace Auctus.Business.Portfolio
         public Projection Create(string email, int portfolioId, double projectionValue, double? optimisticProjection,
             double? pessimisticProjection, Dictionary<int, double> distribution)
         {
-            var portfolio = PortfolioBusiness.GetValidByOwner(email, portfolioId);
+            var user = UserBusiness.GetValidUser(email);
+            var portfolio = PortfolioBusiness.GetValidByOwner(user.Id, portfolioId);
             if (portfolio == null)
                 throw new ArgumentException("Invalid portfolio.");
 
@@ -69,53 +70,53 @@ namespace Auctus.Business.Portfolio
             return Data.Get(projectionId);
         }
         
-        public Projections GetProjections(string email)
-        {
-            var user = UserBusiness.GetValidUser(email);
-            var purchases = BuyBusiness.ListPurchasesComplete(user.Id);
-            user.Goal = GoalBusiness.GetCurrent(user.Id);
-            var projections = new Projections();
-            projections.CurrentGoal = new Projections.Goal()
-            {
-                Risk = RiskType.Get(user.Goal.Risk, user.Goal.GoalOption.Risk).Value,
-                Timeframe = user.Goal.Timeframe,
-                MonthlyContribution = user.Goal.MonthlyContribution,
-                StartingAmount = user.Goal.StartingAmount,
-                TargetAmount = user.Goal.TargetAmount
-            };
-            projections.Purchases = new List<Projections.Purchase>();
-            foreach(Buy purchase in purchases)
-            {
-                projections.Purchases.Add(new Projections.Purchase()
-                {
-                    PurchaseDate = purchase.CreationDate,
-                    ExpirationDate = purchase.ExpirationDate,
-                    AdvisorId = purchase.AdvisorId,
-                    Description = purchase.Advisor.Detail.Description,
-                    Name = purchase.Advisor.Name,
-                    Period = purchase.Advisor.Detail.Period,
-                    Price = purchase.Advisor.Detail.Price,
-                    Goal = new Projections.Goal()
-                    {
-                        MonthlyContribution = purchase.Goal.MonthlyContribution,
-                        StartingAmount = purchase.Goal.StartingAmount,
-                        Timeframe = purchase.Goal.Timeframe,
-                        TargetAmount = purchase.Goal.TargetAmount,
-                        Risk = RiskType.Get(purchase.Goal.Risk, purchase.Goal.GoalOption.Risk).Value
-                    },
-                    ProjectionData = new Projections.Projection()
-                    {
-                        Risk = purchase.Projection.Portfolio.Risk,
-                        ProjectionPercent = purchase.Projection.ProjectionValue,
-                        OptimisticPercent = purchase.Projection.OptimisticProjection,
-                        PessimisticPercent = purchase.Projection.PessimisticProjection,
-                        Current = GetProjectionResult(user.Goal, purchase.Projection),
-                        Purchased = GetProjectionResult(purchase.Goal, purchase.Projection)
-                    }
-                });
-            }
-            return projections;
-        }
+        //public Projections GetProjections(string email)
+        //{
+        //    var user = UserBusiness.GetValidUser(email);
+        //    var purchases = BuyBusiness.ListPurchasesComplete(user.Id);
+        //    user.Goal = GoalBusiness.GetCurrent(user.Id);
+        //    var projections = new Projections();
+        //    projections.CurrentGoal = new Projections.Goal()
+        //    {
+        //        Risk = RiskType.Get(user.Goal.Risk, user.Goal.GoalOption.Risk).Value,
+        //        Timeframe = user.Goal.Timeframe,
+        //        MonthlyContribution = user.Goal.MonthlyContribution,
+        //        StartingAmount = user.Goal.StartingAmount,
+        //        TargetAmount = user.Goal.TargetAmount
+        //    };
+        //    projections.Purchases = new List<Projections.Purchase>();
+        //    foreach(Buy purchase in purchases)
+        //    {
+        //        projections.Purchases.Add(new Projections.Purchase()
+        //        {
+        //            PurchaseDate = purchase.CreationDate,
+        //            ExpirationDate = purchase.ExpirationDate,
+        //            AdvisorId = purchase.AdvisorId,
+        //            Description = purchase.Advisor.Detail.Description,
+        //            Name = purchase.Advisor.Name,
+        //            Period = purchase.Advisor.Detail.Period,
+        //            Price = purchase.Advisor.Detail.Price,
+        //            Goal = new Projections.Goal()
+        //            {
+        //                MonthlyContribution = purchase.Goal.MonthlyContribution,
+        //                StartingAmount = purchase.Goal.StartingAmount,
+        //                Timeframe = purchase.Goal.Timeframe,
+        //                TargetAmount = purchase.Goal.TargetAmount,
+        //                Risk = RiskType.Get(purchase.Goal.Risk, purchase.Goal.GoalOption.Risk).Value
+        //            },
+        //            ProjectionData = new Projections.Projection()
+        //            {
+        //                Risk = purchase.Projection.Portfolio.Risk,
+        //                ProjectionPercent = purchase.Projection.ProjectionValue,
+        //                OptimisticPercent = purchase.Projection.OptimisticProjection,
+        //                PessimisticPercent = purchase.Projection.PessimisticProjection,
+        //                Current = GetProjectionResult(user.Goal, purchase.Projection),
+        //                Purchased = GetProjectionResult(purchase.Goal, purchase.Projection)
+        //            }
+        //        });
+        //    }
+        //    return projections;
+        //}
 
         private Projections.Result GetProjectionResult(Goal goal, Projection projection)
         {

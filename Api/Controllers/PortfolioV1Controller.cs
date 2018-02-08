@@ -27,6 +27,14 @@ namespace Api.Controllers
         }
 
         [Route("{portfolioId}")]
+        [HttpPatch]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult UpdatePortfolio([FromRoute]int portfolioId, [FromBody]UpdatePortfolioRequest updatePortfolioRequest)
+        {
+            return base.UpdatePortfolio(portfolioId, updatePortfolioRequest);
+        }
+
+        [Route("{portfolioId}")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult DisablePortfolio([FromRoute]int portfolioId)
@@ -42,28 +50,35 @@ namespace Api.Controllers
             return base.Distribution(portfolioId, newDistributionRequest);
         }
         
-        [Route("projections")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult Projection()
+        public new IActionResult ListPortfolios()
         {
-            return base.Projection();
+            return base.ListPortfolios();
         }
 
-        [Route("history")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult PortfolioHistory()
-        {
-            return base.PortfolioHistory();
-        }
+        //[Route("projections")]
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public new IActionResult Projection()
+        //{
+        //    return base.Projection();
+        //}
 
-        [Route("distribution")]
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult PortfolioDistribution()
-        {
-            return base.PortfolioDistribution();
-        }
+        //[Route("history")]
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public new IActionResult PortfolioHistory()
+        //{
+        //    return base.PortfolioHistory();
+        //}
+
+        //[Route("distribution")]
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public new IActionResult PortfolioDistribution()
+        //{
+        //    return base.PortfolioDistribution();
+        //}
     }
 }

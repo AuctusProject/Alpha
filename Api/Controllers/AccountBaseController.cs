@@ -54,6 +54,30 @@ namespace Api.Controllers
             return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), email = user.Email });
         }
 
+        //protected virtual async Task<IActionResult> FullRegister(FullRegisterRequest registerRequest)
+        //{
+        //    if (registerRequest == null || registerRequest.User == null || registerRequest.Goal == null)
+        //        return BadRequest();
+
+        //    User user;
+        //    try
+        //    {
+        //        user = await AccountServices.FullRegister(registerRequest.User.Email,
+        //                                                    registerRequest.User.Password,
+        //                                                    registerRequest.Goal.GoalOption.Id,
+        //                                                    registerRequest.Goal.Timeframe,
+        //                                                    registerRequest.Goal.Risk,
+        //                                                    registerRequest.Goal.TargetAmount,
+        //                                                    registerRequest.Goal.StartingAmount,
+        //                                                    registerRequest.Goal.MonthlyContribution);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //    return Ok(new { jwt = GenerateToken(registerRequest.User.Email.ToLower().Trim()), email = user.Email });
+        //}
+
         protected virtual async Task<IActionResult> ForgotPassword(EmailRequest forgotPasswordRequest)
         {
             if (forgotPasswordRequest == null || forgotPasswordRequest.Email == null)

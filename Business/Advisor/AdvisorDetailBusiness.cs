@@ -13,40 +13,39 @@ namespace Auctus.Business.Advisor
     {
         public AdvisorDetailBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public AdvisorDetail SetNew(int advisorId, string description, int period, double price, bool enabled)
+        public AdvisorDetail SetNew(int advisorId, string name, string description, bool enabled)
         {
-            ValidateBaseCreation(description, period, price);
+            ValidateBaseCreation(name, description);
             var advisorDetail = new AdvisorDetail();
             advisorDetail.AdvisorId = advisorId;
             advisorDetail.Date = DateTime.UtcNow;
             advisorDetail.Description = description;
-            advisorDetail.Period = period;
-            advisorDetail.Price = price;
+            advisorDetail.Name = name;
             advisorDetail.Enabled = enabled; 
             return advisorDetail;
         }
 
-        public AdvisorDetail Create(string email, int advisorId, string description, int period, double price, bool enabled)
+        public AdvisorDetail Create(string email, int advisorId, string name, string description, bool enabled)
         {
             var advisor = AdvisorBusiness.GetWithOwner(advisorId, email);
             if (advisor == null)
                 throw new ArgumentException("Invalid advisor.");
 
-            var advisorDetail = SetNew(advisor.Id, description, period, price, enabled);
+            var advisorDetail = SetNew(advisor.Id, name, description, enabled);
             Data.Insert(advisorDetail);
             return advisorDetail;
         }
 
-        private void ValidateBaseCreation(string description, int period, double price)
+        private void ValidateBaseCreation(string name, string description)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Name cannot be empty.");
+            if (name.Length > 100)
+                throw new ArgumentException("Name is too long.");
             if (string.IsNullOrWhiteSpace(description))
                 throw new ArgumentException("Description cannot be empty.");
             if (description.Length > 500)
                 throw new ArgumentException("Description is too long.");
-            if (period < 1)
-                throw new ArgumentException("Period is invalid.");
-            if (price < 0.000001)
-                throw new ArgumentException("Price is invalid.");
         }
         
         public AdvisorDetail GetForAutoEnabled(int advisorId)
