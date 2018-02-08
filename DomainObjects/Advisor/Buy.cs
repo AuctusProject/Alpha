@@ -25,6 +25,8 @@ namespace Auctus.DomainObjects.Advisor
         [DapperType(System.Data.DbType.Int32)]
         public int PortfolioId { get; set; }
         [DapperType(System.Data.DbType.Int32)]
+        public int ProjectionId { get; set; }
+        [DapperType(System.Data.DbType.Int32)]
         public int? GoalId { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int UserId { get; set; }

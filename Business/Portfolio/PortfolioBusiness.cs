@@ -26,22 +26,17 @@ namespace Auctus.Business.Portfolio
                 throw new ArgumentException("Invalid advisor.");
 
             var risk = GetRisk(projectionValue, distribution);
-            var portfolio = GetValidByAdvisorAndRisk(advisorId, risk.Value);
-            if (portfolio != null)
-                throw new ArgumentException("Already exist a portfolio registered for this risk.");
-
             var advisorDetail = AdvisorDetailBusiness.GetForAutoEnabled(advisorId);
 
-            portfolio = new DomainObjects.Portfolio.Portfolio();
+            var portfolio = new DomainObjects.Portfolio.Portfolio();
             portfolio.AdvisorId = advisorId;
             portfolio.CreationDate = DateTime.UtcNow;
-            portfolio.Risk = risk.Value;
             using (var transaction = new TransactionalDapperCommand())
             {
                 transaction.Insert(portfolio);
                 var detail = PortfolioDetailBusiness.SetNew(portfolio.Id, price, name, description, true);
                 transaction.Insert(detail);
-                var projection = ProjectionBusiness.SetNew(portfolio.Id, projectionValue, optimisticProjection, pessimisticProjection);
+                var projection = ProjectionBusiness.SetNew(portfolio.Id, projectionValue, risk, optimisticProjection, pessimisticProjection);
                 transaction.Insert(projection);
                 var distributions = DistributionBusiness.SetNew(projection.Id, distribution);
                 foreach (Distribution dist in distributions)
@@ -91,7 +86,7 @@ namespace Auctus.Business.Portfolio
             PortfolioDetailBusiness.Create(portfolioId, portfolio.Detail.Price, portfolio.Detail.Name, portfolio.Detail.Description, false);
         }
 
-        private RiskType GetRisk(double projectionValue, Dictionary<int, double> distribution)
+        public RiskType GetRisk(double projectionValue, Dictionary<int, double> distribution)
         {
             IEnumerable<DomainObjects.Asset.Asset> assets = AssetBusiness.ListAssets().Where(c => distribution.ContainsKey(c.Id));
             double cryptoAssetsPercentage = assets.Count(c => c.Type == AssetType.Crypto) / assets.Count() * 100.0;
@@ -160,30 +155,25 @@ namespace Auctus.Business.Portfolio
             if (portfolios.Count == 1)
                 return portfolios.First();
 
-            var sameRisk = portfolios.SingleOrDefault(c => c.RiskType == riskType);
+            var sameRisk = portfolios.SingleOrDefault(c => c.Projection.RiskType == riskType);
             if (sameRisk != null)
                 return sameRisk;
 
-            var littleLower = portfolios.SingleOrDefault(c => c.RiskType.Value == (riskType.Value - 1));
+            var littleLower = portfolios.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 1));
             if (littleLower != null)
                 return littleLower;
 
-            var littleHigher = portfolios.SingleOrDefault(c => c.RiskType.Value == (riskType.Value + 1));
+            var littleHigher = portfolios.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value + 1));
             if (littleHigher != null)
                 return littleHigher;
 
-            var lower = portfolios.SingleOrDefault(c => c.RiskType.Value == (riskType.Value - 2));
+            var lower = portfolios.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 2));
             if (lower != null)
                 return lower;
 
-            return portfolios.Single(c => c.RiskType.Value == (riskType.Value + 2));
+            return portfolios.Single(c => c.Projection.RiskType.Value == (riskType.Value + 2));
         }
-
-        public DomainObjects.Portfolio.Portfolio GetValidByAdvisorAndRisk(int advisorId, int risk)
-        {
-            return Data.GetValidByAdvisorAndRisk(advisorId, risk);
-        }
-
+        
         public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
             return Data.GetValidByOwner(userId, portfolioId);
@@ -213,7 +203,7 @@ namespace Auctus.Business.Portfolio
                 AdvisorId = c.AdvisorId,
                 AdvisorDescription = c.Advisor.Detail.Description,
                 AdvisorName = c.Advisor.Detail.Name,
-                Risk = c.Risk,
+                Risk = c.Projection.Risk,
                 ProjectionPercent = c.Projection.ProjectionValue,
                 OptimisticPercent = c.Projection.OptimisticProjection,
                 PessimisticPercent = c.Projection.PessimisticProjection,

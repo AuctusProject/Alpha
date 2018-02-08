@@ -1,4 +1,5 @@
-﻿using Auctus.Util.DapperAttributes;
+﻿using Auctus.DomainObjects.Account;
+using Auctus.Util.DapperAttributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +21,10 @@ namespace Auctus.DomainObjects.Portfolio
         public double? OptimisticProjection { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double? PessimisticProjection { get; set; }
+        [DapperType(System.Data.DbType.Int32)]
+        public int Risk { get; set; }
 
+        public RiskType RiskType { get { return RiskType.Get(Risk); } }
         public Portfolio Portfolio { get; set; }
         public List<Distribution> Distribution { get; set; }
     }

@@ -25,8 +25,10 @@ namespace Auctus.Business.Portfolio
             var projection = ProjectionBusiness.Get(portfolio.ProjectionId.Value);
             if (projection == null)
                 throw new ArgumentException("Invalid projection.");
-            
-            return ProjectionBusiness.Create(portfolio, projection.ProjectionValue, projection.OptimisticProjection,
+
+            var risk = PortfolioBusiness.GetRisk(projection.ProjectionValue, distribution);
+
+            return ProjectionBusiness.Create(portfolio, projection.ProjectionValue, risk, projection.OptimisticProjection,
                 projection.PessimisticProjection, distribution).Distribution;
         }
 

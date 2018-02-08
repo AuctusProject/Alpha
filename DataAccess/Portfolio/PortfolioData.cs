@@ -13,11 +13,6 @@ namespace Auctus.DataAccess.Portfolio
     {
         public override string TableName => "Portfolio";
 
-        private const string SELECT_VALID_BY_ADVISOR_AND_RISK = @"SELECT p.* FROM Portfolio p  
-                                                                  INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id 
-                                                                  WHERE p.Risk = @Risk AND p.AdvisorId = @AdvisorId AND d.Enabled = 1 AND
-                                                                  d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id)";
-
         private const string SELECT_VALID_BY_OWNER = @"SELECT p.*, d.* FROM Portfolio p  
                                                        INNER JOIN Advisor a ON a.Id = p.AdvisorId  
                                                        INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id 
@@ -66,15 +61,7 @@ namespace Auctus.DataAccess.Portfolio
                                                     WHERE p.Id = @Id AND
                                                     d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND
                                                     e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id)";
-
-        public DomainObjects.Portfolio.Portfolio GetValidByAdvisorAndRisk(int advisorId, int risk)
-        {
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("AdvisorId", advisorId, DbType.Int32);
-            parameters.Add("Risk", risk, DbType.Int32);
-            return Query<DomainObjects.Portfolio.Portfolio>(SELECT_VALID_BY_ADVISOR_AND_RISK, parameters).SingleOrDefault();
-        }
-
+        
         public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
             DynamicParameters parameters = new DynamicParameters();

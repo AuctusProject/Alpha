@@ -17,7 +17,7 @@ namespace Auctus.Business.Portfolio
     {
         public ProjectionBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public Projection Create(string email, int portfolioId, double projectionValue, double? optimisticProjection,
+        public Projection Create(string email, int portfolioId, double projectionValue, RiskType risk, double? optimisticProjection,
             double? pessimisticProjection, Dictionary<int, double> distribution)
         {
             var user = UserBusiness.GetValidUser(email);
@@ -25,13 +25,13 @@ namespace Auctus.Business.Portfolio
             if (portfolio == null)
                 throw new ArgumentException("Invalid portfolio.");
 
-            return Create(portfolio, projectionValue, optimisticProjection, pessimisticProjection, distribution);
+            return Create(portfolio, projectionValue, risk, optimisticProjection, pessimisticProjection, distribution);
         }
 
-        internal Projection Create(DomainObjects.Portfolio.Portfolio portfolio, double projectionValue, double? optimisticProjection,
-            double? pessimisticProjection, Dictionary<int, double> distribution)
+        internal Projection Create(DomainObjects.Portfolio.Portfolio portfolio, double projectionValue, RiskType risk, 
+            double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)
         {
-            var projection = SetNew(portfolio.Id, projectionValue, optimisticProjection, pessimisticProjection);
+            var projection = SetNew(portfolio.Id, projectionValue, risk, optimisticProjection, pessimisticProjection);
             using (var transaction = new TransactionalDapperCommand())
             {
                 transaction.Insert(projection);
@@ -47,7 +47,7 @@ namespace Auctus.Business.Portfolio
             return projection;
         }
 
-        public Projection SetNew(int portfolioId, double projectionValue, double? optimisticProjection, double? pessimisticProjection)
+        public Projection SetNew(int portfolioId, double projectionValue, RiskType risk, double? optimisticProjection, double? pessimisticProjection)
         {
             if (projectionValue <= 0)
                 throw new ArgumentException("Invalid projection value.");
@@ -59,6 +59,7 @@ namespace Auctus.Business.Portfolio
             var projection = new Projection();
             projection.PortfolioId = portfolioId;
             projection.Date = DateTime.UtcNow;
+            projection.Risk = risk.Value;
             projection.ProjectionValue = projectionValue;
             projection.OptimisticProjection = optimisticProjection;
             projection.PessimisticProjection = pessimisticProjection;

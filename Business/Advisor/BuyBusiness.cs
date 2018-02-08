@@ -44,7 +44,7 @@ namespace Auctus.Business.Advisor
                     goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
                     transaction.Insert(goal);
                 }
-                buy = SetNew(days, (portfolio.Detail.Price * days / 30.0), portfolio.Id, portfolio.Detail.Id, user.Id, goal?.Id);
+                buy = SetNew(days, (portfolio.Detail.Price * days / 30.0), portfolio.Id, portfolio.ProjectionId.Value, portfolio.Detail.Id, user.Id, goal?.Id);
                 transaction.Insert(buy);
                 var trans = TransactionBusiness.SetNew(user.Id);
                 transaction.Insert(trans);
@@ -58,13 +58,14 @@ namespace Auctus.Business.Advisor
             return buy;
         }
         
-        public Buy SetNew(int days, double price, int portfolioId, int portfolioDetailId, int userId, int? goalId)
+        public Buy SetNew(int days, double price, int portfolioId, int projectionId, int portfolioDetailId, int userId, int? goalId)
         {
             var buy = new Buy();
             buy.CreationDate = DateTime.UtcNow;
             buy.Days = days;
             buy.Price = price;
             buy.PortfolioId = portfolioId;
+            buy.ProjectionId = projectionId;
             buy.PortfolioDetailId = portfolioDetailId;
             buy.UserId = userId;
             buy.GoalId = goalId;

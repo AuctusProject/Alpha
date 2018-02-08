@@ -126,7 +126,7 @@ namespace Api.Controllers
             try
             {
                 PortfolioServices.CreateProjection(baseValidation.Email, portfolioId, projectionRequest.ProjectionValue,
-                    projectionRequest.OptimisticProjection, projectionRequest.PessimisticProjection,
+                    projectionRequest.Risk, projectionRequest.OptimisticProjection, projectionRequest.PessimisticProjection,
                     projectionRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
             catch (ArgumentException ex)
