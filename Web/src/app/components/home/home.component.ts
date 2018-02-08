@@ -40,13 +40,19 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmit() {
-    console.log(this.web3Service.getAccount())
-    this.simpleRegister.address = this.web3Service.getAccount();
+    this.web3Service.getAccount().subscribe(success=> {
+      this.simpleRegister.address = success;
+      this.createAccount();
+    });
+   
+  }
+
+  private createAccount() {
     this.accountService.simpleRegister(this.simpleRegister).subscribe(success => {
       this.router.navigateByUrl('dashboard');
     }, response => {
       this.notificationService.info("Info", response.error);
-    })
+    });
   }
 
   public getErrorMessage(formField: any) {

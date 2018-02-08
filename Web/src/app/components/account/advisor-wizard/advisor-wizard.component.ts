@@ -1,75 +1,61 @@
+import { AdvisorWizardStep } from './advisor-wizard-step.enum';
+import { Advisor } from './../../../model/advisor/advisor';
 import { Component, OnInit } from '@angular/core';
-import { Advisor } from '../../../model/advisor/advisor'
+
 
 @Component({
   selector: 'app-advisor-wizard',
   templateUrl: './advisor-wizard.component.html',
   styleUrls: ['./advisor-wizard.component.css']
 })
-export class AdvisorWizardComponent implements OnInit {
-  model: Advisor;
-  step1Model: Advisor;
-  step2Model: Advisor;
-  step1EditingModel: Advisor;
-  step2EditingModel: Advisor;
 
-  public currentStep = 1;
-  public editingStep = -1;
-  constructor() { }
+export class AdvisorWizardComponent implements OnInit {
+
+  public currentStep;
+  public advisorModel: Advisor;
+  public wizardSteps = AdvisorWizardStep;
+
+  constructor() {
+  }
 
   ngOnInit() {
-    this.model = new Advisor();
-    this.step1Model = new Advisor();
-    this.step2Model = new Advisor();
+    this.advisorModel = new Advisor();
+    this.currentStep = this.wizardSteps.Start.Id;
   }
 
-  public nextStep() {
-    this.fillEditingModel(this.currentStep);
-    this.editingStep = this.currentStep;
+  public changeStep(stepToChange) {
+    this.currentStep = stepToChange;
   }
 
-  public saveCurrentStep(stepModel) {
-    if (this.currentStep == this.editingStep)
-      this.currentStep++;
-
-    if (this.editingStep == 1) {
-      this.step1Model = stepModel;
-    }
-    if (this.editingStep == 2) {
-      this.step2Model = stepModel;
+  public backStep() {
+    switch (this.currentStep) {
+      case this.wizardSteps.Advisor.Id:
+        this.currentStep = this.wizardSteps.Start.Id;
+        break;
+      case this.wizardSteps.Portfolio.Id:
+        this.currentStep = this.wizardSteps.Advisor.Id;
+        break;
     }
   }
 
-  public fillEditingModel(stepIndex) {
-    if (stepIndex == 1) {
-      this.step1EditingModel = this.copyObject(this.step1Model);
+  public nextStep(advisorModel) {
+
+    if (advisorModel) {
+      this.advisorModel = advisorModel;
+      switch (this.currentStep) {
+        case this.wizardSteps.Advisor.Id:
+          this.currentStep = this.wizardSteps.Portfolio.Id;
+          break;
+        case this.wizardSteps.Portfolio.Id:
+          this.currentStep = this.wizardSteps.Start.Id;
+          break;
+      }
+    } else {
+      this.currentStep = this.wizardSteps.Start.Id;
     }
-    if (stepIndex == 2) {
-      this.step2EditingModel = this.copyObject(this.step2Model);
-    }
   }
 
-  public stepFinished(filledInformation, index) {
-    if(filledInformation)
-      this.saveCurrentStep(filledInformation);
-
-    this.editingStep = -1;
-  }
-
-  public edit(stepIndex) {
-    this.fillEditingModel(stepIndex);
-    this.editingStep = stepIndex;
-  }
-
-  public textFromPeriod(model) {
-    if (model.period == 7)
-      return "week";
-    if (model.period == 30)
-      return "month";
-    return model.period;
-  }
-
-  public copyObject(object) {
-    return JSON.parse(JSON.stringify(object));
+  public getAdvisorModel() {
+    return JSON.parse(JSON.stringify(this.advisorModel));
   }
 }

@@ -56,8 +56,8 @@ import { AccountHeaderComponent } from './components/account/account-header/acco
 
 import { IconsModule } from './icons.module';
 import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
-import { Step1Component } from './components/account/advisor-wizard/step1/step1.component';
-import { Step2Component } from './components/account/advisor-wizard/step2/step2.component';
+import { AdvisorStepComponent } from './components/account/advisor-wizard/advisor-step/advisor-step.component';
+import { PortfolioStepComponent } from './components/account/advisor-wizard/portfolio-step/portfolio-step.component';
 import { LoadingBlockComponent } from './components/ui/loading-block/loading-block.component';
 import { EthMachineComponent } from './components/eth-machine/eth-machine.component';
 import { PortfolioRegisterComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-register.component';
@@ -107,8 +107,8 @@ import { UsernameRegistrationDirective } from './directives/username-registratio
     ManageApiComponent,
     AccountHeaderComponent,
     AdvisorWizardComponent,
-    Step1Component,
-    Step2Component,
+    AdvisorStepComponent,
+    PortfolioStepComponent,
     LoadingBlockComponent,
     EthMachineComponent,
     PortfolioRegisterComponent,

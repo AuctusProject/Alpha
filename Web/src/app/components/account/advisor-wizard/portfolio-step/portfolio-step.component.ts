@@ -5,11 +5,16 @@ import { Asset } from '../../../../model/asset/asset'
 import { PublicService } from '../../../../services/public.service'
 
 @Component({
-  selector: 'advisor-step2',
-  templateUrl: './step2.component.html',
-  styleUrls: ['./step2.component.css']
+  selector: 'portfolio-step',
+  templateUrl: './portfolio-step.component.html',
+  styleUrls: ['./portfolio-step.component.css']
 })
-export class Step2Component implements OnInit {
+export class PortfolioStepComponent implements OnInit {
+
+  @Input() advisorModel: Advisor;
+  @Output() onBackStep = new EventEmitter<Advisor>();
+  @Output() onNextStep = new EventEmitter<Advisor>();
+
   portfolioRisks: RiskType[] =
   [
     { value: 1, description: "Conservative"},
@@ -19,9 +24,6 @@ export class Step2Component implements OnInit {
     { value: 5, description: "Very Aggressive"}
   ]; 
 
-  @Input() model: Advisor;
-  @Output() onStepFinished = new EventEmitter<Advisor>();
-
   assets: Asset[];
   constructor(private publicService: PublicService) { }
 
@@ -30,10 +32,10 @@ export class Step2Component implements OnInit {
   }
 
   public back() {
-    this.onStepFinished.emit(null);
+    this.onBackStep.emit();
   }
 
   public next() {
-    this.onStepFinished.emit(this.model);
+    this.onNextStep.emit(this.advisorModel);
   }
 }
