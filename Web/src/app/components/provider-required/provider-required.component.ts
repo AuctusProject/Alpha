@@ -29,7 +29,7 @@ export class ProviderRequiredComponent implements OnInit {
     new MetamaskCondition("Install metamask", true),
     new MetamaskCondition("Select rinkeby network", true),
     new MetamaskCondition("Unlock account", true),
-    new MetamaskCondition("Minimum 500 AUC necessary", true)
+    new MetamaskCondition("Minimum "+constants.minimumAUCNecessary+" AUC necessary", true)
   ];
 
   constructor(
