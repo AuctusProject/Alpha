@@ -16,7 +16,8 @@ namespace Auctus.Business.Advisor
     {
         public BuyBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public Buy Create(string email, string address, int portfolioId, int days, int? goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        public Buy Create(string email, string address, int portfolioId, int days, int? goalOptionId = null, int? timeframe = null, 
+            int? risk = null, double? targetAmount = null, double? startingAmount = null, double? monthlyContribution = null)
         {
             if (string.IsNullOrWhiteSpace(address))
                 throw new ArgumentException("Address must be filled.");
@@ -41,7 +42,7 @@ namespace Auctus.Business.Advisor
                 Goal goal = null;
                 if (portfolio.Advisor.Type == AdvisorType.Robo)
                 {
-                    goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+                    goal = GoalBusiness.SetNew(user.Id, goalOptionId.Value, timeframe.Value, risk.Value, targetAmount, startingAmount.Value, monthlyContribution.Value);
                     transaction.Insert(goal);
                 }
                 buy = SetNew(days, (portfolio.Detail.Price * days / 30.0), portfolio.Id, portfolio.ProjectionId.Value, portfolio.Detail.Id, user.Id, goal?.Id);

@@ -138,11 +138,11 @@ namespace Auctus.Business.Portfolio
                     {
                         result.Reached = goal.TargetAmount.Value <= result.ProjectionValue.Value;
                         result.Difference = Math.Abs(goal.TargetAmount.Value - result.ProjectionValue.Value);
-                        result.NewStartingAmount = Math.Abs(goal.TargetAmount.Value - monthly) / GetStartProjectionInterestRate(goal.Timeframe.Value, projection.ProjectionValue);
+                        result.NewStartingAmount = Math.Abs(goal.TargetAmount.Value - monthly) / GetStartProjectionInterestRate(goal.Timeframe, projection.ProjectionValue);
                         result.NewMonthlyContribution = Math.Abs(goal.TargetAmount.Value - start) /
-                            (goal.StartingAmount.HasValue ?
-                            GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe.Value, projection.ProjectionValue) :
-                            GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe.Value, projection.ProjectionValue));
+                            (goal.StartingAmount > 0 ?
+                            GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe, projection.ProjectionValue) :
+                            GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe, projection.ProjectionValue));
                     }
                 }
             }
@@ -166,14 +166,14 @@ namespace Auctus.Business.Portfolio
 
         private double GetStartProjectionValue(Goal goal, double percent)
         {
-            return !goal.StartingAmount.HasValue ? 0 : goal.StartingAmount.Value * GetStartProjectionInterestRate(goal.Timeframe.Value, percent);
+            return goal.StartingAmount * GetStartProjectionInterestRate(goal.Timeframe, percent);
         }
 
         private double GetMonthlyProjectionValue(Goal goal, double percent)
         {
-            return !goal.MonthlyContribution.HasValue ? 0 : goal.StartingAmount.HasValue ?
-                    goal.MonthlyContribution.Value * GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe.Value, percent) :
-                    goal.MonthlyContribution.Value * GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe.Value, percent);
+            return goal.StartingAmount > 0 ?
+                    goal.MonthlyContribution * GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe, percent) :
+                    goal.MonthlyContribution * GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe, percent);
         }
     }
 }

@@ -17,11 +17,11 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.Decimal)]
         public double? TargetAmount { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public double? StartingAmount { get; set; }
+        public double StartingAmount { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public double? MonthlyContribution { get; set; }
+        public double MonthlyContribution { get; set; }
         [DapperType(System.Data.DbType.Int32)]
-        public int? Timeframe { get; set; }
+        public int Timeframe { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int Risk { get; set; }
         [DapperType(System.Data.DbType.Int32)]

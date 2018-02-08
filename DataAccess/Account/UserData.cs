@@ -55,7 +55,7 @@ namespace Auctus.DataAccess.Account
         public User GetByWalletAddress(string address)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("Address", address.ToUpper().Trim(), DbType.AnsiString);
+            parameters.Add("Address", address.ToUpper().Trim(), DbType.AnsiStringFixedLength);
             return Query<User, Wallet, User>(SELECT_WITH_WALLET_BY_WALLET,
                                 (user, wallet) =>
                                 {
