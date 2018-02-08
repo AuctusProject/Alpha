@@ -64,9 +64,11 @@ import { PortfolioRegisterComponent } from './components/account/advisor-wizard/
 import { PortfolioDistributionRowComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-distribution-row/portfolio-distribution-row.component';
 import { Web3Service } from './services/web3.service';
 import { PublicService } from './services/public.service';
+import { MetamaskAccountService } from './services/metamask-account.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 import { EventsServiceModule } from 'angular-event-service';
+import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
 
 @NgModule({
   declarations: [
@@ -109,7 +111,8 @@ import { EventsServiceModule } from 'angular-event-service';
     EthMachineComponent,
     PortfolioRegisterComponent,
     PortfolioDistributionRowComponent,
-    ProviderRequiredComponent
+    ProviderRequiredComponent,
+    MetamaskAccountMonitorComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -142,7 +145,8 @@ import { EventsServiceModule } from 'angular-event-service';
     WindowRefService, 
     PublicService, 
     Web3Service, 
-    CanActivateViaAuthGuard
+    CanActivateViaAuthGuard,
+    MetamaskAccountService
   ],
   bootstrap: [AppComponent]
 })
