@@ -20,14 +20,16 @@ namespace Auctus.Business.Account
     {
         public UserBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public User Login(string email, string password)
+        public User Login(string address, string emailOrUsername, string password)
         {
+            BaseAddressValidation(address);
             BasePasswordValidation(password);
-            BaseEmailValidation(email);
-            EmailValidation(email);
+            BaseEmailOrUsernameValidation(emailOrUsername);
 
-            var user = Data.Get(email);
-            if (user.Password != Security.Hash(password))
+            var user = Data.GetByEmailOrUsername(emailOrUsername);
+            if(user.Wallet.Address.ToUpper() != address.ToUpper())
+                throw new ArgumentException("Wallet is invalid.");
+            else if (user.Password != Security.Hash(password))
                 throw new ArgumentException("Password is invalid.");
             else if (user.ConfirmationDate.HasValue)
                 MemoryCache.Set<User>(user.Email, user);
@@ -35,36 +37,23 @@ namespace Auctus.Business.Account
             return user;
         }
 
-        public async Task<User> SimpleRegister(string email, string password)
+        public async Task<User> SimpleRegister(string address, string username, string email, string password)
         {
-            var user = SetBaseUserCreation(email, password);
-            Data.Insert(user);
+            User user;
+            using (var transaction = new TransactionalDapperCommand())
+            {
+                user = SetBaseUserCreation(username, email, password);
+                transaction.Insert(user);
+                var wallet = SetWalletCreation(user.Id, address);
+                user.Wallet = wallet;
+                transaction.Insert(wallet);
+                transaction.Commit();
+            }
 
             await SendEmailConfirmation(user.Email, user.ConfirmationCode);
 
             return user;
         }
-
-        //public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
-        //{
-        //    var user = SetBaseUserCreation(email, password);
-        //    using (var transaction = new TransactionalDapperCommand())
-        //    {
-        //        transaction.Insert(user, "[User]");
-        //        var goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
-        //        transaction.Insert(goal);
-        //        var option = GoalOptionsBusiness.List().Single(c => c.Id == goal.GoalOptionId);
-        //        var portfolio = PortfolioBusiness.GetByRisk(AdvisorBusiness.DefaultAdvisorId, RiskType.Get(goal.Risk, option.Risk));
-        //        var buyAuctusAdvisor = BuyBusiness.SetNew(AdvisorBusiness.DefaultAdvisorId, portfolio.ProjectionId.Value, goal.Id, 999999);
-        //        transaction.Insert(buyAuctusAdvisor);
-        //        user.Goal = goal;
-        //        transaction.Commit();
-        //    }
-        
-        //    await SendEmailConfirmation(user.Email, user.ConfirmationCode);
-
-        //    return user;
-        //}
 
         public async Task ResendEmailConfirmation(string email)
         {
@@ -151,7 +140,7 @@ namespace Auctus.Business.Account
                 string.Format("Thank you for support to Auctus Alpha. <br/><br/>To verify your account <a href='{0}/confirm?c={1}' target='_blank'>click here</a><br/><br/><small>If you do not recognize this email, just ignore the message.</small>", Config.WEB_URL, code));
         }
 
-        private User SetBaseUserCreation(string email, string password)
+        private User SetBaseUserCreation(string username, string email, string password)
         {
             BaseEmailValidation(email);
             EmailValidation(email);
@@ -162,6 +151,10 @@ namespace Auctus.Business.Account
             if (user != null)
                 throw new ArgumentException("Email already registered.");
 
+            user = Data.GetByUsername(username);
+            if (user != null)
+                throw new ArgumentException("Username already registered.");
+
             user = new User();
             user.Email = email.ToLower().Trim();
             user.CreationDate = DateTime.UtcNow;
@@ -169,6 +162,25 @@ namespace Auctus.Business.Account
             user.ConfirmationCode = Guid.NewGuid().ToString();
             return user;
         }
+
+        private Wallet SetWalletCreation(int userId, string address)
+        {
+            User user = Data.GetByWalletAddress(address);
+            if (user != null)
+                throw new ArgumentException("Address already registered.");
+
+            Wallet wallet = new Wallet();
+            wallet.UserId = userId;
+            wallet.Address = address;
+            return wallet;
+        }
+
+        private void BaseEmailOrUsernameValidation(string emailOrUsername)
+        {
+            if (string.IsNullOrEmpty(emailOrUsername))
+                throw new ArgumentException("Email or username must be filled.");
+        }
+
 
         private void BaseEmailValidation(string email)
         {
@@ -187,13 +199,18 @@ namespace Auctus.Business.Account
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password must be filled.");
         }
+        private void BaseAddressValidation(string address)
+        {
+            if (string.IsNullOrEmpty(address))
+                throw new ArgumentException("Address must be filled.");
+        }
 
         private void PasswordValidation(string password)
         {
             if (password.Length < 8)
                 throw new ArgumentException("Password must be at least 8 characters.");
-            if (password.Length > 30)
-                throw new ArgumentException("Password cannot have more than 30 characters.");
+            if (password.Length > 100)
+                throw new ArgumentException("Password cannot have more than 100 characters.");
             if (password.Contains(" "))
                 throw new ArgumentException("Password cannot have spaces.");
         }

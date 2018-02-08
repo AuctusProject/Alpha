@@ -6,7 +6,8 @@ namespace Api.Model.Account
 {
     public class LoginRequest
     {
-        public string Email { get; set; }
+        public string Address { get; set; }
+        public string EmailOrUsername { get; set; }
         public string Password { get; set; }
     }
 }
