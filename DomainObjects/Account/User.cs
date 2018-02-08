@@ -13,6 +13,8 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.AnsiString)]
         public string Email { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
+        public string UserName { get; set; }
+        [DapperType(System.Data.DbType.AnsiString)]
         public string Password { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime CreationDate { get; set; }
@@ -21,6 +23,6 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.AnsiString)]
         public string ConfirmationCode { get; set; }
 
-        public Goal Goal { get; set; }
+        public Wallet Wallet { get; set; }
     }
 }

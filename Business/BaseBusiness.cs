@@ -35,6 +35,10 @@ namespace Auctus.Business
         private AssetBusiness _assetBusiness;
         private AssetValueBusiness _assetValueBusiness;
         private ApiAccessBusiness _apiAccessBusiness;
+        private WalletBusiness _walletBusiness;
+        private TransactionBusiness _transactionBusiness;
+        private BuyTransactionBusiness _buyTransactionBusiness;
+        private PortfolioDetailBusiness _portfolioDetailBusiness;
 
         protected BaseBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices)
         {
@@ -71,6 +75,16 @@ namespace Auctus.Business
                 if (_userBusiness == null)
                     _userBusiness = new UserBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _userBusiness;
+            }
+        }
+
+        protected WalletBusiness WalletBusiness
+        {
+            get
+            {
+                if (_walletBusiness == null)
+                    _walletBusiness = new WalletBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _walletBusiness;
             }
         }
 
@@ -201,6 +215,36 @@ namespace Auctus.Business
                 if (_apiAccessBusiness == null)
                     _apiAccessBusiness = new ApiAccessBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _apiAccessBusiness;
+            }
+        }
+
+        protected TransactionBusiness TransactionBusiness
+        {
+            get
+            {
+                if (_transactionBusiness == null)
+                    _transactionBusiness = new TransactionBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _transactionBusiness;
+            }
+        }
+
+        protected BuyTransactionBusiness BuyTransactionBusiness
+        {
+            get
+            {
+                if (_buyTransactionBusiness == null)
+                    _buyTransactionBusiness = new BuyTransactionBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _buyTransactionBusiness;
+            }
+        }
+
+        protected PortfolioDetailBusiness PortfolioDetailBusiness
+        {
+            get
+            {
+                if (_portfolioDetailBusiness == null)
+                    _portfolioDetailBusiness = new PortfolioDetailBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _portfolioDetailBusiness;
             }
         }
     }

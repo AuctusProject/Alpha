@@ -16,11 +16,19 @@ namespace Auctus.DataAccess.Account
                                                    WHERE a.CreationDate = (SELECT max(a2.CreationDate) FROM ApiAccess a2 WHERE a2.UserId = u.Id)
                                                    AND a.ApiKey = @ApiKey";
 
+        private const string SELECT_BY_EMAIL = @"SELECT u.*, w.* FROM [User] u INNER JOIN Wallet w ON w.UserId = u.Id 
+                                                   WHERE u.Email = @Email";
+
         public User Get(string email)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("Email", email.ToLower().Trim(), DbType.AnsiString);
-            return SelectByParameters<User>(parameters).SingleOrDefault();
+            return Query<User, Wallet, User>(SELECT_BY_EMAIL,
+                        (user, wallet) =>
+                        {
+                            user.Wallet = wallet;
+                            return user;
+                        }, "UserId", parameters).SingleOrDefault();
         }
 
         public User Get(int id)

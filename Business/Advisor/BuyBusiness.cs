@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Advisor;
+using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Advisor;
 using Auctus.Util;
@@ -15,39 +16,71 @@ namespace Auctus.Business.Advisor
     {
         public BuyBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public Buy Create(string email, int advisorId, int? risk = null)
+        public Buy Create(string email, string address, int portfolioId, int days, int? goalOptionId, int? timeframe, int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
-            var advisor = AdvisorBusiness.GetWithDetail(advisorId);
-            var user = UserBusiness.GetValidUser(email);
-            if (advisor.UserId == user.Id)
+            if (string.IsNullOrWhiteSpace(address))
+                throw new ArgumentException("Address must be filled.");
+            if (days <= 0)
+                throw new ArgumentException("Invalid purchase days.");
+
+            var user = UserBusiness.GetValidUser(email, address);
+            var portfolio = PortfolioBusiness.GetWithDetail(portfolioId);
+
+            if (portfolio == null || !portfolio.Detail.Enabled || !portfolio.Advisor.Detail.Enabled)
+                throw new ArgumentException("Invalid portfolio.");
+            if (portfolio.Advisor.UserId == user.Id)
                 throw new ArgumentException("User is the advisor owner.");
-
+           
             var purchases = ListPurchases(user.Id);
-            if (purchases.Any(c => c.AdvisorId == advisorId))
-                throw new ArgumentException("Advisor already bought.");
+            if (purchases.Any(c => c.PortfolioId == portfolio.Id))
+                throw new ArgumentException("Portfolio already bought.");
 
-            var goal = GoalBusiness.GetCurrent(user.Id);
-            var portfolio = PortfolioBusiness.GetByRisk(advisorId, risk.HasValue ? RiskType.Get(risk.Value) : RiskType.Get(goal.Risk, goal.GoalOption.Risk));
-
-            var buy = SetNew(advisorId, portfolio.ProjectionId.Value, goal.Id, advisor.Detail.Period);
-            Data.Insert(buy);
+            Buy buy;
+            using (var transaction = new TransactionalDapperCommand())
+            {
+                Goal goal = null;
+                if (portfolio.Advisor.Type == AdvisorType.Robo)
+                {
+                    goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+                    transaction.Insert(goal);
+                }
+                buy = SetNew(days, (portfolio.Detail.Price * days / 30.0), portfolio.Id, portfolio.Detail.Id, user.Id, goal?.Id);
+                transaction.Insert(buy);
+                var trans = TransactionBusiness.SetNew(user.Id);
+                transaction.Insert(trans);
+                var buyTrans = BuyTransactionBusiness.SetNew(buy.Id, trans.Id);
+                transaction.Insert(buyTrans);
+                buy.Goal = goal;
+                buy.Portfolio = portfolio;
+                buy.PortfolioDetail = portfolio.Detail;
+                transaction.Commit();
+            }
             return buy;
         }
         
-        public Buy SetNew(int advisorId, int projectionId, int goalId, int period)
+        public Buy SetNew(int days, double price, int portfolioId, int portfolioDetailId, int userId, int? goalId)
         {
             var buy = new Buy();
-            buy.AdvisorId = advisorId;
-            buy.ProjectionId = projectionId;
-            buy.GoalId = goalId;
             buy.CreationDate = DateTime.UtcNow;
-            buy.ExpirationDate = buy.CreationDate.AddDays(period);
+            buy.Days = days;
+            buy.Price = price;
+            buy.PortfolioId = portfolioId;
+            buy.PortfolioDetailId = portfolioDetailId;
+            buy.UserId = userId;
+            buy.GoalId = goalId;
             return buy;
         }
 
         public List<Buy> ListPurchases(int userId)
         {
-            return Data.ListPurchases(userId);
+            var purchases = Data.ListPurchases(userId);
+            return purchases.Where(c => (c.ExpirationDate.HasValue && c.ExpirationDate.Value >= DateTime.UtcNow) ||
+                                    (!c.ExpirationDate.HasValue && c.LastTransaction.TransactionStatus != TransactionStatus.Cancel)).ToList();
+        }
+
+        public Buy Get(int id)
+        {
+            return Data.Get(id);
         }
 
         public List<Buy> ListUserAdvisorPurchases(int userId, int advisorId)
@@ -60,17 +93,17 @@ namespace Auctus.Business.Advisor
             return Data.ListAdvisorsPurchases(advisorIds);
         }
 
-        public List<Buy> ListPurchasesWithPortfolio(int userId)
-        {
-            return Data.ListPurchasesWithPortfolio(userId);
-        }
+        //public List<Buy> ListPurchasesWithPortfolio(int userId)
+        //{
+        //    return Data.ListPurchasesWithPortfolio(userId);
+        //}
 
-        public List<Buy> ListPurchasesComplete(int userId)
-        {
-            var purchases = Data.ListPurchasesComplete(userId);
-            var options = GoalOptionsBusiness.List();
-            purchases.ForEach(c => c.Goal.GoalOption = options.Single(o => o.Id == c.Goal.GoalOptionId));
-            return purchases;
-        }
+        //public List<Buy> ListPurchasesComplete(int userId)
+        //{
+        //    var purchases = Data.ListPurchasesComplete(userId);
+        //    var options = GoalOptionsBusiness.List();
+        //    purchases.ForEach(c => c.Goal.GoalOption = options.Single(o => o.Id == c.Goal.GoalOptionId));
+        //    return purchases;
+        //}
     }
 }

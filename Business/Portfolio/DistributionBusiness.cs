@@ -17,7 +17,8 @@ namespace Auctus.Business.Portfolio
 
         public List<Distribution> Create(string email, int portfolioId, Dictionary<int, double> distribution)
         {
-            var portfolio = PortfolioBusiness.GetValidByOwner(email, portfolioId);
+            var user = UserBusiness.GetValidUser(email);
+            var portfolio = PortfolioBusiness.GetValidByOwner(user.Id, portfolioId);
             if (portfolio == null)
                 throw new ArgumentException("Invalid portfolio.");
 
@@ -61,29 +62,29 @@ namespace Auctus.Business.Portfolio
             return distributions;
         }
 
-        public List<Model.PortfolioDistribution> ListPortfolioDistribution(string email)
-        {
-            var user = UserBusiness.GetValidUser(email);
-            var purchases = BuyBusiness.ListPurchases(user.Id);
-            var distributions = List(purchases.Select(c => c.ProjectionId));
-            List<Model.PortfolioDistribution> result = new List<Model.PortfolioDistribution>();
-            foreach (Buy buy in purchases)
-            {
-                Model.PortfolioDistribution portfolioDistribution = new Model.PortfolioDistribution();
-                portfolioDistribution.AdvisorId = buy.AdvisorId;
-                portfolioDistribution.Distribution = distributions.Where(c => c.ProjectionId == buy.ProjectionId).Select(c =>
-                new Model.PortfolioDistribution.Asset()
-                {
-                    Code = c.Asset.Code,
-                    Id = c.Asset.Id,
-                    Name = c.Asset.Name,
-                    Type = (int)c.Asset.Type,
-                    Percentage = c.Percent 
-                }
-                ).ToList();
-                result.Add(portfolioDistribution);
-            }
-            return result;
-        }
+        //public List<Model.PortfolioDistribution> ListPortfolioDistribution(string email)
+        //{
+        //    var user = UserBusiness.GetValidUser(email);
+        //    var purchases = BuyBusiness.ListPurchases(user.Id);
+        //    var distributions = List(purchases.Select(c => c.ProjectionId));
+        //    List<Model.PortfolioDistribution> result = new List<Model.PortfolioDistribution>();
+        //    foreach (Buy buy in purchases)
+        //    {
+        //        Model.PortfolioDistribution portfolioDistribution = new Model.PortfolioDistribution();
+        //        portfolioDistribution.AdvisorId = buy.AdvisorId;
+        //        portfolioDistribution.Distribution = distributions.Where(c => c.ProjectionId == buy.ProjectionId).Select(c =>
+        //        new Model.PortfolioDistribution.Asset()
+        //        {
+        //            Code = c.Asset.Code,
+        //            Id = c.Asset.Id,
+        //            Name = c.Asset.Name,
+        //            Type = (int)c.Asset.Type,
+        //            Percentage = c.Percent 
+        //        }
+        //        ).ToList();
+        //        result.Add(portfolioDistribution);
+        //    }
+        //    return result;
+        //}
     }
 }

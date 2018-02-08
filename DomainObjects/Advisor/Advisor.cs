@@ -11,9 +11,9 @@ namespace Auctus.DomainObjects.Advisor
         [DapperType(System.Data.DbType.Int32)]
         public int Id { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
-        public string Name { get; set; }
-        [DapperType(System.Data.DbType.Int32)]
         public int UserId { get; set; }
+        [DapperType(System.Data.DbType.Int32)]
+        public AdvisorType Type { get; set; }
 
         public AdvisorDetail Detail { get; set; }
     }

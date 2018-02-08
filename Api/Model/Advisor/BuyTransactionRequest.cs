@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace Api.Model.Advisor
 {
-    public class AdvisorRequest
+    public class BuyTransactionRequest
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string TransactionHash { get; set; }
     }
 }

@@ -43,20 +43,36 @@ namespace Api.Controllers
         {
             return base.Buy(buyRequest);
         }
-        
-        [HttpGet]
+
+        [Route("purchase/{buyId}/transaction")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult ListAdvisors()
+        public new IActionResult SetBuyTransaction([FromRoute]int buyId, [FromBody]BuyTransactionRequest buyTransactionRequest)
         {
-            return base.ListAdvisors();
+            return base.SetBuyTransaction(buyId, buyTransactionRequest);
         }
 
-        [Route("{advisorId}")]
-        [HttpGet]
+        [Route("purchase/{buyId}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult ListAdvisorDetails([FromRoute]int advisorId)
+        public new IActionResult CancelBuyTransaction([FromRoute]int buyId)
         {
-            return base.ListAdvisorDetails(advisorId);
+            return base.CancelBuyTransaction(buyId);
         }
+
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public new IActionResult ListAdvisors()
+        //{
+        //    return base.ListAdvisors();
+        //}
+
+        //[Route("{advisorId}")]
+        //[HttpGet]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //public new IActionResult ListAdvisorDetails([FromRoute]int advisorId)
+        //{
+        //    return base.ListAdvisorDetails(advisorId);
+        //}
     }
 }

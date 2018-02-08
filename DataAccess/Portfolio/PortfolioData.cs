@@ -14,33 +14,58 @@ namespace Auctus.DataAccess.Portfolio
         public override string TableName => "Portfolio";
 
         private const string SELECT_VALID_BY_ADVISOR_AND_RISK = @"SELECT p.* FROM Portfolio p  
-                                                                  INNER JOIN Advisor a ON a.Id = p.AdvisorId  
-                                                                  WHERE p.Risk = @Risk AND a.Id = @AdvisorId AND p.Disabled IS NULL";
+                                                                  INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id 
+                                                                  WHERE p.Risk = @Risk AND p.AdvisorId = @AdvisorId AND d.Enabled = 1 AND
+                                                                  d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id)";
 
-        private const string SELECT_VALID_BY_OWNER = @"SELECT p.* FROM Portfolio p  
+        private const string SELECT_VALID_BY_OWNER = @"SELECT p.*, d.* FROM Portfolio p  
                                                        INNER JOIN Advisor a ON a.Id = p.AdvisorId  
-                                                       INNER JOIN [User] u ON u.Id = a.UserId  
-                                                       WHERE p.Id = @Id AND u.Email = @Email AND p.Disabled IS NULL";
+                                                       INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id 
+                                                       WHERE p.Id = @Id AND a.UserId = @UserId AND d.Enabled = 1 AND
+                                                       d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id)";
 
-        private const string SELECT_LIST_BY_OWNER = @"SELECT p.*, j.*, a.*, d.* FROM 
+        private const string SELECT_LIST_BY_OWNER = @"SELECT p.*, e.*, j.*, a.*, d.* FROM 
                                                       Portfolio p  
                                                       INNER JOIN Projection j ON p.ProjectionId = j.Id
                                                       INNER JOIN Advisor a ON a.Id = p.AdvisorId  
                                                       INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
-                                                      INNER JOIN [User] u ON u.Id = a.UserId  
+                                                      INNER JOIN PortfolioDetail e on e.PortfolioId = p.Id 
                                                       WHERE 
-                                                      u.Email = @Email AND p.Disabled IS NULL AND 
-                                                      d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id)";
+                                                      a.UserId = @UserId AND 
+                                                      d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) AND
+                                                      e.Date = (SELECT max(e2.Date) FROM PortfolioDetail e2 WHERE e2.PortfolioId = p.Id)";
 
-        private const string SELECT_LIST_BY_ADVISOR = @"SELECT p.*, j.* FROM 
+        private const string SELECT_LIST_BY_ADVISOR = @"SELECT p.*, d.*, j.* FROM 
                                                       Portfolio p  
+                                                      INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id
                                                       INNER JOIN Projection j ON p.ProjectionId = j.Id
-                                                      WHERE p.Disabled IS NULL AND ({0})";
+                                                      WHERE d.Enabled = 1 AND
+                                                      d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND ({0})";
 
         private const string LIST_ALL =
             @"SELECT port.*, proj.*, dist.* FROM Portfolio port 
             INNER JOIN Projection proj on port.ProjectionId = proj.Id
             INNER JOIN Distribution dist on proj.Id = dist.ProjectionId";
+        
+        private const string LIST_ALL_VALIDS = @"SELECT p.*, e.*, j.*, a.*, d.* FROM 
+                                                Portfolio p  
+                                                INNER JOIN Projection j ON p.ProjectionId = j.Id
+                                                INNER JOIN Advisor a ON a.Id = p.AdvisorId  
+                                                INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
+                                                INNER JOIN PortfolioDetail e on e.PortfolioId = p.Id 
+                                                WHERE 
+                                                d.Enabled = 1 AND e.Enabled = 1 AND a.Type = 0 AND
+                                                d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) AND
+                                                e.Date = (SELECT max(e2.Date) FROM PortfolioDetail e2 WHERE e2.PortfolioId = p.Id)";
+
+        private const string SELECT_WITH_DETAIL = @"SELECT p.*, d.*, a.*, e.* FROM 
+                                                    Portfolio p 
+                                                    INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id
+                                                    INNER JOIN Advisor a ON a.Id = p.AdvisorId  
+                                                    INNER JOIN AdvisorDetail e ON e.AdvisorId = a.Id
+                                                    WHERE p.Id = @Id AND
+                                                    d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND
+                                                    e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id)";
 
         public DomainObjects.Portfolio.Portfolio GetValidByAdvisorAndRisk(int advisorId, int risk)
         {
@@ -50,14 +75,19 @@ namespace Auctus.DataAccess.Portfolio
             return Query<DomainObjects.Portfolio.Portfolio>(SELECT_VALID_BY_ADVISOR_AND_RISK, parameters).SingleOrDefault();
         }
 
-        public DomainObjects.Portfolio.Portfolio GetValidByOwner(string email, int portfolioId)
+        public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("Id", portfolioId, DbType.Int32);
-            parameters.Add("Email", email, DbType.AnsiString);
-            return Query<DomainObjects.Portfolio.Portfolio>(SELECT_VALID_BY_OWNER, parameters).SingleOrDefault();
+            parameters.Add("UserId", userId, DbType.Int32);
+            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, DomainObjects.Portfolio.Portfolio>(SELECT_VALID_BY_OWNER,
+                (port, detail) =>
+                {
+                    port.Detail = detail;
+                    return port;
+                }, "Id", parameters).SingleOrDefault();
         }
-
+        
         public List<DomainObjects.Portfolio.Portfolio> ListByAdvisor(IEnumerable<int> advisorsId)
         {
             List<string> restrictions = new List<string>();
@@ -69,29 +99,44 @@ namespace Auctus.DataAccess.Portfolio
                 parameters.Add(parameterName, advisorsId.ElementAt(i), DbType.Int32);
             }
 
-            return Query<DomainObjects.Portfolio.Portfolio, Projection, DomainObjects.Portfolio.Portfolio>(
+            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, Projection, DomainObjects.Portfolio.Portfolio>(
                 string.Format(SELECT_LIST_BY_ADVISOR, string.Join(" OR ", restrictions)),
-                            (port, proj) =>
+                            (port, detail, proj) =>
                             {
+                                port.Detail = detail;
                                 port.Projection = proj;
                                 return port;
-                            }, "Id", parameters).ToList();
+                            }, "Id,Id", parameters).ToList();
         }
 
-        public List<DomainObjects.Portfolio.Portfolio> List(string email)
+        public List<DomainObjects.Portfolio.Portfolio> ListOwn(int userId)
         {
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("Email", email, DbType.AnsiString);
-            return Query<DomainObjects.Portfolio.Portfolio, Projection, DomainObjects.Advisor.Advisor, AdvisorDetail, DomainObjects.Portfolio.Portfolio>(SELECT_LIST_BY_OWNER,
-                            (port, proj, adv, det) =>
+            parameters.Add("UserId", userId, DbType.Int32);
+            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, Projection, DomainObjects.Advisor.Advisor, AdvisorDetail, DomainObjects.Portfolio.Portfolio>(SELECT_LIST_BY_OWNER,
+                            (port, portdet, proj, adv, advdet) =>
                             {
                                 port.Advisor = adv;
-                                port.Advisor.Detail = det;
+                                port.Advisor.Detail = advdet;
                                 port.Projection = proj;
+                                port.Detail = portdet;
                                 return port;
-                            }, "Id,Id,Id", parameters).ToList();
+                            }, "Id,Id,Id,Id", parameters).ToList();
         }
-        
+
+        public List<DomainObjects.Portfolio.Portfolio> ListAllValids()
+        {
+            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, Projection, DomainObjects.Advisor.Advisor, AdvisorDetail, DomainObjects.Portfolio.Portfolio>(LIST_ALL_VALIDS,
+                            (port, portdet, proj, adv, advdet) =>
+                            {
+                                port.Advisor = adv;
+                                port.Advisor.Detail = advdet;
+                                port.Projection = proj;
+                                port.Detail = portdet;
+                                return port;
+                            }, "Id,Id,Id,Id").ToList();
+        }
+
         public IEnumerable<DomainObjects.Portfolio.Portfolio> ListAll()
         {
             var cache = new Dictionary<int, DomainObjects.Portfolio.Portfolio>();
@@ -132,5 +177,18 @@ namespace Auctus.DataAccess.Portfolio
                     }, "Id, AssetId").Distinct();
         }
 
+        public DomainObjects.Portfolio.Portfolio GetWithDetail(int portfolioId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Id", portfolioId, DbType.Int32);
+            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, DomainObjects.Advisor.Advisor, AdvisorDetail, DomainObjects.Portfolio.Portfolio>(SELECT_WITH_DETAIL,
+                            (p, pd, a, ad) =>
+                            {
+                                p.Detail = pd;
+                                p.Advisor = a;
+                                p.Advisor.Detail = ad;
+                                return p;
+                            }, "Id,Id,Id", parameters).SingleOrDefault();
+        }
     }
 }

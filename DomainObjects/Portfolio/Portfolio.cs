@@ -17,8 +17,6 @@ namespace Auctus.DomainObjects.Portfolio
         public int Risk { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime CreationDate { get; set; }
-        [DapperType(System.Data.DbType.DateTime)]
-        public DateTime? Disabled { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int? ProjectionId { get; set; }
 
@@ -27,5 +25,6 @@ namespace Auctus.DomainObjects.Portfolio
         public Projection Projection { get; set; }
         public List<Projection> Projections { get; set; }
         public List<PortfolioHistory> PortfolioHistory { get; set; }
+        public PortfolioDetail Detail { get; set; }
     }
 }

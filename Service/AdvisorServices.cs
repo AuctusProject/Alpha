@@ -12,29 +12,40 @@ namespace Auctus.Service
     {
         public AdvisorServices(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public Advisor CreateAdvisor(string email, string name, string description, int period, double price)
+        public Advisor CreateAdvisor(string email, string name, string description)
         {
-            return AdvisorBusiness.Create(email, name, description, period, price);
+            return AdvisorBusiness.Create(email, name, description);
         }
 
-        public AdvisorDetail UpdateAdvisor(string email, int advisorId, string description, int period, double price, bool enabled)
+        public AdvisorDetail UpdateAdvisor(string email, int advisorId, string name, string description, bool enabled)
         {
-            return AdvisorDetailBusiness.Create(email, advisorId, description, period, price, enabled);
+            return AdvisorDetailBusiness.Create(email, advisorId, name, description, enabled);
         }
 
-        public Model.Advisor ListAdvisorDetails(string email, int advisorId)
+        //public Model.Advisor ListAdvisorDetails(string email, int advisorId)
+        //{
+        //    return AdvisorBusiness.ListDetails(email, advisorId);
+        //}
+
+        public Buy Buy(string email, string address, int portfolioId, int days, int? goalOptionId, int? timeframe, 
+            int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
-            return AdvisorBusiness.ListDetails(email, advisorId);
+            return BuyBusiness.Create(email, address, portfolioId, days, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
         }
 
-        public Buy Buy(string email, int advisorId, int? risk = null)
+        public void SetBuyTransaction(string email, int buyId, string transactionHash)
         {
-            return BuyBusiness.Create(email, advisorId, risk);
+            BuyTransactionBusiness.SetTransactionHash(email, buyId, transactionHash);
         }
 
-        public IEnumerable<Model.Advisor> ListAdvisors(string email)
+        public void CancelBuyTransaction(string email, int buyId)
         {
-            return AdvisorBusiness.ListAvailable(email);
+            BuyTransactionBusiness.Cancel(email, buyId);
         }
+
+        //public IEnumerable<Model.Advisor> ListAdvisors(string email)
+        //{
+        //    return AdvisorBusiness.ListAvailable(email);
+        //}
     }
 }

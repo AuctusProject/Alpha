@@ -45,26 +45,26 @@ namespace Auctus.Business.Account
             return user;
         }
 
-        public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
-        {
-            var user = SetBaseUserCreation(email, password);
-            using (var transaction = new TransactionalDapperCommand())
-            {
-                transaction.Insert(user, "[User]");
-                var goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
-                transaction.Insert(goal);
-                var option = GoalOptionsBusiness.List().Single(c => c.Id == goal.GoalOptionId);
-                var portfolio = PortfolioBusiness.GetByRisk(AdvisorBusiness.DefaultAdvisorId, RiskType.Get(goal.Risk, option.Risk));
-                var buyAuctusAdvisor = BuyBusiness.SetNew(AdvisorBusiness.DefaultAdvisorId, portfolio.ProjectionId.Value, goal.Id, 999999);
-                transaction.Insert(buyAuctusAdvisor);
-                user.Goal = goal;
-                transaction.Commit();
-            }
+        //public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
+        //{
+        //    var user = SetBaseUserCreation(email, password);
+        //    using (var transaction = new TransactionalDapperCommand())
+        //    {
+        //        transaction.Insert(user, "[User]");
+        //        var goal = GoalBusiness.SetNew(user.Id, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+        //        transaction.Insert(goal);
+        //        var option = GoalOptionsBusiness.List().Single(c => c.Id == goal.GoalOptionId);
+        //        var portfolio = PortfolioBusiness.GetByRisk(AdvisorBusiness.DefaultAdvisorId, RiskType.Get(goal.Risk, option.Risk));
+        //        var buyAuctusAdvisor = BuyBusiness.SetNew(AdvisorBusiness.DefaultAdvisorId, portfolio.ProjectionId.Value, goal.Id, 999999);
+        //        transaction.Insert(buyAuctusAdvisor);
+        //        user.Goal = goal;
+        //        transaction.Commit();
+        //    }
         
-            await SendEmailConfirmation(user.Email, user.ConfirmationCode);
+        //    await SendEmailConfirmation(user.Email, user.ConfirmationCode);
 
-            return user;
-        }
+        //    return user;
+        //}
 
         public async Task ResendEmailConfirmation(string email)
         {
@@ -102,7 +102,7 @@ namespace Auctus.Business.Account
             Data.Update(user);
         }
         
-        public User GetValidUser(string email)
+        public User GetValidUser(string email, string address = null)
         {
             BaseEmailValidation(email);
             var cacheKey = email.ToLower().Trim();
@@ -113,10 +113,24 @@ namespace Auctus.Business.Account
                 user = Data.Get(email);
                 if (user == null)
                     throw new ArgumentException("User cannot be found.");
-                else if (user.ConfirmationDate.HasValue)
+
+                ValidateUserAddress(user, address);
+
+                if (user.ConfirmationDate.HasValue)
                     MemoryCache.Set<User>(cacheKey, user);
+                return user;
             }
-            return user;
+            else
+            {
+                ValidateUserAddress(user, address);
+                return user;
+            }
+        }
+
+        private void ValidateUserAddress(User user, string address)
+        {
+            if (address != null && user.Wallet.Address.ToLower() != address.ToLower())
+                throw new ArgumentException("Invalid user wallet.");
         }
         
         public User Get(Guid guid)

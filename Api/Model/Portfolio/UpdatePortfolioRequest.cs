@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Model.Advisor
+namespace Api.Model.Portfolio
 {
-    public class AdvisorRequest
+    public class UpdatePortfolioRequest
     {
+        public double Price { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

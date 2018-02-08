@@ -25,7 +25,7 @@ namespace Api.Controllers
             Auctus.DomainObjects.Advisor.Advisor advisor;
             try
             {
-                advisor = AdvisorServices.CreateAdvisor(GetUser(), advisorRequest.Name, advisorRequest.Description, advisorRequest.Period, advisorRequest.Price);
+                advisor = AdvisorServices.CreateAdvisor(GetUser(), advisorRequest.Name, advisorRequest.Description);
             }
             catch (ArgumentException ex)
             {
@@ -42,8 +42,8 @@ namespace Api.Controllers
             AdvisorDetail advisorDetail;
             try
             {
-                advisorDetail = AdvisorServices.UpdateAdvisor(GetUser(), advisorId, advisorDetailRequest.Description,
-                    advisorDetailRequest.Period, advisorDetailRequest.Price, advisorDetailRequest.Enabled);
+                advisorDetail = AdvisorServices.UpdateAdvisor(GetUser(), advisorId, advisorDetailRequest.Name, advisorDetailRequest.Description, 
+                    advisorDetailRequest.Enabled);
             }
             catch (ArgumentException ex)
             {
@@ -57,9 +57,28 @@ namespace Api.Controllers
             if (buyRequest == null)
                 return BadRequest();
 
+            Buy buy;
             try
             {
-                AdvisorServices.Buy(GetUser(), buyRequest.AdvisorId, buyRequest.Risk);
+                buy = AdvisorServices.Buy(GetUser(), buyRequest.Address, buyRequest.PortfolioId, buyRequest.Days, buyRequest.Goal?.GoalOptionId,
+                        buyRequest.Goal?.Timeframe, buyRequest.Goal?.Risk, buyRequest.Goal?.TargetAmount, buyRequest.Goal?.StartingAmount,
+                        buyRequest.Goal?.MonthlyContribution);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { id = buy.Id });
+        }
+
+        protected virtual IActionResult SetBuyTransaction(int buyId, BuyTransactionRequest buyTransactionRequest)
+        {
+            if (buyTransactionRequest == null || buyId == 0)
+                return BadRequest();
+            
+            try
+            {
+                AdvisorServices.SetBuyTransaction(GetUser(), buyId, buyTransactionRequest.TransactionHash);
             }
             catch (ArgumentException ex)
             {
@@ -67,31 +86,47 @@ namespace Api.Controllers
             }
             return Ok();
         }
-        
-        protected virtual IActionResult ListAdvisors()
+
+        protected virtual IActionResult CancelBuyTransaction(int buyId)
         {
+            if (buyId == 0)
+                return BadRequest();
+
             try
             {
-                var advisors = AdvisorServices.ListAdvisors(GetUser());
-                return Ok(advisors);
+                AdvisorServices.CancelBuyTransaction(GetUser(), buyId);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
+            return Ok();
         }
 
-        protected virtual IActionResult ListAdvisorDetails(int advisorId)
-        {
-            try
-            {
-                var advisor = AdvisorServices.ListAdvisorDetails(GetUser(), advisorId);
-                return Ok(advisor);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
+        //protected virtual IActionResult ListAdvisors()
+        //{
+        //    try
+        //    {
+        //        var advisors = AdvisorServices.ListAdvisors(GetUser());
+        //        return Ok(advisors);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //}
+
+        //protected virtual IActionResult ListAdvisorDetails(int advisorId)
+        //{
+        //    try
+        //    {
+        //        var advisor = AdvisorServices.ListAdvisorDetails(GetUser(), advisorId);
+        //        return Ok(advisor);
+        //    }
+        //    catch (ArgumentException ex)
+        //    {
+        //        return BadRequest(new { error = ex.Message });
+        //    }
+        //}
     }
 }

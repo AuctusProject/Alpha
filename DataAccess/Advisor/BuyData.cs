@@ -14,20 +14,32 @@ namespace Auctus.DataAccess.Advisor
     {
         public override string TableName => "Buy";
 
-        private const string SELECT_PURCHASE = @"SELECT b.*, g.* FROM 
-                                                 Buy b 
-                                                 INNER JOIN Goal g ON g.Id = b.GoalId 
-                                                 WHERE g.UserId = @UserId AND b.ExpirationDate > @Date";
+        private const string SELECT_USER_PURCHASE = @"SELECT b.*, t.* FROM 
+                                                        Buy b 
+                                                        INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
+                                                        INNER JOIN Transaction t ON t.Id = bt.TransactionId
+                                                        WHERE b.UserId = @UserId AND
+                                                        t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 ON bt2.BuyId = b.Id
+                                                                            INNER JOIN Transaction t2 ON t2.Id = bt2.TransactionId)";
+
+        private const string SELECT_PURCHASE = @"SELECT b.*, t.* FROM 
+                                                Buy b 
+                                                INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
+                                                INNER JOIN Transaction t ON t.Id = bt.TransactionId
+                                                WHERE b.Id = @Id AND
+                                                t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 ON bt2.BuyId = b.Id
+                                                                    INNER JOIN Transaction t2 ON t2.Id = bt2.TransactionId)";
 
         private const string SELECT_ADVISOR_PURCHASE = @"SELECT b.*, g.* FROM 
                                                          Buy b 
                                                          INNER JOIN Goal g ON g.Id = b.GoalId 
                                                          WHERE g.UserId = @UserId AND b.AdvisorId = @AdvisorId";
 
-        private const string SELECT_PURCHASE_QTY = @"SELECT b.AdvisorId, COUNT(b.Id) Qty FROM 
-                                                     Buy b 
-                                                     WHERE {0}
-                                                     GROUP BY b.AdvisorId";
+        private const string SELECT_PURCHASE_QTY = @"SELECT p.AdvisorId, COUNT(b.Id) Qty FROM 
+                                                     Buy b
+                                                     INNER JOIN Portfolio p ON p.Id = b.PortfolioId
+                                                     WHERE b.ExpirationDate IS NOT NULL AND ({0})
+                                                     GROUP BY p.AdvisorId";
 
         private const string SELECT_PURCHASE_WITH_PORTFOLIO = @"SELECT b.*, g.*, e.*, p.* FROM 
                                                                 Buy b 
@@ -50,13 +62,24 @@ namespace Auctus.DataAccess.Advisor
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int32);
-            parameters.Add("Date", DateTime.UtcNow, DbType.DateTime);
-            return Query<Buy, Goal, Buy>(SELECT_PURCHASE,
-                            (buy, goal) =>
+            return Query<Buy, Transaction, Buy>(SELECT_USER_PURCHASE,
+                            (buy, trans) =>
                             {
-                                buy.Goal = goal;
+                                buy.LastTransaction = trans;
                                 return buy;
                             }, "Id", parameters).ToList();
+        }
+
+        public Buy Get(int id)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+            return Query<Buy, Transaction, Buy>(SELECT_PURCHASE,
+                            (buy, trans) =>
+                            {
+                                buy.LastTransaction = trans;
+                                return buy;
+                            }, "Id", parameters).SingleOrDefault();
         }
 
         public List<Buy> ListUserAdvisorPurchases(int userId, int advisorId)
@@ -72,37 +95,37 @@ namespace Auctus.DataAccess.Advisor
                             }, "Id", parameters).ToList();
         }
 
-        public List<Buy> ListPurchasesWithPortfolio(int userId)
-        {
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("UserId", userId, DbType.Int32);
-            parameters.Add("Date", DateTime.UtcNow, DbType.DateTime);
-            return Query<Buy, Goal, Projection, DomainObjects.Portfolio.Portfolio, Buy>(SELECT_PURCHASE_WITH_PORTFOLIO,
-                            (buy, goal, projection, portfolio) =>
-                            {
-                                buy.Goal = goal;
-                                buy.Projection = projection;
-                                buy.Projection.Portfolio = portfolio;
-                                return buy;
-                            }, "Id,Id,Id", parameters).ToList();
-        }
+        //public List<Buy> ListPurchasesWithPortfolio(int userId)
+        //{
+        //    DynamicParameters parameters = new DynamicParameters();
+        //    parameters.Add("UserId", userId, DbType.Int32);
+        //    parameters.Add("Date", DateTime.UtcNow, DbType.DateTime);
+        //    return Query<Buy, Goal, Projection, DomainObjects.Portfolio.Portfolio, Buy>(SELECT_PURCHASE_WITH_PORTFOLIO,
+        //                    (buy, goal, projection, portfolio) =>
+        //                    {
+        //                        buy.Goal = goal;
+        //                        buy.Projection = projection;
+        //                        buy.Projection.Portfolio = portfolio;
+        //                        return buy;
+        //                    }, "Id,Id,Id", parameters).ToList();
+        //}
 
-        public List<Buy> ListPurchasesComplete(int userId)
-        {
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("UserId", userId, DbType.Int32);
-            parameters.Add("Date", DateTime.UtcNow, DbType.DateTime);
-            return Query<Buy, Goal, DomainObjects.Advisor.Advisor, AdvisorDetail, Projection, DomainObjects.Portfolio.Portfolio, Buy>(SELECT_PURCHASE_COMPLETE,
-                            (buy, goal, advisor, detail, projection, portfolio) =>
-                            {
-                                buy.Goal = goal;
-                                buy.Advisor = advisor;
-                                buy.Advisor.Detail = detail;
-                                buy.Projection = projection;
-                                buy.Projection.Portfolio = portfolio;
-                                return buy;
-                            }, "Id,Id,Id,Id,Id", parameters).ToList();
-        }
+        //public List<Buy> ListPurchasesComplete(int userId)
+        //{
+        //    DynamicParameters parameters = new DynamicParameters();
+        //    parameters.Add("UserId", userId, DbType.Int32);
+        //    parameters.Add("Date", DateTime.UtcNow, DbType.DateTime);
+        //    return Query<Buy, Goal, DomainObjects.Advisor.Advisor, AdvisorDetail, Projection, DomainObjects.Portfolio.Portfolio, Buy>(SELECT_PURCHASE_COMPLETE,
+        //                    (buy, goal, advisor, detail, projection, portfolio) =>
+        //                    {
+        //                        buy.Goal = goal;
+        //                        buy.Advisor = advisor;
+        //                        buy.Advisor.Detail = detail;
+        //                        buy.Projection = projection;
+        //                        buy.Projection.Portfolio = portfolio;
+        //                        return buy;
+        //                    }, "Id,Id,Id,Id,Id", parameters).ToList();
+        //}
 
         public Dictionary<int, int> ListAdvisorsPurchases(IEnumerable<int> advisorIds)
         {

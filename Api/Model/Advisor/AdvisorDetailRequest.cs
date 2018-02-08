@@ -7,9 +7,8 @@ namespace Api.Model.Advisor
 {
     public class AdvisorDetailRequest
     {
+        public string Name { get; set; }
         public string Description { get; set; }
-        public double Price { get; set; }
-        public int Period { get; set; }
         public bool Enabled { get; set; }
     }
 }
