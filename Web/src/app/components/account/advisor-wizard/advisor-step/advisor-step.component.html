@@ -1,0 +1,27 @@
+<form #stepForm="ngForm" (ngSubmit)="onSubmit()">
+  <div fxLayout="column" class="advisor-steps-main-content" fxLayoutAlign="center center">
+
+    <div class="inside-step-title">Introduce yourself to your investors</div>
+    <div class="name-step blue-box" fxLayout="column" fxLayoutGap="12px">
+      <div fxLayout="row">
+        <mat-form-field fxFlex>
+          <input matInput placeholder="Advisor name" [inputFocus]="true" name="Name" [(ngModel)]="advisorModel.name" required>
+        </mat-form-field>
+      </div>
+      <div fxLayout="row">
+        <mat-form-field fxFlex>
+          <textarea matInput maxlength="300" placeholder="Description" name="Description" [(ngModel)]="advisorModel.description" required matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="3"></textarea>
+          <mat-hint align="end"><span *ngIf="advisorModel.description">{{advisorModel.description.length}}</span><span *ngIf="!advisorModel.description">0</span> / 300</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+    <div fxLayout="row" class="advisor-wizard-buttons wizard-buttons" fxLayoutAlign="space-between center">
+      <button class="back" mat-icon-button type="button" (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <button class="next" mat-icon-button type="submit" [disabled]="!stepForm.form.valid">
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+  </div>
+</form>

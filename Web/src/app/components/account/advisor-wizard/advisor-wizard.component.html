@@ -1,5 +1,5 @@
 <wizard-header></wizard-header>
-<div fxLayout="column" class="advisor-steps-main-content" *ngIf="editingStep == 2">
+<div fxLayout="column" class="advisor-steps-main-content" *ngIf="currentStep == wizardSteps.Start.Id">
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutMargin>
     <div fxLayout="column" fxFlex>
       <div fxLayout="column">
@@ -12,21 +12,17 @@
         <div fxLayout="column" class="steps">
           <div class="step-number">STEP 1</div>
           <div class="step-title">
-            <span *ngIf="!step1Model.name">Tell us a little about you</span>
-            <span *ngIf="step1Model.name">{{step1Model.name}}</span>
+            <span *ngIf="!advisorModel.name">Tell us a little about you</span>
+            <span *ngIf="advisorModel.name">{{advisorModel.name}}</span>
           </div>
           <div class="step-description">
-            <span *ngIf="!step1Model.description">Title, description, fee and pay frequency</span>
-            <span *ngIf="step1Model.description">{{step1Model.description}}</span>
+            <span *ngIf="!advisorModel.description">Title, description, fee and pay frequency</span>
+            <span *ngIf="advisorModel.description">{{advisorModel.description}}</span>
           </div>
-          <div class="step-fee" *ngIf="step1Model.price">
-            <span>{{step1Model.price}} AUC<span class="periodicity-description"> / {{textFromPeriod(step1Model)}}</span></span>
-          </div>
-          <div class="step-next-button primary-blue-button bold" *ngIf="currentStep==1" (click)="nextStep()">Continue</div>
-
+          <div class="step-next-button primary-blue-button bold" (click)="changeStep(wizardSteps.Advisor.Id)">Continue</div>
         </div>
-        <div *ngIf="step1Model.name" fxLayout="row" fxLayoutAlign="space-evenly center">
-          <a (click)="edit(1)" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
+        <div  fxLayout="row" fxLayoutAlign="space-evenly center">
+          <a (click)="edit(1)" *ngIf="advisorModel.id" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
             <i-check-circle class="blue-confirm"></i-check-circle>
             <span class="edit-label bold">EDIT</span>
           </a>
@@ -37,10 +33,10 @@
           <div class="step-number">STEP 2</div>
           <div class="step-title">Set your financial portfólio</div>
           <div class="step-description">Products, percental, risk and projection</div>
-          <div class="step-next-button primary-blue-button bold" *ngIf="currentStep==2" (click)="nextStep()">Continue</div>
+          <div class="step-next-button primary-blue-button bold" *ngIf="currentStep==2" (click)="changeStep(wizardSteps.Portfolio.Id)">Continue</div>
         </div>
-        <div *ngIf="step2Model.name" fxLayout="row" fxLayoutAlign="space-evenly center">
-          <a (click)="edit(2)" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
+        <div  fxLayout="row" fxLayoutAlign="space-evenly center">
+          <a (click)="edit(2)" *ngIf="advisorModel.id" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
             <i-check-circle class="blue-confirm"></i-check-circle>
             <span class="edit-label bold">EDIT</span>
           </a>
@@ -51,5 +47,5 @@
 
   </div>
 </div>
-<advisor-step1 *ngIf="editingStep == 1" [model]="step1EditingModel" (onStepFinished)="stepFinished($event, 1)"></advisor-step1>
-<advisor-step2 *ngIf="editingStep == -1" [model]="step2EditingModel" (onStepFinished)="stepFinished($event, 2)"></advisor-step2>
+<advisor-step *ngIf="currentStep === wizardSteps.Advisor.Id" [advisorModel]="advisorModel" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></advisor-step>
+<portfolio-step *ngIf="currentStep === wizardSteps.Portfolio.Id" [advisorModel]="advisorModel" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></portfolio-step>
