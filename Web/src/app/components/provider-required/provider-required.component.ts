@@ -47,7 +47,9 @@ export class ProviderRequiredComponent implements OnInit {
   }
 
   ngOnDestroy() {
-
+    this.eventsService.destroyListener("loginConditionsFail", this.onLoginConditionsFail);
+    this.eventsService.destroyListener("accountChanged", this.onAccountChanged);
+    this.eventsService.destroyListener("balanceChanged", this.onBalanceChanged);
   }
 
   private onAccountChanged: Function = (account: any) => {

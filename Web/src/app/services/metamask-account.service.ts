@@ -23,6 +23,22 @@ export class MetamaskAccountService {
     this.monitoreAccount();
   }
 
+  monitoreAccount() {
+    let metamaskAccountService = this;
+    var accountInterval = setInterval(function () {
+      metamaskAccountService.web3Service.getAccount().subscribe(
+        account => {
+          if (metamaskAccountService.account != account) {
+            metamaskAccountService.broadcastAccountChanged(account);
+          }
+          if (account) {
+            metamaskAccountService.checkAUCBalance(account);
+          }
+          metamaskAccountService.account = account;
+        })
+    }, 100);
+  }
+
   runChecks() {
     let metamaskAccountService = this;
     this.web3Service.getWeb3().subscribe(
@@ -37,29 +53,14 @@ export class MetamaskAccountService {
       })
   }
 
-  monitoreAccount() {
+  checkLoginConditions() {
     let metamaskAccountService = this;
-    var accountInterval = setInterval(function () {
-      metamaskAccountService.web3Service.getAccount().subscribe(
-        account => {
-          if (metamaskAccountService.account != account){
-            if (account){
-              metamaskAccountService.checkBalance(account);
-            }
-            metamaskAccountService.broadcastAccountChanged(account);
-          }
-          metamaskAccountService.account = account;
-        })
-    }, 100);
-  }
-
-  checkBalance(account){
-    let metamaskAccountService = this;
-    this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
-      balance =>{
-        metamaskAccountService.aucBalance = balance;
-        metamaskAccountService.broadcastBalanceChanged(balance);
-    });
+    this.checkAccountAndNetwork().subscribe(
+      success => {
+        if (success) {
+          this.checkAUCBalance(metamaskAccountService.account);
+        }
+      });
   }
 
   checkAccountAndNetwork(): Observable<boolean> {
@@ -81,36 +82,37 @@ export class MetamaskAccountService {
       });
   }
 
-  checkAUCBalance() {
+  checkAUCBalance(account) {
     let metamaskAccountService = this;
-    this.web3Service.getTokenBalance(environment.tokenAddress, metamaskAccountService.account).subscribe(
+    this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
       balance => {
-        metamaskAccountService.aucBalance = balance;
-        if (balance < constants.minimumAUCNecessary) {
+        if (metamaskAccountService.aucBalance != balance) {
+          metamaskAccountService.broadcastBalanceChanged(balance);
+        }
+        if (balance < constants.minimumAUCNecessary){
           metamaskAccountService.broadcastLoginConditionsFail();
         }
-      });
-  }
-
-  checkLoginConditions() {
-    this.checkAccountAndNetwork().subscribe(
-      success => {
-        if (success) {
-          this.checkAUCBalance();
+        else {
+          metamaskAccountService.broadcastLoginConditionsSuccess();
         }
+        metamaskAccountService.aucBalance = balance;
       });
   }
 
-  private broadcastBalanceChanged(balance){
+  private broadcastBalanceChanged(balance) {
     this.eventsService.broadcast("balanceChanged", balance);
   }
 
-  private broadcastAccountChanged(account){
+  private broadcastAccountChanged(account) {
     this.eventsService.broadcast("accountChanged", account);
   }
 
   private broadcastLoginConditionsFail() {
     this.eventsService.broadcast("loginConditionsFail");
+  }
+
+  private broadcastLoginConditionsSuccess() {
+    this.eventsService.broadcast("loginConditionsSuccess");
   }
 
   public getAUCBalance(): number {
@@ -128,18 +130,5 @@ export class MetamaskAccountService {
   public getNetwork(): number {
     return this.network;
   }
-
-  //   this.web3Service.getWeb3().subscribe(
-  //     () => {
-  //       this.checkNetwork();
-  //     })
-  // }
-
-  // checkNetwork() {
-  //   this.web3Service.getNetwork().subscribe(
-  //     netId => {
-
-  //     });
-  // }
 
 }
