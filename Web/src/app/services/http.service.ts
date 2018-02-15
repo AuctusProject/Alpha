@@ -133,7 +133,7 @@ export class HttpService {
     return (response: any): Observable<T> => {
       if (response.status == "401") {
         this.logout();
-        this.router.navigateByUrl('../login');
+        this.router.navigateByUrl('login');
       }
       // TODO: send the error to remote logging infrastructure
       if (response.status == "400") {

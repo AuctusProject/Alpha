@@ -14,11 +14,16 @@ export class PortfolioService {
   private getPortfoliosHistoryUrl = this.httpService.apiUrl("portfolios/v1/history");
   private getPortfoliosDistributionUrl = this.httpService.apiUrl("portfolios/v1/distribution");
   private savePortfolioUrl = this.httpService.apiUrl("portfolios/v1/");
+  private getPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/");
 
   constructor(private httpService: HttpService) { }
 
   getProjections(): Observable<Projections> {
     return this.httpService.get(this.getProjectionsUrl);
+  }
+
+  getPortfolios(): Observable<Portfolio[]> {
+    return this.httpService.get(this.getPortfoliosUrl);
   }
 
   getPortfoliosHistory(): Observable<PortfolioHistory[]> {
