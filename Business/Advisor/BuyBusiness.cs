@@ -95,6 +95,11 @@ namespace Auctus.Business.Advisor
             return Data.ListAdvisorsPurchases(advisorIds);
         }
 
+        public Dictionary<int, int> ListPortfoliosPurchases(IEnumerable<int> portfolioIds)
+        {
+            return Data.ListPortfoliosPurchases(portfolioIds);
+        }
+
         //public List<Buy> ListPurchasesWithPortfolio(int userId)
         //{
         //    return Data.ListPurchasesWithPortfolio(userId);

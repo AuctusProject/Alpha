@@ -48,9 +48,9 @@ namespace Auctus.Service
             BuyTransactionBusiness.Cancel(email, buyId);
         }
 
-        //public IEnumerable<Model.Advisor> ListAdvisors(string email)
-        //{
-        //    return AdvisorBusiness.ListAvailable(email);
-        //}
+        public IEnumerable<Model.Portfolio> ListRoboAdvisors(string email, int goalOptionId, int risk)
+        {
+            return AdvisorBusiness.ListRoboAdvisors(email, goalOptionId, risk);
+        }
     }
 }

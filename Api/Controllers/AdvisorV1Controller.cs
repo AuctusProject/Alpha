@@ -68,12 +68,13 @@ namespace Api.Controllers
             return base.CancelBuyTransaction(buyId);
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult ListAdvisors()
-        //{
-        //    return base.ListAdvisors();
-        //}
+        [Route("robos")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListRoboAdvisors([FromBody]ListRoboAdvisorsRequest listRoboAdvisorsRequest)
+        {
+            return base.ListRoboAdvisors(listRoboAdvisorsRequest);
+        }
 
         //[Route("{advisorId}")]
         //[HttpGet]

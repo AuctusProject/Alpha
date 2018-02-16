@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Model.Account;
 using Auctus.DomainObjects.Account;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,20 +22,20 @@ namespace Api.Controllers
             if (loginRequest == null)
                 return BadRequest(new { logged = false });
 
-            User user;
+            Login login;
             try
             {
-                user = AccountServices.Login(loginRequest.Address, loginRequest.EmailOrUsername, loginRequest.Password);
+                login = AccountServices.Login(loginRequest.Address, loginRequest.EmailOrUsername, loginRequest.Password);
             }
             catch (ArgumentException)
             {
                 return BadRequest(new { logged = false, error = "Credentials are invalid." });
             }
-            if (!user.ConfirmationDate.HasValue)
+            if (login.PendingConfirmation)
             {
-                return Ok(new { logged = false, error = "Pending email confirmation." });
+                return Ok(new { logged = false, error = "Pending email confirmation.", data = login });
             }
-            return Ok(new { logged = true, jwt = GenerateToken(user.Email.ToLower().Trim()), email = user.Email });
+            return Ok(new { logged = true, jwt = GenerateToken(login.Email.ToLower().Trim()), data = login });
         }
 
         protected virtual async Task<IActionResult> SimpleRegister(SimpleRegisterRequest registerRequest)
@@ -42,16 +43,16 @@ namespace Api.Controllers
             if (registerRequest == null)
                 return BadRequest();
 
-            User user;
+            Login login;
             try
             {
-                user = await AccountServices.SimpleRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password);
+                login = await AccountServices.SimpleRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password);
             }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
             }
-            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), email = user.Email });
+            return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), data = login });
         }
 
         //protected virtual async Task<IActionResult> FullRegister(FullRegisterRequest registerRequest)
