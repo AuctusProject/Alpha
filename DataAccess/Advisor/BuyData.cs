@@ -17,18 +17,20 @@ namespace Auctus.DataAccess.Advisor
         private const string SELECT_USER_PURCHASE = @"SELECT b.*, t.* FROM 
                                                         Buy b 
                                                         INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
-                                                        INNER JOIN Transaction t ON t.Id = bt.TransactionId
+                                                        INNER JOIN [Transaction] t ON t.Id = bt.TransactionId
                                                         WHERE b.UserId = @UserId AND
-                                                        t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 ON bt2.BuyId = b.Id
-                                                                            INNER JOIN Transaction t2 ON t2.Id = bt2.TransactionId)";
+                                                        t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 
+                                                                            INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
+                                                                            WHERE bt2.BuyId = b.Id)";
 
         private const string SELECT_PURCHASE = @"SELECT b.*, t.* FROM 
                                                 Buy b 
                                                 INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
-                                                INNER JOIN Transaction t ON t.Id = bt.TransactionId
+                                                INNER JOIN [Transaction] t ON t.Id = bt.TransactionId
                                                 WHERE b.Id = @Id AND
-                                                t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 ON bt2.BuyId = b.Id
-                                                                    INNER JOIN Transaction t2 ON t2.Id = bt2.TransactionId)";
+                                                t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 
+                                                                    INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
+                                                                    WHERE bt2.BuyId = b.Id)";
 
         private const string SELECT_ADVISOR_PURCHASE = @"SELECT b.*, g.* FROM 
                                                          Buy b 
@@ -129,20 +131,23 @@ namespace Auctus.DataAccess.Advisor
 
         public Dictionary<int, int> ListAdvisorsPurchases(IEnumerable<int> advisorIds)
         {
-            List<string> advisorRestrictions = new List<string>();
-            DynamicParameters parameters = new DynamicParameters();
-            for (int i = 0; i < advisorIds.Count(); ++i)
-            {
-                var parameterName = string.Format("@advisor{0}", i);
-                advisorRestrictions.Add(string.Format("b.AdvisorId={0}", parameterName));
-                parameters.Add(parameterName, advisorIds.ElementAt(i), DbType.Int32);
-            }
-            var advisorsQty = Query(string.Format(SELECT_PURCHASE_QTY, string.Join(" OR ", advisorRestrictions)), parameters);
-
             Dictionary<int, int> result = new Dictionary<int, int>();
-            foreach (IDictionary<string, object> pair in advisorsQty)
-                result.Add(Convert.ToInt32(pair["AdvisorId"]), Convert.ToInt32(pair["Qty"]));
+            if (advisorIds.Any())
+            {
+                List<string> advisorRestrictions = new List<string>();
+                DynamicParameters parameters = new DynamicParameters();
+                for (int i = 0; i < advisorIds.Count(); ++i)
+                {
+                    var parameterName = string.Format("@advisor{0}", i);
+                    advisorRestrictions.Add(string.Format("b.AdvisorId={0}", parameterName));
+                    parameters.Add(parameterName, advisorIds.ElementAt(i), DbType.Int32);
+                }
+                var advisorsQty = Query(string.Format(SELECT_PURCHASE_QTY, string.Join(" OR ", advisorRestrictions)), parameters);
 
+
+                foreach (IDictionary<string, object> pair in advisorsQty)
+                    result.Add(Convert.ToInt32(pair["AdvisorId"]), Convert.ToInt32(pair["Qty"]));
+            }
             return result;
         }
     }

@@ -114,9 +114,7 @@ namespace Auctus.Business.Portfolio
             if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != DateTime.UtcNow.Date)
             {
                 portfolioHistory = Data.ListHistory(portfolioId);
-                if (portfolioHistory == null)
-                    throw new ArgumentException("Portfolio history cannot be found.");
-                else if (portfolioHistory.Last().Date.Date == DateTime.UtcNow.Date)
+                if (portfolioHistory?.LastOrDefault()?.Date.Date == DateTime.UtcNow.Date)
                     MemoryCache.Set<List<PortfolioHistory>>(cacheKey, portfolioHistory, 720);
             }
             return portfolioHistory;

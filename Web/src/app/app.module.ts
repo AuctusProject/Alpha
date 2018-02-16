@@ -71,6 +71,8 @@ import { EventsServiceModule } from 'angular-event-service';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
 import { EmailRegistrationDirective } from './directives/email-registration.directive';
 import { UsernameRegistrationDirective } from './directives/username-registration.directive';
+import { RoboAdvisorsComponent } from './components/portfolio/robo-advisors/robo-advisors.component';
+import { HumanAdvisorsComponent } from './components/portfolio/human-advisors/human-advisors.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +118,9 @@ import { UsernameRegistrationDirective } from './directives/username-registratio
     ProviderRequiredComponent,
     MetamaskAccountMonitorComponent,
     EmailRegistrationDirective,
-    UsernameRegistrationDirective
+    UsernameRegistrationDirective,
+    RoboAdvisorsComponent,
+    HumanAdvisorsComponent
   ],
   imports: [
     BrowserAnimationsModule,
