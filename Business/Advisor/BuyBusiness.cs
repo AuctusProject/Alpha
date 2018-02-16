@@ -42,6 +42,9 @@ namespace Auctus.Business.Advisor
                 Goal goal = null;
                 if (portfolio.Advisor.Type == AdvisorType.Robo)
                 {
+                    if (!goalOptionId.HasValue || !timeframe.HasValue || !risk.HasValue || !startingAmount.HasValue || !monthlyContribution.HasValue)
+                        throw new ArgumentException("Invalid goal data.");
+
                     goal = GoalBusiness.SetNew(user.Id, goalOptionId.Value, timeframe.Value, risk.Value, targetAmount, startingAmount.Value, monthlyContribution.Value);
                     transaction.Insert(goal);
                 }
