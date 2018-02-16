@@ -25,7 +25,7 @@ namespace Auctus.Business.Advisor
                 throw new ArgumentException("Invalid purchase days.");
 
             var user = UserBusiness.GetValidUser(email, address);
-            var portfolio = PortfolioBusiness.GetWithDetail(portfolioId);
+            var portfolio = PortfolioBusiness.GetWithDetails(portfolioId);
 
             if (portfolio == null || !portfolio.Detail.Enabled || !portfolio.Advisor.Detail.Enabled)
                 throw new ArgumentException("Invalid portfolio.");

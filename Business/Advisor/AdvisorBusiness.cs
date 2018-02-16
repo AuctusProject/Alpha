@@ -91,24 +91,24 @@ namespace Auctus.Business.Advisor
 
                 var sameRisk = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == riskType);
                 if (sameRisk != null)
-                    portfolioWithSameRisk.Add(FillPortfolioModel(sameRisk, advisor, user, purchases.Result, portfolioQty.Result));
+                    portfolioWithSameRisk.Add(PortfolioBusiness.FillPortfolioModel(sameRisk, advisor, user, purchases.Result, portfolioQty.Result));
                 else
                 {
                     var littleLower = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 1));
                     if (littleLower != null)
-                        portfolioWithLittleLowerRisk.Add(FillPortfolioModel(littleLower, advisor, user, purchases.Result, portfolioQty.Result));
+                        portfolioWithLittleLowerRisk.Add(PortfolioBusiness.FillPortfolioModel(littleLower, advisor, user, purchases.Result, portfolioQty.Result));
                     else
                     {
                         var littleHigher = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value + 1));
                         if (littleHigher != null)
-                            portfolioWithLittleHigherRisk.Add(FillPortfolioModel(littleHigher, advisor, user, purchases.Result, portfolioQty.Result));
+                            portfolioWithLittleHigherRisk.Add(PortfolioBusiness.FillPortfolioModel(littleHigher, advisor, user, purchases.Result, portfolioQty.Result));
                         else
                         {
                             var lower = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 2));
                             if (lower != null)
-                                portfolioWithLowerRisk.Add(FillPortfolioModel(lower, advisor, user, purchases.Result, portfolioQty.Result));
+                                portfolioWithLowerRisk.Add(PortfolioBusiness.FillPortfolioModel(lower, advisor, user, purchases.Result, portfolioQty.Result));
                             else
-                                portfolioWithHigherRisk.Add(FillPortfolioModel(
+                                portfolioWithHigherRisk.Add(PortfolioBusiness.FillPortfolioModel(
                                     advisorPortfolios.Value.Single(c => c.Projection.RiskType.Value == (riskType.Value + 2)), 
                                     advisor, user, purchases.Result, portfolioQty.Result));
                         }
@@ -124,35 +124,7 @@ namespace Auctus.Business.Advisor
 
             return new KeyValuePair<int, IEnumerable<Model.Portfolio>>(riskType.Value, result);
         }
-
-        private Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
-            List<Buy> purchases, Dictionary<int, int> purchasesQty)
-        {
-            return new Model.Portfolio()
-            {
-                Id = portfolio.Id,
-                Name = portfolio.Detail.Name,
-                Description = portfolio.Detail.Description,
-                Price = portfolio.Detail.Price,
-                AdvisorId = portfolio.AdvisorId,
-                AdvisorDescription = advisor.Detail.Description,
-                AdvisorName = advisor.Detail.Name,
-                Risk = portfolio.Projection.Risk,
-                ProjectionPercent = portfolio.Projection.ProjectionValue,
-                OptimisticPercent = portfolio.Projection.OptimisticProjection,
-                PessimisticPercent = portfolio.Projection.PessimisticProjection,
-                Owned = user != null && advisor.UserId == user.Id,
-                Purchased = purchases != null && purchases.Any(x => x.PortfolioId == portfolio.Id),
-                Enabled = portfolio.Detail.Enabled,
-                PurchaseQuantity = purchasesQty.ContainsKey(portfolio.Id) ? purchasesQty[portfolio.Id] : 0,
-                TotalDays = portfolio.PortfolioHistory.Count,
-                LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
-                Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory),
-                Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory),
-                AllDays = PortfolioHistoryBusiness.GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.PortfolioHistory.Min(x => x.Date)).TotalDays) + 1, portfolio.PortfolioHistory)
-            };
-        }
-
+        
         public Model.Advisor ListDetails(string email, int advisorId)
         {
             User user = null;
@@ -185,7 +157,7 @@ namespace Auctus.Business.Advisor
                 Owned = owned,
                 Enabled = advisor.Detail.Enabled,
                 PurchaseQuantity = advisorQty.Result.ContainsKey(advisor.Id) ? advisorQty.Result[advisor.Id] : 0,
-                Portfolio = portfolios.Select(c => FillPortfolioModel(c, advisor, user, purchases?.Result, portfolioQty.Result)).
+                Portfolio = portfolios.Select(c => PortfolioBusiness.FillPortfolioModel(c, advisor, user, purchases?.Result, portfolioQty.Result)).
                     OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList()
             };
         }
