@@ -17,18 +17,20 @@ namespace Auctus.DataAccess.Advisor
         private const string SELECT_USER_PURCHASE = @"SELECT b.*, t.* FROM 
                                                         Buy b 
                                                         INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
-                                                        INNER JOIN Transaction t ON t.Id = bt.TransactionId
+                                                        INNER JOIN [Transaction] t ON t.Id = bt.TransactionId
                                                         WHERE b.UserId = @UserId AND
-                                                        t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 ON bt2.BuyId = b.Id
-                                                                            INNER JOIN Transaction t2 ON t2.Id = bt2.TransactionId)";
+                                                        t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 
+                                                                            INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
+                                                                            WHERE bt2.BuyId = b.Id)";
 
         private const string SELECT_PURCHASE = @"SELECT b.*, t.* FROM 
                                                 Buy b 
                                                 INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
-                                                INNER JOIN Transaction t ON t.Id = bt.TransactionId
+                                                INNER JOIN [Transaction] t ON t.Id = bt.TransactionId
                                                 WHERE b.Id = @Id AND
-                                                t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 ON bt2.BuyId = b.Id
-                                                                    INNER JOIN Transaction t2 ON t2.Id = bt2.TransactionId)";
+                                                t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 
+                                                                    INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
+                                                                    WHERE bt2.BuyId = b.Id)";
 
         private const string SELECT_ADVISOR_PURCHASE = @"SELECT b.*, g.* FROM 
                                                          Buy b 
@@ -144,20 +146,22 @@ namespace Auctus.DataAccess.Advisor
 
         private Dictionary<int, int> ListPurchasesQty(IEnumerable<int> ids, string columnName, string query)
         {
-            List<string> restrictions = new List<string>();
-            DynamicParameters parameters = new DynamicParameters();
-            for (int i = 0; i < ids.Count(); ++i)
-            {
-                var parameterName = string.Format("@id{0}", i);
-                restrictions.Add(string.Format("m.{0}={1}", columnName, parameterName));
-                parameters.Add(parameterName, ids.ElementAt(i), DbType.Int32);
-            }
-            var qty = Query(string.Format(query, string.Join(" OR ", restrictions)), parameters);
-
             Dictionary<int, int> result = new Dictionary<int, int>();
-            foreach (IDictionary<string, object> pair in qty)
-                result.Add(Convert.ToInt32(pair[columnName]), Convert.ToInt32(pair["Qty"]));
+            if (ids.Any())
+            {
+                List<string> restrictions = new List<string>();
+                DynamicParameters parameters = new DynamicParameters();
+                for (int i = 0; i < ids.Count(); ++i)
+                {
+                    var parameterName = string.Format("@id{0}", i);
+                    restrictions.Add(string.Format("m.{0}={1}", columnName, parameterName));
+                    parameters.Add(parameterName, ids.ElementAt(i), DbType.Int32);
+                }
+                var qty = Query(string.Format(query, string.Join(" OR ", restrictions)), parameters);
 
+                foreach (IDictionary<string, object> pair in qty)
+                    result.Add(Convert.ToInt32(pair[columnName]), Convert.ToInt32(pair["Qty"]));
+            }
             return result;
         }
     }

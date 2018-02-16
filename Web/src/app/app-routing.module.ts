@@ -17,6 +17,8 @@ import { ManageApiComponent } from './components/account/manage-api/manage-api.c
 import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
 import { ProviderRequiredComponent } from "./components/provider-required/provider-required.component";
+import { RoboAdvisorsComponent } from "./components/portfolio/robo-advisors/robo-advisors.component";
+import { HumanAdvisorsComponent } from "./components/portfolio/human-advisors/human-advisors.component";
 
 
 const routes: Routes = [
@@ -34,6 +36,8 @@ const routes: Routes = [
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'manage-api', component: ManageApiComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'become-advisor', component: AdvisorWizardComponent },
+    { path: 'robo-advisors', component: RoboAdvisorsComponent },
+    { path: 'human-advisors', component: HumanAdvisorsComponent },
 ];
 
 @NgModule({

@@ -23,56 +23,57 @@ export class MetamaskAccountService {
     this.monitoreAccount();
   }
 
-  runChecks() {
-    let metamaskAccountService = this;
-    this.web3Service.getWeb3().subscribe(
-      web3 => {
-        metamaskAccountService.hasMetamask = web3 != null;
-        if (!web3) {
-          metamaskAccountService.broadcastLoginConditionsFail();
-        }
-        else {
-          metamaskAccountService.checkLoginConditions();
-        }
-      })
-  }
-
   monitoreAccount() {
-    let metamaskAccountService = this;
+    let self = this;
     var accountInterval = setInterval(function () {
-      metamaskAccountService.web3Service.getAccount().subscribe(
+      self.web3Service.getAccount().subscribe(
         account => {
-          if (metamaskAccountService.account != account){
-            if (account){
-              metamaskAccountService.checkBalance(account);
-            }
-            metamaskAccountService.broadcastAccountChanged(account);
+          if (self.account != account) {
+            self.broadcastAccountChanged(account);
           }
-          metamaskAccountService.account = account;
+          if (account) {
+            self.checkAUCBalance(account);
+          }
+          self.account = account;
         })
     }, 100);
   }
 
-  checkBalance(account){
-    let metamaskAccountService = this;
-    this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
-      balance =>{
-        metamaskAccountService.aucBalance = balance;
-        metamaskAccountService.broadcastBalanceChanged(balance);
-    });
+  runChecks() {
+    let self = this;
+    this.web3Service.getWeb3().subscribe(
+      web3 => {
+        self.hasMetamask = web3 != null;
+        if (!web3) {
+          self.broadcastLoginConditionsFail();
+        }
+        else {
+          self.checkLoginConditions();
+        }
+      })
+  }
+
+  checkLoginConditions() {
+    let self = this;
+    this.checkAccountAndNetwork().subscribe(
+      success => {
+        if (success) {
+          this.checkAUCBalance(self.account);
+        }
+      });
   }
 
   checkAccountAndNetwork(): Observable<boolean> {
-    let metamaskAccountService = this;
+    let self = this;
     return new Observable(
       observer => {
         Observable.combineLatest(this.web3Service.getNetwork(), this.web3Service.getAccount())
           .subscribe(function handleValues(values) {
-            metamaskAccountService.network = values[0];
-            metamaskAccountService.account = values[1];
-            if (!metamaskAccountService.network || !metamaskAccountService.account) {
+            self.network = values[0];
+            self.account = values[1];
+            if (!self.network || !self.account) {
               observer.next(false);
-              metamaskAccountService.broadcastLoginConditionsFail();
+              self.broadcastLoginConditionsFail();
             }
             else {
               observer.next(true);
@@ -81,36 +82,39 @@ export class MetamaskAccountService {
       });
   }
 
-  checkAUCBalance() {
-    let metamaskAccountService = this;
-    this.web3Service.getTokenBalance(environment.tokenAddress, metamaskAccountService.account).subscribe(
+  checkAUCBalance(account) {
+    let self = this;
+    this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
       balance => {
-        metamaskAccountService.aucBalance = balance;
-        if (balance < constants.minimumAUCNecessary) {
-          metamaskAccountService.broadcastLoginConditionsFail();
+        self.broadcastLoginConditionsSuccess();
+        /*
+        if (self.aucBalance != balance) {
+          self.broadcastBalanceChanged(balance);
         }
+        if (balance < constants.minimumAUCNecessary){
+          self.broadcastLoginConditionsFail();
+        }
+        else {
+          self.broadcastLoginConditionsSuccess();
+        }*/
+        self.aucBalance = balance;
       });
   }
 
-  checkLoginConditions() {
-    this.checkAccountAndNetwork().subscribe(
-      success => {
-        if (success) {
-          this.checkAUCBalance();
-        }
-      });
-  }
-
-  private broadcastBalanceChanged(balance){
+  private broadcastBalanceChanged(balance) {
     this.eventsService.broadcast("balanceChanged", balance);
   }
 
-  private broadcastAccountChanged(account){
+  private broadcastAccountChanged(account) {
     this.eventsService.broadcast("accountChanged", account);
   }
 
   private broadcastLoginConditionsFail() {
     this.eventsService.broadcast("loginConditionsFail");
+  }
+
+  private broadcastLoginConditionsSuccess() {
+    this.eventsService.broadcast("loginConditionsSuccess");
   }
 
   public getAUCBalance(): number {
@@ -128,18 +132,5 @@ export class MetamaskAccountService {
   public getNetwork(): number {
     return this.network;
   }
-
-  //   this.web3Service.getWeb3().subscribe(
-  //     () => {
-  //       this.checkNetwork();
-  //     })
-  // }
-
-  // checkNetwork() {
-  //   this.web3Service.getNetwork().subscribe(
-  //     netId => {
-
-  //     });
-  // }
 
 }
