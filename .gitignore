@@ -83,4 +83,6 @@ WebApi/subscribed_members.csv
 WebApi/Controllers/PresaleController.cs
 
 /node_modules
+**/node_modules
 /Web/wwwroot
+Node/.env
