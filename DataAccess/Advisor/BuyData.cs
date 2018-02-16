@@ -23,6 +23,16 @@ namespace Auctus.DataAccess.Advisor
                                                                             INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
                                                                             WHERE bt2.BuyId = b.Id)";
 
+        private const string SELECT_USER_PURCHASE_BY_ADVISOR = @"SELECT b.*, t.*, p.* FROM 
+                                                                Buy b 
+                                                                INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
+                                                                INNER JOIN [Transaction] t ON t.Id = bt.TransactionId
+                                                                INNER JOIN Portfolio p ON p.Id = b.PortfolioId 
+                                                                WHERE b.UserId = @UserId AND p.AdvisorId = @AdvisorId AND
+                                                                t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 
+                                                                                    INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
+                                                                                    WHERE bt2.BuyId = b.Id)";
+
         private const string SELECT_PURCHASE = @"SELECT b.*, t.* FROM 
                                                 Buy b 
                                                 INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
@@ -31,11 +41,6 @@ namespace Auctus.DataAccess.Advisor
                                                 t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 
                                                                     INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
                                                                     WHERE bt2.BuyId = b.Id)";
-
-        private const string SELECT_ADVISOR_PURCHASE = @"SELECT b.*, g.* FROM 
-                                                         Buy b 
-                                                         INNER JOIN Goal g ON g.Id = b.GoalId 
-                                                         WHERE g.UserId = @UserId AND b.AdvisorId = @AdvisorId";
 
         private const string SELECT_ADVISOR_PURCHASE_QTY = @"SELECT m.AdvisorId, COUNT(b.Id) Qty FROM 
                                                              Buy b
@@ -94,12 +99,13 @@ namespace Auctus.DataAccess.Advisor
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int32);
             parameters.Add("AdvisorId", advisorId, DbType.Int32);
-            return Query<Buy, Goal, Buy>(SELECT_ADVISOR_PURCHASE,
-                            (buy, goal) =>
+            return Query<Buy, Transaction, DomainObjects.Portfolio.Portfolio, Buy>(SELECT_USER_PURCHASE_BY_ADVISOR,
+                            (buy, trans, port) =>
                             {
-                                buy.Goal = goal;
+                                buy.LastTransaction = trans;
+                                buy.Portfolio = port;
                                 return buy;
-                            }, "Id", parameters).ToList();
+                            }, "Id,Id", parameters).ToList();
         }
 
         //public List<Buy> ListPurchasesWithPortfolio(int userId)

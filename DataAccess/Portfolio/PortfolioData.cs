@@ -34,8 +34,8 @@ namespace Auctus.DataAccess.Portfolio
                                                       Portfolio p  
                                                       INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id
                                                       INNER JOIN Projection j ON p.ProjectionId = j.Id
-                                                      WHERE d.Enabled = 1 AND
-                                                      d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND ({0})";
+                                                      WHERE {0}
+                                                      d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND ({1})";
 
         private const string LIST_ALL =
             @"SELECT port.*, proj.*, dist.* FROM Portfolio port 
@@ -75,7 +75,7 @@ namespace Auctus.DataAccess.Portfolio
                 }, "Id", parameters).SingleOrDefault();
         }
         
-        public List<DomainObjects.Portfolio.Portfolio> ListByAdvisor(IEnumerable<int> advisorsId)
+        public List<DomainObjects.Portfolio.Portfolio> ListByAdvisor(IEnumerable<int> advisorsId, bool onlyEnabled)
         {
             List<string> restrictions = new List<string>();
             DynamicParameters parameters = new DynamicParameters();
@@ -87,7 +87,7 @@ namespace Auctus.DataAccess.Portfolio
             }
 
             return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, Projection, DomainObjects.Portfolio.Portfolio>(
-                string.Format(SELECT_LIST_BY_ADVISOR, string.Join(" OR ", restrictions)),
+                string.Format(SELECT_LIST_BY_ADVISOR, onlyEnabled ? " d.Enabled = 1 AND " : "", string.Join(" OR ", restrictions)),
                             (port, detail, proj) =>
                             {
                                 port.Detail = detail;

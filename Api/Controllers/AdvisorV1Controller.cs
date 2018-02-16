@@ -76,12 +76,13 @@ namespace Api.Controllers
             return base.ListRoboAdvisors(listRoboAdvisorsRequest);
         }
 
-        //[Route("{advisorId}")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult ListAdvisorDetails([FromRoute]int advisorId)
-        //{
-        //    return base.ListAdvisorDetails(advisorId);
-        //}
+        [AllowAnonymous]
+        [Route("{advisorId}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListAdvisorDetails([FromRoute]int advisorId)
+        {
+            return base.ListAdvisorDetails(advisorId);
+        }
     }
 }

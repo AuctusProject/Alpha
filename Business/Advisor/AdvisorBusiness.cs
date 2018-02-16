@@ -59,23 +59,24 @@ namespace Auctus.Business.Advisor
             return advisor;
         }
 
-        public IEnumerable<Model.Portfolio> ListRoboAdvisors(string email, int goalOptionId, int risk)
+        public KeyValuePair<int, IEnumerable<Model.Portfolio>> ListRoboAdvisors(string email, int goalOptionId, int risk)
         {
             var user = UserBusiness.GetValidUser(email);
             var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
             var goalOption = GoalOptionsBusiness.Get(goalOptionId);
             var riskType = RiskType.Get(risk, goalOption.Risk);
             var advisors = Data.ListRobosAvailable();
-            var advisorsQty = Task.Factory.StartNew(() => BuyBusiness.ListAdvisorsPurchases(advisors.Select(c => c.Id)));
             var portfolios = Task.Factory.StartNew(() => PortfolioBusiness.List(advisors.Select(c => c.Id)));
             
             Task.WaitAll(portfolios);
+
+            var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(portfolios.Result.SelectMany(c => c.Value.Select(x => x.Id))));
 
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios.Result.SelectMany(c => c.Value))
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
 
-            Task.WaitAll(purchases, advisorsQty);
+            Task.WaitAll(purchases, portfolioQty);
             Task.WaitAll(histories.ToArray());
 
             List<Model.Portfolio> portfolioWithSameRisk = new List<Model.Portfolio>();
@@ -90,26 +91,26 @@ namespace Auctus.Business.Advisor
 
                 var sameRisk = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == riskType);
                 if (sameRisk != null)
-                    portfolioWithSameRisk.Add(FillPortfolioModel(sameRisk, advisor, user, purchases.Result, advisorsQty.Result));
+                    portfolioWithSameRisk.Add(FillPortfolioModel(sameRisk, advisor, user, purchases.Result, portfolioQty.Result));
                 else
                 {
                     var littleLower = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 1));
                     if (littleLower != null)
-                        portfolioWithLittleLowerRisk.Add(FillPortfolioModel(littleLower, advisor, user, purchases.Result, advisorsQty.Result));
+                        portfolioWithLittleLowerRisk.Add(FillPortfolioModel(littleLower, advisor, user, purchases.Result, portfolioQty.Result));
                     else
                     {
                         var littleHigher = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value + 1));
                         if (littleHigher != null)
-                            portfolioWithLittleHigherRisk.Add(FillPortfolioModel(littleHigher, advisor, user, purchases.Result, advisorsQty.Result));
+                            portfolioWithLittleHigherRisk.Add(FillPortfolioModel(littleHigher, advisor, user, purchases.Result, portfolioQty.Result));
                         else
                         {
                             var lower = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 2));
                             if (lower != null)
-                                portfolioWithLowerRisk.Add(FillPortfolioModel(lower, advisor, user, purchases.Result, advisorsQty.Result));
+                                portfolioWithLowerRisk.Add(FillPortfolioModel(lower, advisor, user, purchases.Result, portfolioQty.Result));
                             else
                                 portfolioWithHigherRisk.Add(FillPortfolioModel(
                                     advisorPortfolios.Value.Single(c => c.Projection.RiskType.Value == (riskType.Value + 2)), 
-                                    advisor, user, purchases.Result, advisorsQty.Result));
+                                    advisor, user, purchases.Result, portfolioQty.Result));
                         }
                     }
                 }
@@ -121,7 +122,7 @@ namespace Auctus.Business.Advisor
             result.AddRange(portfolioWithLowerRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
             result.AddRange(portfolioWithHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
 
-            return result;
+            return new KeyValuePair<int, IEnumerable<Model.Portfolio>>(riskType.Value, result);
         }
 
         private Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
@@ -140,9 +141,9 @@ namespace Auctus.Business.Advisor
                 ProjectionPercent = portfolio.Projection.ProjectionValue,
                 OptimisticPercent = portfolio.Projection.OptimisticProjection,
                 PessimisticPercent = portfolio.Projection.PessimisticProjection,
-                Owned = advisor.UserId == user.Id,
-                Purchased = purchases.Any(x => x.PortfolioId == portfolio.Id),
-                Enabled = true,
+                Owned = user != null && advisor.UserId == user.Id,
+                Purchased = purchases != null && purchases.Any(x => x.PortfolioId == portfolio.Id),
+                Enabled = portfolio.Detail.Enabled,
                 PurchaseQuantity = purchasesQty.ContainsKey(portfolio.Id) ? purchasesQty[portfolio.Id] : 0,
                 TotalDays = portfolio.PortfolioHistory.Count,
                 LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
@@ -152,64 +153,41 @@ namespace Auctus.Business.Advisor
             };
         }
 
-        //public Model.Advisor ListDetails(string email, int advisorId)
-        //{
-        //    var user = UserBusiness.GetValidUser(email);
-        //    var advisor = Task.Factory.StartNew(() => GetWithDetail(advisorId));
-        //    var purchases = Task.Factory.StartNew(() => BuyBusiness.ListUserAdvisorPurchases(user.Id, advisorId));
-        //    var advisorQty = Task.Factory.StartNew(() => BuyBusiness.ListAdvisorsPurchases(new int[] { advisorId }));
-        //    var portfolios = PortfolioBusiness.ListWithHistory(advisorId);
+        public Model.Advisor ListDetails(string email, int advisorId)
+        {
+            User user = null;
+            if (!string.IsNullOrEmpty(email))
+                user = UserBusiness.GetValidUser(email);
 
-        //    Task.WaitAll(advisor, purchases, advisorQty);
+            var advisor = GetWithDetail(advisorId);
+            var owned = (user != null && user.Id == advisor.UserId);
+            if (advisor.Type == AdvisorType.Robo || (!advisor.Detail.Enabled && !owned))
+                throw new ArgumentException("Invalid advisor.");
 
-        //    var purchase = purchases.Result.SingleOrDefault(c => c.ExpirationDate > DateTime.UtcNow);
-        //    var result = new Model.Advisor()
-        //    {
-        //        Id = advisor.Result.Id,
-        //        Name = advisor.Result.Name,
-        //        Description = advisor.Result.Detail.Description,
-        //        Period = advisor.Result.Detail.Period,
-        //        Price = advisor.Result.Detail.Price,
-        //        Purchased = purchase != null,
-        //        PurchaseQuantity = advisorQty.Result.ContainsKey(advisorId) ? advisorQty.Result[advisorId] : 0,
-        //        Projection = portfolios.Select(x => new Model.Advisor.RiskProjection()
-        //        {
-        //            Risk = x.Risk,
-        //            ProjectionPercent = x.Projection.ProjectionValue,
-        //            OptimisticPercent = x.Projection.OptimisticProjection,
-        //            PessimisticPercent = x.Projection.PessimisticProjection
-        //        }).ToList(),
-        //        Detail = new Model.Advisor.Details()
-        //        {
-        //            PurchaseInfo = new Model.Advisor.Purchase()
-        //            {
-        //                QtyAlreadyPurchased = purchases.Result.Count,
-        //                ExpirationTime = purchase != null ? purchase.ExpirationDate : (DateTime?)null,
-        //                Risk = purchase != null ? purchase.Goal.Risk : (int?)null
-        //            }
-        //        }
-        //    };
-        //    result.Detail.PortfolioHistory = GetPortfolioHistory(portfolios);
-        //    return result;
-        //}
+            Task<List<Buy>> purchases = null;
+            if (user != null)
+                purchases = Task.Factory.StartNew(() => BuyBusiness.ListUserAdvisorPurchases(user.Id, advisorId));
 
-        //public List<Model.Advisor.History> GetPortfolioHistory(IEnumerable<DomainObjects.Portfolio.Portfolio> portfolios)
-        //{
-        //    List<Model.Advisor.History> result = new List<Model.Advisor.History>();
-        //    foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
-        //    {
-        //        result.Add(new Model.Advisor.History()
-        //        {
-        //            Risk = portfolio.Risk,
-        //            TotalDays = portfolio.PortfolioHistory.Count,
-        //            LastDay = GetHistoryResult(1, portfolio.PortfolioHistory),
-        //            Last7Days = GetHistoryResult(7, portfolio.PortfolioHistory),
-        //            Last30Days = GetHistoryResult(30, portfolio.PortfolioHistory),
-        //            AllDays = GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.PortfolioHistory.Min(c => c.Date)).TotalDays) + 1, portfolio.PortfolioHistory),
-        //            Histogram = GetHistogram(portfolio.PortfolioHistory)
-        //        });
-        //    }
-        //    return result;
-        //}
+            var advisorQty = Task.Factory.StartNew(() => BuyBusiness.ListAdvisorsPurchases(new int[] { advisorId }));
+            var portfolios = PortfolioBusiness.ListWithHistory(advisorId, !owned);
+            var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(portfolios.Select(x => x.Id)));
+
+            if (user != null)
+                Task.WaitAll(purchases, advisorQty, portfolioQty);
+            else
+                Task.WaitAll(advisorQty, portfolioQty);
+            
+            return new Model.Advisor()
+            {
+                Id = advisor.Id,
+                Name = advisor.Detail.Name,
+                Description = advisor.Detail.Description,
+                Owned = owned,
+                Enabled = advisor.Detail.Enabled,
+                PurchaseQuantity = advisorQty.Result.ContainsKey(advisor.Id) ? advisorQty.Result[advisor.Id] : 0,
+                Portfolio = portfolios.Select(c => FillPortfolioModel(c, advisor, user, purchases?.Result, portfolioQty.Result)).
+                    OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList()
+            };
+        }
     }
 }

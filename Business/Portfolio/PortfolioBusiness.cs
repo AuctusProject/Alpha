@@ -219,14 +219,14 @@ namespace Auctus.Business.Portfolio
             }).OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
-        public List<DomainObjects.Portfolio.Portfolio> List(int advisorId)
+        public List<DomainObjects.Portfolio.Portfolio> List(int advisorId, bool onlyEnabled = true)
         {
-            return List(new int[] { advisorId }).Single().Value;
+            return List(new int[] { advisorId }, onlyEnabled).Single().Value;
         }
 
-        public List<DomainObjects.Portfolio.Portfolio> ListWithHistory(int advisorId)
+        public List<DomainObjects.Portfolio.Portfolio> ListWithHistory(int advisorId, bool onlyEnabled = true)
         {
-            var portfolios = List(advisorId);
+            var portfolios = List(advisorId, onlyEnabled);
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
@@ -237,9 +237,9 @@ namespace Auctus.Business.Portfolio
             return portfolios;
         }
 
-        public Dictionary<int, List<DomainObjects.Portfolio.Portfolio>> List(IEnumerable<int> advisorId)
+        public Dictionary<int, List<DomainObjects.Portfolio.Portfolio>> List(IEnumerable<int> advisorId, bool onlyEnabled = true)
         {
-            var portfolio = Data.ListByAdvisor(advisorId);
+            var portfolio = Data.ListByAdvisor(advisorId, onlyEnabled);
             return portfolio.GroupBy(c => c.AdvisorId, c => c, (k, v) => new KeyValuePair<int, List<DomainObjects.Portfolio.Portfolio>>(k, v.ToList())).ToDictionary(c => c.Key, c => c.Value);
         }
 

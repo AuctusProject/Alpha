@@ -27,10 +27,10 @@ namespace Auctus.Service
             return AdvisorDetailBusiness.Disable(email, advisorId);
         }
 
-        //public Model.Advisor ListAdvisorDetails(string email, int advisorId)
-        //{
-        //    return AdvisorBusiness.ListDetails(email, advisorId);
-        //}
+        public Model.Advisor ListAdvisorDetails(string email, int advisorId)
+        {
+            return AdvisorBusiness.ListDetails(email, advisorId);
+        }
 
         public Buy Buy(string email, string address, int portfolioId, int days, int? goalOptionId, int? timeframe, 
             int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
@@ -48,7 +48,7 @@ namespace Auctus.Service
             BuyTransactionBusiness.Cancel(email, buyId);
         }
 
-        public IEnumerable<Model.Portfolio> ListRoboAdvisors(string email, int goalOptionId, int risk)
+        public KeyValuePair<int, IEnumerable<Model.Portfolio>> ListRoboAdvisors(string email, int goalOptionId, int risk)
         {
             return AdvisorBusiness.ListRoboAdvisors(email, goalOptionId, risk);
         }
