@@ -3,6 +3,7 @@ import { Advisor } from '../../../../model/advisor/advisor'
 import { RiskType } from '../../../../model/account/riskType'
 import { Asset } from '../../../../model/asset/asset'
 import { PublicService } from '../../../../services/public.service'
+import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
 
 @Component({
   selector: 'portfolio-step',
@@ -15,20 +16,14 @@ export class PortfolioStepComponent implements OnInit {
   @Output() onBackStep = new EventEmitter<Advisor>();
   @Output() onNextStep = new EventEmitter<Advisor>();
 
-  portfolioRisks: RiskType[] =
-  [
-    { value: 1, description: "Conservative"},
-    { value: 2, description: "Moderately Conservative" },
-    { value: 3, description: "Moderately Aggressive" },
-    { value: 4, description: "Aggressive" },
-    { value: 5, description: "Very Aggressive"}
-  ]; 
+  public assets: Asset[];
+  public portfolioList = new Array<PortfolioRequest>();
 
-  assets: Asset[];
   constructor(private publicService: PublicService) { }
 
   ngOnInit() {
     this.publicService.listAssets().subscribe(assets => this.assets = assets);
+    this.addPortfolio();
   }
 
   public back() {
@@ -36,6 +31,17 @@ export class PortfolioStepComponent implements OnInit {
   }
 
   public next() {
-    this.onNextStep.emit(this.advisorModel);
+    this.onNextStep.emit();
+  }
+
+  public addPortfolio() {
+    let portfolio = new PortfolioRequest();
+    portfolio.advisorId = this.advisorModel.id;
+    portfolio.isEditing = true;
+    this.portfolioList.push(portfolio);
+  }
+
+  public hasEditingPortfolio(): boolean {
+    return this.portfolioList.some(item => item.isEditing);
   }
 }

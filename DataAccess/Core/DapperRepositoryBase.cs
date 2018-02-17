@@ -56,7 +56,7 @@ namespace Auctus.DataAccess.Core
             }
         }
 
-        protected IEnumerable<TParent> QueryParentChild<TParent, TChild, TParentKey>(string sql, Func<TParent, TParentKey> parentKeySelector, 
+        protected IEnumerable<TParent> QueryParentChild<TParent, TChild, TParentKey>(string sql, Func<TParent, TParentKey> parentKeySelector,
             Func<TParent, IList<TChild>> childSelector, string splitOn, dynamic param = null, int commandTimeout = _defaultTimeout, IDbTransaction transaction = null)
         {
             Dictionary<TParentKey, TParent> cache = new Dictionary<TParentKey, TParent>();
@@ -67,7 +67,7 @@ namespace Auctus.DataAccess.Core
                 {
                     if (!cache.ContainsKey(parentKeySelector(parent)))
                         cache.Add(parentKeySelector(parent), parent);
-                    
+
                     TParent cachedParent = cache[parentKeySelector(parent)];
                     if (child != null)
                     {
@@ -182,7 +182,7 @@ namespace Auctus.DataAccess.Core
 
         private IEnumerable<T> Select<T>(string pairs, DynamicParameters criteria, String orderBy = "")
         {
-            string sql = string.Format("SELECT * FROM {0} ", TableName);
+            string sql = string.Format("SELECT * FROM [{0}] ", TableName);
             if (!string.IsNullOrEmpty(pairs))
                 sql += " WHERE " + pairs;
 
@@ -199,7 +199,7 @@ namespace Auctus.DataAccess.Core
             IEnumerable<string> columns = identity ? propertyContainer.ValueNames : propertyContainer.AllNames;
             var sql = string.Format("INSERT INTO {0} ({1}) VALUES(@{2})",
                 tableName ?? TableName,
-                string.Join(", ", columns),
+                string.Join(", ", columns.Select(item => string.Format("[{0}]", item))),
                 string.Join(", @", columns));
 
             if (identity)
@@ -227,7 +227,7 @@ namespace Auctus.DataAccess.Core
             string sql = string.Format("DELETE FROM {0} WHERE {1} ", tableName ?? TableName, sqlKeyPairs);
             Execute(sql, propertyContainer.KeyParameters);
         }
-        
+
         private static PropertyContainer ParseProperties<T>(T obj)
         {
             PropertyContainer propertyContainer = new PropertyContainer();
@@ -241,11 +241,11 @@ namespace Auctus.DataAccess.Core
                 // Skip methods without a public setter
                 if (property.GetSetMethod() == null)
                     continue;
-                
+
                 // Skip methods without db type defined
                 if (!property.IsDefined(typeof(DapperTypeAttribute), false))
                     continue;
-                
+
                 object value = typeof(T).GetProperty(property.Name).GetValue(obj, null);
                 DbType dbType = ((DapperTypeAttribute)property.GetCustomAttribute(typeof(DapperTypeAttribute))).DbType;
                 if (property.IsDefined(typeof(DapperKeyAttribute), false))
@@ -255,10 +255,10 @@ namespace Auctus.DataAccess.Core
             }
             return propertyContainer;
         }
-        
+
         private static string GetSqlPairs(IEnumerable<string> keys, string separator)
         {
-            return string.Join(separator, keys.Select(key => string.Format("{0}=@{0}", key)));
+            return string.Join(separator, keys.Select(key => string.Format("[{0}]=@{0}", key)));
         }
 
         private void SetIdentity<T>(T obj, int id, string identity)
@@ -272,7 +272,7 @@ namespace Auctus.DataAccess.Core
                 }
             }
         }
-        
+
         private class PropertyContainer
         {
             private string _identity;
@@ -321,7 +321,7 @@ namespace Auctus.DataAccess.Core
             {
                 get { return _allParameters; }
             }
-            
+
             internal void AddKey(string name, object value, DbType type, bool identity)
             {
                 if (identity)
