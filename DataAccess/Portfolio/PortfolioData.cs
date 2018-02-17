@@ -34,8 +34,8 @@ namespace Auctus.DataAccess.Portfolio
                                                       Portfolio p  
                                                       INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id
                                                       INNER JOIN Projection j ON p.ProjectionId = j.Id
-                                                      WHERE d.Enabled = 1 AND
-                                                      d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND ({0})";
+                                                      WHERE {0}
+                                                      d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND ({1})";
 
         private const string LIST_ALL =
             @"SELECT port.*, proj.*, dist.* FROM Portfolio port 
@@ -58,9 +58,9 @@ namespace Auctus.DataAccess.Portfolio
                                                     INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id
                                                     INNER JOIN Advisor a ON a.Id = p.AdvisorId  
                                                     INNER JOIN AdvisorDetail e ON e.AdvisorId = a.Id
-                                                    WHERE p.Id = @Id AND
+                                                    WHERE 
                                                     d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND
-                                                    e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id)";
+                                                    e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id) AND {0}";
         
         public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
@@ -75,7 +75,7 @@ namespace Auctus.DataAccess.Portfolio
                 }, "Id", parameters).SingleOrDefault();
         }
         
-        public List<DomainObjects.Portfolio.Portfolio> ListByAdvisor(IEnumerable<int> advisorsId)
+        public List<DomainObjects.Portfolio.Portfolio> ListByAdvisor(IEnumerable<int> advisorsId, bool onlyEnabled)
         {
             List<string> restrictions = new List<string>();
             DynamicParameters parameters = new DynamicParameters();
@@ -87,7 +87,7 @@ namespace Auctus.DataAccess.Portfolio
             }
 
             return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, Projection, DomainObjects.Portfolio.Portfolio>(
-                string.Format(SELECT_LIST_BY_ADVISOR, string.Join(" OR ", restrictions)),
+                string.Format(SELECT_LIST_BY_ADVISOR, onlyEnabled ? " d.Enabled = 1 AND " : "", string.Join(" OR ", restrictions)),
                             (port, detail, proj) =>
                             {
                                 port.Detail = detail;
@@ -164,18 +164,26 @@ namespace Auctus.DataAccess.Portfolio
                     }, "Id, AssetId").Distinct();
         }
 
-        public DomainObjects.Portfolio.Portfolio GetWithDetail(int portfolioId)
+        public List<DomainObjects.Portfolio.Portfolio> ListWithDetails(IEnumerable<int> portfolioIds)
         {
+            List<string> restrictions = new List<string>();
             DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("Id", portfolioId, DbType.Int32);
-            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, DomainObjects.Advisor.Advisor, AdvisorDetail, DomainObjects.Portfolio.Portfolio>(SELECT_WITH_DETAIL,
+            for (int i = 0; i < portfolioIds.Count(); ++i)
+            {
+                var parameterName = string.Format("@Id{0}", i);
+                restrictions.Add(string.Format("p.Id={0}", parameterName));
+                parameters.Add(parameterName, portfolioIds.ElementAt(i), DbType.Int32);
+            }
+
+            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, DomainObjects.Advisor.Advisor, AdvisorDetail, 
+                DomainObjects.Portfolio.Portfolio>(string.Format(SELECT_WITH_DETAIL, string.Join(" OR ", restrictions)),
                             (p, pd, a, ad) =>
                             {
                                 p.Detail = pd;
                                 p.Advisor = a;
                                 p.Advisor.Detail = ad;
                                 return p;
-                            }, "Id,Id,Id", parameters).SingleOrDefault();
+                            }, "Id,Id,Id", parameters).ToList();
         }
     }
 }

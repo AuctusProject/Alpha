@@ -12,6 +12,7 @@ namespace Auctus.Model
         public double Price { get; set; }
         public bool Purchased { get; set; }
         public bool Owned { get; set; }
+        public bool Enabled { get; set; }
         public int PurchaseQuantity { get; set; }
         public int AdvisorId { get; set; }
         public string AdvisorName { get; set; }

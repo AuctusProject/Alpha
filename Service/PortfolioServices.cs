@@ -35,6 +35,11 @@ namespace Auctus.Service
             return PortfolioBusiness.List(email);
         }
 
+        public List<Model.Portfolio> ListPurchasedPortfolios(string email)
+        {
+            return PortfolioBusiness.ListPurchased(email);
+        }
+
         public void DisablePortfolio(string email, int portfolioId)
         {
             PortfolioBusiness.Disable(email, portfolioId);

@@ -26,5 +26,13 @@ namespace Auctus.Business.Account
             }
             return options;
         }
+
+        public GoalOption Get(int goalOptionId)
+        {
+            var option = List().SingleOrDefault(c => c.Id == goalOptionId);
+            if (option == null)
+                throw new ArgumentException("Invalid goal option.");
+            return option;
+        }
     }
 }

@@ -72,8 +72,8 @@ namespace Auctus.Business.Portfolio
                         PortfolioId = portfolio.Id,
                         RealValue = portfolioRealValue - 100.0,
                         ProjectionValue = projection.ProjectionValue,
-                        OptimisticProjectionValue = projection.OptimisticProjection,
-                        PessimisticProjectionValue = projection.PessimisticProjection
+                        OptimisticProjectionValue = projection.OptimisticProjectionValue,
+                        PessimisticProjectionValue = projection.PessimisticProjectionValue
                     };
                     Data.Insert(portfolioHistory);
                     return portfolioHistory;

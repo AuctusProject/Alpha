@@ -28,19 +28,17 @@ export class AdvisorStepComponent implements OnInit {
   }
 
   public next() {
-    this.onNextStep.emit(this.advisorModel);
+    this.onNextStep.emit();
   }
 
   onSubmit() {
-    this.advisorModel.id = Math.floor(Math.random() * 6) + 1 ;
-    this.next();
-    // if (this.advisorModel.id) {
-    //   this.advisorService.updateAdvisor(this.advisorModel).subscribe(val => this.next());
-    // }
-    // else {
-    //   this.advisorService.createAdvisor(this.advisorModel).subscribe(
-    //     advisor => this.afterSave(advisor));
-    // }
+    if (this.advisorModel.id) {
+      this.advisorService.updateAdvisor(this.advisorModel).subscribe(val => this.next());
+    }
+    else {
+      this.advisorService.createAdvisor(this.advisorModel).subscribe(
+        advisor => this.afterSave(advisor));
+    }
   }
 
   afterSave(advisor) {
