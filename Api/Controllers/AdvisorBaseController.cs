@@ -118,30 +118,33 @@ namespace Api.Controllers
             return Ok();
         }
 
-        //protected virtual IActionResult ListAdvisors()
-        //{
-        //    try
-        //    {
-        //        var advisors = AdvisorServices.ListAdvisors(GetUser());
-        //        return Ok(advisors);
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //}
+        protected virtual IActionResult ListRoboAdvisors(ListRoboAdvisorsRequest listRoboAdvisorsRequest)
+        {
+            if (listRoboAdvisorsRequest == null)
+                return BadRequest();
 
-        //protected virtual IActionResult ListAdvisorDetails(int advisorId)
-        //{
-        //    try
-        //    {
-        //        var advisor = AdvisorServices.ListAdvisorDetails(GetUser(), advisorId);
-        //        return Ok(advisor);
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //}
+            try
+            {
+                var result = AdvisorServices.ListRoboAdvisors(GetUser(), listRoboAdvisorsRequest.GoalOption, listRoboAdvisorsRequest.Risk);
+                return Ok(new { userRisk = result.Key, advisors = result.Value });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        protected virtual IActionResult ListAdvisorDetails(int advisorId)
+        {
+            try
+            {
+                var advisor = AdvisorServices.ListAdvisorDetails(GetUser(), advisorId);
+                return Ok(advisor);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

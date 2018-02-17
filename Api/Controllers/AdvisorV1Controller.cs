@@ -44,7 +44,7 @@ namespace Api.Controllers
             return base.AdvisorDisable(advisorId);
         }
 
-        [Route("purchase")]
+        [Route("purchases")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult Buy([FromBody]BuyRequest buyRequest)
@@ -52,7 +52,7 @@ namespace Api.Controllers
             return base.Buy(buyRequest);
         }
 
-        [Route("purchase/{buyId}/transaction")]
+        [Route("purchases/{buyId}/transaction")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult SetBuyTransaction([FromRoute]int buyId, [FromBody]BuyTransactionRequest buyTransactionRequest)
@@ -60,7 +60,7 @@ namespace Api.Controllers
             return base.SetBuyTransaction(buyId, buyTransactionRequest);
         }
 
-        [Route("purchase/{buyId}")]
+        [Route("purchases/{buyId}")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult CancelBuyTransaction([FromRoute]int buyId)
@@ -68,19 +68,21 @@ namespace Api.Controllers
             return base.CancelBuyTransaction(buyId);
         }
 
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult ListAdvisors()
-        //{
-        //    return base.ListAdvisors();
-        //}
+        [Route("robos")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListRoboAdvisors([FromBody]ListRoboAdvisorsRequest listRoboAdvisorsRequest)
+        {
+            return base.ListRoboAdvisors(listRoboAdvisorsRequest);
+        }
 
-        //[Route("{advisorId}")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult ListAdvisorDetails([FromRoute]int advisorId)
-        //{
-        //    return base.ListAdvisorDetails(advisorId);
-        //}
+        [AllowAnonymous]
+        [Route("{advisorId}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListAdvisorDetails([FromRoute]int advisorId)
+        {
+            return base.ListAdvisorDetails(advisorId);
+        }
     }
 }

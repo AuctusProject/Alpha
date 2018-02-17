@@ -96,6 +96,20 @@ namespace Api.Controllers
             return Ok(portfolios);
         }
 
+        protected virtual IActionResult ListPurchasedPortfolios()
+        {
+            List<Auctus.Model.Portfolio> portfolios;
+            try
+            {
+                portfolios = PortfolioServices.ListPurchasedPortfolios(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(portfolios);
+        }
+
         //protected virtual IActionResult Projection()
         //{
         //    Projections projections;

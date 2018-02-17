@@ -1,6 +1,7 @@
 ﻿using Auctus.DataAccess.Account;
 using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Account;
+using Auctus.Model;
 using Auctus.Util;
 using Auctus.Util.NotShared;
 using Dapper;
@@ -20,24 +21,41 @@ namespace Auctus.Business.Account
     {
         public UserBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public User Login(string address, string emailOrUsername, string password)
+        public Login Login(string address, string emailOrUsername, string password)
         {
             BaseAddressValidation(address);
             BasePasswordValidation(password);
             BaseEmailOrUsernameValidation(emailOrUsername);
-
+            
             var user = Data.GetByEmailOrUsername(emailOrUsername);
-            if(user.Wallet.Address.ToUpper() != address.ToUpper())
+            if (user.Wallet.Address.ToUpper() != address.ToUpper())
                 throw new ArgumentException("Wallet is invalid.");
             else if (user.Password != Security.Hash(password))
                 throw new ArgumentException("Password is invalid.");
-            else if (user.ConfirmationDate.HasValue)
+            
+            var result = new Model.Login()
+            {
+                Address = user.Wallet.Address,
+                Email = user.Email,
+                Username = user.Username,
+                PendingConfirmation = !user.ConfirmationDate.HasValue
+            };
+            if (!result.PendingConfirmation)
+            {
                 MemoryCache.Set<User>(user.Email, user);
+                var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+                var advisor = Task.Factory.StartNew(() => AdvisorBusiness.SimpleGetByOwner(user.Id));
 
-            return user;
+                Task.WaitAll(purchases, advisor);
+
+                result.HumanAdvisorId = advisor.Result?.Id;
+                result.HasInvestment = purchases.Result.Count > 0;
+            }
+
+            return result;
         }
 
-        public async Task<User> SimpleRegister(string address, string username, string email, string password)
+        public async Task<Login> SimpleRegister(string address, string username, string email, string password)
         {
             User user;
             using (var transaction = new TransactionalDapperCommand())
@@ -52,7 +70,13 @@ namespace Auctus.Business.Account
 
             await SendEmailConfirmation(user.Email, user.ConfirmationCode);
 
-            return user;
+            return new Model.Login()
+            {
+                Address = user.Wallet.Address,
+                Email = user.Email,
+                Username = user.Username,
+                PendingConfirmation = true
+            };
         }
 
         public async Task ResendEmailConfirmation(string email)

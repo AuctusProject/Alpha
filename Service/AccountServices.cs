@@ -1,4 +1,5 @@
 ﻿using Auctus.DomainObjects.Account;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
@@ -38,7 +39,7 @@ namespace Auctus.Service
             await UserBusiness.ResendEmailConfirmation(email);
         }
 
-        public async Task<User> SimpleRegister(string address, string username, string email, string password)
+        public async Task<Login> SimpleRegister(string address, string username, string email, string password)
         {
             return await UserBusiness.SimpleRegister(address, username, email, password);
         }
@@ -73,7 +74,7 @@ namespace Auctus.Service
             ApiAccessBusiness.Delete(email);
         }
 
-        public User Login(string address, string emailOrUsername, string password)
+        public Login Login(string address, string emailOrUsername, string password)
         {
             return UserBusiness.Login(address, emailOrUsername, password);
         }

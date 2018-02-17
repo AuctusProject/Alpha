@@ -57,6 +57,14 @@ namespace Api.Controllers
             return base.ListPortfolios();
         }
 
+        [Route("purchases")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListPurchasedPortfolios()
+        {
+            return base.ListPurchasedPortfolios();
+        }
+
         //[Route("projections")]
         //[HttpGet]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]

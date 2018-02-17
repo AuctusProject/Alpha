@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Auctus.DomainObjects.Advisor;
 
 namespace Auctus.Business.Portfolio
 {
@@ -134,9 +135,14 @@ namespace Auctus.Business.Portfolio
                 return RiskType.VeryHigh;
         }
 
-        public DomainObjects.Portfolio.Portfolio GetWithDetail(int portfolioId)
+        public DomainObjects.Portfolio.Portfolio GetWithDetails(int portfolioId)
         {
-            return Data.GetWithDetail(portfolioId);
+            return ListWithDetails(new int[] { portfolioId }).SingleOrDefault();
+        }
+
+        public List<DomainObjects.Portfolio.Portfolio> ListWithDetails(IEnumerable<int> portfolioIds)
+        {
+            return Data.ListWithDetails(portfolioIds);
         }
 
         public DomainObjects.Portfolio.Portfolio GetByRisk(int roboAdvisorId, RiskType riskType)
@@ -182,50 +188,80 @@ namespace Auctus.Business.Portfolio
         public List<Model.Portfolio> List(string email)
         {
             var user = UserBusiness.GetValidUser(email);
-            var portfolios = Data.ListAllValids();
             var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
-            var advisorsQty = Task.Factory.StartNew(() => BuyBusiness.ListAdvisorsPurchases(portfolios.Select(c => c.AdvisorId)));
+            var portfolios = Data.ListAllValids();
+            var portfoliosQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(portfolios.Select(c => c.Id)));
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
             
-            Task.WaitAll(purchases, advisorsQty);
+            Task.WaitAll(purchases, portfoliosQty);
             Task.WaitAll(histories.ToArray());
 
             portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
 
-            return portfolios.Select(c => new Model.Portfolio()
+            return portfolios.Select(c => FillPortfolioModel(c, c.Advisor, user, purchases.Result, portfoliosQty.Result))
+                .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
+        }
+
+        public List<Model.Portfolio> ListPurchased(string email)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var purchases = BuyBusiness.ListPurchases(user.Id);
+            if (purchases.Count == 0)
+                return new List<Model.Portfolio>();
+
+            var portfoliosQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(purchases.Select(c => c.PortfolioId)));
+            var portfolios = Task.Factory.StartNew(() => PortfolioBusiness.ListWithDetails(purchases.Select(c => c.PortfolioId)));
+            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
+            foreach (var buy in purchases)
+                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(buy.PortfolioId)));
+
+            Task.WaitAll(portfolios, portfoliosQty);
+            Task.WaitAll(histories.ToArray());
+
+            portfolios.Result.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+
+            return portfolios.Result.Select(c => FillPortfolioModel(c, c.Advisor, user, purchases, portfoliosQty.Result))
+                .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
+        }
+        
+        public Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
+            List<Buy> purchases, Dictionary<int, int> purchasesQty)
+        {
+            return new Model.Portfolio()
             {
-                Id = c.Id,
-                Name = c.Detail.Name,
-                Description = c.Detail.Description,
-                Price = c.Detail.Price,
-                AdvisorId = c.AdvisorId,
-                AdvisorDescription = c.Advisor.Detail.Description,
-                AdvisorName = c.Advisor.Detail.Name,
-                Risk = c.Projection.Risk,
-                ProjectionPercent = c.Projection.ProjectionValue,
-                OptimisticPercent = c.Projection.OptimisticProjectionValue,
-                PessimisticPercent = c.Projection.PessimisticProjectionValue,
-                Owned = c.Advisor.UserId == user.Id,
-                Purchased = purchases.Result.Any(x => x.UserId == user.Id),
-                PurchaseQuantity = advisorsQty.Result.ContainsKey(c.AdvisorId) ? advisorsQty.Result[c.AdvisorId] : 0,
-                TotalDays = histories.Count,
-                LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, c.PortfolioHistory),
-                Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, c.PortfolioHistory),
-                Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, c.PortfolioHistory),
-                AllDays = PortfolioHistoryBusiness.GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(c.PortfolioHistory.Min(x => x.Date)).TotalDays) + 1, c.PortfolioHistory)
-            }).OrderByDescending(c => c.PurchaseQuantity).ThenBy(c => c.ProjectionPercent).ToList();
+                Id = portfolio.Id,
+                Name = portfolio.Detail.Name,
+                Description = portfolio.Detail.Description,
+                Price = portfolio.Detail.Price,
+                AdvisorId = portfolio.AdvisorId,
+                AdvisorDescription = advisor.Detail.Description,
+                AdvisorName = advisor.Detail.Name,
+                Risk = portfolio.Projection.Risk,
+                ProjectionPercent = portfolio.Projection.ProjectionValue,
+                OptimisticPercent = portfolio.Projection.OptimisticProjection,
+                PessimisticPercent = portfolio.Projection.PessimisticProjection,
+                Owned = user != null && advisor.UserId == user.Id,
+                Purchased = purchases != null && purchases.Any(x => x.PortfolioId == portfolio.Id),
+                Enabled = portfolio.Detail.Enabled,
+                PurchaseQuantity = purchasesQty.ContainsKey(portfolio.Id) ? purchasesQty[portfolio.Id] : 0,
+                TotalDays = portfolio.PortfolioHistory.Count,
+                LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
+                Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory),
+                Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory),
+                AllDays = PortfolioHistoryBusiness.GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.PortfolioHistory.Min(x => x.Date)).TotalDays) + 1, portfolio.PortfolioHistory)
+            };
         }
 
-        public List<DomainObjects.Portfolio.Portfolio> List(int advisorId)
+        public List<DomainObjects.Portfolio.Portfolio> List(int advisorId, bool onlyEnabled = true)
         {
-            return List(new int[] { advisorId }).Single().Value;
+            return List(new int[] { advisorId }, onlyEnabled).Single().Value;
         }
 
-        public List<DomainObjects.Portfolio.Portfolio> ListWithHistory(int advisorId)
+        public List<DomainObjects.Portfolio.Portfolio> ListWithHistory(int advisorId, bool onlyEnabled = true)
         {
-            var portfolios = List(advisorId);
+            var portfolios = List(advisorId, onlyEnabled);
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
@@ -236,9 +272,9 @@ namespace Auctus.Business.Portfolio
             return portfolios;
         }
 
-        public Dictionary<int, List<DomainObjects.Portfolio.Portfolio>> List(IEnumerable<int> advisorId)
+        public Dictionary<int, List<DomainObjects.Portfolio.Portfolio>> List(IEnumerable<int> advisorId, bool onlyEnabled = true)
         {
-            var portfolio = Data.ListByAdvisor(advisorId);
+            var portfolio = Data.ListByAdvisor(advisorId, onlyEnabled);
             return portfolio.GroupBy(c => c.AdvisorId, c => c, (k, v) => new KeyValuePair<int, List<DomainObjects.Portfolio.Portfolio>>(k, v.ToList())).ToDictionary(c => c.Key, c => c.Value);
         }
 

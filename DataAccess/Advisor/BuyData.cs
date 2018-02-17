@@ -23,6 +23,16 @@ namespace Auctus.DataAccess.Advisor
                                                                             INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
                                                                             WHERE bt2.BuyId = b.Id)";
 
+        private const string SELECT_USER_PURCHASE_BY_ADVISOR = @"SELECT b.*, t.*, p.* FROM 
+                                                                Buy b 
+                                                                INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
+                                                                INNER JOIN [Transaction] t ON t.Id = bt.TransactionId
+                                                                INNER JOIN Portfolio p ON p.Id = b.PortfolioId 
+                                                                WHERE b.UserId = @UserId AND p.AdvisorId = @AdvisorId AND
+                                                                t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2 
+                                                                                    INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
+                                                                                    WHERE bt2.BuyId = b.Id)";
+
         private const string SELECT_PURCHASE = @"SELECT b.*, t.* FROM 
                                                 Buy b 
                                                 INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
@@ -32,16 +42,16 @@ namespace Auctus.DataAccess.Advisor
                                                                     INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
                                                                     WHERE bt2.BuyId = b.Id)";
 
-        private const string SELECT_ADVISOR_PURCHASE = @"SELECT b.*, g.* FROM 
-                                                         Buy b 
-                                                         INNER JOIN Goal g ON g.Id = b.GoalId 
-                                                         WHERE g.UserId = @UserId AND b.AdvisorId = @AdvisorId";
+        private const string SELECT_ADVISOR_PURCHASE_QTY = @"SELECT m.AdvisorId, COUNT(b.Id) Qty FROM 
+                                                             Buy b
+                                                             INNER JOIN Portfolio m ON m.Id = b.PortfolioId
+                                                             WHERE b.ExpirationDate IS NOT NULL AND ({0})
+                                                             GROUP BY m.AdvisorId";
 
-        private const string SELECT_PURCHASE_QTY = @"SELECT p.AdvisorId, COUNT(b.Id) Qty FROM 
-                                                     Buy b
-                                                     INNER JOIN Portfolio p ON p.Id = b.PortfolioId
-                                                     WHERE b.ExpirationDate IS NOT NULL AND ({0})
-                                                     GROUP BY p.AdvisorId";
+        private const string SELECT_PORTFOLIO_PURCHASE_QTY = @"SELECT m.PortfolioId, COUNT(m.Id) Qty FROM 
+                                                             Buy m
+                                                             WHERE m.ExpirationDate IS NOT NULL AND ({0})
+                                                             GROUP BY m.PortfolioId";
 
         private const string SELECT_PURCHASE_WITH_PORTFOLIO = @"SELECT b.*, g.*, e.*, p.* FROM 
                                                                 Buy b 
@@ -89,12 +99,13 @@ namespace Auctus.DataAccess.Advisor
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int32);
             parameters.Add("AdvisorId", advisorId, DbType.Int32);
-            return Query<Buy, Goal, Buy>(SELECT_ADVISOR_PURCHASE,
-                            (buy, goal) =>
+            return Query<Buy, Transaction, DomainObjects.Portfolio.Portfolio, Buy>(SELECT_USER_PURCHASE_BY_ADVISOR,
+                            (buy, trans, port) =>
                             {
-                                buy.Goal = goal;
+                                buy.LastTransaction = trans;
+                                buy.Portfolio = port;
                                 return buy;
-                            }, "Id", parameters).ToList();
+                            }, "Id,Id", parameters).ToList();
         }
 
         //public List<Buy> ListPurchasesWithPortfolio(int userId)
@@ -128,25 +139,34 @@ namespace Auctus.DataAccess.Advisor
         //                        return buy;
         //                    }, "Id,Id,Id,Id,Id", parameters).ToList();
         //}
+        
+        public Dictionary<int, int> ListPortfoliosPurchases(IEnumerable<int> portfolioIds)
+        {
+            return ListPurchasesQty(portfolioIds, "PortfolioId", SELECT_PORTFOLIO_PURCHASE_QTY);
+        }
 
         public Dictionary<int, int> ListAdvisorsPurchases(IEnumerable<int> advisorIds)
         {
+            return ListPurchasesQty(advisorIds, "AdvisorId", SELECT_ADVISOR_PURCHASE_QTY);
+        }
+
+        private Dictionary<int, int> ListPurchasesQty(IEnumerable<int> ids, string columnName, string query)
+        {
             Dictionary<int, int> result = new Dictionary<int, int>();
-            if (advisorIds.Any())
+            if (ids.Any())
             {
-                List<string> advisorRestrictions = new List<string>();
+                List<string> restrictions = new List<string>();
                 DynamicParameters parameters = new DynamicParameters();
-                for (int i = 0; i < advisorIds.Count(); ++i)
+                for (int i = 0; i < ids.Count(); ++i)
                 {
-                    var parameterName = string.Format("@advisor{0}", i);
-                    advisorRestrictions.Add(string.Format("b.AdvisorId={0}", parameterName));
-                    parameters.Add(parameterName, advisorIds.ElementAt(i), DbType.Int32);
+                    var parameterName = string.Format("@id{0}", i);
+                    restrictions.Add(string.Format("m.{0}={1}", columnName, parameterName));
+                    parameters.Add(parameterName, ids.ElementAt(i), DbType.Int32);
                 }
-                var advisorsQty = Query(string.Format(SELECT_PURCHASE_QTY, string.Join(" OR ", advisorRestrictions)), parameters);
+                var qty = Query(string.Format(query, string.Join(" OR ", restrictions)), parameters);
 
-
-                foreach (IDictionary<string, object> pair in advisorsQty)
-                    result.Add(Convert.ToInt32(pair["AdvisorId"]), Convert.ToInt32(pair["Qty"]));
+                foreach (IDictionary<string, object> pair in qty)
+                    result.Add(Convert.ToInt32(pair[columnName]), Convert.ToInt32(pair["Qty"]));
             }
             return result;
         }
