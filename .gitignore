@@ -86,3 +86,4 @@ WebApi/Controllers/PresaleController.cs
 **/node_modules
 /Web/wwwroot
 Node/.env
+Node/config/environments/dev.js

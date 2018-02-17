@@ -8,7 +8,9 @@ module.exports = function(router) {
 
   router.route('/')
   .post(function(req, res, next) {
-    new FaucetController().request(req.body, next);
-    res.end("OK");
+    new FaucetController().request(req.body, function(err){
+      if (err) next(err);
+      else res.end("OK");
+    });
   });
 };

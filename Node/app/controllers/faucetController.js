@@ -10,9 +10,9 @@ class faucetController {
         if (!Web3Helper.IsAddress(json.address)) throw new Error('not a valid ethereum address');
     }
 
-    request(json, next) {
+    request(json, cb) {
         this.valid(json);
-        new Wallet(json.address).request();
+        new Wallet(json.address).request(cb);
     }
 }
 
