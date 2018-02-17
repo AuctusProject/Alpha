@@ -1,6 +1,7 @@
 // config/initializers/server.js
 
 var Web3 = require('web3');
+var Web3Utils = require('web3-utils');
 var config = require('nconf');
 
 class Web3Helper {
@@ -12,21 +13,11 @@ class Web3Helper {
   getBlockNumber(){
     return this._web3.eth.blockNumber;
   }
+
+  static IsAddress(address){
+    return Web3Utils.isAddress(address);
+  }
 }
-
-// var init =  function() {
-//   'use strict'; 
-
-  
-
-//   var web3Helper = {};
-  
-//   web3Helper.getBlockNumber = function(){
-//     return _web3.eth.blockNumber;
-//   }
-
-//   return web3Helper;
-// };
 
 module.exports = Web3Helper;
 

@@ -21,7 +21,6 @@ module.exports = function(router) {
 
   router.route('/')
   .get(function(req, res, next) {
-    console.log(web3Helper.getBlockNumber());
     // Logic for GET /transactions routes
   }).post(function(req, res, next) {
     // Create new transaction
