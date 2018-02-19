@@ -25,7 +25,7 @@ namespace Auctus.Business.Advisor
                 throw new ArgumentException("Invalid purchase days.");
 
             var user = UserBusiness.GetValidUser(email, address);
-            var portfolio = PortfolioBusiness.GetWithDetail(portfolioId);
+            var portfolio = PortfolioBusiness.GetWithDetails(portfolioId);
 
             if (portfolio == null || !portfolio.Detail.Enabled || !portfolio.Advisor.Detail.Enabled)
                 throw new ArgumentException("Invalid portfolio.");
@@ -42,6 +42,9 @@ namespace Auctus.Business.Advisor
                 Goal goal = null;
                 if (portfolio.Advisor.Type == AdvisorType.Robo)
                 {
+                    if (!goalOptionId.HasValue || !timeframe.HasValue || !risk.HasValue || !startingAmount.HasValue || !monthlyContribution.HasValue)
+                        throw new ArgumentException("Invalid goal data.");
+
                     goal = GoalBusiness.SetNew(user.Id, goalOptionId.Value, timeframe.Value, risk.Value, targetAmount, startingAmount.Value, monthlyContribution.Value);
                     transaction.Insert(goal);
                 }
@@ -75,9 +78,7 @@ namespace Auctus.Business.Advisor
 
         public List<Buy> ListPurchases(int userId)
         {
-            var purchases = Data.ListPurchases(userId);
-            return purchases.Where(c => (c.ExpirationDate.HasValue && c.ExpirationDate.Value >= DateTime.UtcNow) ||
-                                    (!c.ExpirationDate.HasValue && c.LastTransaction.TransactionStatus != TransactionStatus.Cancel)).ToList();
+            return ListValidPurchases(Data.ListPurchases(userId));
         }
 
         public Buy Get(int id)
@@ -87,7 +88,7 @@ namespace Auctus.Business.Advisor
 
         public List<Buy> ListUserAdvisorPurchases(int userId, int advisorId)
         {
-            return Data.ListUserAdvisorPurchases(userId, advisorId);
+            return ListValidPurchases(Data.ListUserAdvisorPurchases(userId, advisorId));
         }
 
         public Dictionary<int, int> ListAdvisorsPurchases(IEnumerable<int> advisorIds)
@@ -100,6 +101,11 @@ namespace Auctus.Business.Advisor
             return Data.ListPortfoliosPurchases(portfolioIds);
         }
 
+        private List<Buy> ListValidPurchases(IEnumerable<Buy> purchases)
+        {
+            return purchases.Where(c => (c.ExpirationDate.HasValue && c.ExpirationDate.Value >= DateTime.UtcNow) ||
+                                    (!c.ExpirationDate.HasValue && c.LastTransaction.TransactionStatus != TransactionStatus.Cancel)).ToList();
+        }
         //public List<Buy> ListPurchasesWithPortfolio(int userId)
         //{
         //    return Data.ListPurchasesWithPortfolio(userId);

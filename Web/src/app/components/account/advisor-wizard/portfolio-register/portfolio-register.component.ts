@@ -15,27 +15,28 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 })
 export class PortfolioRegisterComponent implements OnInit {
   @Input() index: number;
-  @Input() risk: RiskType;
   @Input() assets: Asset[];
   assetsDistributionRows: AssetDistribution[];
   @Input() model: PortfolioRequest;
   @ViewChild('portfolioRegisterForm') portfolioRegisterForm;
-  isEditing = false;
   totalDistributionPercentage = 0;
   totalPercentageForm: FormControl = new FormControl("", [Validators.required, Validators.min(100), Validators.max(100)]);
 
   constructor(private ref: ChangeDetectorRef, private portfolioService: PortfolioService) { }
 
   ngOnInit() {
-    this.model = new PortfolioRequest();
+
+    if (this.model == null) {
+      this.model = new PortfolioRequest();
+    }
     this.assetsDistributionRows = [];
     this.assetsDistributionRows.push(new AssetDistribution());
     this.assetsDistributionRows[0].percentage = 100;
     this.portfolioRegisterForm.control.addControl("TotalPercentage", this.totalPercentageForm);
   }
 
-  public addPortfolio() {
-    this.isEditing = true;
+  public editPortfolio() {
+    this.model.isEditing = true;
   }
 
   public addNewRow(rowIndex: number) {
@@ -104,11 +105,17 @@ export class PortfolioRegisterComponent implements OnInit {
 
   onSubmit() {
     for (let row of this.assetsDistributionRows) {
-      this.model.distribution.push({
-        assetId: row.id,
-        percentage: row.percentage 
-      });
+      if (!this.model.distribution.some(item => item.assetId === row.id)) {
+        this.model.distribution.push({
+          assetId: row.id,
+          percentage: row.percentage
+        });
+      }
     }
-    this.portfolioService.savePortfolio(this.model).subscribe(model => console.log(model.advisorId));
+    this.portfolioService.savePortfolio(this.model)
+      .subscribe(model => {
+        this.model.id = model.id;
+        this.model.isEditing = false;
+      });
   }
 }

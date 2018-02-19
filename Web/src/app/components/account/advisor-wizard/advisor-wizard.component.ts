@@ -13,6 +13,7 @@ export class AdvisorWizardComponent implements OnInit {
 
   public currentStep;
   public advisorModel: Advisor;
+  public editedAdvisorModel: Advisor;
   public wizardSteps = AdvisorWizardStep;
 
   constructor() {
@@ -38,24 +39,20 @@ export class AdvisorWizardComponent implements OnInit {
     }
   }
 
-  public nextStep(advisorModel) {
+  public nextStep() {
 
-    if (advisorModel) {
-      this.advisorModel = advisorModel;
-      switch (this.currentStep) {
-        case this.wizardSteps.Advisor.Id:
-          this.currentStep = this.wizardSteps.Portfolio.Id;
-          break;
-        case this.wizardSteps.Portfolio.Id:
-          this.currentStep = this.wizardSteps.Start.Id;
-          break;
-      }
-    } else {
-      this.currentStep = this.wizardSteps.Start.Id;
+    switch (this.currentStep) {
+      case this.wizardSteps.Start.Id:
+        this.currentStep = this.wizardSteps.Advisor.Id;
+        this.editedAdvisorModel = JSON.parse(JSON.stringify(this.advisorModel));
+        break;
+      case this.wizardSteps.Advisor.Id:
+        this.currentStep = this.wizardSteps.Portfolio.Id;
+        this.advisorModel = JSON.parse(JSON.stringify(this.editedAdvisorModel));
+        break;
+      case this.wizardSteps.Portfolio.Id:
+        this.currentStep = this.wizardSteps.Start.Id;
+        break;
     }
-  }
-
-  public getAdvisorModel() {
-    return JSON.parse(JSON.stringify(this.advisorModel));
   }
 }

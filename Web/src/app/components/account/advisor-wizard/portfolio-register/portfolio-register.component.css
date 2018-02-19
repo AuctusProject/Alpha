@@ -74,22 +74,23 @@
   border-radius: 3px;
   background-color: #f3f5f8;
   padding: 3px 12px 3px 12px;
-  height: 30px;
+  min-height: 30px;
   flex: 1 1 100%;
 }
 
-/deep/ .mat-form-field-wrapper {
+/* /deep/ .mat-form-field-wrapper {
   padding-bottom: 0px;
-}
+} */
 
-/deep/ .expected-returns .mat-form-field-label-wrapper {
+/deep/ .portfolio-input .mat-form-field-label-wrapper {
+  margin-top: 3px;
   left: -12px;
   top: -26px;
   min-width: 120px;
   color: #55606e;
 }
 
-.expected-returns label {
+.portfolio-input label {
   font-size: 12px;
   color: #55606e;
   margin-bottom: 8px;
@@ -181,3 +182,7 @@
   color: #4a4a4a;
   width: 50px
 }
+
+.suffix-disabled {
+    color: #9D9EA0;
+  }

@@ -26,22 +26,7 @@ namespace Auctus.Business.Account
             Data.Insert(goal);
             return goal;
         }
-
-        private void TimeFrameValidation(int timeFrame)
-        {
-            if (timeFrame == 0)
-            {
-                throw new ArgumentException("Years must be filled and more than 0 (zero).");
-            }
-        }
         
-        private void GoalOptionValidation(int goalOptionId)
-        {
-            if (goalOptionId == 0) {
-                throw new ArgumentException("Goal option must be filled.");
-            }
-        }
-
         public Goal GetCurrent(int userId)
         {
             var goal = Data.GetCurrent(userId);
@@ -55,9 +40,12 @@ namespace Auctus.Business.Account
 
         public Goal SetNew(int userId, int goalOptionId, int timeframe, int risk, double? targetAmount, double startingAmount, double monthlyContribution)
         {
-            GoalOptionValidation(goalOptionId);
-            TimeFrameValidation(timeframe);
+            GoalOptionsBusiness.Get(goalOptionId);
             RiskType riskType = RiskType.Get(risk);
+            if (timeframe <= 0)
+                throw new ArgumentException("Invalid timeframe for goal.");
+            if ((startingAmount == 0 && monthlyContribution == 0) || startingAmount < 0 || monthlyContribution < 0)
+                throw new ArgumentException("Invalid contribution.");
 
             var goal = new Goal();
             goal.UserId = userId;
