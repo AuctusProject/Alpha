@@ -1,4 +1,1 @@
-<p *ngFor="let portfolio of portfolios">
-  {{portfolio.Id}}
-
-</p>
+<portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>

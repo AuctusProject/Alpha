@@ -120,6 +120,13 @@ namespace Auctus.Business.Portfolio
             return portfolioHistory;
         }
 
+        public Model.Portfolio.HistoryResult GetHistoryResult(IEnumerable<PortfolioHistory> portfolioHistory)
+        {
+            int days = (portfolioHistory != null && portfolioHistory.Any()) ? 
+                (int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolioHistory.Min(x => x.Date)).TotalDays) + 1 : 1;
+            return GetHistoryResult(days, portfolioHistory);
+        }
+
         public Model.Portfolio.HistoryResult GetHistoryResult(int days, IEnumerable<PortfolioHistory> portfolioHistory)
         {
             var history = portfolioHistory.Where(c => c.Date >= DateTime.UtcNow.AddDays(-days).Date);

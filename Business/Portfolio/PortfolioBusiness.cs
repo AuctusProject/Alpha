@@ -215,7 +215,7 @@ namespace Auctus.Business.Portfolio
                 LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, c.PortfolioHistory),
                 Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, c.PortfolioHistory),
                 Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, c.PortfolioHistory),
-                AllDays = PortfolioHistoryBusiness.GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(c.PortfolioHistory.Min(x => x.Date)).TotalDays) + 1, c.PortfolioHistory)
+                AllDays = PortfolioHistoryBusiness.GetHistoryResult(c.PortfolioHistory)
             }).OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
