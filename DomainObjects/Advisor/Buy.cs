@@ -33,6 +33,7 @@ namespace Auctus.DomainObjects.Advisor
 
         public Goal Goal { get; set; }
         public PortfolioDetail PortfolioDetail { get; set; }
+        public Projection Projection { get; set; }
         public DomainObjects.Portfolio.Portfolio Portfolio { get; set; }
         public Transaction LastTransaction { get; set; }
     }

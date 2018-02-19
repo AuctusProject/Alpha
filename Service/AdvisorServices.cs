@@ -52,5 +52,15 @@ namespace Auctus.Service
         {
             return AdvisorBusiness.ListRoboAdvisors(email, goalOptionId, risk);
         }
+
+        public void EvaluateEscrowResults()
+        {
+            EscrowResultBusiness.Evaluate();
+        }
+
+        public void MakeEscrowResultsTransaction()
+        {
+            EscrowResultTransactionBusiness.MakeTransactions();
+        }
     }
 }

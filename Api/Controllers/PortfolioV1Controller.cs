@@ -73,28 +73,20 @@ namespace Api.Controllers
             return base.ListRoboAdvisors(goalOption, risk);
         }
 
-        //[Route("projections")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult Projection()
-        //{
-        //    return base.Projection();
-        //}
+        [Route("{portfolioId}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetPortfolio([FromRoute]int portfolioId)
+        {
+            return base.GetPortfolio(portfolioId);
+        }
 
-        //[Route("history")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult PortfolioHistory()
-        //{
-        //    return base.PortfolioHistory();
-        //}
-
-        //[Route("distribution")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult PortfolioDistribution()
-        //{
-        //    return base.PortfolioDistribution();
-        //}
+        [Route("{portfolioId}/distribution")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetDistribution([FromRoute]int portfolioId)
+        {
+            return base.GetDistribution(portfolioId);
+        }
     }
 }

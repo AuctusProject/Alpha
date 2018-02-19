@@ -125,47 +125,31 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+        
+        protected virtual IActionResult GetPortfolio(int portfolioId)
+        {
+            try
+            {
+                var portfolio = PortfolioServices.GetPortfolio(GetUser(), portfolioId);
+                return Ok(portfolio);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
 
-        //protected virtual IActionResult Projection()
-        //{
-        //    Projections projections;
-        //    try
-        //    {
-        //        projections = PortfolioServices.GetProjections(GetUser());
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //    return Ok(projections);
-        //}
-
-        //protected virtual IActionResult PortfolioHistory()
-        //{
-        //    List<Auctus.Model.PortfolioHistory> portfolioHistory;
-        //    try
-        //    {
-        //        portfolioHistory = PortfolioServices.ListHistory(GetUser());
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //    return Ok(portfolioHistory);
-        //}
-
-        //protected virtual IActionResult PortfolioDistribution()
-        //{
-        //    List<Auctus.Model.PortfolioDistribution> portfolioDistribution;
-        //    try
-        //    {
-        //        portfolioDistribution = PortfolioServices.ListPortfolioDistribution(GetUser());
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //    return Ok(portfolioDistribution);
-        //}
+        protected virtual IActionResult GetDistribution(int portfolioId)
+        {
+            try
+            {
+                var distribution = PortfolioServices.ListPortfolioDistribution(GetUser(), portfolioId);
+                return Ok(distribution);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

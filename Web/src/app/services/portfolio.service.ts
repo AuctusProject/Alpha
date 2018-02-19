@@ -36,8 +36,12 @@ export class PortfolioService {
     return this.httpService.get(this.getPortfoliosDistributionUrl);
   }
 
-  savePortfolio(portfolioRequest: PortfolioRequest): Observable<PortfolioRequest> {
+  createPortfolio(portfolioRequest: PortfolioRequest): Observable<PortfolioRequest> {
     return this.httpService.post(this.savePortfolioUrl, portfolioRequest);
+  }
+
+  updatePortfolio(portfolioRequest: PortfolioRequest): Observable<PortfolioRequest> {
+    return this.httpService.put(this.savePortfolioUrl, portfolioRequest);
   }
 
   getRoboPortfolios(goalOption: number, risk: number): Observable<ListRoboAdvisorsResponse> {

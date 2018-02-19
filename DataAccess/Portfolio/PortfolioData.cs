@@ -53,6 +53,17 @@ namespace Auctus.DataAccess.Portfolio
                                                 d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) AND
                                                 e.Date = (SELECT max(e2.Date) FROM PortfolioDetail e2 WHERE e2.PortfolioId = p.Id)";
 
+        private const string SELECT_COMPLETE = @"SELECT p.*, e.*, j.*, a.*, d.* FROM 
+                                                Portfolio p  
+                                                INNER JOIN Projection j ON p.ProjectionId = j.Id
+                                                INNER JOIN Advisor a ON a.Id = p.AdvisorId  
+                                                INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
+                                                INNER JOIN PortfolioDetail e on e.PortfolioId = p.Id 
+                                                WHERE 
+                                                p.Id = @Id AND
+                                                d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) AND
+                                                e.Date = (SELECT max(e2.Date) FROM PortfolioDetail e2 WHERE e2.PortfolioId = p.Id)";
+
         private const string SELECT_WITH_DETAIL = @"SELECT p.*, d.*, a.*, e.* FROM 
                                                     Portfolio p 
                                                     INNER JOIN PortfolioDetail d on d.PortfolioId = p.Id
@@ -122,6 +133,22 @@ namespace Auctus.DataAccess.Portfolio
                                 port.Detail = portdet;
                                 return port;
                             }, "Id,Id,Id,Id").ToList();
+        }
+
+        public DomainObjects.Portfolio.Portfolio Get(int portfolioId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Id", portfolioId, DbType.Int32);
+            return Query<DomainObjects.Portfolio.Portfolio, PortfolioDetail, Projection, DomainObjects.Advisor.Advisor, AdvisorDetail, 
+                DomainObjects.Portfolio.Portfolio>(SELECT_COMPLETE,
+                            (port, portdet, proj, adv, advdet) =>
+                            {
+                                port.Advisor = adv;
+                                port.Advisor.Detail = advdet;
+                                port.Projection = proj;
+                                port.Detail = portdet;
+                                return port;
+                            }, "Id,Id,Id,Id", parameters).SingleOrDefault();
         }
 
         public IEnumerable<DomainObjects.Portfolio.Portfolio> ListAll()
