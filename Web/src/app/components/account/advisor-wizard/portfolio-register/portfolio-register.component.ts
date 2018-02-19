@@ -112,10 +112,18 @@ export class PortfolioRegisterComponent implements OnInit {
         });
       }
     }
-    this.portfolioService.savePortfolio(this.model)
-      .subscribe(model => {
-        this.model.id = model.id;
-        this.model.isEditing = false;
-      });
+
+    if (this.model.id == null) {
+      this.portfolioService.createPortfolio(this.model)
+        .subscribe(model => {
+          this.model.id = model.id;
+          this.model.isEditing = false;
+        });
+    } else {
+      this.portfolioService.updatePortfolio(this.model)
+        .subscribe(model => {
+          this.model.isEditing = false;
+        });
+    }
   }
 }
