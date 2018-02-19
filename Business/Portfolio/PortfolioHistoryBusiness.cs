@@ -92,10 +92,11 @@ namespace Auctus.Business.Portfolio
         {
             string cacheKey = string.Format("PortfolioHistory{0}", portfolioId);
             var portfolioHistory = MemoryCache.Get<List<PortfolioHistory>>(cacheKey);
-            if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != DateTime.UtcNow.Date)
+            var yesterday = DateTime.UtcNow.Date.AddDays(-1);
+            if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != yesterday)
             {
                 portfolioHistory = Data.ListHistory(portfolioId);
-                if (portfolioHistory?.LastOrDefault()?.Date.Date == DateTime.UtcNow.Date)
+                if (portfolioHistory?.LastOrDefault()?.Date.Date == yesterday)
                     MemoryCache.Set<List<PortfolioHistory>>(cacheKey, portfolioHistory, 720);
             }
             return portfolioHistory;

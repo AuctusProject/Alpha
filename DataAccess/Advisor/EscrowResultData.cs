@@ -23,6 +23,26 @@ namespace Auctus.DataAccess.Advisor
                                                                                 INNER JOIN [Transaction] t2 ON t2.Id = ert2.TransactionId
                                                                                 WHERE ert2.EscrowResultId = e.Id)";
 
+
+
+        private const string SELECT_PENDING_TRANSACTIONS = @"SELECT e.*, t.* FROM 
+                                                            EscrowResult e
+                                                            INNER JOIN EscrowResultTransaction et 
+                                                            INNER JOIN [Transaction] t ON t.Id = et.TransactionId
+                                                            WHERE t.TransactionHash IS NULL AND t.CreationDate > @CreationDate ";
+
+        public List<EscrowResult> ListPendingCreation()
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("CreationDate", DateTime.UtcNow.AddDays(-7), DbType.DateTime);
+            return Query<EscrowResult, Transaction, EscrowResult>(SELECT_PENDING_TRANSACTIONS,
+                                (er, trans) =>
+                                {
+                                    er.LastTransaction = trans;
+                                    return er;
+                                }, "Id", parameters).ToList();
+        }
+
         public List<EscrowResult> ListByPortfolio(int portfolioId)
         {
             DynamicParameters parameters = new DynamicParameters();

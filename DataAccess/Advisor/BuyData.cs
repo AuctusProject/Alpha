@@ -69,6 +69,11 @@ namespace Auctus.DataAccess.Advisor
                                                                             INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
                                                                             WHERE bt2.BuyId = b.Id)";
 
+        private const string SELECT_PENDING_ESCROWRESULT = @"SELECT b.* FROM 
+                                                            Buy b 
+                                                            WHERE b.ExpirationDate IS NOT NULL AND b.ExpirationDate < @ExpirationDate
+                                                            AND NOT EXISTS (SELECT 1 FROM EscrowResult e WHERE e.BuyId = b.Id)";
+
         public List<Buy> ListPurchases(int userId)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -121,6 +126,13 @@ namespace Auctus.DataAccess.Advisor
                                 buy.Goal = goal;
                                 return buy;
                             }, "Id,Id,Id,Id", parameters).SingleOrDefault();
+        }
+
+        public List<Buy> ListPendingEscrowResult()
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("ExpirationDate", DateTime.UtcNow, DbType.DateTime);
+            return SelectByParameters<Buy>(parameters).ToList();
         }
 
         public double? ListPortfolioPurchaseAmount(int portfolioId)

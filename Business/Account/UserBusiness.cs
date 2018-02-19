@@ -168,6 +168,16 @@ namespace Auctus.Business.Account
             return Data.Get(id);
         }
 
+        public User GetWithWallet(int id)
+        {
+            return Data.GetWithWallet(id);
+        }
+
+        public User GetOwner(int buyId)
+        {
+            return Data.GetOwner(buyId);
+        }
+
         private async Task SendEmailConfirmation(string email, string code)
         {
             await Email.SendAsync(

@@ -101,6 +101,11 @@ namespace Auctus.Business.Advisor
             return Data.ListPortfolioPurchaseAmount(portfolioId);
         }
 
+        public List<Buy> ListPendingEscrowResult()
+        {
+            return Data.ListPendingEscrowResult();
+        }
+
         public Dictionary<int, int> ListAdvisorsPurchases(IEnumerable<int> advisorIds)
         {
             return Data.ListAdvisorsPurchases(advisorIds);
@@ -119,7 +124,7 @@ namespace Auctus.Business.Advisor
         public bool IsValidPurchase(Buy purchase)
         {
             return purchase != null && purchase.LastTransaction != null &&
-                ((purchase.ExpirationDate.HasValue && purchase.ExpirationDate.Value >= DateTime.UtcNow) ||
+                ((purchase.ExpirationDate.HasValue && purchase.ExpirationDate.Value >= DateTime.UtcNow.Date) ||
                  (!purchase.ExpirationDate.HasValue && purchase.LastTransaction.TransactionStatus != TransactionStatus.Cancel));
         }
     }
