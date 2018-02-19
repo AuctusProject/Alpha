@@ -110,6 +110,22 @@ namespace Api.Controllers
             return Ok(portfolios);
         }
 
+        protected virtual IActionResult ListRoboAdvisors([FromQuery]int? goalOption, [FromQuery]int? risk)
+        {
+            if (!goalOption.HasValue || !risk.HasValue)
+                return BadRequest();
+
+            try
+            {
+                var result = AdvisorServices.ListRoboAdvisors(GetUser(), goalOption.Value, risk.Value);
+                return Ok(new { userRisk = result.Key, portfolios = result.Value });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         //protected virtual IActionResult Projection()
         //{
         //    Projections projections;

@@ -4,8 +4,7 @@ import { LoginComponent } from './components/account/login/login.component';
 import { WizardComponent } from './components/register/wizard/wizard.component';
 import { ForgotPasswordEmailComponent } from './components/account/forgot-password-email/forgot-password-email.component';
 import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
-import { AdvisorsComponent } from './components/advisor/advisors/advisors.component';
-import { AdvisorDetailComponent } from './components/advisor/advisor-detail/advisor-detail.component';
+import { AdvisorDetailsComponent } from './components/advisor/advisor-details/advisor-details.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { HomeComponent } from "./components/home/home.component";
 import { DashboardComponent } from "./components/dashboard/dashboard/dashboard.component";
@@ -30,8 +29,7 @@ const routes: Routes = [
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'try', component: WizardComponent },
     { path: 'confirm', component: ConfirmEmailComponent },
-    { path: 'advisors', component: AdvisorsComponent, canActivate: [CanActivateViaAuthGuard]},
-    { path: 'advisor/:id', component: AdvisorDetailComponent, canActivate: [CanActivateViaAuthGuard] },
+    { path: 'advisor/:id', component: AdvisorDetailsComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'dashboard', component: DashboardComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'manage-api', component: ManageApiComponent, canActivate: [CanActivateViaAuthGuard] },

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="src\app\components\advisor\NewFolder\" />
     <Folder Include="wwwroot\" />
     <Folder Include="e2e\" />
     <Folder Include="static\" />
@@ -37,5 +38,6 @@
     <TypeScriptCompile Include="src\app\model\account\forgotPasswordEmail.ts" />
     <TypeScriptCompile Include="src\app\model\account\loginResult.ts" />
     <TypeScriptCompile Include="src\app\model\account\login.ts" />
+    <TypeScriptCompile Include="src\app\model\portfolio\listRoboAdvisorsResponse.ts" />
   </ItemGroup>
 </Project>

@@ -250,7 +250,7 @@ namespace Auctus.Business.Portfolio
                 LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
                 Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory),
                 Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory),
-                AllDays = PortfolioHistoryBusiness.GetHistoryResult(c.PortfolioHistory)
+                AllDays = PortfolioHistoryBusiness.GetHistoryResult(portfolio.PortfolioHistory)
             };
         }
 

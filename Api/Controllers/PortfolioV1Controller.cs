@@ -65,6 +65,14 @@ namespace Api.Controllers
             return base.ListPurchasedPortfolios();
         }
 
+        [Route("robos")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListRoboAdvisors([FromQuery]int? goalOption, [FromQuery]int? risk)
+        {
+            return base.ListRoboAdvisors(goalOption, risk);
+        }
+
         //[Route("projections")]
         //[HttpGet]
         //[ProducesResponseType(StatusCodes.Status400BadRequest)]
