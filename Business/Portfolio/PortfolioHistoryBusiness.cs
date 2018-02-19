@@ -72,8 +72,8 @@ namespace Auctus.Business.Portfolio
                         PortfolioId = portfolio.Id,
                         RealValue = portfolioRealValue - 100.0,
                         ProjectionValue = projection.ProjectionValue,
-                        OptimisticProjectionValue = projection.OptimisticProjection,
-                        PessimisticProjectionValue = projection.PessimisticProjection
+                        OptimisticProjectionValue = projection.OptimisticProjectionValue,
+                        PessimisticProjectionValue = projection.PessimisticProjectionValue
                     };
                     Data.Insert(portfolioHistory);
                     return portfolioHistory;
@@ -99,6 +99,13 @@ namespace Auctus.Business.Portfolio
                     MemoryCache.Set<List<PortfolioHistory>>(cacheKey, portfolioHistory, 720);
             }
             return portfolioHistory;
+        }
+
+        public Model.Portfolio.HistoryResult GetHistoryResult(IEnumerable<PortfolioHistory> portfolioHistory)
+        {
+            int days = (portfolioHistory != null && portfolioHistory.Any()) ? 
+                (int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolioHistory.Min(x => x.Date)).TotalDays) + 1 : 1;
+            return GetHistoryResult(days, portfolioHistory);
         }
 
         public Model.Portfolio.HistoryResult GetHistoryResult(int days, IEnumerable<PortfolioHistory> portfolioHistory)

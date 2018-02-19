@@ -30,8 +30,8 @@ namespace Auctus.Business.Portfolio
 
             var risk = PortfolioBusiness.GetRisk(projection.ProjectionValue, distribution);
 
-            return ProjectionBusiness.Create(portfolio, projection.ProjectionValue, risk, projection.OptimisticProjection,
-                projection.PessimisticProjection, distribution).Distribution;
+            return ProjectionBusiness.Create(portfolio, projection.ProjectionValue, risk, projection.OptimisticProjectionValue,
+                projection.PessimisticProjectionValue, distribution).Distribution;
         }
 
         public List<Distribution> SetNew(int projectionId, Dictionary<int, double> distribution)

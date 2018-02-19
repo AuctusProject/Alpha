@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    
+
   }
 
   private buildForm() {
@@ -40,19 +40,19 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmit() {
-    this.web3Service.getAccount().subscribe(success=> {
+    this.web3Service.getAccount().subscribe(success => {
       this.simpleRegister.address = success;
       this.createAccount();
     });
-   
+
   }
 
   private createAccount() {
-    this.accountService.simpleRegister(this.simpleRegister).subscribe(success => {
-      this.router.navigateByUrl('dashboard');
-    }, response => {
-      this.notificationService.info("Info", response.error);
-    });
+      this.accountService.simpleRegister(this.simpleRegister).subscribe(success => {
+        this.router.navigateByUrl('dashboard');
+      }, response => {
+        this.notificationService.info("Info", response.error);
+      });
   }
 
   public getErrorMessage(formField: any) {

@@ -1,51 +1,66 @@
 <form #portfolioRegisterForm="ngForm" (ngSubmit)="onSubmit()" fxLayout="row">
-  <div class="portfolio-card-pre-elements" fxLayout="column">
-    <div class="portfolio-card-pre-elements" fxLayout="row">
-      <div class="portfolio-card-risk-description"><span *ngIf="index==0">Low risk</span><span *ngIf="index==4">High risk</span>&nbsp;</div>      
-      <div class="portfolio-card-circle white bold">{{index + 1}}</div>
-    </div>
-    <div class="portfolio-card-line"></div>
-  </div>
   <div class="portfolio-card" fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="space-between center" class="portfolio-summary">
 
       <div fxLayout="column">
-        <span class="risk-description bold">{{risk.description}}</span>
+        <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
+          <div fxLayout="column" fxFlex="100">
+            <span class="risk-description bold" *ngIf="!model.isEditing">{{model.name}}</span>
+            <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px" *ngIf="model.isEditing">
+              <input type="text" placeholder="Name" matInput name="Name" [(ngModel)]="model.name" required>
+            </mat-form-field>
+          </div>
+        </div>
         <span class="products-details">
           <span *ngIf="!model.projectionValue">No products registered</span>
-          <span *ngIf="model.projectionValue">Expected Return: {{model.projectionValue}}% | {{assetsDistributionRows.length}} <span *ngIf="assetsDistributionRows.length == 1">asset</span><span *ngIf="assetsDistributionRows.length != 1">assets</span></span>
+          <span *ngIf="model.projectionValue">Expected Return: {{model.projectionValue}}% | {{assetsDistributionRows.length}}
+            <span *ngIf="assetsDistributionRows.length == 1">asset</span>
+            <span *ngIf="assetsDistributionRows.length != 1">assets</span>
+          </span>
         </span>
       </div>
       <div class="button">
-        <div *ngIf="!isEditing" class="step-add-button rectangle-white-button" (click)="addPortfolio()" fxLayout="row" fxLayoutAlign="none center">
-          <i-plus></i-plus><span class="button-text bold"> ADD</span>
-        </div>
-        <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="isEditing" class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center">
-          <i-save></i-save><span class="button-text bold"> SAVE</span>
+        <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="!model.id || this.model.isEditing"
+          class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center">
+          <i-save></i-save>
+          <span class="button-text bold"> SAVE</span>
         </button>
-        <div *ngIf="false" class="step-edit-button rectangle-white-button" (click)="editPortfolio()" fxLayout="row" fxLayoutAlign="none center">
-          <i-edit></i-edit><span class="button-text bold"> EDIT</span>
+        <div *ngIf="model.id && !this.model.isEditing" class="step-edit-button rectangle-white-button" (click)="editPortfolio()"
+          fxLayout="row" fxLayoutAlign="none center">
+          <i-edit></i-edit>
+          <span class="button-text bold"> EDIT</span>
         </div>
       </div>
     </div>
-    <div *ngIf="isEditing" class="portfolio-edition">
+    <div [hidden]="model.id && !this.model.isEditing" class="portfolio-edition">
+      <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
+        <div fxLayout="column" fxFlex="100">
+          <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px">
+            <textarea type="text" placeholder="Description" matAutosizeMinRows="1" matAutosizeMaxRows="3" matInput name="Description"
+              [(ngModel)]="model.description" required></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
+        <div fxLayout="column" fxFlex="100">
+          <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px">
+            <input matInput type="number" placeholder="Price" name="Price" required [(ngModel)]="model.price">
+            <span matSuffix>AUC&nbsp;</span>
+          </mat-form-field>
+        </div>
+      </div>
       <div class="portfolio-edition-title">Build the investment plan</div>
-      <div class="portfolio-edition-subtitle">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras justo odio, dapibus ac.</div>
+      <div class="portfolio-edition-subtitle">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras
+        justo odio, dapibus ac.</div>
       <div *ngIf="!assets">Loading</div>
       <div *ngIf="assets">
-        <portfolio-distribution-row *ngFor="let assetDistribution of assetsDistributionRows; let i = index"
-                                    [rowNumber]="i"
-                                    [assetDistribution]="assetDistribution"
-                                    [availableAssets]="currentAvailableAssets(assetDistribution)"
-                                    [disableRemoveButton]="assetsDistributionRows.length <= 1"
-                                    [showAddButton]="(i+1) == assetsDistributionRows.length && assetsDistributionRows.length < assets.length"
-                                    [formGroup]="portfolioRegisterForm.control"
-                                    (addNewRow)="addNewRow(i)"
-                                    (removeRow)="!(assetsDistributionRows.length <= 1) && removeRow(i)"
-                                    (assetDistributionChanged)="onAssetDistributionChanged($event, i)"
-                                    (onAddFormControls)="addFormControls(i, $event)"
-                                    (onRemoveFormControls)="removeFormControls(i)"></portfolio-distribution-row>
-        <div class="total-percentage" [class.success]="this.totalDistributionPercentage == 100" [class.error]="this.totalDistributionPercentage != 100" fxLayout="row" fxLayoutAlign="none center">
+        <portfolio-distribution-row *ngFor="let assetDistribution of assetsDistributionRows; let i = index" [rowNumber]="i" [assetDistribution]="assetDistribution"
+          [availableAssets]="currentAvailableAssets(assetDistribution)" [disableRemoveButton]="assetsDistributionRows.length <= 1"
+          [showAddButton]="(i+1) == assetsDistributionRows.length && assetsDistributionRows.length < assets.length" [formGroup]="portfolioRegisterForm.control"
+          (addNewRow)="addNewRow(i)" (removeRow)="!(assetsDistributionRows.length <= 1) && removeRow(i)" (assetDistributionChanged)="onAssetDistributionChanged($event, i)"
+          (onAddFormControls)="addFormControls(i, $event)" (onRemoveFormControls)="removeFormControls(i)"></portfolio-distribution-row>
+        <div class="total-percentage" [class.success]="this.totalDistributionPercentage == 100" [class.error]="this.totalDistributionPercentage != 100"
+          fxLayout="row" fxLayoutAlign="none center">
           <div fxLayout="row" fxFlex="65" fxLayoutAlign="none center">
             <i-alert-triangle class="icon" *ngIf="this.totalDistributionPercentage != 100"></i-alert-triangle>
             <i-check class="icon" *ngIf="this.totalDistributionPercentage == 100"></i-check>
@@ -64,12 +79,14 @@
         </div>
       </div>
       <div class="portfolio-edition-title">What do you think your annual return will be?</div>
-      <div class="portfolio-edition-subtitle">This is the return the investment will generate over time. Historically, the 30-year return of the S&P 500 has been roughly 11%</div>
-      <div fxLayout="row" fxLayoutGap="32px" class="expected-returns">
+      <div class="portfolio-edition-subtitle">This is the return the investment will generate over time. Historically, the 30-year return of the S&P 500 has been
+        roughly 11%</div>
+      <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
         <div fxLayout="column" fxFlex="25">
           <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
-            <input type="number" placeholder="Expected Return" matInput class="percentage-input" name="ExpectedReturn" [(ngModel)]="model.projectionValue" required>
-            <span matSuffix>%</span>
+            <input type="number" placeholder="Expected Return" matInput class="percentage-input" name="ExpectedReturn" [(ngModel)]="model.projectionValue"
+              [disabled]="model.id" required>
+            <span matSuffix [ngClass]="{'suffix-disabled': model.id}">%</span>
           </mat-form-field>
         </div>
       </div>

@@ -18,6 +18,8 @@ export class HumanAdvisorsComponent implements OnInit {
   }
 
   private getPortfolios() {
-    this.portfolioService.getPortfolios().subscribe(portfolios => this.portfolios = portfolios);
+    this.portfolioService.getPortfolios().subscribe(
+      portfolios => 
+      this.portfolios = portfolios);
   }
 }

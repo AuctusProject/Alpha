@@ -61,8 +61,8 @@ namespace Auctus.Business.Portfolio
             projection.Date = DateTime.UtcNow;
             projection.Risk = risk.Value;
             projection.ProjectionValue = projectionValue;
-            projection.OptimisticProjection = optimisticProjection;
-            projection.PessimisticProjection = pessimisticProjection;
+            projection.OptimisticProjectionValue = optimisticProjection;
+            projection.PessimisticProjectionValue = pessimisticProjection;
             return projection;
         }
 
@@ -76,10 +76,10 @@ namespace Auctus.Business.Portfolio
             Model.Portfolio.Result result = new Model.Portfolio.Result();
             if (goal.Timeframe > 0 && (goal.StartingAmount > 0 || goal.MonthlyContribution > 0))
             {
-                if (projection.OptimisticProjection > 0)
-                    result.OptimisticValue = GetStartProjectionValue(goal, projection.OptimisticProjection.Value) + GetMonthlyProjectionValue(goal, projection.OptimisticProjection.Value);
-                if (projection.PessimisticProjection > 0)
-                    result.PessimisticValue = GetStartProjectionValue(goal, projection.PessimisticProjection.Value) + GetMonthlyProjectionValue(goal, projection.PessimisticProjection.Value);
+                if (projection.OptimisticProjectionValue > 0)
+                    result.OptimisticValue = GetStartProjectionValue(goal, projection.OptimisticProjectionValue.Value) + GetMonthlyProjectionValue(goal, projection.OptimisticProjectionValue.Value);
+                if (projection.PessimisticProjectionValue > 0)
+                    result.PessimisticValue = GetStartProjectionValue(goal, projection.PessimisticProjectionValue.Value) + GetMonthlyProjectionValue(goal, projection.PessimisticProjectionValue.Value);
 
                 if (projection.ProjectionValue > 0)
                 {

@@ -331,8 +331,8 @@ namespace Auctus.Business.Portfolio
                 AdvisorType = (int)advisor.Type,
                 Risk = portfolio.Projection.Risk,
                 ProjectionPercent = portfolio.Projection.ProjectionValue,
-                OptimisticPercent = portfolio.Projection.OptimisticProjection,
-                PessimisticPercent = portfolio.Projection.PessimisticProjection,
+                OptimisticPercent = portfolio.Projection.OptimisticProjectionValue,
+                PessimisticPercent = portfolio.Projection.PessimisticProjectionValue,
                 Owned = user != null && advisor.UserId == user.Id,
                 Purchased = purchases != null && purchases.Any(x => x.PortfolioId == portfolio.Id),
                 Enabled = portfolio.Detail.Enabled && advisor.Detail.Enabled,
@@ -341,7 +341,7 @@ namespace Auctus.Business.Portfolio
                 LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
                 Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory),
                 Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory),
-                AllDays = PortfolioHistoryBusiness.GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.PortfolioHistory.Min(x => x.Date)).TotalDays) + 1, portfolio.PortfolioHistory)
+                AllDays = PortfolioHistoryBusiness.GetHistoryResult(c.PortfolioHistory)
             };
         }
 

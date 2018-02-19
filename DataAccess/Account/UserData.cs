@@ -10,7 +10,7 @@ namespace Auctus.DataAccess.Account
 {
     public class UserData : BaseData<User>
     {
-        public override string TableName => "[User]";
+        public override string TableName => "User";
 
         private const string SELECT_BY_API_KEY = @"SELECT u.* FROM [User] u INNER JOIN ApiAccess a ON a.UserId = u.Id 
                                                    WHERE a.CreationDate = (SELECT max(a2.CreationDate) FROM ApiAccess a2 WHERE a2.UserId = u.Id)

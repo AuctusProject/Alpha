@@ -1,0 +1,21 @@
+.portfolio-card{
+    width: 100%;
+    max-width: 800px;
+    margin: 10px;
+    border-radius: 3px;
+    border: 1px solid gray;
+    padding: 8px;
+}
+
+.price-box{
+    width: 80px;
+    text-align: center;
+    background-color: gray;
+    border-radius: 3px;
+}
+
+.details-button{
+    background-color: blue;
+    color: white;
+    
+}

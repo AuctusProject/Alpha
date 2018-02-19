@@ -73,6 +73,7 @@ import { EmailRegistrationDirective } from './directives/email-registration.dire
 import { UsernameRegistrationDirective } from './directives/username-registration.directive';
 import { RoboAdvisorsComponent } from './components/portfolio/robo-advisors/robo-advisors.component';
 import { HumanAdvisorsComponent } from './components/portfolio/human-advisors/human-advisors.component';
+import { PortfolioCardComponent } from './components/portfolio/portfolio-card/portfolio-card.component';
 
 @NgModule({
   declarations: [
@@ -120,7 +121,8 @@ import { HumanAdvisorsComponent } from './components/portfolio/human-advisors/hu
     EmailRegistrationDirective,
     UsernameRegistrationDirective,
     RoboAdvisorsComponent,
-    HumanAdvisorsComponent
+    HumanAdvisorsComponent,
+    PortfolioCardComponent
   ],
   imports: [
     BrowserAnimationsModule,

@@ -1,0 +1,34 @@
+<div class="portfolio-card" fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="column" fxFlex="30">
+    <div class="portfolio-name">
+    {{portfolio.name}}
+    </div>
+    <div class="portfolio-description">
+      {{portfolio.description}}
+    </div>
+    <div class="portfolio-risk">
+      {{portfolio.risk}}
+    </div>
+  </div>
+  <div *ngIf="portfolio.allDays" fxFlex>
+    <div fxLayout="column">
+      <div>
+        {{portfolio.allDays.expectedValue}}
+      </div>
+    </div>
+    <div fxLayout="column">
+      <div>
+        {{portfolio.allDays.value}}
+      </div>
+    </div>
+    <div fxLayout="column">
+      <div>
+        {{portfolio.allDays.hitPercentage}}
+      </div>
+    </div> 
+  </div>
+  <div fxFlex="180px" fxLayout="row">
+    <div class="price-box">{{portfolio.price}} AUC</div>
+    <div class="details-button">Details</div>
+  </div>
+</div>
