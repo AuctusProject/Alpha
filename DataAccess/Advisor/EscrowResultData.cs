@@ -1,0 +1,38 @@
+﻿using Auctus.DomainObjects.Account;
+using Auctus.DomainObjects.Advisor;
+using Dapper;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+
+namespace Auctus.DataAccess.Advisor
+{
+    public class EscrowResultData : BaseData<EscrowResult>
+    {
+        public override string TableName => "EscrowResult";
+
+        private const string SELECT_ESCROWRESULT_BY_BUY = @"SELECT e.*, t.* FROM 
+                                                            EscrowResult e 
+                                                            INNER JOIN Buy b ON b.Id = e.BuyId 
+                                                            INNER JOIN EscrowResultTransaction ert ON ert.EscrowResultId = e.Id
+                                                            INNER JOIN [Transaction] t ON t.Id = ert.TransactionId
+                                                            WHERE b.PortfolioId = @PortfolioId AND
+                                                            t.CreationDate = (SELECT max(t2.CreationDate) FROM EscrowResultTransaction ert2 
+                                                                                INNER JOIN [Transaction] t2 ON t2.Id = ert2.TransactionId
+                                                                                WHERE ert2.EscrowResultId = e.Id)";
+
+        public List<EscrowResult> ListByPortfolio(int portfolioId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("PortfolioId", portfolioId, DbType.Int32);
+            return Query<EscrowResult, Transaction, EscrowResult>(SELECT_ESCROWRESULT_BY_BUY,
+                            (er, trans) =>
+                            {
+                                er.LastTransaction = trans;
+                                return er;
+                            }, "Id", parameters).ToList();
+        }
+    }
+}
