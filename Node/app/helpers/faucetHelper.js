@@ -4,7 +4,7 @@ var FaucetCache = require('../util/faucetCache.js');
 var config = require('nconf');
 
 class FaucetHelper {
-    constructor() { 
+    constructor() {
         this.faucetCache = new FaucetCache();
     }
 
@@ -31,9 +31,9 @@ class FaucetHelper {
             if (!this.validAUCBalance(aucBalance)) {
                 this.sendAUC(address, cb);
             }
-            if (!this.validETHBalance(new Web3Helper().getETHBalance(address))) {
-                this.sendETH(address, cb);
-            }
+            // if (!this.validETHBalance(new Web3Helper().getETHBalance(address))) {
+            //     this.sendETH(address, cb);
+            // }
         }
         catch (err) {
             cb(err);
@@ -47,14 +47,18 @@ class FaucetHelper {
     }
 
     sendETH(address, cb) {
-        new Web3Helper().sendETH(address, 0.05, cb);
+        new Web3Helper().sendETH(address, config.get('ETH_SEND_FAUCET'), cb);
     }
 
-    sendAUC(cb) {
-        // new Web3Helper().sendETH(this.address, 0.01,
-        //     function (err) {
+    sendAUC(address, cb) {
+        var web3Helper = new Web3Helper();
+        var aucToSendHex = web3Helper.toHex(web3Helper.toWei(config.get('AUC_SEND_FAUCET')));
+        var data = web3Helper.getContractMethodData(config.get('AUC_TOKEN_ABI'), config.get('AUC_TOKEN_ADDRESS'), 'mint', [address, aucToSendHex]);
+        web3Helper.sendTransaction(1, 50000, config.get('AUC_TOKEN_OWNER'), config.get('AUC_TOKEN_ADDRESS'), 0, data, config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
+    }
 
-        //     })
+    sendETH(to, value, cb) {
+        this.sendTransaction(1, 21000, to, value, '', cb);
     }
 }
 
