@@ -93,5 +93,10 @@ namespace Auctus.Service
         {
             return UserBusiness.IsValidUsernameToRegister(username);
         }
+
+        public string Faucet(string address)
+        {
+            return WalletBusiness.Faucet(address);
+        }
     }
 }
