@@ -1,7 +1,7 @@
 var Wallet = require('../models/wallet.js');
 var Web3Helper = require('../helpers/web3Helper.js');
 
-class faucetController {
+class FaucetController {
     constructor() {}
 
     valid(json){
@@ -16,4 +16,4 @@ class faucetController {
     }
 }
 
-module.exports = faucetController;
+module.exports = FaucetController;

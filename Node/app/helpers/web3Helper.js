@@ -43,31 +43,26 @@ class Web3Helper {
   }
 
   sendETH(to, value, cb) {
-    this.sendTransaction(6, 21000, to, value, '', cb);
+    this.sendTransaction(1, 21000, to, value, '', cb);
   }
 
   sendTransaction(gasPrice, gasLimit, to, value, data, cb) {
-    var gasPriceGwei = this._web3.toWei(gasPrice, 'gwei');
+    const gasPriceWei = this._web3.toWei(gasPrice, 'gwei');
+    const valueWei = this._web3.toWei(value, 'ether');
     const rawTx = {
       nonce: this._web3.toHex(this._web3.eth.getTransactionCount(config.get('AUC_TOKEN_OWNER'))),
-      gasPrice: this._web3.toHex(gasPriceGwei),
+      gasPrice: this._web3.toHex(gasPriceWei),
       gasLimit: this._web3.toHex(gasLimit),
       to: to,
-      value: this._web3.toHex(this._web3.toWei(value, 'ether')),
+      value: this._web3.toHex(valueWei),
       data: data,
-      chainId: config.get('CHAIN_ID')
+      chainId: this._web3.toHex(config.get('CHAIN_ID'))
     };
     const tx = new Tx(rawTx);
     const privateKey = Buffer.from(config.get('PRIVATE_KEY'), 'hex');
     tx.sign(privateKey);
     const serializedTx = tx.serialize();
-    this._web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'),
-      function (err, result) {
-        if (err) cb(err);
-        else {
-
-        }
-      });
+    this._web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), cb);
   }
 
   static IsAddress(address) {
