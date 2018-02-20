@@ -1,4 +1,5 @@
-﻿using Auctus.Util.DapperAttributes;
+﻿using Auctus.DomainObjects.Account;
+using Auctus.Util.DapperAttributes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,7 @@ namespace Auctus.DomainObjects.Advisor
         [DapperKey]
         [DapperType(System.Data.DbType.Int32)]
         public int TransactionId { get; set; }
+
+        public Transaction Transaction { get; set; }
     }
 }

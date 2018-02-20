@@ -15,8 +15,7 @@ namespace Auctus.Business.Account
 
         public string Faucet(string address)
         {
-            //TODO: call faucet api method and get the transaction hash from return
-            return null;
+            return Web3.Web3Business.FaucetTransaction(address).TransactionHash;
         }
     }
 }
