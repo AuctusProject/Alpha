@@ -29,7 +29,12 @@ export class HttpService {
   }
 
   public setLoginData(loginData: string): void {
-    this.setLocalStorage(this.login, loginData);
+    this.setLocalStorage(this.login, JSON.stringify(loginData));
+  }
+
+  public getLoginData(): any {
+    let loginData = this.getLocalStorage(this.login);
+    return JSON.parse(loginData);
   }
 
   private setLocalStorage(key: string, value: any): void {
@@ -45,7 +50,7 @@ export class HttpService {
   }
 
   getUser(): string {
-    return (this.getLocalStorage(this.login).Email as string);
+    return this.getLoginData().email;
   }
 
   logout(): void {

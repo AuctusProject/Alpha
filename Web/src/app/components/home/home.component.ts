@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
 
   private createAccount() {
       this.accountService.simpleRegister(this.simpleRegister).subscribe(success => {
-        this.router.navigateByUrl('dashboard');
+        this.router.navigateByUrl('');
       }, response => {
         this.notificationService.info("Info", response.error);
       });

@@ -21,6 +21,10 @@ export class LoginService {
     this.httpService.setLoginData(loginData);
   }
 
+  getLoginData(): any {
+    return this.httpService.getLoginData();
+  }
+
   getUser(): string {
     return this.httpService.getUser();
   }

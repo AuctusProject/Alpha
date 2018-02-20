@@ -1,44 +1,36 @@
 <wizard-header></wizard-header>
 
-<div *ngIf="!login.pendingConfirmation" fxLayout="column" class="main-content" fxLayoutAlign="space-evenly center">
+<div class="main-content">
+<form  [formGroup]="loginForm" (ngSubmit)="onLoginClick()">
+<div  fxLayout="column" fxLayoutAlign="space-evenly center">
   <div fxLayout="row" fxLayoutGap="20px">
     <mat-form-field>
-      <input matInput placeholder="Email or username" [(ngModel)]="login.emailOrUsername" type="email" name="email" autocomplete="username email" />
+      <input matInput placeholder="Email or username" [(ngModel)]="login.emailOrUsername" formControlName="emailOrUsername" type="text" autocomplete="username email" />
+      <mat-error *ngIf="loginForm.controls.emailOrUsername.invalid">
+        Required field
+      </mat-error>
     </mat-form-field>
   </div>
   <div fxLayout="row" fxLayoutGap="20px">
     <mat-form-field>
-      <input matInput placeholder="Password" [(ngModel)]="login.password" type="password" autocomplete="current-password" name="password" />
+      <input matInput placeholder="Password" [(ngModel)]="login.password" type="password" formControlName="password" autocomplete="current-password" />
+      <mat-error *ngIf="loginForm.controls.password.invalid">
+        Required field
+      </mat-error>
     </mat-form-field>
   </div>
   <div fxLayout="row" fxLayoutGap="20px">
-    <input type="button" class="primary-button bold login" (click)="onLoginClick()" value="LOGIN" />
+    <button type="submit" class="primary-button bold login">
+      LOGIN
+    </button>
   </div>
   <div fxLayout="row" fxLayoutGap="20px">
     <a routerLink="/forgot-password-email" class="element-margin-top">Forgot my password</a>
   </div>
+  <div fxLayout="row" fxLayoutGap="20px">
+    <a routerLink="/home" class="element-margin-top">Don't have an account?</a>
+  </div>
 </div>
+</form>
 <app-pending-email-confirmation-component *ngIf="login.pendingConfirmation" [email]="login.emailOrUsername"></app-pending-email-confirmation-component>
-<!--
-  <form>
-    <div fxLayout="column" fxLayoutGap="20px">
-      <div fxLayout="row" fxLayoutGap="20px">
-        <mat-form-field>
-          <input matInput placeholder="Email" [(ngModel)]="login.email" type="text" name="email" autocomplete="username email" />
-        </mat-form-field>
-      </div>
-      <div fxLayout="row" fxLayoutGap="20px">
-        <mat-form-field>
-          <input matInput placeholder="Password" [(ngModel)]="login.password" type="password" autocomplete="current-password" name="password" />
-        </mat-form-field>
-      </div>
-      <div fxLayout="row" fxLayoutGap="20px">
-        <mat-form-field>
-          <input type="button" class="primary-button bold" (click)="onLoginClick()" value="LOGIN" />
-        </mat-form-field>
-      </div>
-    </div>
-
-  </form>
-
--->
+</div>
