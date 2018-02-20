@@ -3,7 +3,7 @@
 <div *ngIf="!login.pendingConfirmation" fxLayout="column" class="main-content" fxLayoutAlign="space-evenly center">
   <div fxLayout="row" fxLayoutGap="20px">
     <mat-form-field>
-      <input matInput placeholder="Email" [(ngModel)]="login.email" type="email" name="email" autocomplete="username email" />
+      <input matInput placeholder="Email" [(ngModel)]="login.emailOrUsername" type="email" name="email" autocomplete="username email" />
     </mat-form-field>
   </div>
   <div fxLayout="row" fxLayoutGap="20px">
@@ -18,7 +18,7 @@
     <a routerLink="/forgot-password-email" class="element-margin-top">Forgot my password</a>
   </div>
 </div>
-<app-pending-email-confirmation-component *ngIf="login.pendingConfirmation" [email]="login.email"></app-pending-email-confirmation-component>
+<app-pending-email-confirmation-component *ngIf="login.pendingConfirmation" [email]="login.emailOrUsername"></app-pending-email-confirmation-component>
 <!--
   <form>
     <div fxLayout="column" fxLayoutGap="20px">

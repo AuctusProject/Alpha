@@ -13,7 +13,7 @@ export class HttpService {
   constructor(private http: HttpClient, private notificationService: NotificationsService, private router: Router) { }
 
   private jwt: string = "auc_jwt";
-  private user: string = "auc_user";
+  private login: string = "auc_login";
 
   public isLoggedIn(): boolean {
     return this.getAccessToken() != null;
@@ -25,6 +25,10 @@ export class HttpService {
 
   private setAccessToken(newJwt: string): void {
     this.setLocalStorage(this.jwt, newJwt);
+  }
+
+  public setLoginData(loginData: string): void {
+    this.setLocalStorage(this.login, loginData);
   }
 
   private setLocalStorage(key: string, value: any): void {
@@ -40,16 +44,12 @@ export class HttpService {
   }
 
   getUser(): string {
-    return (this.getLocalStorage(this.user) as string);
-  }
-
-  setUser(email: string): void {
-    if (email) this.setLocalStorage(this.user, email.toLowerCase().trim());
+    return (this.getLocalStorage(this.login).Email as string);
   }
 
   logout(): void {
-    this.removeLocalStorage(this.user);
     this.removeLocalStorage(this.jwt);
+    this.removeLocalStorage(this.login);
   }
 
   apiUrl(route: string): string {
