@@ -75,6 +75,7 @@ import { HumanAdvisorsComponent } from './components/portfolio/human-advisors/hu
 import { PortfolioCardComponent } from './components/portfolio/portfolio-card/portfolio-card.component';
 import { AdvisorPortfoliosComponent } from './components/advisor/advisor-portfolios/advisor-portfolios.component';
 import { AdvisorDetailsComponent } from './components/advisor/advisor-details/advisor-details.component';
+import { PortfolioDetailsComponent } from './components/portfolio/portfolio-details/portfolio-details.component';
 
 @NgModule({
   declarations: [
@@ -123,7 +124,8 @@ import { AdvisorDetailsComponent } from './components/advisor/advisor-details/ad
     HumanAdvisorsComponent,
     PortfolioCardComponent,
     AdvisorPortfoliosComponent,
-    AdvisorDetailsComponent
+    AdvisorDetailsComponent,
+    PortfolioDetailsComponent
   ],
   imports: [
     BrowserAnimationsModule,
