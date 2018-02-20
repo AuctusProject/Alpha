@@ -86,9 +86,24 @@ namespace Auctus.Business.Advisor
             return Data.Get(id);
         }
 
+        public Buy Get(int userId, int portfolioId)
+        {
+            return Data.Get(userId, portfolioId);
+        }
+
         public List<Buy> ListUserAdvisorPurchases(int userId, int advisorId)
         {
             return ListValidPurchases(Data.ListUserAdvisorPurchases(userId, advisorId));
+        }
+
+        public double? ListPortfolioPurchaseAmount(int portfolioId)
+        {
+            return Data.ListPortfolioPurchaseAmount(portfolioId);
+        }
+
+        public List<Buy> ListPendingEscrowResult()
+        {
+            return Data.ListPendingEscrowResult();
         }
 
         public Dictionary<int, int> ListAdvisorsPurchases(IEnumerable<int> advisorIds)
@@ -103,20 +118,14 @@ namespace Auctus.Business.Advisor
 
         private List<Buy> ListValidPurchases(IEnumerable<Buy> purchases)
         {
-            return purchases.Where(c => (c.ExpirationDate.HasValue && c.ExpirationDate.Value >= DateTime.UtcNow) ||
-                                    (!c.ExpirationDate.HasValue && c.LastTransaction.TransactionStatus != TransactionStatus.Cancel)).ToList();
+            return purchases.Where(c => IsValidPurchase(c)).ToList();
         }
-        //public List<Buy> ListPurchasesWithPortfolio(int userId)
-        //{
-        //    return Data.ListPurchasesWithPortfolio(userId);
-        //}
 
-        //public List<Buy> ListPurchasesComplete(int userId)
-        //{
-        //    var purchases = Data.ListPurchasesComplete(userId);
-        //    var options = GoalOptionsBusiness.List();
-        //    purchases.ForEach(c => c.Goal.GoalOption = options.Single(o => o.Id == c.Goal.GoalOptionId));
-        //    return purchases;
-        //}
+        public bool IsValidPurchase(Buy purchase)
+        {
+            return purchase != null && purchase.LastTransaction != null &&
+                ((purchase.ExpirationDate.HasValue && purchase.ExpirationDate.Value >= DateTime.UtcNow.Date) ||
+                 (!purchase.ExpirationDate.HasValue && purchase.LastTransaction.TransactionStatus != TransactionStatus.Cancel));
+        }
     }
 }

@@ -118,22 +118,6 @@ namespace Api.Controllers
             return Ok();
         }
 
-        protected virtual IActionResult ListRoboAdvisors(ListRoboAdvisorsRequest listRoboAdvisorsRequest)
-        {
-            if (listRoboAdvisorsRequest == null)
-                return BadRequest();
-
-            try
-            {
-                var result = AdvisorServices.ListRoboAdvisors(GetUser(), listRoboAdvisorsRequest.GoalOption, listRoboAdvisorsRequest.Risk);
-                return Ok(new { userRisk = result.Key, advisors = result.Value });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-        }
-
         protected virtual IActionResult ListAdvisorDetails(int advisorId)
         {
             try

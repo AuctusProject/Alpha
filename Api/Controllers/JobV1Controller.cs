@@ -38,5 +38,19 @@ namespace Api.Controllers
         {
             return base.UpdatePortfoliosHistory();
         }
+
+        [Route("purchases/escrowresult")]
+        [HttpPost]
+        public new IActionResult EvaluateEscrowResults()
+        {
+            return base.EvaluateEscrowResults();
+        }
+        
+        [Route("purchases/escrowresult/transaction")]
+        [HttpPost]
+        public new IActionResult MakeEscrowResultsTransaction()
+        {
+            return base.MakeEscrowResultsTransaction();
+        }
     }
 }

@@ -87,34 +87,16 @@ namespace Auctus.Business.Portfolio
             var portfolioHistory = Data.LastHistory(id);
             return portfolioHistory?.Date;
         }
-
-        //public List<Model.PortfolioHistory> ListHistory(string email)
-        //{
-        //    var user = UserBusiness.GetValidUser(email);
-        //    var purchases = BuyBusiness.ListPurchasesWithPortfolio(user.Id);
-        //    purchases.ForEach(c => c.Projection.Portfolio.PortfolioHistory = ListHistory(c.Projection.PortfolioId));
-        //    List<Model.PortfolioHistory> result = new List<Model.PortfolioHistory>();
-        //    result.AddRange(purchases.Select(c => new Model.PortfolioHistory()
-        //    {
-        //        AdvisorId = c.AdvisorId,
-        //        Values = c.Projection.Portfolio.PortfolioHistory.Select(g => new Model.PortfolioHistory.HistoryValue()
-        //        {
-        //            Date = g.Date,
-        //            Value = g.RealValue
-        //        }).ToList(),
-        //        History = AdvisorBusiness.GetPortfolioHistory(new DomainObjects.Portfolio.Portfolio[] { c.Projection.Portfolio }).FirstOrDefault()
-        //    }));
-        //    return result;
-        //}
-
+        
         public List<PortfolioHistory> ListHistory(int portfolioId)
         {
             string cacheKey = string.Format("PortfolioHistory{0}", portfolioId);
             var portfolioHistory = MemoryCache.Get<List<PortfolioHistory>>(cacheKey);
-            if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != DateTime.UtcNow.Date)
+            var yesterday = DateTime.UtcNow.Date.AddDays(-1);
+            if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != yesterday)
             {
                 portfolioHistory = Data.ListHistory(portfolioId);
-                if (portfolioHistory?.LastOrDefault()?.Date.Date == DateTime.UtcNow.Date)
+                if (portfolioHistory?.LastOrDefault()?.Date.Date == yesterday)
                     MemoryCache.Set<List<PortfolioHistory>>(cacheKey, portfolioHistory, 720);
             }
             return portfolioHistory;
@@ -142,8 +124,11 @@ namespace Auctus.Business.Portfolio
             };
         }
 
-        private List<Model.Portfolio.Distribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)
+        public List<Model.Portfolio.HistogramDistribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)
         {
+            if (!portfolioHistory.Any())
+                return new List<Model.Portfolio.HistogramDistribution>();
+
             var values = portfolioHistory.OrderBy(c => c.RealValue).Select(c => c.RealValue);
             var minValue = values.First();
             var maxValue = values.Last();
@@ -152,15 +137,21 @@ namespace Auctus.Business.Portfolio
             if (difference == 0)
                 rangeGroup = 1;
             else
-                rangeGroup = difference / (values.Count() > 75 ? 15.0 : Math.Floor(values.Count() / 5.0));
+                rangeGroup = difference / (values.Count() > 75 ? 15.0 : 
+                    values.Count() > 55 ? 12.0 :
+                    values.Count() > 35 ? 9.0 :
+                    values.Count() > 15 ? 7.0 :
+                    values.Count() > 10 ? 5.0 :
+                    values.Count() > 5 ? 4.0 :
+                    values.Count() == 1 ? 1.0 : values.Count() - 1);
 
             minValue = minValue - (rangeGroup / 1.5);
             maxValue = maxValue + (rangeGroup / 1.5);
 
-            List<Model.Portfolio.Distribution> result = new List<Model.Portfolio.Distribution>();
+            List<Model.Portfolio.HistogramDistribution> result = new List<Model.Portfolio.HistogramDistribution>();
             for (double i = minValue; i <= maxValue; i = i + rangeGroup)
             {
-                result.Add(new Model.Portfolio.Distribution()
+                result.Add(new Model.Portfolio.HistogramDistribution()
                 {
                     GreaterOrEqual = i,
                     Lesser = i + rangeGroup,

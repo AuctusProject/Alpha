@@ -3,7 +3,7 @@
 <div *ngIf="!login.pendingConfirmation" fxLayout="column" class="main-content" fxLayoutAlign="space-evenly center">
   <div fxLayout="row" fxLayoutGap="20px">
     <mat-form-field>
-      <input matInput placeholder="Email" [(ngModel)]="login.emailOrUsername" type="email" name="email" autocomplete="username email" />
+      <input matInput placeholder="Email or username" [(ngModel)]="login.emailOrUsername" type="email" name="email" autocomplete="username email" />
     </mat-form-field>
   </div>
   <div fxLayout="row" fxLayoutGap="20px">

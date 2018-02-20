@@ -28,8 +28,6 @@ import { RegisterStepComponent } from './components/register/register-step/regis
 import { ForgotPasswordEmailComponent } from './components/account/forgot-password-email/forgot-password-email.component';
 import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
 import { PendingEmailConfirmationComponent } from './components/account/pending-email-confirmation/pending-email-confirmation.component';
-import { AdvisorDetailComponent } from './components/advisor/advisor-detail/advisor-detail.component';
-import { AdvisorsComponent } from './components/advisor/advisors/advisors.component';
 import { AdvisorService } from './services/advisor.service';
 import { PortfolioService } from './services/portfolio.service';
 import { FocusDirective } from './directives/focus.directive';
@@ -74,6 +72,8 @@ import { UsernameRegistrationDirective } from './directives/username-registratio
 import { RoboAdvisorsComponent } from './components/portfolio/robo-advisors/robo-advisors.component';
 import { HumanAdvisorsComponent } from './components/portfolio/human-advisors/human-advisors.component';
 import { PortfolioCardComponent } from './components/portfolio/portfolio-card/portfolio-card.component';
+import { AdvisorPortfoliosComponent } from './components/advisor/advisor-portfolios/advisor-portfolios.component';
+import { AdvisorDetailsComponent } from './components/advisor/advisor-details/advisor-details.component';
 
 @NgModule({
   declarations: [
@@ -89,8 +89,6 @@ import { PortfolioCardComponent } from './components/portfolio/portfolio-card/po
     ForgotPasswordEmailComponent,
     ForgotPasswordResetComponent,
     PendingEmailConfirmationComponent,
-    AdvisorDetailComponent,
-    AdvisorsComponent,
     FocusDirective,
     ConfirmEmailComponent,
     WizardHeaderComponent,
@@ -122,7 +120,9 @@ import { PortfolioCardComponent } from './components/portfolio/portfolio-card/po
     UsernameRegistrationDirective,
     RoboAdvisorsComponent,
     HumanAdvisorsComponent,
-    PortfolioCardComponent
+    PortfolioCardComponent,
+    AdvisorPortfoliosComponent,
+    AdvisorDetailsComponent
   ],
   imports: [
     BrowserAnimationsModule,

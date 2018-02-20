@@ -86,7 +86,7 @@ export class MetamaskAccountService {
     let self = this;
     this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
       balance => {        
-        if (self.aucBalance != balance) {
+        /*if (self.aucBalance != balance) {
           self.broadcastBalanceChanged(balance);
         }
         if (balance < constants.minimumAUCNecessary){
@@ -94,7 +94,8 @@ export class MetamaskAccountService {
         }
         else {
           self.broadcastLoginConditionsSuccess();
-        }
+        }*/
+        self.broadcastLoginConditionsSuccess();
         self.aucBalance = balance;
       });
   }

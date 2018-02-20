@@ -1,34 +1,43 @@
-<div class="portfolio-card" fxLayout="row" fxLayoutAlign="space-between center">
-  <div fxLayout="column" fxFlex="30">
+<div class="portfolio-card" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="40px">
+  <div fxLayout="column" fxFlex>
     <div class="portfolio-name">
-    {{portfolio.name}}
+    {{portfolio.advisorName}}
     </div>
     <div class="portfolio-description">
-      {{portfolio.description}}
+      {{portfolio.name}}
     </div>
     <div class="portfolio-risk">
-      {{portfolio.risk}}
+      {{getRiskDescription()}}
     </div>
   </div>
-  <div *ngIf="portfolio.allDays" fxFlex>
-    <div fxLayout="column">
-      <div>
-        {{portfolio.allDays.expectedValue}}
+  <div fxLayout="row" *ngIf="portfolio.allDays" fxFlex="270px" fxLayoutGap="40px">
+    <div fxLayout="column" fxLayoutGap="4px">
+      <div class="performance-value expected-value bold">
+        {{portfolio.allDays.expectedValue}}%
+      </div>
+      <div class="performance-labels">
+        Estimated return
       </div>
     </div>
-    <div fxLayout="column">
-      <div>
-        {{portfolio.allDays.value}}
+    <div fxLayout="column" fxLayoutGap="4px">
+      <div class="performance-value real-return bold">
+        {{portfolio.allDays.value}}%
+      </div>
+      <div class="performance-labels">
+        Real return
       </div>
     </div>
-    <div fxLayout="column">
-      <div>
-        {{portfolio.allDays.hitPercentage}}
+    <div fxLayout="column" fxLayoutGap="4px">
+      <div class="performance-value success-rate bold">
+        {{portfolio.allDays.hitPercentage}}%
+      </div>
+      <div class="performance-labels">
+        Success rate
       </div>
     </div> 
   </div>
-  <div fxFlex="180px" fxLayout="row">
+  <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
     <div class="price-box">{{portfolio.price}} AUC</div>
-    <div class="details-button">Details</div>
+    <div class="details-button">SEE DETAILS</div>
   </div>
 </div>

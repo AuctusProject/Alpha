@@ -38,36 +38,47 @@ class Web3Helper {
     });
   }
 
-  sendAUC() {
+  // sendContractTransaction(gasPrice, gasLimit, to, value, cb){
+  //   var contractInstance = this._web3.eth.contract(JSON.parse(config.get('AUC_TOKEN_ABI'))).at(config.get('AUC_TOKEN_ADDRESS'));
+  //   console.log(contractInstance);
+  //   const valueWei = this._web3.toWei(value, 'ether');
+  //   var data = contractInstance["mint"].getData(to, this._web3.toHex(valueWei));
+  //   console.log(data);
+  //   this.sendTransaction(1, 200000, config.get('AUC_TOKEN_ADDRESS'), 0, data, cb);
+  // }
 
+  getContractMethodData(abi, contractAddress, method, params){
+    var contractInstance = this._web3.eth.contract(JSON.parse(abi)).at(contractAddress);
+    var data = contractInstance[method].getData.apply(null, params);
+    console.log(data);
+    return data;
   }
 
-  sendETH(to, value, cb) {
-    this.sendTransaction(6, 21000, to, value, '', cb);
+  toWei(value, unit){
+    return this._web3.toWei(value, unit);
   }
 
-  sendTransaction(gasPrice, gasLimit, to, value, data, cb) {
-    var gasPriceGwei = this._web3.toWei(gasPrice, 'gwei');
+  toHex(value){
+    return this._web3.toHex(value);
+  }
+
+  sendTransaction(gasPrice, gasLimit, from, to, value, data, pk, chainId, cb) {
+    const gasPriceWei = this._web3.toWei(gasPrice, 'gwei');
+    const valueWei = this._web3.toWei(value, 'ether');
     const rawTx = {
-      nonce: this._web3.toHex(this._web3.eth.getTransactionCount(config.get('AUC_TOKEN_OWNER'))),
-      gasPrice: this._web3.toHex(gasPriceGwei),
+      nonce: this._web3.toHex(this._web3.eth.getTransactionCount(from)),
+      gasPrice: this._web3.toHex(gasPriceWei),
       gasLimit: this._web3.toHex(gasLimit),
       to: to,
-      value: this._web3.toHex(this._web3.toWei(value, 'ether')),
+      value: this._web3.toHex(valueWei),
       data: data,
-      chainId: config.get('CHAIN_ID')
+      chainId: this._web3.toHex(chainId)
     };
     const tx = new Tx(rawTx);
-    const privateKey = Buffer.from(config.get('PRIVATE_KEY'), 'hex');
+    const privateKey = Buffer.from(pk, 'hex');
     tx.sign(privateKey);
     const serializedTx = tx.serialize();
-    this._web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'),
-      function (err, result) {
-        if (err) cb(err);
-        else {
-
-        }
-      });
+    this._web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), cb);
   }
 
   static IsAddress(address) {

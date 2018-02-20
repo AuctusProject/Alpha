@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { URLSearchParams } from '@angular/http'
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -89,13 +90,13 @@ export class HttpService {
     );
   }
 
-  get<T>(url: string, httpOptions: any = {}): Observable<any> {
+  get(url: string, httpOptions: any = {}): Observable<any> {
     return this.http.get<any>(url, this.getHttpOptions(httpOptions))
       .pipe(
       tap((response: any) => {
         if (response && response.jwt) this.setAccessToken(response.jwt);
       }),
-      catchError(this.handleError<T>(url))
+      catchError(this.handleError(url))
       );
   }
 
