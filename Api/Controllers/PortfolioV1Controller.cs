@@ -65,28 +65,28 @@ namespace Api.Controllers
             return base.ListPurchasedPortfolios();
         }
 
-        //[Route("projections")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult Projection()
-        //{
-        //    return base.Projection();
-        //}
+        [Route("robos")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListRoboAdvisors([FromQuery]int? goalOption, [FromQuery]int? risk)
+        {
+            return base.ListRoboAdvisors(goalOption, risk);
+        }
 
-        //[Route("history")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult PortfolioHistory()
-        //{
-        //    return base.PortfolioHistory();
-        //}
+        [Route("{portfolioId}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetPortfolio([FromRoute]int portfolioId)
+        {
+            return base.GetPortfolio(portfolioId);
+        }
 
-        //[Route("distribution")]
-        //[HttpGet]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new IActionResult PortfolioDistribution()
-        //{
-        //    return base.PortfolioDistribution();
-        //}
+        [Route("{portfolioId}/distribution")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetDistribution([FromRoute]int portfolioId)
+        {
+            return base.GetDistribution(portfolioId);
+        }
     }
 }

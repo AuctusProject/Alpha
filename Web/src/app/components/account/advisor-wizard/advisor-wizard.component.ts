@@ -1,6 +1,8 @@
 import { AdvisorWizardStep } from './advisor-wizard-step.enum';
 import { Advisor } from './../../../model/advisor/advisor';
+import { PortfolioRequest } from './../../../model/portfolio/portfolioRequest';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -14,13 +16,15 @@ export class AdvisorWizardComponent implements OnInit {
   public currentStep;
   public advisorModel: Advisor;
   public editedAdvisorModel: Advisor;
+  public portfolioList: Array<PortfolioRequest>;
   public wizardSteps = AdvisorWizardStep;
 
-  constructor() {
+  constructor(private router: Router) {
+    this.portfolioList = new Array<PortfolioRequest>();
+    this.advisorModel = new Advisor();
   }
 
   ngOnInit() {
-    this.advisorModel = new Advisor();
     this.currentStep = this.wizardSteps.Start.Id;
   }
 
@@ -54,5 +58,26 @@ export class AdvisorWizardComponent implements OnInit {
         this.currentStep = this.wizardSteps.Start.Id;
         break;
     }
+  }
+
+ public hasSavedPortfolio() {
+   return this.getSavedPortfolioCount() > 0;
+ }
+
+  public getSavedPortfolioCount() {
+     return this.portfolioList.filter(item => item.id > 0 ).length;
+  }
+
+  public getPortfoliosName() {
+    let names = this.portfolioList.filter(item => item.id > 0 ).map(item => item.name);
+    return names.join(", ");
+  }
+
+  public showMyPortoliosButton() {
+    return this.currentStep === this.wizardSteps.Start.Id && this.hasSavedPortfolio();
+  }
+
+  public onMyPortfoliosClick() {
+    this.router.navigateByUrl('dashboard');
   }
 }

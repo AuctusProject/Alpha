@@ -42,5 +42,7 @@ namespace Auctus.Service
         protected TransactionBusiness TransactionBusiness { get { return new TransactionBusiness(Logger, MemoryCache, NodeServices); } }
         protected BuyTransactionBusiness BuyTransactionBusiness { get { return new BuyTransactionBusiness(Logger, MemoryCache, NodeServices); } }
         protected PortfolioDetailBusiness PortfolioDetailBusiness { get { return new PortfolioDetailBusiness(Logger, MemoryCache, NodeServices); } }
+        protected EscrowResultBusiness EscrowResultBusiness { get { return new EscrowResultBusiness(Logger, MemoryCache, NodeServices); } }
+        protected EscrowResultTransactionBusiness EscrowResultTransactionBusiness { get { return new EscrowResultTransactionBusiness(Logger, MemoryCache, NodeServices); } }
     }
 }

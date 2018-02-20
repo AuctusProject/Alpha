@@ -29,14 +29,19 @@
         </div>
       </div>
       <div fxLayout="row" fxLayoutGap="20px">
-        <div fxLayout="column" class="steps" [class.disabled]="currentStep < 2">
+        <div fxLayout="column" class="steps" *ngIf="!hasSavedPortfolio()" [class.disabled]="!advisorModel.id">
           <div class="step-number">STEP 2</div>
           <div class="step-title">Set your financial portfólio</div>
           <div class="step-description">Products, percental, risk and projection</div>
-          <div class="step-next-button primary-blue-button bold" *ngIf="currentStep==2" (click)="changeStep(wizardSteps.Portfolio.Id)">Continue</div>
+          <div class="step-next-button primary-blue-button bold" (click)="changeStep(wizardSteps.Portfolio.Id)">Continue</div>
+        </div>
+        <div fxLayout="column" class="steps" *ngIf="hasSavedPortfolio()">
+          <div class="step-number">STEP 2</div>
+          <div class="step-title">{{getSavedPortfolioCount()}} portfolio(s) registred</div>
+          <div class="step-description">{{getPortfoliosName()}}</div>
         </div>
         <div  fxLayout="row" fxLayoutAlign="space-evenly center">
-          <a (click)="changeStep(wizardSteps.Portfolio.Id)" *ngIf="advisorModel.id" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
+          <a (click)="changeStep(wizardSteps.Portfolio.Id)" *ngIf="hasSavedPortfolio()" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
             <i-check-circle class="blue-confirm"></i-check-circle>
             <span class="edit-label bold">EDIT</span>
           </a>
@@ -44,8 +49,14 @@
       </div>
     </div>
     <eth-machine fxFlex fxHide.lt-md></eth-machine>
-
   </div>
 </div>
-<advisor-step *ngIf="currentStep === wizardSteps.Advisor.Id" [advisorModel]="editedAdvisorModel" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></advisor-step>
-<portfolio-step *ngIf="currentStep === wizardSteps.Portfolio.Id" [advisorModel]="advisorModel" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></portfolio-step>
+
+<div fxLayout="row" fxLayoutGap="100px"  fxLayoutAlign="center center"class="my-portfolio-button" (click)="onMyPortfoliosClick()" *ngIf="showMyPortoliosButton()">
+  <button class="primary-blue-button bold ">
+    Go to my portfolios
+  </button>
+</div>
+
+<advisor-step [hidden]="currentStep !== wizardSteps.Advisor.Id" [advisorModel]="editedAdvisorModel" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></advisor-step>
+<portfolio-step [hidden]="currentStep !== wizardSteps.Portfolio.Id" [advisorModel]="advisorModel" [portfolioList]="portfolioList" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></portfolio-step>

@@ -17,6 +17,7 @@ namespace Auctus.Model
         public int AdvisorId { get; set; }
         public string AdvisorName { get; set; }
         public string AdvisorDescription { get; set; }
+        public int AdvisorType { get; set; }
         public int Risk { get; set; }
         public double ProjectionPercent { get; set; }
         public double? OptimisticPercent { get; set; }
@@ -26,6 +27,45 @@ namespace Auctus.Model
         public HistoryResult Last7Days { get; set; }
         public HistoryResult Last30Days { get; set; }
         public HistoryResult AllDays { get; set; }
+        public List<HistogramDistribution> Histogram { get; set; }
+        public List<History> HistoryData { get; set; }
+        public Purchase PurchaseData { get; set; }
+        public Owner OwnerData { get; set; }
+        public List<Distribution> AssetDistribution { get; set; }
+
+        public class Owner
+        {
+            public double AucEscrow { get; set; }
+            public double AucReached { get; set; }
+            public double AucLost { get; set; }
+        }
+
+        public class Purchase
+        {
+            public double Price { get; set; }
+            public double AucEscrow { get; set; }
+            public int Risk { get; set; }
+            public DateTime CreationDate { get; set; }
+            public DateTime? ExpirationDate { get; set; }
+            public int TransactionStatus { get; set; }
+            public Goal Goal { get; set; }
+        }
+
+        public class Goal
+        {
+            public double? TargetAmount { get; set; }
+            public double StartingAmount { get; set; }
+            public double MonthlyContribution { get; set; }
+            public int Timeframe { get; set; }
+            public int Risk { get; set; }
+        }
+
+        public class Distribution
+        {
+            public string Code { get; set; }
+            public string Name { get; set; }
+            public double Percentage { get; set; }
+        }
 
         public class HistoryResult
         {
@@ -36,11 +76,28 @@ namespace Auctus.Model
             public double HitPercentage { get; set; }
         }
 
-        public class Distribution
+        public class HistogramDistribution
         {
             public double GreaterOrEqual { get; set; }
             public double Lesser { get; set; }
             public int Quantity { get; set; }
+        }
+
+        public class History
+        {
+            public DateTime Date { get; set; }
+            public double Value { get; set; }
+        }
+
+        public class Result
+        {
+            public double? ProjectionValue { get; set; }
+            public double? OptimisticValue { get; set; }
+            public double? PessimisticValue { get; set; }
+            public bool? Reached { get; set; }
+            public double? Difference { get; set; }
+            public double? NewStartingAmount { get; set; }
+            public double? NewMonthlyContribution { get; set; }
         }
     }
 }

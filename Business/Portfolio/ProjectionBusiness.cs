@@ -70,58 +70,10 @@ namespace Auctus.Business.Portfolio
         {
             return Data.Get(projectionId);
         }
-        
-        //public Projections GetProjections(string email)
-        //{
-        //    var user = UserBusiness.GetValidUser(email);
-        //    var purchases = BuyBusiness.ListPurchasesComplete(user.Id);
-        //    user.Goal = GoalBusiness.GetCurrent(user.Id);
-        //    var projections = new Projections();
-        //    projections.CurrentGoal = new Projections.Goal()
-        //    {
-        //        Risk = RiskType.Get(user.Goal.Risk, user.Goal.GoalOption.Risk).Value,
-        //        Timeframe = user.Goal.Timeframe,
-        //        MonthlyContribution = user.Goal.MonthlyContribution,
-        //        StartingAmount = user.Goal.StartingAmount,
-        //        TargetAmount = user.Goal.TargetAmount
-        //    };
-        //    projections.Purchases = new List<Projections.Purchase>();
-        //    foreach(Buy purchase in purchases)
-        //    {
-        //        projections.Purchases.Add(new Projections.Purchase()
-        //        {
-        //            PurchaseDate = purchase.CreationDate,
-        //            ExpirationDate = purchase.ExpirationDate,
-        //            AdvisorId = purchase.AdvisorId,
-        //            Description = purchase.Advisor.Detail.Description,
-        //            Name = purchase.Advisor.Name,
-        //            Period = purchase.Advisor.Detail.Period,
-        //            Price = purchase.Advisor.Detail.Price,
-        //            Goal = new Projections.Goal()
-        //            {
-        //                MonthlyContribution = purchase.Goal.MonthlyContribution,
-        //                StartingAmount = purchase.Goal.StartingAmount,
-        //                Timeframe = purchase.Goal.Timeframe,
-        //                TargetAmount = purchase.Goal.TargetAmount,
-        //                Risk = RiskType.Get(purchase.Goal.Risk, purchase.Goal.GoalOption.Risk).Value
-        //            },
-        //            ProjectionData = new Projections.Projection()
-        //            {
-        //                Risk = purchase.Projection.Portfolio.Risk,
-        //                ProjectionPercent = purchase.Projection.ProjectionValue,
-        //                OptimisticPercent = purchase.Projection.OptimisticProjection,
-        //                PessimisticPercent = purchase.Projection.PessimisticProjection,
-        //                Current = GetProjectionResult(user.Goal, purchase.Projection),
-        //                Purchased = GetProjectionResult(purchase.Goal, purchase.Projection)
-        //            }
-        //        });
-        //    }
-        //    return projections;
-        //}
 
-        private Projections.Result GetProjectionResult(Goal goal, Projection projection)
+        private Model.Portfolio.Result GetProjectionResult(Goal goal, Projection projection)
         {
-            Projections.Result result = new Projections.Result();
+            Model.Portfolio.Result result = new Model.Portfolio.Result();
             if (goal.Timeframe > 0 && (goal.StartingAmount > 0 || goal.MonthlyContribution > 0))
             {
                 if (projection.OptimisticProjectionValue > 0)
@@ -141,8 +93,8 @@ namespace Auctus.Business.Portfolio
                         result.NewStartingAmount = Math.Abs(goal.TargetAmount.Value - monthly) / GetStartProjectionInterestRate(goal.Timeframe, projection.ProjectionValue);
                         result.NewMonthlyContribution = Math.Abs(goal.TargetAmount.Value - start) /
                             (goal.StartingAmount > 0 ?
-                            GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe, projection.ProjectionValue) :
-                            GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe, projection.ProjectionValue));
+                            GetMonthlyProjectionExpiredInterestRate(goal.Timeframe, projection.ProjectionValue) :
+                            GetMonthlyProjectionAntecipatedInterestRate(goal.Timeframe, projection.ProjectionValue));
                     }
                 }
             }
@@ -154,12 +106,12 @@ namespace Auctus.Business.Portfolio
             return Math.Pow((1 + percent / 100), period);
         }
 
-        private double GetMotnhlyProjectionAntecipatedInterestRate(int period, double percent)
+        private double GetMonthlyProjectionAntecipatedInterestRate(int period, double percent)
         {
             return ((Math.Pow((1 + percent / 100), period + 1) - 1) / (percent / 100)) - 1;
         }
 
-        private double GetMotnhlyProjectionExpiredInterestRate(int period, double percent)
+        private double GetMonthlyProjectionExpiredInterestRate(int period, double percent)
         {
             return (Math.Pow((1 + percent / 100), period) - 1) / (percent / 100);
         }
@@ -172,8 +124,8 @@ namespace Auctus.Business.Portfolio
         private double GetMonthlyProjectionValue(Goal goal, double percent)
         {
             return goal.StartingAmount > 0 ?
-                    goal.MonthlyContribution * GetMotnhlyProjectionExpiredInterestRate(goal.Timeframe, percent) :
-                    goal.MonthlyContribution * GetMotnhlyProjectionAntecipatedInterestRate(goal.Timeframe, percent);
+                    goal.MonthlyContribution * GetMonthlyProjectionExpiredInterestRate(goal.Timeframe, percent) :
+                    goal.MonthlyContribution * GetMonthlyProjectionAntecipatedInterestRate(goal.Timeframe, percent);
         }
     }
 }

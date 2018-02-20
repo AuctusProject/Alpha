@@ -225,9 +225,99 @@ namespace Auctus.Business.Portfolio
             return portfolios.Result.Select(c => FillPortfolioModel(c, c.Advisor, user, purchases, portfoliosQty.Result))
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
-        
+
+        public Model.Portfolio Get(string email, int portfolioId)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var purchase = Task.Factory.StartNew(() => BuyBusiness.Get(user.Id, portfolioId));
+            var portfolio = Task.Factory.StartNew(() => Data.Get(portfolioId));
+            Task.WaitAll(portfolio, purchase);
+
+            var owned = user.Id == portfolio.Result.Advisor.UserId;
+            var purchased = purchase.Result != null && BuyBusiness.IsValidPurchase(purchase.Result);
+
+            if (portfolio.Result == null || (!owned && !purchased && (!portfolio.Result.Detail.Enabled || !portfolio.Result.Advisor.Detail.Enabled)))
+                throw new ArgumentException("Invalid portfolio.");
+            
+            var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(new int[] { portfolioId }));
+            var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolioId));
+
+            Task<List<Distribution>> distribution = null;
+            Task<List<EscrowResult>> escrowResult = null;
+            Task<double?> purchaseAmount = null;
+            if (purchased && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success)
+            {
+                distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
+                Task.WaitAll(history, portfolioQty, distribution);
+            }
+            else if (owned)
+            {
+                distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
+                escrowResult = Task.Factory.StartNew(() => EscrowResultBusiness.ListByPortfolio(portfolio.Result.Id));
+                purchaseAmount = Task.Factory.StartNew(() => BuyBusiness.ListPortfolioPurchaseAmount(portfolio.Result.Id));
+                Task.WaitAll(history, portfolioQty, distribution, escrowResult, purchaseAmount);
+            }
+            else
+                Task.WaitAll(history, portfolioQty);
+
+            portfolio.Result.PortfolioHistory = history.Result;
+            var result = FillPortfolioModel(portfolio.Result, portfolio.Result.Advisor, user, 
+                purchase.Result != null ? new Buy[] { purchase.Result } : null, portfolioQty.Result);
+
+            result.Purchased = purchased;
+            result.Histogram = PortfolioHistoryBusiness.GetHistogram(history.Result);
+            result.HistoryData = history.Result.Select(c => new Model.Portfolio.History()
+            {
+                Date = c.Date,
+                Value = c.RealValue
+            }).ToList();
+            result.AssetDistribution = distribution == null ? null : distribution.Result.Select(c => new Model.Portfolio.Distribution()
+            {
+                Code = c.Asset.Code,
+                Name = c.Asset.Name,
+                Percentage = c.Percent
+            }).OrderByDescending(c => c.Percentage).ToList();
+
+            if (purchased)
+            {
+                GoalOption goalOption = null;
+                if (purchase.Result.Goal != null)
+                    goalOption = GoalOptionsBusiness.Get(purchase.Result.Goal.GoalOptionId);
+                
+                result.PurchaseData = new Model.Portfolio.Purchase()
+                {
+                    CreationDate = purchase.Result.CreationDate,
+                    ExpirationDate = purchase.Result.ExpirationDate,
+                    Price = purchase.Result.PortfolioDetail.Price,
+                    AucEscrow = distribution != null ? purchase.Result.PortfolioDetail.Price : 0,
+                    TransactionStatus = (int)purchase.Result.LastTransaction.TransactionStatus,
+                    Risk = purchase.Result.Projection.Risk,
+                    Goal = purchase.Result.Goal == null ? null : new Model.Portfolio.Goal()
+                    {
+                        Timeframe = purchase.Result.Goal.Timeframe,
+                        MonthlyContribution = purchase.Result.Goal.MonthlyContribution,
+                        StartingAmount = purchase.Result.Goal.StartingAmount,
+                        TargetAmount = purchase.Result.Goal.TargetAmount,
+                        Risk = RiskType.Get(purchase.Result.Goal.Risk, goalOption.Risk).Value
+                    }
+                };
+            }
+            else if (owned)
+            {
+                result.OwnerData = new Model.Portfolio.Owner();
+                if (purchaseAmount.Result.HasValue && purchaseAmount.Result.Value > 0)
+                {
+                    var validResults = escrowResult.Result.Where(c => c.LastTransaction.TransactionStatus == TransactionStatus.Success);
+                    result.OwnerData.AucReached = validResults.Sum(c => c.OwnerTokenResult);
+                    result.OwnerData.AucLost = validResults.Sum(c => c.BuyerTokenResult);
+                    result.OwnerData.AucEscrow = purchaseAmount.Result.Value - result.OwnerData.AucReached - result.OwnerData.AucLost;
+                }
+            }
+            return result;
+        }
+
         public Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
-            List<Buy> purchases, Dictionary<int, int> purchasesQty)
+            IEnumerable<Buy> purchases, Dictionary<int, int> purchasesQty)
         {
             return new Model.Portfolio()
             {
@@ -238,19 +328,20 @@ namespace Auctus.Business.Portfolio
                 AdvisorId = portfolio.AdvisorId,
                 AdvisorDescription = advisor.Detail.Description,
                 AdvisorName = advisor.Detail.Name,
+                AdvisorType = (int)advisor.Type,
                 Risk = portfolio.Projection.Risk,
                 ProjectionPercent = portfolio.Projection.ProjectionValue,
                 OptimisticPercent = portfolio.Projection.OptimisticProjectionValue,
                 PessimisticPercent = portfolio.Projection.PessimisticProjectionValue,
                 Owned = user != null && advisor.UserId == user.Id,
                 Purchased = purchases != null && purchases.Any(x => x.PortfolioId == portfolio.Id),
-                Enabled = portfolio.Detail.Enabled,
+                Enabled = portfolio.Detail.Enabled && advisor.Detail.Enabled,
                 PurchaseQuantity = purchasesQty.ContainsKey(portfolio.Id) ? purchasesQty[portfolio.Id] : 0,
                 TotalDays = portfolio.PortfolioHistory.Count,
                 LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
                 Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory),
                 Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory),
-                AllDays = PortfolioHistoryBusiness.GetHistoryResult((int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.PortfolioHistory.Min(x => x.Date)).TotalDays) + 1, portfolio.PortfolioHistory)
+                AllDays = PortfolioHistoryBusiness.GetHistoryResult(portfolio.PortfolioHistory)
             };
         }
 

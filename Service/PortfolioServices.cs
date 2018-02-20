@@ -55,20 +55,15 @@ namespace Auctus.Service
         {
             return DistributionBusiness.Create(email, portfolioId, distribution);
         }
-        
-        //public Model.Projections GetProjections(string email)
-        //{
-        //    return ProjectionBusiness.GetProjections(email);
-        //}
 
-        //public List<Model.PortfolioHistory> ListHistory(string email)
-        //{
-        //    return PortfolioHistoryBusiness.ListHistory(email);
-        //}
+        public Model.Portfolio GetPortfolio(string email, int portfolioId)
+        {
+            return PortfolioBusiness.Get(email, portfolioId);
+        }
 
-        //public List<Model.PortfolioDistribution> ListPortfolioDistribution(string email)
-        //{
-        //    return DistributionBusiness.ListPortfolioDistribution(email);
-        //}
+        public List<Model.Portfolio.Distribution> ListPortfolioDistribution(string email, int portfolioId)
+        {
+            return DistributionBusiness.ListByUserPortfolio(email, portfolioId);
+        }
     }
 }

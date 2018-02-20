@@ -25,6 +25,17 @@ namespace Auctus.DataAccess.Account
         private const string SELECT_WITH_WALLET_BY_WALLET = @"SELECT u.*, w.* FROM [User] u INNER JOIN [Wallet] w ON w.UserId = u.Id 
                                                    WHERE w.Address = @Address";
 
+        private const string SELECT_WITH_WALLET_BY_ID = @"SELECT u.*, w.* FROM [User] u INNER JOIN [Wallet] w ON w.UserId = u.Id 
+                                                   WHERE u.Id = @Id";
+
+        private const string SELECT_BUY_OWNER = @"SELECT u.*, w.* FROM 
+                                                    [User] u 
+                                                    INNER JOIN [Wallet] w ON w.UserId = u.Id 
+                                                    INNER JOIN [Advisor] a ON a.UserId = u.Id
+                                                    INNER JOIN [Portfolio] p ON p.AdvisorId = a.Id 
+                                                    INNER JOIN [Buy] b ON b.PortfolioId = p.Id 
+                                                    WHERE b.Id = @BuyId";
+
         public User Get(string email)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -83,6 +94,30 @@ namespace Auctus.DataAccess.Account
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("Id", id, DbType.Int32);
             return SelectByParameters<User>(parameters).SingleOrDefault();
+        }
+
+        public User GetWithWallet(int id)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+            return Query<User, Wallet, User>(SELECT_WITH_WALLET_BY_ID,
+                                (user, wallet) =>
+                                {
+                                    user.Wallet = wallet;
+                                    return user;
+                                }, "UserId", parameters).SingleOrDefault();
+        }
+
+        public User GetOwner(int buyId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("BuyId", buyId, DbType.Int32);
+            return Query<User, Wallet, User>(SELECT_BUY_OWNER,
+                                (user, wallet) =>
+                                {
+                                    user.Wallet = wallet;
+                                    return user;
+                                }, "UserId", parameters).SingleOrDefault();
         }
 
         public User GetByConfirmationCode(string confirmationCode)

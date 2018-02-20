@@ -26,6 +26,18 @@ namespace Api.Controllers
             return Ok();
         }
 
+        protected virtual IActionResult EvaluateEscrowResults()
+        {
+            RunJobAsync(AdvisorServices.EvaluateEscrowResults);
+            return Ok();
+        }
+
+        protected virtual IActionResult MakeEscrowResultsTransaction()
+        {
+            RunJobAsync(AdvisorServices.MakeEscrowResultsTransaction);
+            return Ok();
+        }
+
         private void RunJobAsync(Action action)
         {
             Task.Factory.StartNew(() =>
@@ -38,7 +50,7 @@ namespace Api.Controllers
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, $"Exception on {action.Method.Name} job");
+                    Logger.LogCritical(e, $"Exception on {action.Method.Name} job");
                 }
             });
         }

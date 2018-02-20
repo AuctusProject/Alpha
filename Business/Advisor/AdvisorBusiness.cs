@@ -157,7 +157,7 @@ namespace Auctus.Business.Advisor
                 Owned = owned,
                 Enabled = advisor.Detail.Enabled,
                 PurchaseQuantity = advisorQty.Result.ContainsKey(advisor.Id) ? advisorQty.Result[advisor.Id] : 0,
-                Portfolio = portfolios.Select(c => PortfolioBusiness.FillPortfolioModel(c, advisor, user, purchases?.Result, portfolioQty.Result)).
+                Portfolios = portfolios.Select(c => PortfolioBusiness.FillPortfolioModel(c, advisor, user, purchases?.Result, portfolioQty.Result)).
                     OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList()
             };
         }

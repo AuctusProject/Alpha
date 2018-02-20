@@ -1,5 +1,6 @@
 export class Login {
-  email: string;
+  address: string;
+  emailOrUsername: string;
   password: string;
   pendingConfirmation: boolean;
 }

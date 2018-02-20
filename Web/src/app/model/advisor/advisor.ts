@@ -1,19 +1,15 @@
-import { AdvisorDetail } from "./advisorDetail";
-import { Projection } from "../portfolio/projection";
+import { Portfolio } from "../portfolio/portfolio";
 
 export class Advisor {
   id: number;
   name: string;
   description: string;
-  price: number;
-  period: number;
-  purchased: boolean;
+  owned: boolean;
+  enabled: boolean;
   purchaseQuantity: number;
-  projection: Projection[];
-  userId: number;
-  detail: AdvisorDetail;
+  portfolios: Portfolio[];
 
   constructor() {
-    this.projection = [];
+    this.portfolios = [];
   }
 }

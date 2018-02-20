@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
 import { Advisor } from "../model/advisor/advisor";
+import { Portfolio } from "../model/portfolio/portfolio";
 
 @Injectable()
 export class AdvisorService {
@@ -11,12 +12,8 @@ export class AdvisorService {
   
   constructor(private httpService : HttpService) { }
 
-  getAdvisors(): Observable<Advisor[]> {
-    return this.httpService.get(this.baseGetAdvisorsUrl);
-  }
-
-  getAdvisorDetails(advisorId: number): Observable<Advisor> {
-    return this.httpService.get(this.baseGetAdvisorsUrl + "/" + advisorId);
+  getAdvisor(id: string): Observable<Advisor> {
+    return this.httpService.get(this.baseGetAdvisorsUrl + "/" + id);
   }
 
   createAdvisor(advisor: Advisor): Observable<Advisor> {
