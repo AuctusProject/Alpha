@@ -257,5 +257,25 @@ namespace Api.Controllers
             }
             return Ok(new { isValid = isValid });
         }
+
+        protected virtual IActionResult Faucet(FaucetRequest faucetRequest)
+        {
+            if (faucetRequest == null || string.IsNullOrWhiteSpace(faucetRequest.Address))
+                return BadRequest();
+
+            //var address = faucetRequest.Address.ToLower().Trim();
+            //if (MemoryCache.Get<string>(address) != null)
+            //    return new StatusCodeResult(429);
+            try
+            {
+                var transactionHash = AccountServices.Faucet(faucetRequest.Address);
+                //MemoryCache.Set<string>(address, address, 15);
+                return Ok(new { transaction = transactionHash });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

@@ -13,5 +13,10 @@ namespace Auctus.Business.Account
     {
         public WalletBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
+        public string Faucet(string address)
+        {
+            //TODO: call faucet api method and get the transaction hash from return
+            return null;
+        }
     }
 }
