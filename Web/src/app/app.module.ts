@@ -64,6 +64,7 @@ import { Web3Service } from './services/web3.service';
 import { PublicService } from './services/public.service';
 import { MetamaskAccountService } from './services/metamask-account.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
+import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provider';
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 import { EventsServiceModule } from 'angular-event-service';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
@@ -156,6 +157,7 @@ import { AdvisorDetailsComponent } from './components/advisor/advisor-details/ad
     PublicService, 
     Web3Service, 
     CanActivateViaAuthGuard,
+    UserProfileAuthGuard,
     MetamaskAccountService
   ],
   bootstrap: [AppComponent]

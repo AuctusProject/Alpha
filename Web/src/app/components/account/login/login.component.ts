@@ -34,11 +34,10 @@ export class LoginComponent implements OnInit {
   doLogin() {
     this.loginService.login(this.login)
       .subscribe(response => {
-        if (response.data) {
+        if (response.logged) {
           this.loginService.setLoginData(response.data);
-          this.router.navigateByUrl('dashboard');
-        }
-        else {
+          this.router.navigateByUrl('');
+        } else {
           this.login.pendingConfirmation = true;
           this.notificationService.info("Info", response.error);
         }
