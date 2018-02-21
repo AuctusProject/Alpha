@@ -1,1 +1,25 @@
-<portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
+<div class="human-advisors">
+    <div class="portfolio-list-header">
+        <header></header>
+        <div class="header-text-container" fxLayout="row">
+            <div fxFlex>
+                <h1>Create goal</h1>
+                <p>Para investir bem, é necessário organizar o seu dinheiro, e a melhor forma, é investir por objetivos. Você
+                    vai poder criar quantos quiser, mas vamos começar pelo primeiro</p>
+            </div>
+            <div fxFlex fxLayoutAlign="end center">
+                <div class="header-action-button" fxLayoutAlign="space-around center">CREATE A NEW TARGET</div>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-list-subheader">
+        <div class="header-text-container" fxLayout="row">
+            <div fxFlex>
+                <h1>Start investing</h1>
+            </div>
+        </div>
+    </div>
+    <div class="portfolio-list">
+        <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
+    </div>
+</div>

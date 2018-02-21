@@ -1,0 +1,2 @@
+<div class="risk-circle" *ngFor="let riskItem of possibleRisks" [ngClass]="{'risk-circle-blue': risk >= riskItem}" ></div>
+<div class="risk-description bold">{{getRiskDescription()}}</div>

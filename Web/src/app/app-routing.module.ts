@@ -22,10 +22,10 @@ import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provid
 
 
 const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
-    { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
-    { path: 'required', component: ProviderRequiredComponent },
-    { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
+  { path: 'required', component: ProviderRequiredComponent },
+  { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'try', component: WizardComponent },

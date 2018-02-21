@@ -21,7 +21,7 @@ export class HumanAdvisorsComponent implements OnInit {
     advisorId: 36,
     advisorName: "rwer",
     advisorDescription: "werwer",
-    risk: 5,
+    risk: 1,
     projectionPercent: 222.0,
     optimisticPercent: null,
     pessimisticPercent: null,

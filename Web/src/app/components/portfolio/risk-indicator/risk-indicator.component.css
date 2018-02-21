@@ -1,0 +1,19 @@
+div{
+    display: inline-block;
+    margin-right: 4px;
+}
+.risk-circle{
+    width: 10px;
+  height: 10px;
+  background-color: #f3f5f8;
+  border-radius: 5px;
+}
+
+.risk-circle-blue{
+    background-color: #4a90e2;
+}
+
+.risk-description {
+    font-size: 12px;
+    color: #4a90e2;
+  }
