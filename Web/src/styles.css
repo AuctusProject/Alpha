@@ -359,7 +359,7 @@ button.back {
 .advisor-wizard-buttons {
   width: 600px;
   max-width: 100%;
-  padding-top:0px;
+  padding-top: 0px;
   padding: 20px;
 }
 
@@ -421,7 +421,7 @@ button.back {
   cursor: pointer;
 }
 
-.rectangle-white-button{
+.rectangle-white-button {
   color: #4a90e2;
 }
 
@@ -431,11 +431,11 @@ button.back {
   color: white;
 }
 
-.rectangle-white-button svg.feather,
-.rectangle-blue-button svg.feather {
-  height: 15px;
-  padding-top: 2px;
-}
+  .rectangle-white-button svg.feather,
+  .rectangle-blue-button svg.feather {
+    height: 15px;
+    padding-top: 2px;
+  }
 
 button.rectangle-white-button:disabled,
 button.rectangle-white-button[disabled],
@@ -446,7 +446,7 @@ button.rectangle-blue-button[disabled] {
   border: solid 1px rgb(172, 171, 171);
 }
 
-.button-text{
+.button-text {
   margin-left: 4px;
 }
 
@@ -464,6 +464,52 @@ input[type=number]::-webkit-outer-spin-button {
   color: #f85843;
 }
 
+
 .portfolio-register-component:last-child .portfolio-card-line {
   display: none;
 }
+
+
+.action-button {
+  font-family: 'HelveticaNeueBold';
+  cursor: pointer;
+  width: 200px;
+  padding: 15px;
+  font-size: 14px;
+  line-height: 1;
+  background: #009bff;
+  background: -webkit-linear-gradient(90deg, #009bff, #4a90e2);
+  background: -o-linear-gradient(90deg, #009bff, #4a90e2);
+  background: -moz-linear-gradient(90deg, #009bff, #4a90e2);
+  background: linear-gradient(90deg, #009bff, #4a90e2);
+  color: white;
+  border-radius: 5px;
+  text-align: center;
+}
+
+
+  .action-button:hover {
+    background: #4a90e2;
+    background: -webkit-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: -o-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: -moz-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: linear-gradient(90deg, #4a90e2, #0884cd);
+  }
+
+
+.header-action-button {
+  width: 290px;
+  height: 58px;
+  border-radius: 45px;
+  background-color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  color: #3d84de;
+  cursor: pointer;
+}
+
+
+  .header-action-button:hover {
+    background-color: #f6f6f6;
+  }
