@@ -13,5 +13,9 @@ namespace Auctus.Business.Account
     {
         public WalletBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
+        public string Faucet(string address)
+        {
+            return Web3.Web3Business.FaucetTransaction(address).TransactionHash;
+        }
     }
 }

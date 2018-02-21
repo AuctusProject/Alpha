@@ -42,16 +42,7 @@ namespace Api.Controllers
         {
             return await base.SimpleRegister(registerRequest);
         }
-
-        //[Route("registration/full")]
-        //[HttpPost]
-        //[AllowAnonymous]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //public new async Task<IActionResult> FullRegister([FromBody]FullRegisterRequest registerRequest)
-        //{
-        //    return await base.FullRegister(registerRequest);
-        //}
-
+        
         [Route("password/forgotten")]
         [HttpPost]
         [AllowAnonymous]
@@ -149,6 +140,7 @@ namespace Api.Controllers
         {
             return base.IsValidEmailToRegister(email);
         }
+
         [Route("usernames/{username}")]
         [HttpGet]
         [AllowAnonymous]
@@ -156,6 +148,15 @@ namespace Api.Controllers
         public new IActionResult IsValidUsernameToRegister([FromRoute]string username)
         {
             return base.IsValidUsernameToRegister(username);
+        }
+
+        [Route("faucet")]
+        [HttpPost]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult Faucet([FromRoute]FaucetRequest faucetRequest)
+        {
+            return base.Faucet(faucetRequest);
         }
     }
 }

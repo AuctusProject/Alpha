@@ -17,8 +17,12 @@ export class LoginService {
     return this.httpService.post(this.loginUrl, login);
   }
 
-  setUser(email: string): void {
-    this.httpService.setUser(email);
+  setLoginData(loginData: string): void {
+    this.httpService.setLoginData(loginData);
+  }
+
+  getLoginData(): any {
+    return this.httpService.getLoginData();
   }
 
   getUser(): string {

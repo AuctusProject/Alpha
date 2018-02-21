@@ -64,6 +64,7 @@ import { Web3Service } from './services/web3.service';
 import { PublicService } from './services/public.service';
 import { MetamaskAccountService } from './services/metamask-account.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
+import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provider';
 import { ProviderRequiredComponent } from './components/provider-required/provider-required.component';
 import { EventsServiceModule } from 'angular-event-service';
 import { MetamaskAccountMonitorComponent } from './components/metamask-account-monitor/metamask-account-monitor.component';
@@ -74,6 +75,7 @@ import { HumanAdvisorsComponent } from './components/portfolio/human-advisors/hu
 import { PortfolioCardComponent } from './components/portfolio/portfolio-card/portfolio-card.component';
 import { AdvisorPortfoliosComponent } from './components/advisor/advisor-portfolios/advisor-portfolios.component';
 import { AdvisorDetailsComponent } from './components/advisor/advisor-details/advisor-details.component';
+import { PortfolioDetailsComponent } from './components/portfolio/portfolio-details/portfolio-details.component';
 
 @NgModule({
   declarations: [
@@ -122,7 +124,8 @@ import { AdvisorDetailsComponent } from './components/advisor/advisor-details/ad
     HumanAdvisorsComponent,
     PortfolioCardComponent,
     AdvisorPortfoliosComponent,
-    AdvisorDetailsComponent
+    AdvisorDetailsComponent,
+    PortfolioDetailsComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -156,6 +159,7 @@ import { AdvisorDetailsComponent } from './components/advisor/advisor-details/ad
     PublicService, 
     Web3Service, 
     CanActivateViaAuthGuard,
+    UserProfileAuthGuard,
     MetamaskAccountService
   ],
   bootstrap: [AppComponent]

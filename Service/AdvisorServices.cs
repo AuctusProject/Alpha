@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Auctus.Service
 {
@@ -61,6 +62,16 @@ namespace Auctus.Service
         public void MakeEscrowResultsTransaction()
         {
             EscrowResultTransactionBusiness.MakeTransactions();
+        }
+
+        public void CheckPurchasesTransaction()
+        {
+            BuyTransactionBusiness.CheckTransactions();
+        }
+
+        public async void CheckEscrowResultsTransactionAsync()
+        {
+            await EscrowResultTransactionBusiness.CheckTransactionsAsync();
         }
     }
 }

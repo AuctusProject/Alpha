@@ -88,7 +88,7 @@ namespace Api.Controllers
 
         protected virtual IActionResult SetBuyTransaction(int buyId, BuyTransactionRequest buyTransactionRequest)
         {
-            if (buyTransactionRequest == null || buyId == 0)
+            if (buyTransactionRequest == null || buyId == 0 || string.IsNullOrWhiteSpace(buyTransactionRequest.TransactionHash))
                 return BadRequest();
             
             try

@@ -18,13 +18,14 @@ import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider
 import { ProviderRequiredComponent } from "./components/provider-required/provider-required.component";
 import { RoboAdvisorsComponent } from "./components/portfolio/robo-advisors/robo-advisors.component";
 import { HumanAdvisorsComponent } from "./components/portfolio/human-advisors/human-advisors.component";
+import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provider';
 
 
 const routes: Routes = [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'home', component: HomeComponent },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'required', component: ProviderRequiredComponent },
-    { path: 'login', component: LoginComponent },
+    { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'try', component: WizardComponent },

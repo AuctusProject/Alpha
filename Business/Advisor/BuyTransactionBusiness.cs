@@ -35,18 +35,20 @@ namespace Auctus.Business.Advisor
                 TransactionBusiness.SetTransactionHash(buy.LastTransaction, transactionHash);
             else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Error)
                 Create(user.Id, buyId, transactionHash);
-            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending && !string.IsNullOrEmpty(buy.LastTransaction.TransactionHash))
+            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending && TransactionBusiness.TransactionCanBeConsideredLost(buy.LastTransaction) 
+                && buy.LastTransaction.TransactionHash.ToLower().Trim() != transactionHash.ToLower().Trim())
             {
-                //TODO: check if transaction exists inside the ethereum node
-
-                TransactionBusiness.ValidateTransaction(transactionHash);
-                using (var trans = new TransactionalDapperCommand())
+                try
                 {
-                    buy.LastTransaction.TransactionStatus = TransactionStatus.Lost;
-                    buy.LastTransaction.ProcessedDate = DateTime.UtcNow;
-                    trans.Update(buy.LastTransaction);
-                    InternalCreate(trans, user.Id, buyId, transactionHash);
-                    trans.Commit();
+                    var transaction = Web3.Web3Business.CheckTransaction(buy.LastTransaction.TransactionHash);
+                    throw new ArgumentException(transaction.BlockNumber.HasValue ? "Before transaction was processed." : "Before transaction is still pending.");
+                }
+                catch (DomainObjects.Web3.Web3Exception ex)
+                {
+                    if (ex.Code == 404)
+                        HandleLostTransaction(buy.LastTransaction, user.Id, buyId, transactionHash);
+                    else
+                        throw;
                 }
             }
             else
@@ -60,9 +62,26 @@ namespace Auctus.Business.Advisor
             if (buy == null || buy.UserId != user.Id || buy.ExpirationDate.HasValue)
                 throw new ArgumentException("Invalid purchase.");
 
-            if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending &&
-                (string.IsNullOrEmpty(buy.LastTransaction.TransactionHash) || true))//TODO: check if transaction exists inside the ethereum node
-                TransactionBusiness.Process(buy.LastTransaction, TransactionStatus.Cancel);
+            if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending)
+            {
+                if (string.IsNullOrEmpty(buy.LastTransaction.TransactionHash))
+                    TransactionBusiness.Process(buy.LastTransaction, TransactionStatus.Cancel);
+                else
+                {
+                    try
+                    {
+                        var transaction = Web3.Web3Business.CheckTransaction(buy.LastTransaction.TransactionHash);
+                        throw new ArgumentException(transaction.BlockNumber.HasValue ? "The transaction is already minted." : "Pending transaction cannot be canceled.");
+                    }
+                    catch (DomainObjects.Web3.Web3Exception ex)
+                    {
+                        if (ex.Code == 404)
+                            TransactionBusiness.Process(buy.LastTransaction, TransactionStatus.Cancel);
+                        else
+                            throw;
+                    }
+                }
+            }
             else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Error)
             {
                 using (var transaction = new TransactionalDapperCommand())
@@ -94,6 +113,43 @@ namespace Auctus.Business.Advisor
             transaction.Insert(trans);
             var buyTrans = BuyTransactionBusiness.SetNew(buyId, trans.Id);
             transaction.Insert(buyTrans);
+        }
+
+        public void CheckTransactions()
+        {
+            var pendingTransactions = Data.ListPendingTransactions();
+            foreach (var pending in pendingTransactions)
+            {
+                try
+                {
+                    var transaction = Web3.Web3Business.CheckTransaction(pending.Transaction.TransactionHash);
+                    if (transaction.BlockNumber.HasValue)
+                        TransactionBusiness.Process(pending.Transaction, transaction.Status.Value == 1 ? TransactionStatus.Success : TransactionStatus.Error);
+                }
+                catch (DomainObjects.Web3.Web3Exception ex)
+                {
+                    if (ex.Code == 404 && TransactionBusiness.TransactionCanBeConsideredLost(pending.Transaction))
+                        HandleLostTransaction(pending.Transaction, pending.Transaction.UserId, pending.BuyId, null);
+                    else
+                        throw;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogCritical(ex, $"Exception on check buy transaction {pending.TransactionId}");
+                }
+            }
+        }
+        
+        private void HandleLostTransaction(Transaction transaction, int userId, int buyId, string transactionHash)
+        {
+            using (var trans = new TransactionalDapperCommand())
+            {
+                transaction.TransactionStatus = TransactionStatus.Lost;
+                transaction.ProcessedDate = DateTime.UtcNow;
+                trans.Update(transaction);
+                InternalCreate(trans, userId, buyId, transactionHash);
+                trans.Commit();
+            }
         }
     }
 }

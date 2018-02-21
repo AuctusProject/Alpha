@@ -69,7 +69,7 @@ namespace Auctus.Business.Advisor
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogCritical(ex, ex.Message);
+                    Logger.LogCritical(ex, $"Error on evaluate purchase {purchase.Id}");
                 }
             }
         }

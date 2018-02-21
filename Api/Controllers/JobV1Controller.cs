@@ -52,5 +52,19 @@ namespace Api.Controllers
         {
             return base.MakeEscrowResultsTransaction();
         }
+
+        [Route("purchases/check")]
+        [HttpPost]
+        public new IActionResult CheckPurchasesTransaction()
+        {
+            return base.CheckPurchasesTransaction();
+        }
+
+        [Route("purchases/escrowresult/check")]
+        [HttpPost]
+        public new IActionResult CheckEscrowResultsTransaction()
+        {
+            return base.CheckEscrowResultsTransaction();
+        }
     }
 }

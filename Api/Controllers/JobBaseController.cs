@@ -38,6 +38,18 @@ namespace Api.Controllers
             return Ok();
         }
 
+        protected virtual IActionResult CheckPurchasesTransaction()
+        {
+            RunJobAsync(AdvisorServices.CheckPurchasesTransaction);
+            return Ok();
+        }
+
+        protected virtual IActionResult CheckEscrowResultsTransaction()
+        {
+            RunJobAsync(AdvisorServices.CheckEscrowResultsTransactionAsync);
+            return Ok();
+        }
+
         private void RunJobAsync(Action action)
         {
             Task.Factory.StartNew(() =>
