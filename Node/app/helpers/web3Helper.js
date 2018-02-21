@@ -7,7 +7,6 @@ const Tx = require('ethereumjs-tx');
 
 class Web3Helper {
   constructor() {
-    console.log(config.get("INFURA_URL"));
     this._web3 = new Web3(new Web3.providers.HttpProvider(config.get("INFURA_URL")));
   }
 
@@ -38,19 +37,9 @@ class Web3Helper {
     });
   }
 
-  // sendContractTransaction(gasPrice, gasLimit, to, value, cb){
-  //   var contractInstance = this._web3.eth.contract(JSON.parse(config.get('AUC_TOKEN_ABI'))).at(config.get('AUC_TOKEN_ADDRESS'));
-  //   console.log(contractInstance);
-  //   const valueWei = this._web3.toWei(value, 'ether');
-  //   var data = contractInstance["mint"].getData(to, this._web3.toHex(valueWei));
-  //   console.log(data);
-  //   this.sendTransaction(1, 200000, config.get('AUC_TOKEN_ADDRESS'), 0, data, cb);
-  // }
-
   getContractMethodData(abi, contractAddress, method, params){
     var contractInstance = this._web3.eth.contract(JSON.parse(abi)).at(contractAddress);
     var data = contractInstance[method].getData.apply(null, params);
-    console.log(data);
     return data;
   }
 

@@ -1,4 +1,3 @@
-var Web3Helper = require('../helpers/web3Helper.js');
 var FaucetHelper = require('../helpers/faucetHelper.js');
 var config = require('nconf');
 

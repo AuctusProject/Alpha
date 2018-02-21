@@ -1,7 +1,7 @@
 var Wallet = require('../models/wallet.js');
 var TransactionObject = require('../models/transactionObject.js');
 var web3Helper = require('../helpers/web3Helper.js');
-var faucetCache = require('../util/faucetCache.js');
+var transactionRequestCache = require('../util/transactionRequestCache.js');
 var config = require('nconf');
 var Error = require('../util/error.js');
 
@@ -18,7 +18,7 @@ class FaucetHelper {
 
     requestForAddress(address, cb) {
         var self = this;
-        web3Helper.getTokenBalance(config.get('AUC_TOKEN_ADDRESS'), address,
+        web3Helper.getTokenBalance(config.get('AUC_CONTRACT_ADDRESS'), address,
             function (err, result) {
                 if (err) cb(err);
                 else self.validateAndSendTokensIfApplicable(address, result, cb);
@@ -28,7 +28,7 @@ class FaucetHelper {
     validateAndSendTokensIfApplicable(address, aucBalance, cb) {
         var self = this;
         try {
-            this.validRequestTimeInterval(address);
+            this.validRequestTimeInterval(address, 'faucet');
             if (!this.validETHBalance(web3Helper.getETHBalance(address))) {
                 this.sendETH(address,
                     function (err, result) {
@@ -51,30 +51,27 @@ class FaucetHelper {
                 function (err, result) {
                     if (err) cb(err);
                     else {
+                        transactionRequestCache.update(address, 'faucet');
                         cb(null, new TransactionObject(result));
                     }
                 });
         }
     }
 
-    validRequestTimeInterval(address) {
-        if (!faucetCache.valid(address)) {
+    validRequestTimeInterval(address, method) {
+        if (!transactionRequestCache.valid(address, method)) {
             throw new Error(429, 'Too many requests.');
         }
     }
 
-    sendETH(address, cb) {
-        web3Helper.sendETH(address, config.get('ETH_SEND_FAUCET'), cb);
-    }
-
     sendAUC(address, cb) {
         var aucToSendHex = web3Helper.toHex(web3Helper.toWei(config.get('AUC_SEND_FAUCET')));
-        var data = web3Helper.getContractMethodData(config.get('AUC_TOKEN_ABI'), config.get('AUC_TOKEN_ADDRESS'), 'mint', [address, aucToSendHex]);
-        web3Helper.sendTransaction(config.get('GAS_PRICE')+1, 50000, config.get('AUC_TOKEN_OWNER'), config.get('AUC_TOKEN_ADDRESS'), 0, data, config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
+        var data = web3Helper.getContractMethodData(config.get('AUC_TOKEN_ABI'), config.get('AUC_CONTRACT_ADDRESS'), 'mint', [address, aucToSendHex]);
+        web3Helper.sendTransaction(config.get('GAS_PRICE')+1, 50000, config.get('OWNER_ADDRESS'), config.get('AUC_CONTRACT_ADDRESS'), 0, data, config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
     }
 
     sendETH(address, cb) {
-        web3Helper.sendTransaction(config.get('GAS_PRICE'), 21000, config.get('AUC_TOKEN_OWNER'), address, config.get('ETH_SEND_FAUCET'), '', config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
+        web3Helper.sendTransaction(config.get('GAS_PRICE'), 21000, config.get('OWNER_ADDRESS'), address, config.get('ETH_SEND_FAUCET'), '', config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
     }
 }
 

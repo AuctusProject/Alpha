@@ -1,5 +1,4 @@
-// app/routes/transactions.js
-var FaucetController = require('../controllers/faucetController.js');
+var EscrowController = require('../controllers/escrowController.js');
 var baseResponse = require('../util/baseResponse.js');
 
 module.exports = function (router) {
@@ -7,6 +6,6 @@ module.exports = function (router) {
 
   router.route('/')
     .post(function (req, res, next) {
-      new FaucetController().request(req.body, baseResponse(res));
+      new EscrowController().escrowResult(req.body, baseResponse(res));
     });
 };
