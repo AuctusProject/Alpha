@@ -81,10 +81,10 @@ class Web3Helper {
     this._web3.eth.sendRawTransaction('0x' + serializedTx.toString('hex'), cb);
   }
 
-  static IsAddress(address) {
+  isAddress(address) {
     return Web3Utils.isAddress(address);
   }
 }
 
-module.exports = Web3Helper;
+module.exports = new Web3Helper();
 

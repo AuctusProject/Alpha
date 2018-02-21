@@ -24,4 +24,4 @@ class FaucetCache {
     }
 }
 
-module.exports = FaucetCache;
+module.exports = new FaucetCache();

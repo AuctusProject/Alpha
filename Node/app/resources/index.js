@@ -1,5 +1,6 @@
 var changeCase = require('change-case');
 var express = require('express');
+var config = require('nconf');
 var routes = require('require-dir')();
 
 module.exports = function(app) {
@@ -15,7 +16,7 @@ module.exports = function(app) {
     require('./' + routeName)(router);
     
     // Add router to the speficied route name in the app
-    app.use('/api/' + changeCase.paramCase(routeName), router);
+    app.use('/api/v' + config.get('API_VERSION') + "/" + changeCase.paramCase(routeName), router);
   }); 
 };
 

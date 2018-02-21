@@ -1,6 +1,4 @@
 // app/routes/transactions.js
-var Web3Helper = require('../helpers/web3Helper.js');
-var web3Helper = new Web3Helper();
 
 module.exports = function(router) {
   'use strict';
