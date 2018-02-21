@@ -24,4 +24,4 @@ class EscrowHelper {
     }
 }
 
-module.exports = TransactionHelper;
+module.exports = EscrowHelper;

@@ -13,4 +13,4 @@ class Escrow {
     }
 }
 
-module.exports = Wallet;
+module.exports = Escrow;
