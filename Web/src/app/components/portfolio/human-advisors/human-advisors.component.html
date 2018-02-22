@@ -8,7 +8,7 @@
                     vai poder criar quantos quiser, mas vamos começar pelo primeiro</p>
             </div>
             <div fxFlex fxLayoutAlign="end center">
-                <div class="header-action-button" fxLayoutAlign="space-around center">CREATE A NEW TARGET</div>
+                <div class="header-action-button" fxLayoutAlign="space-around center" routerLink="/try" >CREATE A NEW TARGET</div>
             </div>
         </div>
     </div>
@@ -20,6 +20,8 @@
         </div>
     </div>
     <div class="portfolio-list">
-        <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
+      <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
     </div>
 </div>

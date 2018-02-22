@@ -1,1 +1,24 @@
-<portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
+<div class="robo-advisors">
+  <div class="portfolio-list-header">
+    <header></header>
+    <div class="header-text-container" fxLayout="row">
+      <div fxFlex>
+        <h1>Robo Advisors</h1>
+        <p>
+          We need some information about your goal to get the best portfolios for your saviings
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <register-wizard *ngIf="!goal"  (onSubmitted)="onWizardSubmitted($event)"></register-wizard>
+  <ng-container *ngIf="goal">
+    <div class="portfolio-list">
+      <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
+    </div>
+  </ng-container>
+</div>
+
+

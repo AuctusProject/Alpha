@@ -9,6 +9,11 @@
   margin: 0 auto !important;
 }
 
+.wizard {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 /deep/ .wizard .mat-horizontal-stepper-header{
   padding: 0px !important;
 }

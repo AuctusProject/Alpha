@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'header',
@@ -6,10 +7,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  loginData: any;
 
-  constructor() { }
+
+  constructor(private loginService: LoginService) { }
 
   ngOnInit() {
+    let logged = this.loginService.isLoggedIn();
+    if (logged) {
+      this.loginData = this.loginService.getLoginData();
+    }
   }
 
 }

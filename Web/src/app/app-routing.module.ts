@@ -19,6 +19,7 @@ import { ProviderRequiredComponent } from "./components/provider-required/provid
 import { RoboAdvisorsComponent } from "./components/portfolio/robo-advisors/robo-advisors.component";
 import { HumanAdvisorsComponent } from "./components/portfolio/human-advisors/human-advisors.component";
 import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provider';
+import { PortfolioDetailsComponent } from "./components/portfolio/portfolio-details/portfolio-details.component";
 
 
 const routes: Routes = [
@@ -37,6 +38,7 @@ const routes: Routes = [
     { path: 'become-advisor', component: AdvisorWizardComponent },
     { path: 'robo-advisors', component: RoboAdvisorsComponent },
     { path: 'human-advisors', component: HumanAdvisorsComponent },
+    { path: 'portfolio/:id', component: PortfolioDetailsComponent },
 ];
 
 @NgModule({

@@ -1,5 +1,5 @@
 <div class="wizard" fxLayout="column">
-    <wizard-header fxFlex="100%"></wizard-header>
+    <!--<wizard-header fxFlex="100%"></wizard-header>-->
     <mat-horizontal-stepper class="register-stepper" fxFlex="100%" fxLayout="column" [linear]="isLinear" #stepper (selectionChange)="onStepChange()">
         <mat-step>
             <goal-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></goal-step>
@@ -11,7 +11,7 @@
             <period-step [(model)]="goal" (onSubmitted)="goForward(stepper)"></period-step>
         </mat-step>
         <mat-step>
-            <risk-step [(model)]="goal" (onValidationFail)="goToStep($event, stepper)"></risk-step>
+            <risk-step [(model)]="goal" (onSubmitted)="onLastStepSubmitted(goal)" (onValidationFail)="goToStep($event, stepper)"></risk-step>
         </mat-step>
     </mat-horizontal-stepper>
 </div>

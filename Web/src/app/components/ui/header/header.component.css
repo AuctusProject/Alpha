@@ -21,6 +21,10 @@
   .header a:hover{
     color: #4a90e2;
   }
+
+  .header a.active{
+    color:  #4a90e2;
+  }
   
   .header .menu{
       padding-right: 50px;

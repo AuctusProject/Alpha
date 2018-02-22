@@ -473,7 +473,7 @@ input[type=number]::-webkit-outer-spin-button {
 .action-button {
   font-family: 'HelveticaNeueBold';
   cursor: pointer;
-  width: 200px;
+  min-width: 200px;
   padding: 15px;
   font-size: 14px;
   line-height: 1;
@@ -485,6 +485,7 @@ input[type=number]::-webkit-outer-spin-button {
   color: white;
   border-radius: 5px;
   text-align: center;
+  border: 0;
 }
 
 
@@ -512,4 +513,48 @@ input[type=number]::-webkit-outer-spin-button {
 
   .header-action-button:hover {
     background-color: #f6f6f6;
+  }
+
+
+.portfolio-list-header {
+  background-color: #4a90e2;
+  background: url(/assets/img/BG.svg) 0 0 no-repeat;
+  background-size: cover;
+}
+
+.header-text-container {
+  padding-left: 136px;
+  padding-right: 136px;
+}
+
+  .header-text-container h1 {
+    font-size: 36px;
+    font-family: 'HelveticaNeueBold';
+    line-height: 1.08;
+    color: #ffffff;
+  }
+
+  .header-text-container p {
+    width: 596px;
+    font-size: 18px;
+    line-height: 1.44;
+    color: #ffffff;
+    padding-bottom: 42px;
+  }
+
+.portfolio-list-subheader .header-text-container h1 {
+  font-size: 36px;
+  font-family: 'HelveticaNeueBold';
+  color: #4a90e2;
+  margin-top: 56px;
+  margin-bottom: 56px;
+}
+
+.portfolio-list {
+  padding: 56px 136px;
+  background-color: #fafafa;
+}
+
+  .portfolio-list .loading-card div {
+    margin-bottom: 10px;
   }

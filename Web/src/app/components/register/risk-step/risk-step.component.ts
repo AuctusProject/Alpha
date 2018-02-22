@@ -14,7 +14,7 @@ export class RiskStepComponent implements OnInit {
 
   @Input() model: Goal;
   @Output() modelChange = new EventEmitter<Goal>();
-  @Output() onSubmitted = new EventEmitter<boolean>();
+  @Output() onSubmitted = new EventEmitter<Goal>();
   @Output() onValidationFail = new EventEmitter<number>();
   riskDescription: string;
   promise : Subscription;
@@ -56,14 +56,8 @@ export class RiskStepComponent implements OnInit {
     if (!this.validFields()){
       return;
     }
-    this.promise = this.accountService.setGoal(goal).subscribe(
-      ret => {
-        if (ret){
-          this.notificationService.success("Success", "Goal saved");
-          onSubmitted.emit(true);
-        }
-      }
-    );
+
+    onSubmitted.emit(goal);
   }
 
   validFields() : boolean{

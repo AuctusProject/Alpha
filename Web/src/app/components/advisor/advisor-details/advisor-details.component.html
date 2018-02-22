@@ -1,4 +1,21 @@
-<p>
-  advisor-details works!
-</p>
-<advisor-portfolios *ngIf="advisor" [portfolios]="advisor.portfolios"></advisor-portfolios>
+<div class="advisor-details">
+  <div class="portfolio-list-header">
+    <header></header>
+    <div class="header-text-container" fxLayout="row">
+      <div fxFlex *ngIf="advisor">
+        <h1>{{advisor.name}}</h1>
+        <p>
+          {{advisor.description}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <ng-container >
+    <div class="portfolio-list">
+      <loading-block class="loading-card" *ngIf="!advisor || !advisor.portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <loading-block class="loading-card" *ngIf="!advisor || !advisor.portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <advisor-portfolios *ngIf="advisor" [portfolios]="advisor.portfolios"></advisor-portfolios>
+    </div>
+  </ng-container>
+</div>

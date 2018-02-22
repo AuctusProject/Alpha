@@ -4,11 +4,13 @@
         <span class="spacer"></span>
         <div fxHide.lt-md>
             <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
-                <a routerLink="/robo-advisors">ROBO ADVISORS</a>
-                <a routerLink="/human-advisors">HUMAN ADVISORS</a>
-                <a routerLink="/my-investments">MY INVESTMENTS</a>
-                <a routerLink="/help">HELP</a>
-                <div class="action-button" routerLink="/become-advisor">BECOME ADVISOR</div>
+                <a routerLink="/robo-advisors" routerLinkActive="active" >ROBO ADVISORS</a>
+                <a routerLink="/human-advisors" routerLinkActive="active" >HUMAN ADVISORS</a>
+                <a routerLink="/my-investments" routerLinkActive="active" >MY INVESTMENTS</a>
+                <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
+                <a *ngIf="!loginData" routerLink="/logout" routerLinkActive="active">LOGOUT</a>
+                <a *ngIf="loginData" routerLink="/login" routerLinkActive="active">LOGIN</a>
+                <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active" >BECOME ADVISOR</div>
             </div>
         </div>
         <div fxHide.gt-sm>

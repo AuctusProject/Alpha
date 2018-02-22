@@ -7,8 +7,9 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class LoadingBlockComponent implements OnInit {
 
-  @Input() width : number;
-  @Input() height : number;
+  @Input() width: number;
+  @Input() widthPercentage: number;
+  @Input() height: number;
   
   constructor() { }
 
