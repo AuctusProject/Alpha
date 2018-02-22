@@ -16,7 +16,7 @@ class EscrowController {
 
     escrowResult(json, cb) {
         this.valid(json);
-        new Escrow(json.from, json.to, json.value).getResult(cb);
+        new Escrow(json.from, json.to, json.value).getEscrowResult(cb);
     }
 }
 
