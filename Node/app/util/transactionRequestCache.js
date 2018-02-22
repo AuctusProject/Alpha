@@ -15,7 +15,7 @@ class TransactionRequestCache {
         if (!this.cache[address] || !this.cache[address][method]) {
             return true;
         }
-        if (this.dateDiffMinutes(this.cache[address][method], new Date()) > config.get('MIN_TIME_BETWEEN_FAUCET_REQUESTS')){
+        if (this.dateDiffMinutes(this.cache[address][method], new Date()) > config.get('MIN_TIME_BETWEEN_REQUESTS')){
             return true;
         }
         return false;

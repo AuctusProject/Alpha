@@ -7,17 +7,23 @@ var Error = require('../util/error.js');
 class EscrowHelper {
     constructor() { }
 
-    validRequestTimeInterval(address, method) {
-        if (!transactionRequestCache.valid(address, method)) {
-            throw new Error(429, 'Too many requests.');
-        }
-    }
 
     getEscrowResult(from, to, value, cb) {
-        if (!this.validRequestTimeInterval(from, 'purchaseEscrow')){
+        if (!transactionRequestCache.valid(from + to, 'getEscrowResult')) {
             throw new Error(429, 'Too many requests.');
         }
-        
+
+        this.sendEscrowResultTransaction(from, to, value,
+            function (err, result) {
+                if (err) cb(err);
+                else {
+                    transactionRequestCache.update(from + to, 'getEscrowResult');
+                    cb(null, new TransactionObject(result));
+                }
+            })
+    }
+
+    sendEscrowResultTransaction(from, to, value, cb) {
         var valueHex = web3Helper.toHex(web3Helper.toWei(value));
         var data = web3Helper.getContractMethodData(config.get('PURCHASE_ESCROW_ABI'), config.get('PURCHASE_ESCROW_CONTRACT_ADDRESS'), 'escrowResult', [from, to, valueHex]);
         web3Helper.sendTransaction(config.get('GAS_PRICE'), 200000, config.get('OWNER_ADDRESS'), config.get('PURCHASE_ESCROW_CONTRACT_ADDRESS'), 0, data, config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb);

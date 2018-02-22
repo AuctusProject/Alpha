@@ -16,7 +16,8 @@ module.exports = function(app) {
     require('./' + routeName)(router);
     
     // Add router to the speficied route name in the app
-    app.use('/api/v' + config.get('API_VERSION') + "/" + changeCase.paramCase(routeName), router);
+    //app.use('/api/v' + config.get('API_VERSION') + "/" + changeCase.paramCase(routeName), router);
+    app.use('/api/v' + config.get('API_VERSION') + "/" + routeName, router);
   }); 
 };
 

@@ -7,6 +7,6 @@ module.exports = function (router) {
 
   router.route('/')
     .post(function (req, res, next) {
-      new FaucetController().request(req.body, baseResponse(res));
+      new FaucetController().request(req.body, baseResponse(res, next));
     });
 };

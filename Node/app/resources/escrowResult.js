@@ -6,6 +6,6 @@ module.exports = function (router) {
 
   router.route('/')
     .post(function (req, res, next) {
-      new EscrowController().escrowResult(req.body, baseResponse(res));
+      new EscrowController().escrowResult(req.body, baseResponse(res, next));
     });
 };
