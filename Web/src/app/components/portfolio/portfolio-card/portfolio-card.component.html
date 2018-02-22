@@ -6,9 +6,10 @@
     <div class="portfolio-description">
       {{portfolio.name}}
     </div>
-    <div class="portfolio-risk">
+    <risk-indicator [risk]="portfolio.risk"></risk-indicator>
+    <!-- <div class="portfolio-risk">
       {{getRiskDescription()}}
-    </div>
+    </div> -->
   </div>
   <div fxLayout="row" *ngIf="portfolio.allDays" fxFlex="270px" fxLayoutGap="40px">
     <div fxLayout="column" fxLayoutGap="4px">
@@ -38,6 +39,6 @@
   </div>
   <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
     <div class="price-box">{{portfolio.price}} AUC</div>
-    <div class="details-button">SEE DETAILS</div>
+    <div class="action-button" routerLink="/portfolio/{{portfolio.id}}">SEE DETAILS</div>
   </div>
 </div>

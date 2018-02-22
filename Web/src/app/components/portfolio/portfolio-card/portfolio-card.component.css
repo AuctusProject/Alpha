@@ -1,6 +1,6 @@
 .portfolio-card {
-  width: calc(100% - 24px);
-  margin: 10px;
+  width: calc(100% - 2px);
+  margin-bottom: 10px;
   border-radius: 5px;
   background-color: #ffffff;
   border: solid 1px rgba(128, 143, 163, 0.2);
@@ -17,21 +17,6 @@
   color: #4a4a4a;
 }
 
-.details-button {
-  cursor: pointer;
-  width: 200px;
-  padding: 15px;
-  font-size: 14px;
-  background-color: #009bff;
-  color: white;
-  border-radius: 5px;
-  text-align: center;
-}
-
-  .details-button:hover {
-    background-color: #4a90e2;
-  }
-
 .portfolio-name {
   font-size: 16px;
   font-weight: bold;
@@ -44,11 +29,7 @@
   color: #55606e;
 }
 
-.portfolio-risk {
-  font-size: 12px;
-  font-weight: 600;
-  color: #4a90e2;
-}
+
 
 .performance-value {
   font-size: 16px;

@@ -13,21 +13,6 @@ export class PortfolioCardComponent implements OnInit {
   ngOnInit() {
   }
 
-  private getRiskDescription() {
-    if (this.portfolio.risk == 1) {
-      return "Conservative";
-    }
-    else if (this.portfolio.risk == 2) {
-      return "Moderately Conservative";
-    }
-    else if (this.portfolio.risk == 3) {
-      return "Moderately Aggressive";
-    }
-    else if (this.portfolio.risk == 4) {
-      return "Aggressive";
-    }
-    else if (this.portfolio.risk == 5) {
-      return "Very Aggressive"
-    }
-  }
+  
 }
+

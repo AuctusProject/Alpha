@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Goal } from "../../../model/account/goal";
 import { GoalOption } from '../../../model/account/goalOption';
 import { MatStepper } from "@angular/material";
@@ -9,6 +9,7 @@ import { MatStepper } from "@angular/material";
   styleUrls: ['./wizard.component.css']
 })
 export class WizardComponent implements OnInit {
+  @Output() onSubmitted = new EventEmitter<Goal>();
   isLinear = true;
   goal: Goal;
 
@@ -30,6 +31,10 @@ export class WizardComponent implements OnInit {
 
   goForward(stepper: MatStepper) {
     stepper.next();
+  }
+
+  onLastStepSubmitted(goal: Goal) {
+    this.onSubmitted.emit(goal);
   }
 
   onStepChange(){

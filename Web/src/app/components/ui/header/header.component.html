@@ -1,0 +1,27 @@
+<mat-toolbar class="header">
+    <mat-toolbar-row class="internal-header">
+        <img src="./assets/logo.png" class="landing-logo">
+        <span class="spacer"></span>
+        <div fxHide.lt-md>
+            <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
+                <a routerLink="/robo-advisors" routerLinkActive="active" >ROBO ADVISORS</a>
+                <a routerLink="/human-advisors" routerLinkActive="active" >HUMAN ADVISORS</a>
+                <a routerLink="/my-investments" routerLinkActive="active" >MY INVESTMENTS</a>
+                <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
+                <a *ngIf="!loginData" routerLink="/logout" routerLinkActive="active">LOGOUT</a>
+                <a *ngIf="loginData" routerLink="/login" routerLinkActive="active">LOGIN</a>
+                <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active" >BECOME ADVISOR</div>
+            </div>
+        </div>
+        <div fxHide.gt-sm>
+            <mat-menu #appMenu="matMenu">
+                <button mat-menu-item> What is Auctus </button>
+                <button mat-menu-item> Contact Us </button>
+                <button mat-menu-item routerLink="/login"> Login </button>
+            </mat-menu>
+            <button mat-icon-button [matMenuTriggerFor]="appMenu">
+                <mat-icon>menu</mat-icon>
+            </button>
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>

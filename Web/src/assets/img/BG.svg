@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280px" height="450px" viewBox="0 0 1280 450" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 48.2 (47327) - http://www.bohemiancoding.com/sketch -->
+    <title>iStock-660311458@1x</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="1%" y1="50%" x2="100%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#009BFF" offset="0%"></stop>
+            <stop stop-color="#4A90E2" offset="100%"></stop>
+        </linearGradient>
+        <rect id="path-2" x="0" y="0" width="1280" height="450"></rect>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-4">
+            <stop stop-color="#009BFF" offset="0%"></stop>
+            <stop stop-color="#00E8FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Action-Button">
+            <g id="iStock-660311458">
+                <mask id="mask-3" fill="white">
+                    <use xlink:href="#path-2"></use>
+                </mask>
+                <use id="Mask" fill="url(#linearGradient-1)" style="mix-blend-mode: multiply;" xlink:href="#path-2"></use>
+                <g id="Group" mask="url(#mask-3)" fill="url(#linearGradient-4)">
+                    <g transform="translate(696.000000, -72.000000)">
+                        <path d="M84,17 L949.903587,17 L1092.14811,318.887452 L597.470556,591.63444 C552.810544,616.258326 496.775306,603.329919 467.417757,561.628759 L84,17 Z" id="bg-shape"></path>
+                        <rect id="Rectangle-7" transform="translate(217.392569, 271.002127) scale(-1, 1) rotate(35.000000) translate(-217.392569, -271.002127) " x="213.392569" y="150.502127" width="8" height="241" rx="4"></rect>
+                        <rect id="Rectangle-7-Copy-11" transform="translate(572.366124, 227.853989) scale(-1, 1) rotate(35.000000) translate(-572.366124, -227.853989) " x="569.366124" y="137.353989" width="6" height="181" rx="3"></rect>
+                        <rect id="Rectangle-7-Copy-8" transform="translate(289.002568, 323.434055) scale(-1, 1) rotate(35.000000) translate(-289.002568, -323.434055) " x="274.002568" y="123.434055" width="30" height="400" rx="15"></rect>
+                        <rect id="Rectangle-7-Copy-12" transform="translate(309.456714, 170.468936) scale(-1, 1) rotate(35.000000) translate(-309.456714, -170.468936) " x="297.956714" y="20.4689357" width="23" height="300" rx="11.5"></rect>
+                        <rect id="Rectangle-7-Copy-6" transform="translate(110.788782, 181.911050) scale(-1, 1) rotate(36.000000) translate(-110.788782, -181.911050) " x="108.365274" y="61.4110498" width="4.84701487" height="241" rx="2.42350744"></rect>
+                        <rect id="Rectangle-7-Copy-7" opacity="0.143965127" transform="translate(75.682225, 184.013259) scale(-1, 1) rotate(36.000000) translate(-75.682225, -184.013259) " x="69.6822249" y="63.5132593" width="12" height="241" rx="6"></rect>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

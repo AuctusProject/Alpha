@@ -9,7 +9,7 @@ import { Portfolio } from "../../../model/portfolio/portfolio";
 })
 export class HumanAdvisorsComponent implements OnInit {
 
-  portfolios: Portfolio[] = [{
+  portfolios: Portfolio[];/* = [{
     id: 33,
     name: "fsdf",
     description: "fgfgfd",
@@ -21,7 +21,7 @@ export class HumanAdvisorsComponent implements OnInit {
     advisorId: 36,
     advisorName: "rwer",
     advisorDescription: "werwer",
-    risk: 5,
+    risk: 1,
     projectionPercent: 222.0,
     optimisticPercent: null,
     pessimisticPercent: null,
@@ -64,12 +64,12 @@ export class HumanAdvisorsComponent implements OnInit {
       pessimisticExpectation: 30,
       hitPercentage: 75.5
     }
-  }];
+  }];*/
 
   constructor(private portfolioService: PortfolioService) { }
 
   ngOnInit() {
-    //this.getPortfolios();
+    this.getPortfolios();
   }
 
   private getPortfolios() {

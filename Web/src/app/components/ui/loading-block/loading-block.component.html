@@ -1,1 +1,1 @@
-<div [style.width.px]="width" [style.height.px]="height"></div>
+<div [style.width]="width ? width + 'px' : widthPercentage + '%'" [style.height.px]="height"></div>
