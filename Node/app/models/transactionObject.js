@@ -11,34 +11,18 @@ class TransactionObject {
     }
 
     static GetByHash(hash, cb) {
-
-        web3Helper.getTransactionReceipt(hash,
+        web3Helper.getTransactionByHash(hash,
             function (err, result) {
                 if (err) cb(err);
-                else if (!result) {
-                    web3Helper.getTransaction(hash,
-                        function (err, result) {
-                            if (err) cb(err);
-                            else if (!result) {
-                                cb(new Error(404, 'transaction not found'));
-                            }
-                            else {
-                                cb(null, new TransactionObject(result.hash,
-                                    result.blockNumber,
-                                    result.blockHash,
-                                    result.contractAddress,
-                                    result.status));
-                            }
-                        })
-                }
                 else {
-                    cb(null, new TransactionObject(result.transactionHash,
+                    cb(null, new TransactionObject(result.transactionHash || result.hash,
                         result.blockNumber,
                         result.blockHash,
                         result.contractAddress,
                         result.status));
                 }
-            })
+            }
+        )
     }
 }
 

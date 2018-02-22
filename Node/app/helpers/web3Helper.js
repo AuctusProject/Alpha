@@ -14,7 +14,7 @@ class Web3Helper {
     return this._web3.eth.blockNumber;
   }
 
-  getTransactionCount(address){
+  getTransactionCount(address) {
     return this._web3.eth.getTransactionCount(address);
   }
 
@@ -24,6 +24,29 @@ class Web3Helper {
 
   getTransactionReceipt(hash, cb) {
     this._web3.eth.getTransactionReceipt(hash, cb);
+  }
+
+  getTransactionByHash(hash, cb) {
+    var self = this;
+    this.getTransactionReceipt(hash,
+      function (err, result) {
+        if (err) cb(err);
+        else if (!result) {
+          self.getTransaction(hash,
+            function (err, result) {
+              if (err) cb(err);
+              else if (!result) {
+                cb(new Error(404, 'transaction not found'));
+              }
+              else {
+                cb(null, result);
+              }
+            })
+        }
+        else {
+          cb(null, result);
+        }
+      })
   }
 
   getETHBalance(address) {
