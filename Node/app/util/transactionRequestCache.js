@@ -7,7 +7,7 @@ class TransactionRequestCache {
 
     dateDiffMinutes(date1, date2){
         var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-        var diffMinutes = Math.ceil(timeDiff / (1000 * 3600)); 
+        var diffMinutes = Math.floor((timeDiff/1000)/60);
         return diffMinutes;
     }
 
@@ -15,7 +15,7 @@ class TransactionRequestCache {
         if (!this.cache[address] || !this.cache[address][method]) {
             return true;
         }
-        if (this.dateDiffMinutes(this.cache[address][method], new Date()) > config.get('MIN_TIME_BETWEEN_REQUESTS')){
+        if (this.dateDiffMinutes(this.cache[address][method], new Date()) >= config.get('MIN_TIME_BETWEEN_REQUESTS')){
             return true;
         }
         return false;
