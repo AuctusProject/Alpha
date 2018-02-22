@@ -12,27 +12,31 @@ class TransactionObject {
 
     static GetByHash(hash, cb) {
 
-        web3Helper.getTransaction(hash,
+        web3Helper.getTransactionReceipt(hash,
             function (err, result) {
                 if (err) cb(err);
                 else if (!result) {
-                    cb(new Error(404, 'transaction not found'));
-                }
-                else {
-                    web3Helper.getTransactionReceipt(hash,
+                    web3Helper.getTransaction(hash,
                         function (err, result) {
                             if (err) cb(err);
-                            else if (!result || !result.blockNumber) {
-                                cb(new Error(404, 'transaction not mined'));
+                            else if (!result) {
+                                cb(new Error(404, 'transaction not found'));
                             }
                             else {
-                                cb(null, new TransactionObject(result.transactionHash,
+                                cb(null, new TransactionObject(result.hash,
                                     result.blockNumber,
                                     result.blockHash,
                                     result.contractAddress,
                                     result.status));
                             }
                         })
+                }
+                else {
+                    cb(null, new TransactionObject(result.transactionHash,
+                        result.blockNumber,
+                        result.blockHash,
+                        result.contractAddress,
+                        result.status));
                 }
             })
     }
