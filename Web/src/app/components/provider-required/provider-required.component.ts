@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 import { constants } from '../../util/contants';
 import { EventsService } from "angular-event-service";
 import { ChangeDetectorRef } from '@angular/core';
+import { AccountService } from "../../services/account.service";
 
 export class MetamaskCondition {
   private message: string;
@@ -34,7 +35,8 @@ export class ProviderRequiredComponent implements OnInit {
 
   constructor(
     private router: Router, private metamaskAccount: MetamaskAccountService,
-    private eventsService: EventsService, private changeDetector: ChangeDetectorRef) {
+    private eventsService: EventsService, private changeDetector: ChangeDetectorRef,
+    private accountService: AccountService) {
     this.eventsService.on("loginConditionsFail", this.onLoginConditionsFail);
     this.eventsService.on("accountChanged", this.onAccountChanged);
     this.eventsService.on("balanceChanged", this.onBalanceChanged);
@@ -111,10 +113,18 @@ export class ProviderRequiredComponent implements OnInit {
       this.metamaskAccount.getAUCBalance() > constants.minimumAUCNecessary;
   }
 
-  private onlyAucConditionPending(): boolean{
-    return this.conditions[0].status && 
+  private onlyAucConditionPending(): boolean {
+    return this.conditions[0].status &&
       this.conditions[1].status &&
       this.conditions[2].status &&
       !this.conditions[3].status;
+  }
+
+  private callFaucet(): void {
+    this.accountService.faucet(this.metamaskAccount.getAccount()).subscribe(
+      success => {
+        console.log(success);
+      }
+    )
   }
 }

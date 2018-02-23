@@ -23,10 +23,10 @@ import { PortfolioDetailsComponent } from "./components/portfolio/portfolio-deta
 import { MyInvestmentsComponent } from "./components/portfolio/my-investments/my-investments.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
-  { path: 'required', component: ProviderRequiredComponent },
-  { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
+    { path: 'required', component: ProviderRequiredComponent },
+    { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'try', component: WizardComponent },

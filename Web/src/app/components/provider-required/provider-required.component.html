@@ -21,7 +21,7 @@
             <div>{{condition.message}}<br></div>
         </div>
         <div class="faucet-button-wrapper">
-          <button *ngIf="onlyAucConditionPending()" class="action-button">
+          <button *ngIf="onlyAucConditionPending()" (click)="callFaucet()" class="action-button">
             Get free rinkeby AUC for test
           </button>
         </div>

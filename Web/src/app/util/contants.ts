@@ -1,3 +1,3 @@
 export const constants = {
-    minimumAUCNecessary: 100
+    minimumAUCNecessary: 1000
 }
