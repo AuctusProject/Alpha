@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { AccountService } from '../../../services/account.service';
 import { NotificationsService } from 'angular2-notifications';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-manage-api',
@@ -10,6 +11,7 @@ import { NotificationsService } from 'angular2-notifications';
 export class ManageApiComponent implements OnInit {
 
   @Input() apiKey: string = null;
+  promise: Subscription;
 
   constructor(private accountService: AccountService, private notificationService: NotificationsService) { }
 
@@ -24,7 +26,7 @@ export class ManageApiComponent implements OnInit {
   }
 
   onGenerateApiKeyClick(): void {
-    this.accountService.generateApiKey().subscribe(
+    this.promise = this.accountService.generateApiKey().subscribe(
       response => {
         if (response && response.key) {
           this.apiKey = response.key;
@@ -35,7 +37,7 @@ export class ManageApiComponent implements OnInit {
   }
 
   onRevokeClick(): void {
-    this.accountService.revokeApiKey().subscribe(
+    this.promise = this.accountService.revokeApiKey().subscribe(
       response => {
         if (response) {
           this.apiKey = null;

@@ -7,7 +7,7 @@ import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
 import { DistributionRequest } from '../../../../model/portfolio/distributionRequest'
 import { PortfolioService } from '../../../../services/portfolio.service'
 import { FormControl, Validators, FormGroup } from '@angular/forms';
-
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'portfolio-register',
@@ -23,6 +23,7 @@ export class PortfolioRegisterComponent implements OnInit {
   @ViewChild('portfolioRegisterForm') portfolioRegisterForm;
   totalDistributionPercentage = 0;
   totalPercentageForm: FormControl = new FormControl("", [Validators.required, Validators.min(100), Validators.max(100)]);
+  savePromise: Subscription;
 
   constructor(private ref: ChangeDetectorRef, private portfolioService: PortfolioService) { }
 
@@ -116,7 +117,7 @@ export class PortfolioRegisterComponent implements OnInit {
     }
 
     if (this.model.id == null) {
-      this.portfolioService.createPortfolio(this.model)
+      this.savePromise = this.portfolioService.createPortfolio(this.model)
         .subscribe(model => {
           this.model.id = model.id;
           this.model.isEditing = false;
@@ -125,7 +126,7 @@ export class PortfolioRegisterComponent implements OnInit {
           }
         });
     } else {
-      this.portfolioService.updatePortfolio(this.model)
+      this.savePromise = this.portfolioService.updatePortfolio(this.model)
         .subscribe(model => {
           this.model.isEditing = false;
           if (this.onPortfolioSaved) {

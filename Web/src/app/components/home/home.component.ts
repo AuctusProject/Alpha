@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-home',
@@ -13,10 +14,9 @@ import { Web3Service } from '../../services/web3.service';
 })
 
 export class HomeComponent implements OnInit {
-
-  private;
   public simpleRegisterForm: FormGroup;
   public simpleRegister: SimpleRegister;
+  createPromise: Subscription;
 
   constructor(private formBuilder: FormBuilder,
     private accountService: AccountService,
@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmit() {
-    this.web3Service.getAccount().subscribe(success => {
+    this.createPromise = this.web3Service.getAccount().subscribe(success => {
       this.simpleRegister.address = success;
       this.createAccount();
     });
@@ -48,7 +48,7 @@ export class HomeComponent implements OnInit {
   }
 
   private createAccount() {
-      this.accountService.simpleRegister(this.simpleRegister).subscribe(success => {
+      this.createPromise = this.accountService.simpleRegister(this.simpleRegister).subscribe(success => {
         this.router.navigateByUrl('');
       }, response => {
         this.notificationService.info("Info", response.error);
