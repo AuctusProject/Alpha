@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, ApplicationRef } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, ChangeDetectorRef, ApplicationRef, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Asset } from '../../../../model/asset/asset';
 import { RiskType } from '../../../../model/account/riskType'
@@ -7,6 +7,7 @@ import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
 import { DistributionRequest } from '../../../../model/portfolio/distributionRequest'
 import { PortfolioService } from '../../../../services/portfolio.service'
 import { FormControl, Validators, FormGroup } from '@angular/forms';
+
 
 @Component({
   selector: 'portfolio-register',
@@ -18,6 +19,7 @@ export class PortfolioRegisterComponent implements OnInit {
   @Input() assets: Asset[];
   assetsDistributionRows: AssetDistribution[];
   @Input() model: PortfolioRequest;
+  @Output() onPortfolioSaved = new EventEmitter();
   @ViewChild('portfolioRegisterForm') portfolioRegisterForm;
   totalDistributionPercentage = 0;
   totalPercentageForm: FormControl = new FormControl("", [Validators.required, Validators.min(100), Validators.max(100)]);
@@ -118,11 +120,17 @@ export class PortfolioRegisterComponent implements OnInit {
         .subscribe(model => {
           this.model.id = model.id;
           this.model.isEditing = false;
+          if (this.onPortfolioSaved) {
+            this.onPortfolioSaved.emit();
+          }
         });
     } else {
       this.portfolioService.updatePortfolio(this.model)
         .subscribe(model => {
           this.model.isEditing = false;
+          if (this.onPortfolioSaved) {
+            this.onPortfolioSaved.emit();
+          }
         });
     }
   }
