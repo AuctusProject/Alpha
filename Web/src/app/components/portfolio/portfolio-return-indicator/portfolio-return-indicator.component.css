@@ -1,0 +1,41 @@
+.risk {
+    margin-bottom: 30px;
+  }
+
+  .text-left{
+    text-align: left;
+  }
+  
+  .text-right{
+    text-align: right;
+  }
+
+  
+  
+  .return-value {
+    font-family: 'HelveticaNeue';
+    font-size: 16px;
+    color: #4a4a4a;
+  }
+
+  .return-label {
+    font-family: 'HelveticaNeue';
+    font-size: 8px;
+    color: #808fa3;
+  }
+
+
+  
+.circ {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+    display: inline-block;
+    background-color: transparent;
+    border-top: 15px solid transparent;
+    border-left: 15px solid#009bff;
+    border-right: 15px solid #009bff;
+    border-bottom: 15px solid #009bff;
+    transform: rotate(315deg);
+  }
+  

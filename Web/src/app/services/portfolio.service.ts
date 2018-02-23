@@ -29,6 +29,10 @@ export class PortfolioService {
     return this.httpService.get(this.getPortfoliosUrl);
   }
 
+  getPortfolio(portfolioId): Observable<Portfolio> {
+    return this.httpService.get(this.getPortfoliosUrl + portfolioId);
+  }
+
   getPurchasedPortfolios(): Observable<Portfolio[]> {
     return this.httpService.get(this.getPurchasedPortfoliosUrl);
   }
