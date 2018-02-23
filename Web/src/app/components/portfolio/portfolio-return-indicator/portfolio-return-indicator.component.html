@@ -1,0 +1,33 @@
+<div fxLayout="column" fxLayoutAlign="space-between center">
+  <div fxFlex class="risk">
+    <risk-indicator [risk]="risk"></risk-indicator>
+  </div>
+  <div fxFlex>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxFlex="20" class="text-left">
+        <div class="return-value">
+          {{estimatedReturn}}%
+        </div>
+        <div class="return-label">
+          Estimated Return
+        </div>
+      </div>
+      <div fxFlex="60" class="circ">
+        <!-- <div>
+            78%
+          </div>
+          <div >
+            Success rate
+          </div> -->
+      </div>
+      <div fxFlex="20" class="text-right">
+        <div class="return-value">
+          {{realReturn}}%
+        </div>
+        <div class="return-label">
+          Real Return
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
