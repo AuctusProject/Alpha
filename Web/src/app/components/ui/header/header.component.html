@@ -8,8 +8,17 @@
                 <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
                 <a routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
                 <a *ngIf="loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
-                <a (click)="logout()" href="#">LOGOUT</a>
                 <div *ngIf="!loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
+                <div class="pull-right">
+                    <mat-menu #appMenu="matMenu">
+                        <button mat-menu-item routerLink="/change-password"> Change password </button>
+                        <button mat-menu-item routerLink="/manage-api"> Manage API </button>
+                        <button mat-menu-item (click)="logout()"> Logout </button>
+                    </mat-menu>
+                    <div class="user-menu-item" [matMenuTriggerFor]="appMenu">
+                        {{getUsernameFirstLetter()}}
+                    </div>
+                </div>
             </div>
         </div>
         <div *ngIf="!loginData">

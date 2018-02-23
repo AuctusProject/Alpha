@@ -23,4 +23,9 @@ export class HeaderComponent implements OnInit {
     this.loginService.logout();
   }
 
+  getUsernameFirstLetter(){
+    if(this.loginData && this.loginData.username && this.loginData.username.length > 0)
+      return this.loginData.username[0].toUpperCase();
+    return "-";
+  }
 }

@@ -44,3 +44,15 @@
     border-radius: 5px;
     background-image: linear-gradient(to right, #009bff, #4a90e2);
   }
+
+
+  .user-menu-item{
+    width: 32px;
+    height: 32px;
+    border-radius: 16px;
+    text-align: center;
+    line-height: 32px;
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+  }

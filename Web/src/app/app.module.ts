@@ -80,6 +80,7 @@ import { RiskIndicatorComponent } from './components/portfolio/risk-indicator/ri
 import { HeaderComponent } from './components/ui/header/header.component';
 import { MyInvestmentsComponent } from './components/portfolio/my-investments/my-investments.component';
 import { FooterComponent } from './components/ui/footer/footer.component';
+import { AddPortfolioComponent } from './components/portfolio/add-portfolio/add-portfolio.component';
 
 @NgModule({
   declarations: [
@@ -133,7 +134,8 @@ import { FooterComponent } from './components/ui/footer/footer.component';
     RiskIndicatorComponent,
     HeaderComponent,
     MyInvestmentsComponent,
-    FooterComponent
+    FooterComponent,
+    AddPortfolioComponent
   ],
   imports: [
     BrowserAnimationsModule,

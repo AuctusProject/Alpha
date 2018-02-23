@@ -1,5 +1,6 @@
-<wizard-header></wizard-header>
-<div fxLayout="column" class="advisor-steps-main-content" *ngIf="currentStep == wizardSteps.Start.Id">
+<header></header>
+<portfolio-step [advisorModel]="advisorModel" [portfolioList]="portfolioList" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></portfolio-step>
+<div fxLayout="column" class="advisor-steps-main-content" *ngIf="currentStep != wizardSteps.Start.Id">
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutMargin>
     <div fxLayout="column" fxFlex>
       <div fxLayout="column">
