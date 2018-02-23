@@ -1,0 +1,48 @@
+.no-investments{
+    text-align: center;
+}
+
+.advisor-selection-option{
+    display: inline-block;
+    width: 240px;
+    background: -webkit-linear-gradient(90deg, #009bff, #4a90e2);
+    background: -o-linear-gradient(90deg, #009bff, #4a90e2);
+    background: -moz-linear-gradient(90deg, #009bff, #4a90e2);
+    background: linear-gradient(90deg, #009bff, #4a90e2);
+    color: white;
+    text-align: center;
+    margin: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    border: 0;
+    padding: 20px;
+}
+
+.advisor-selection-option:hover{
+    background: #4a90e2;
+    background: -webkit-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: -o-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: -moz-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: linear-gradient(90deg, #4a90e2, #0884cd);
+  }
+
+  .advisor-selection-option span{
+      display: block;
+      margin-bottom: 20px;
+      font-size: 24px;
+
+  }
+
+
+.no-investments-title{
+    font-size: 24px;
+    color: #4a4a4a;
+}
+
+.no-investments-subtitle{
+    font: size 14px;
+    color: #55606e;
+    margin-top:6px;
+    margin-bottom:6px;
+}

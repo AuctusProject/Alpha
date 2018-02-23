@@ -13,7 +13,6 @@ export class Goal {
   constructor() {
     this.startingAmount = 10000;
     this.monthlyContribution = 300;
-    this.risk = 1;
     this.timeframe = 30;
     this.risk = 3;
     this.goalOption = new GoalOption();

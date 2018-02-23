@@ -20,7 +20,7 @@ import { RoboAdvisorsComponent } from "./components/portfolio/robo-advisors/robo
 import { HumanAdvisorsComponent } from "./components/portfolio/human-advisors/human-advisors.component";
 import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provider';
 import { PortfolioDetailsComponent } from "./components/portfolio/portfolio-details/portfolio-details.component";
-
+import { MyInvestmentsComponent } from "./components/portfolio/my-investments/my-investments.component";
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -39,6 +39,7 @@ const routes: Routes = [
     { path: 'robo-advisors', component: RoboAdvisorsComponent },
     { path: 'human-advisors', component: HumanAdvisorsComponent },
     { path: 'portfolio/:id', component: PortfolioDetailsComponent },
+    { path: 'investments', component: MyInvestmentsComponent },
 ];
 
 @NgModule({

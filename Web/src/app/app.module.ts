@@ -78,6 +78,8 @@ import { AdvisorDetailsComponent } from './components/advisor/advisor-details/ad
 import { PortfolioDetailsComponent } from './components/portfolio/portfolio-details/portfolio-details.component';
 import { RiskIndicatorComponent } from './components/portfolio/risk-indicator/risk-indicator.component';
 import { HeaderComponent } from './components/ui/header/header.component';
+import { MyInvestmentsComponent } from './components/portfolio/my-investments/my-investments.component';
+import { FooterComponent } from './components/ui/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -129,7 +131,9 @@ import { HeaderComponent } from './components/ui/header/header.component';
     AdvisorDetailsComponent,
     PortfolioDetailsComponent,
     RiskIndicatorComponent,
-    HeaderComponent
+    HeaderComponent,
+    MyInvestmentsComponent,
+    FooterComponent
   ],
   imports: [
     BrowserAnimationsModule,

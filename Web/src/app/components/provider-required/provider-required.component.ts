@@ -110,4 +110,11 @@ export class ProviderRequiredComponent implements OnInit {
       this.metamaskAccount.getAccount() != null &&
       this.metamaskAccount.getAUCBalance() > constants.minimumAUCNecessary;
   }
+
+  private onlyAucConditionPending(): boolean{
+    return this.conditions[0].status && 
+      this.conditions[1].status &&
+      this.conditions[2].status &&
+      !this.conditions[3].status;
+  }
 }

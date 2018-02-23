@@ -23,5 +23,9 @@
 }
 
 /deep/ .wizard .mat-step-header:hover{
-  background: white;
+  background:unset;
+}
+
+.register-stepper{
+  background-color: unset;
 }

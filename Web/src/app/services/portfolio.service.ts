@@ -17,7 +17,8 @@ export class PortfolioService {
   private savePortfolioUrl = this.httpService.apiUrl("portfolios/v1/");
   private getPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/");
   private getRoboPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/robos");
-
+  private getPurchasedPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/purchases");
+  
   constructor(private httpService: HttpService) { }
 
   getProjections(): Observable<Projections> {
@@ -26,6 +27,10 @@ export class PortfolioService {
 
   getPortfolios(): Observable<Portfolio[]> {
     return this.httpService.get(this.getPortfoliosUrl);
+  }
+
+  getPurchasedPortfolios(): Observable<Portfolio[]> {
+    return this.httpService.get(this.getPurchasedPortfoliosUrl);
   }
 
   getPortfoliosHistory(): Observable<PortfolioHistory[]> {

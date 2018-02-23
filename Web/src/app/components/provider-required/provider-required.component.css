@@ -5,3 +5,37 @@
 .requirements-itens {
     min-width:300px;
 }
+
+h1{
+    color:#4a90e2;
+}
+
+
+.status{
+    width: 48px;
+    height: 48px;
+    border-radius: 100px;
+    border: 1px solid rgba(0, 0, 0, 0.57);
+    color: rgba(0, 0, 0, 0.57);
+    text-align: center;
+}
+
+.status-ok{
+    background: #4a90e2;
+    background: -webkit-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: -o-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: -moz-linear-gradient(90deg, #4a90e2, #0884cd);
+    background: linear-gradient(90deg, #4a90e2, #0884cd);
+    color:white;
+    border: 1px solid #4a90e2;
+}
+
+/deep/ svg.feather
+{
+    margin-top:12px;
+    margin-bottom:12px;
+}
+
+.faucet-button-wrapper{
+    text-align: center;
+}
