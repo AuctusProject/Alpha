@@ -9,7 +9,7 @@ import { AssetDistribution } from "../../../model/asset/assetDistribution";
   styleUrls: ['./portfolio-distribution.component.css']
 })
 export class PortfolioDistributionComponent implements OnInit {
-  @Input() portfolioDistributionModel: PortfolioDistribution;
+  @Input() assetDistributions: AssetDistribution[];
   portfolioDataSource: MatTableDataSource<AssetDistribution>;
   colors = CHART_COLORS;
 
@@ -17,10 +17,10 @@ export class PortfolioDistributionComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.portfolioDistributionModel != undefined) {
+    if (this.assetDistributions != undefined) {
       this.pieChartLabels.length = 0;
       this.pieChartData = [];
-      for (let assetDistribution of this.portfolioDistributionModel.distribution) {
+      for (let assetDistribution of this.assetDistributions) {
         this.pieChartLabels.push(assetDistribution.code);
         this.pieChartData.push(assetDistribution.percentage);
         if (assetDistribution.type == 1) {
@@ -31,7 +31,7 @@ export class PortfolioDistributionComponent implements OnInit {
         }
       }
       this.portfolioDataSource = new MatTableDataSource<AssetDistribution>();
-      this.portfolioDataSource.data = this.portfolioDistributionModel.distribution;
+      this.portfolioDataSource.data = this.assetDistributions;
     }
   }
 

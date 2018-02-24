@@ -1,0 +1,16 @@
+.need-to-buy-message {
+  font-size: 20px;
+  text-align: center;
+  color: #4a4a4a;
+}
+
+.need-to-buy-container {
+  width: 320px;
+}
+
+.allocation-container {
+  margin-left: 136px;
+  margin-right: 136px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
