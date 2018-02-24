@@ -123,8 +123,8 @@ export class ProviderRequiredComponent implements OnInit {
 
   private callFaucet(): void {
     this.promise = this.accountService.faucet(this.metamaskAccount.getAccount()).subscribe(
-      success => {
-        console.log(success);
+      result => {
+        console.log(result);
       }
     )
   }
