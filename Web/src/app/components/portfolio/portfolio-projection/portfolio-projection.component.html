@@ -30,7 +30,7 @@
         </div>
         <div fxFlex="50" class="text-right">
           <div class="month-qty">
-            {{periodDescription}}
+            {{timeDescription}}
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@
           Estimated total return
         </div>
         <div fxFlex="30" class="text-right">
-          46,41%
+          {{simulator.estimatedTotalReturn}}%
         </div>
       </div>
       <hr>
@@ -65,7 +65,7 @@
           Advise price
         </div>
         <div fxFlex="50" class="text-right">
-          ${{portfolio.price}} AUC X {{periodDescription}}
+          ${{portfolio.price}} AUC X {{timeDescription}}
         </div>
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center" class="total-price">
@@ -76,12 +76,12 @@
         </div>
         <div fxFlex="50" class="text-right">
           <div>
-            $68 AUC
+            ${{simulator.totalPrice}} AUC
           </div>
         </div>
       </div>
       <button type="button" class="action-button text-center" style="width:100%" (click)="onBuyClick()">
-        COMPRAR
+        BUY
       </button>
     </div>
   </div>

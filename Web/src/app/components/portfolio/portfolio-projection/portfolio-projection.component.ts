@@ -10,17 +10,20 @@ import * as moment from 'moment';
 export class PortfolioProjectionComponent implements OnInit {
 
   @Input() portfolio: Portfolio;
-  
-  public simulator =  {
+
+  public simulator = {
     price: null,
     estimatedReturn: null,
     startDate: null,
     endDate: null,
-    totalEstimatedReturn: null,
+    years: 0,
+    months: 0,
+    days: 0,
+    estimatedTotalReturn: null,
     totalPrice: null
   }
 
-  public periodDescription: string;
+  public timeDescription: string;
 
   constructor() { }
 
@@ -30,59 +33,76 @@ export class PortfolioProjectionComponent implements OnInit {
     this.simulator.startDate = moment().startOf('date').toDate();
     this.simulator.endDate = moment().startOf('date').add(1, 'month').toDate();
 
-    this.calculatePeriod();
+    this.onEndDateChange();
 
   }
 
-  public onEndDateChange(){
-    this.calculatePeriod();
-    this.calculateTotalEstimatedReturn();
-    this.calculateTotalPrice();
+  public onEndDateChange() {
+    this.calculateTime();
+    this.setTimeDescription();
+    this.calculateSimulator();
   }
 
-  public calculatePeriod() {
+  private calculateTime() {
 
-    this.periodDescription = '';
-    if(this.simulator.endDate) {
+    this.simulator.years = 0;
+    this.simulator.months = 0;
+    this.simulator.days = 0;
+
+    if (this.simulator.endDate) {
+
       let startDate = moment(this.simulator.startDate).startOf('date');
       let endDate = moment(this.simulator.endDate).startOf('date');
 
-      let months = endDate.diff(startDate, 'month', true);
-      if(months < 1){
-        let days = endDate.diff(startDate, 'day');
-        this.periodDescription = days + (days > 1 ? " days" : " day");
-      } else {
-        this.periodDescription += Math.floor(months) +  (Math.floor(months) > 1 ? " months" : " month");
-        if(!(Number(months) === months && months % 1 === 0)){
-          let auxDate = endDate.add('month', -Math.floor(months));
-          let days = auxDate.diff(startDate, 'days');
-          this.periodDescription += ' / ' + days + (days > 1 ? " days" : " day");
+      this.simulator.years = Math.floor(endDate.diff(startDate, 'year', true));
+      this.simulator.months = endDate.diff(startDate, 'month', true) - (this.simulator.years * 12);
+
+      if (this.simulator.months < 1) {
+        this.simulator.days = endDate.diff(startDate, 'day') - (this.simulator.years * 365);
+      } else if (this.simulator.months > Math.floor(this.simulator.months)) {
+
+        let auxDate = moment(this.simulator.startDate).add(Math.floor(this.simulator.months), 'month').startOf('date');
+        this.simulator.days = endDate.diff(auxDate, 'days') - (this.simulator.years * 365);
+
+        if (this.simulator.days > 29) {
+          this.simulator.months += 1;
+          this.simulator.days = 0;
         }
+
       }
-    } else {
-      this.periodDescription = '0 days';
-    }
 
+      this.simulator.months = Math.floor(this.simulator.months);
+    }
+  }
+
+  public setTimeDescription() {
+
+    this.timeDescription = "";
     
-  }
-
-  public calculateTotalEstimatedReturn() {
-    if(this.simulator.endDate) {
-      let startDate = moment(this.simulator.startDate)
+    if (this.simulator.years > 0) {
+      this.timeDescription += this.simulator.years + (this.simulator.years > 1 ? " years " : " year ");
     }
 
-    return '';
-  }
-
-  public calculateTotalPrice() {
-    if(this.simulator.endDate) {
-      let startDate = moment(this.simulator.startDate)
+    if (this.simulator.months > 0) {
+      this.timeDescription += this.simulator.months + (this.simulator.months > 1 ? " months " : " month ");
     }
 
-    return 0;
+    if (this.simulator.days > 0) {
+      this.timeDescription += this.simulator.days + (this.simulator.days > 1 ? " days" : " day");
+    }
   }
 
-  
+  public calculateSimulator() {
+    if (this.simulator.endDate) {
+
+      let months = this.simulator.years * 12 + this.simulator.months + this.simulator.days / 30;
+
+      this.simulator.estimatedTotalReturn = Math.round(this.simulator.estimatedReturn * months);
+      this.simulator.totalPrice = Math.round(this.simulator.price * months);
+    }
+  }
+
+
 
   public onBuyClick() {
     console.log(this.simulator);
