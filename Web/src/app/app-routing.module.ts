@@ -42,6 +42,7 @@ const routes: Routes = [
     { path: 'portfolio/:id', component: PortfolioDetailsComponent },
     { path: 'investments', component: MyInvestmentsComponent },
     { path: 'add-portfolio', component: AddPortfolioComponent },
+    { path: 'portfolio-edit/:id', component: AddPortfolioComponent },
 ];
 
 @NgModule({

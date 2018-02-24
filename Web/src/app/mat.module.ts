@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from "@angular/material";
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatMenuModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatProgressSpinnerModule,
     MatDatepickerModule,
     MatNativeDateModule
   ],
@@ -49,6 +51,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatMenuModule,
     MatSelectModule,
     MatAutocompleteModule,
+    MatProgressSpinnerModule,
     MatDatepickerModule,
     MatNativeDateModule
     

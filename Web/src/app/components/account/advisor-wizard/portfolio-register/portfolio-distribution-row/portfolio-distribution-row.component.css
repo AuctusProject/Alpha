@@ -28,3 +28,7 @@
 .percentage-input {
   text-align: right;
 }
+
+/deep/ .portfolio-distribution-row .mat-input-flex.mat-form-field-flex {
+  height: 32px;
+}

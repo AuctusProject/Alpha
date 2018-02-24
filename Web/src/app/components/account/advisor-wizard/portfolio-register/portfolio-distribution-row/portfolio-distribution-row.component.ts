@@ -23,11 +23,7 @@ export class PortfolioDistributionRowComponent implements OnChanges, OnInit {
   @Input() formGroup: FormGroup;
   @Output() onAddFormControls = new EventEmitter<any>();
   @Output() onRemoveFormControls = new EventEmitter();
-
-
   selectedAssets: Asset[];
-
-
   productForm: FormControl = new FormControl('Asset', this.selectedValidAssetValidator);
   percentageForm: FormControl = new FormControl("Percentage["+this.rowNumber+"]", [Validators.required, this.greaterThanZero, Validators.max(100)]);
 
@@ -41,7 +37,8 @@ export class PortfolioDistributionRowComponent implements OnChanges, OnInit {
       startWith(''),
       map(val => this.filter(val))
     );
-    
+    this.productForm.setValue(this.assetDistribution);
+    this.emitAssetDistributionChanged();
     this.productForm.valueChanges.subscribe(val => this.assetChange(val));
     this.percentageForm.valueChanges.subscribe(val => this.percentageChange(val));
 
@@ -57,8 +54,6 @@ export class PortfolioDistributionRowComponent implements OnChanges, OnInit {
     };
   }
 
-
-
   selectedValidAssetValidator(control: FormControl) {
     let asset = control.value;
     if (!asset && !asset.code) {
@@ -72,6 +67,7 @@ export class PortfolioDistributionRowComponent implements OnChanges, OnInit {
   addFormControls(rowNumber) {
     this.formGroup.addControl("Product[" + rowNumber + "]", this.productForm);
     this.formGroup.addControl("Percentage[" + rowNumber + "]", this.percentageForm);
+    this.emitAssetDistributionChanged();
   }
 
   removeFormControls(rowNumber) {

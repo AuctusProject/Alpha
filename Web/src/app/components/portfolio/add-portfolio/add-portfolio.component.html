@@ -1,4 +1,4 @@
 <header></header>
 <div class="main-content" fxLayoutAlign="center center">
-  <portfolio-register class="portfolio-register-component" [model]="portfolio" [assets]="assets" (onPortfolioSaved)="onPortfolioSaved()"></portfolio-register>
+  <portfolio-register *ngIf="portfolio" class="portfolio-register-component" [model]="portfolio" [assets]="assets" [assetsDistributionRows]="assetsDistributionRows" (onPortfolioSaved)="onPortfolioSaved()"></portfolio-register>
 </div>

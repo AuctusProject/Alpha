@@ -301,6 +301,19 @@ button {
   cursor: pointer;
 }
 
+  .primary-button[disabled],
+  .primary-button:disabled,
+  .primary-blue-button[disabled],
+  .primary-blue-button:disabled,
+  .primary-button[disabled]:hover,
+  .primary-button:disabled:hover,
+  .primary-blue-button[disabled]:hover,
+  .primary-blue-button:disabled:hover {
+    background-color: lightgray;
+    color: gray;
+    border: solid 1px lightgray;
+  }
+
   .primary-button.bold, .primary-blue-button.bold {
     font-family: 'HelveticaNeueBold';
   }
@@ -429,7 +442,7 @@ button.back {
   border-radius: 3px;
   border: solid 1px #3c91e6;
   height: 40px;
-  width: 104px;
+  width: 120px;
   font-size: 12px;
   padding-left: 22px;
   cursor: pointer;

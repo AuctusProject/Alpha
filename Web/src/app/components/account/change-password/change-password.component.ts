@@ -3,6 +3,7 @@ import { ChangePassword } from '../../../model/account/changePassword';
 import { AccountService } from '../../../services/account.service';
 import { NotificationsService } from 'angular2-notifications';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-change-password',
@@ -12,6 +13,7 @@ import { Router } from '@angular/router';
 export class ChangePasswordComponent implements OnInit {
 
   @Input() changePassword: ChangePassword = new ChangePassword();
+  promise: Subscription;
 
   constructor(private accountService: AccountService, private notificationService: NotificationsService, private router: Router) { }
 
@@ -26,7 +28,7 @@ export class ChangePasswordComponent implements OnInit {
       this.notificationService.error("Error", "Passwords must match.");
     }
     else {
-      this.accountService.changePassword(this.changePassword.currentPassword, this.changePassword.newPassword).subscribe(
+      this.promise = this.accountService.changePassword(this.changePassword.currentPassword, this.changePassword.newPassword).subscribe(
         response => {
           if (response) {
             this.notificationService.success("Sucess", "Password was changed.");

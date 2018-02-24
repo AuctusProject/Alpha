@@ -3,6 +3,7 @@ import { ForgotPasswordReset } from '../../../model/account/forgotPasswordReset'
 import { AccountService } from '../../../services/account.service';
 import { NotificationsService } from "angular2-notifications";
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-forgot-password-reset',
@@ -12,6 +13,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class ForgotPasswordResetComponent implements OnInit {
 
   @Input() forgotPasswordReset: ForgotPasswordReset = new ForgotPasswordReset();
+  promise: Subscription;
 
   constructor(private accountService: AccountService, private notificationService: NotificationsService, private router: Router, private activatedRoute: ActivatedRoute) { }
 
@@ -30,7 +32,7 @@ export class ForgotPasswordResetComponent implements OnInit {
       this.notificationService.error("Error", "Passwords must match.");
     }
     else {
-      this.accountService.resetPassword(this.forgotPasswordReset.code, this.forgotPasswordReset.newPassword).subscribe(
+      this.promise = this.accountService.resetPassword(this.forgotPasswordReset.code, this.forgotPasswordReset.newPassword).subscribe(
         response => {
           if (response) {
             this.notificationService.success("Sucess", "Password was reset.");

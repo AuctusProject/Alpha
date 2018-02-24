@@ -43,7 +43,7 @@
               </mat-form-field>
             </div>
             <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
-              <button type="submit" class="primary-blue-button bold"[disabled]="simpleRegisterForm.invalid">CREATE ACCOUNT</button>
+              <button type="submit" class="primary-blue-button bold" [disabled]="simpleRegisterForm.invalid" [promiseBtn]="createPromise">CREATE ACCOUNT</button>
             </div>
           </div>
         </form>
