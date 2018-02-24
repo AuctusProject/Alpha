@@ -300,7 +300,10 @@ button {
   color: #3c91e6;
   cursor: pointer;
 }
-
+  .action-button[disabled],
+  .action-button:disabled,
+  .action-button[disabled]:hover,
+  .action-button:disabled:hover,
   .primary-button[disabled],
   .primary-button:disabled,
   .primary-blue-button[disabled],
@@ -309,7 +312,8 @@ button {
   .primary-button:disabled:hover,
   .primary-blue-button[disabled]:hover,
   .primary-blue-button:disabled:hover {
-    background-color: lightgray;
+    background-color: lightgray !important;
+    background: lightgray !important;
     color: gray;
     border: solid 1px lightgray;
   }

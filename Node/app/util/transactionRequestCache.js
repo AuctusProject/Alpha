@@ -13,9 +13,11 @@ class TransactionRequestCache {
 
     valid(address, method){
         if (!this.cache[address] || !this.cache[address][method]) {
+            this.update(address, method);
             return true;
         }
         if (this.dateDiffMinutes(this.cache[address][method], new Date()) >= config.get('MIN_TIME_BETWEEN_REQUESTS')){
+            this.update(address, method);
             return true;
         }
         return false;

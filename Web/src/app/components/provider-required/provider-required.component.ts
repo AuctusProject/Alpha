@@ -26,6 +26,7 @@ export class MetamaskCondition {
 })
 export class ProviderRequiredComponent implements OnInit {
   promise: Subscription;
+  transactionUrl: String;
 
   private conditions: Array<MetamaskCondition> = [
     new MetamaskCondition("Install metamask", true),
@@ -124,7 +125,9 @@ export class ProviderRequiredComponent implements OnInit {
   private callFaucet(): void {
     this.promise = this.accountService.faucet(this.metamaskAccount.getAccount()).subscribe(
       result => {
-        console.log(result);
+        if (result) {
+          this.transactionUrl = environment.etherscanUrl + "/tx/" + result.transaction;
+        }
       }
     )
   }
