@@ -5,11 +5,8 @@
 .advisor-selection-option{
     display: inline-block;
     width: 240px;
-    background: -webkit-linear-gradient(90deg, #009bff, #4a90e2);
-    background: -o-linear-gradient(90deg, #009bff, #4a90e2);
-    background: -moz-linear-gradient(90deg, #009bff, #4a90e2);
-    background: linear-gradient(90deg, #009bff, #4a90e2);
-    color: white;
+    background: white;
+    color: #4a90e2;
     text-align: center;
     margin: 20px;
     cursor: pointer;
@@ -20,11 +17,7 @@
 }
 
 .advisor-selection-option:hover{
-    background: #4a90e2;
-    background: -webkit-linear-gradient(90deg, #4a90e2, #0884cd);
-    background: -o-linear-gradient(90deg, #4a90e2, #0884cd);
-    background: -moz-linear-gradient(90deg, #4a90e2, #0884cd);
-    background: linear-gradient(90deg, #4a90e2, #0884cd);
+    background: #f0f0f0;
   }
 
   .advisor-selection-option span{

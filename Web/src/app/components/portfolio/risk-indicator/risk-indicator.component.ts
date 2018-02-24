@@ -13,7 +13,7 @@ export class RiskIndicatorComponent implements OnInit {
   ngOnInit() {
   }
 
-  private getRiskDescription() {
+  getRiskDescription() {
     if (this.risk == 1) {
       return "Conservative";
     }

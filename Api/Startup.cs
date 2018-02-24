@@ -18,7 +18,6 @@ using System.IO;
 using Auctus.Util;
 using NLog.Extensions.Logging;
 using NLog.Web;
-using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Api
@@ -91,21 +90,7 @@ namespace Api
             services.AddMvc();
             services.AddSingleton<Cache>();
             services.AddNodeServices();
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1",
-                    new Info
-                    {
-                        Title = "Auctus Alpha API",
-                        Version = "v1",
-                        Description = "Auctus Alpha Api"
-                    });
-                
-                string xmlDoc = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, $"{PlatformServices.Default.Application.ApplicationName}.xml");
-
-                c.IncludeXmlComments(xmlDoc);
-            });
+            
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
@@ -121,12 +106,7 @@ namespace Api
             app.UseAuthentication();
             app.UseCors("Default");
             app.UseMvcWithDefaultRoute();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Auctus Alpha API");
-            });
+            
         }
     }
 }
