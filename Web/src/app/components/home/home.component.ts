@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
+import { MetamaskAccountService } from '../../services/metamask-account.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -22,7 +23,8 @@ export class HomeComponent implements OnInit {
     private accountService: AccountService,
     private router: Router,
     private notificationService: NotificationsService,
-    private web3Service: Web3Service) {
+    private web3Service: Web3Service,
+    private metamaskAccountService : MetamaskAccountService) {
     this.simpleRegister = new SimpleRegister();
     this.buildForm();
   }
@@ -71,5 +73,9 @@ export class HomeComponent implements OnInit {
     } else if (formField.hasError('usernameRegistration')) {
       return 'Username already registered.'
     }
+  }
+
+  public purchase(){
+    this.metamaskAccountService.sendAUC(100);
   }
 }
