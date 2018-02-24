@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 
 export class HomeComponent implements OnInit {
+  show: boolean;
   public simpleRegisterForm: FormGroup;
   public simpleRegister: SimpleRegister;
   createPromise: Subscription;
