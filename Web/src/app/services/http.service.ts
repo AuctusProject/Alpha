@@ -141,19 +141,17 @@ export class HttpService {
         this.logout();
         this.router.navigateByUrl('login');
       }
-      // TODO: send the error to remote logging infrastructure
-      if (response.status == "400") {
+      else if (response.status != "200") {
         if (response.error) {
           this.notificationService.error("Error", response.error.error);
+        }
+        else if (response.statusText){
+          this.notificationService.error("Error", response.statusText);
         }
         else {
           this.notificationService.error("Error", "An unexpected error happened.");
         }
       }
-      else if (!response.ok) {
-        this.notificationService.error("Error", "An unexpected error happened.");
-      }
-      console.error(response); // log to console instead
 
       return of(result as T);
     };

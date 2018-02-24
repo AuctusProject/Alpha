@@ -130,5 +130,6 @@ export class ProviderRequiredComponent implements OnInit {
         }
       }
     )
+    this.changeDetector.detectChanges();
   }
 }
