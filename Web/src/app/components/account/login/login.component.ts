@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-
+  pendingConfirmation: boolean;
   @Input() login: Login = new Login();
 
   public loginForm: FormGroup;
@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit {
     }
 
   ngOnInit() {
-    this.login.pendingConfirmation = false;
+    this.pendingConfirmation = false;
   } 
 
   public onLoginClick() {
@@ -52,12 +52,15 @@ export class LoginComponent implements OnInit {
   doLogin() {
     this.loginPromise = this.loginService.login(this.login)
       .subscribe(response => {
-        if (response.logged) {
-          this.loginService.setLoginData(response.data);
-          this.router.navigateByUrl('');
-        } else {
-          this.login.pendingConfirmation = true;
-          this.notificationService.info("Info", response.error);
+        if (response){
+          if (response.logged) {
+            this.loginService.setLoginData(response.data);
+            this.router.navigateByUrl('');
+          }
+          else {
+            this.pendingConfirmation = true;
+            this.notificationService.info("Info", response.error);
+          }
         }
       });
   }

@@ -34,7 +34,7 @@
           <a routerLink="/home" class="element-margin-top">Don't have an account?</a>
         </div>
       </div>
-      <app-pending-email-confirmation-component *ngIf="login.pendingConfirmation" [email]="login.emailOrUsername"></app-pending-email-confirmation-component>
+      <app-pending-email-confirmation-component *ngIf="pendingConfirmation" [email]="login.emailOrUsername"></app-pending-email-confirmation-component>
     </div>
   </form>
 
