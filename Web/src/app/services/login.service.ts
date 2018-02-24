@@ -34,6 +34,10 @@ export class LoginService {
     this.router.navigateByUrl('home');
   }
 
+  logoutWithoutRedirect(): void {
+    this.httpService.logout();
+  }
+
   isLoggedIn() : boolean{
     return this.httpService.isLoggedIn();
   }
