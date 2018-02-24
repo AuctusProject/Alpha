@@ -102,14 +102,17 @@ namespace Auctus.Business.Account
 
         public bool IsValidEmailToRegister(string email)
         {
-            User user = Data.GetByEmail(email);
-            return user == null;
+            return Email.IsValidEmail(email) && Data.GetByEmail(email) == null;
         }
 
         public bool IsValidUsernameToRegister(string username)
         {
-            User user = Data.GetByUsername(username);
-            return user == null;
+            return Data.GetByUsername(username) == null;
+        }
+
+        public bool IsValidAddressToRegister(string address)
+        {
+            return WalletBusiness.IsValidAddress(address) && Data.GetByWalletAddress(address) == null;
         }
 
         public void ChangePassword(string email, string currentPassword, string newPassword)
@@ -214,6 +217,8 @@ namespace Auctus.Business.Account
 
         private Wallet SetWalletCreation(int userId, string address)
         {
+            BaseAddressValidation(address);
+
             User user = Data.GetByWalletAddress(address);
             if (user != null)
                 throw new ArgumentException("Address already registered.");
@@ -252,6 +257,8 @@ namespace Auctus.Business.Account
         {
             if (string.IsNullOrEmpty(address))
                 throw new ArgumentException("Address must be filled.");
+            if (!WalletBusiness.IsValidAddress(address))
+                throw new ArgumentException("Invalid address.");
         }
 
         private void PasswordValidation(string password)
