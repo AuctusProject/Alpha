@@ -39,8 +39,7 @@ namespace Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult UpdatePortfolioAndDistribution([FromRoute]int portfolioId, [FromBody]UpdatePortfolioWithDistributionRequest updatePortfolioRequest)
         {
-            throw new NotImplementedException();
-            //return base.UpdatePortfolioAndDistribution(portfolioId, updatePortfolioRequest);
+            return base.UpdatePortfolioAndDistribution(portfolioId, updatePortfolioRequest);
         }
 
         [Route("{portfolioId}")]

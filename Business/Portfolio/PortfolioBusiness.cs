@@ -69,6 +69,42 @@ namespace Auctus.Business.Portfolio
             return portfolio;
         }
 
+        public DomainObjects.Portfolio.Portfolio UpdateWithDistribution(string email, int portfolioId, double price, string name, 
+            string description, Dictionary<int, double> distribution)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var portfolio = GetValidByOwner(user.Id, portfolioId);
+            if (portfolio == null)
+                throw new ArgumentException("Invalid portfolio.");
+
+            var projection = ProjectionBusiness.Get(portfolio.ProjectionId.Value);
+            if (projection == null)
+                throw new ArgumentException("Invalid projection.");
+
+            var risk = PortfolioBusiness.GetRisk(projection.ProjectionValue, distribution);
+            using (var transaction = new TransactionalDapperCommand())
+            {
+                var portfolioDetail = PortfolioDetailBusiness.SetNew(portfolioId, price, name, description, true);
+                transaction.Insert(portfolioDetail);
+
+                var newProjection = ProjectionBusiness.SetNew(portfolio.Id, projection.ProjectionValue, risk, projection.OptimisticProjectionValue, projection.PessimisticProjectionValue);
+                transaction.Insert(newProjection);
+
+                var distributions = DistributionBusiness.SetNew(newProjection.Id, distribution);
+                foreach (Distribution dist in distributions)
+                    transaction.Insert(dist);
+
+                portfolio.ProjectionId = newProjection.Id;
+                transaction.Update(portfolio);
+
+                newProjection.Distribution = distributions;
+                portfolio.Detail = portfolioDetail;
+                portfolio.Projection = newProjection;
+                transaction.Commit();
+            }
+            return portfolio;
+        }
+
         internal Projection GetProjectionAtDate(DateTime date, DomainObjects.Portfolio.Portfolio portfolio)
         {
             return portfolio.Projections.Where(p => p.Date < date).OrderByDescending(p => p.Date).FirstOrDefault();
