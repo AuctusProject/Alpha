@@ -4,8 +4,11 @@
     <div class="header-text-container" fxLayout="row">
       <div fxFlex>
         <h1>Robo Advisors</h1>
-        <p>
-          We need some information about your goal to get the best portfolios for your saviings
+        <p *ngIf="!goal">
+          We need some information about your goal to get the best portfolio for your savings
+        </p>
+        <p *ngIf="goal">
+          Select one portfolio at the list for your {{goal.goalOption.description}} goal.
         </p>
       </div>
     </div>

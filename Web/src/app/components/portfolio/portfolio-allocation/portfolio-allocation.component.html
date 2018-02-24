@@ -1,0 +1,10 @@
+<div class="tab-body">
+  <div *ngIf="!portfolio.assetDistribution" fxLayoutAlign="space-around center">
+    <div class="need-to-buy-container" fxLayout="column" fxLayoutGap="26px">
+      <img src="/assets/img/auctuscoin.png" />
+      <div class="need-to-buy-message bold">Ops! You need to buy this portfolio to see this content</div>
+      <div class="action-button">BUY</div>
+    </div>
+  </div>
+  <portfolio-distribution *ngIf="portfolio.assetDistribution" [assetDistributions]="portfolio.assetDistribution"></portfolio-distribution>
+</div>

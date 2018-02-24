@@ -1,0 +1,18 @@
+.tab-title {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  color: #4a90e2;
+  font-family: 'HelveticaNeue';
+}
+
+/deep/ .mat-tab-header {
+  padding-left: 136px;
+  padding-right: 136px;
+}
+
+
+/deep/ .tab-body {
+  background: linear-gradient( #ECECEC, #FFFFFF00, #FFFFFF00,#FFFFFF00,#FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00);
+  padding: 56px 136px;
+}

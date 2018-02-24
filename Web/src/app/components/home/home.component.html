@@ -1,4 +1,4 @@
-<wizard-header></wizard-header>
+<header></header>
 <div fxLayout="column" class="main-content">
   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="120px" fxLayoutMargin fxLayoutGap.sm="20px" fxLayoutGap.xs="20px">
     <div fxLayout="row" fxLayoutGap="100px">
@@ -43,7 +43,7 @@
               </mat-form-field>
             </div>
             <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
-              <button type="submit" class="primary-blue-button bold"[disabled]="simpleRegisterForm.invalid">CREATE ACCOUNT</button>
+              <button type="submit" class="primary-blue-button bold" [disabled]="simpleRegisterForm.invalid" [promiseBtn]="createPromise">CREATE ACCOUNT</button>
             </div>
           </div>
         </form>

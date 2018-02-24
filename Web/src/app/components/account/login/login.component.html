@@ -1,36 +1,41 @@
-<wizard-header></wizard-header>
+<header></header>
 
 <div class="main-content">
-<form  [formGroup]="loginForm" (ngSubmit)="onLoginClick()">
-<div  fxLayout="column" fxLayoutAlign="space-evenly center">
-  <div fxLayout="row" fxLayoutGap="20px">
-    <mat-form-field>
-      <input matInput placeholder="Email or username" [(ngModel)]="login.emailOrUsername" formControlName="emailOrUsername" type="text" autocomplete="username email" />
-      <mat-error *ngIf="loginForm.controls.emailOrUsername.invalid">
-        Required field
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div fxLayout="row" fxLayoutGap="20px">
-    <mat-form-field>
-      <input matInput placeholder="Password" [(ngModel)]="login.password" type="password" formControlName="password" autocomplete="current-password" />
-      <mat-error *ngIf="loginForm.controls.password.invalid">
-        Required field
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <div fxLayout="row" fxLayoutGap="20px">
-    <button type="submit" class="primary-button bold login">
-      LOGIN
-    </button>
-  </div>
-  <div fxLayout="row" fxLayoutGap="20px">
-    <a routerLink="/forgot-password-email" class="element-margin-top">Forgot my password</a>
-  </div>
-  <div fxLayout="row" fxLayoutGap="20px">
-    <a routerLink="/home" class="element-margin-top">Don't have an account?</a>
-  </div>
-</div>
-</form>
-<app-pending-email-confirmation-component *ngIf="login.pendingConfirmation" [email]="login.emailOrUsername"></app-pending-email-confirmation-component>
+  <form [formGroup]="loginForm" (ngSubmit)="onLoginClick()" fxLayoutAlign="space-evenly center">
+    <div class="blue-box" fxLayout="column" fxLayoutGap="20px">
+      <div fxLayout="column" fxLayoutAlign="space-evenly center">
+        <div fxLayout="row" fxLayoutGap="20px">
+          <mat-form-field>
+            <input matInput placeholder="Email or username" [(ngModel)]="login.emailOrUsername" formControlName="emailOrUsername" type="text"
+              autocomplete="username email" />
+            <mat-error *ngIf="loginForm.controls.emailOrUsername.invalid">
+              Required field
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <mat-form-field>
+            <input matInput placeholder="Password" [(ngModel)]="login.password" type="password" formControlName="password" autocomplete="current-password"
+            />
+            <mat-error *ngIf="loginForm.controls.password.invalid">
+              Required field
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <button type="submit" class="primary-button bold login" [promiseBtn]="loginPromise">
+            LOGIN
+          </button>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <a routerLink="/forgot-password-email" class="element-margin-top">Forgot my password</a>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <a routerLink="/home" class="element-margin-top">Don't have an account?</a>
+        </div>
+      </div>
+      <app-pending-email-confirmation-component *ngIf="login.pendingConfirmation" [email]="login.emailOrUsername"></app-pending-email-confirmation-component>
+    </div>
+  </form>
+
 </div>

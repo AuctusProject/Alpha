@@ -1,4 +1,4 @@
-<wizard-header></wizard-header>
+<header></header>
 <div fxLayout="column" class="main-content">
   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="80px" fxLayoutMargin fxLayoutGap.sm="20px" fxLayoutGap.xs="20px" fxFlex="55">
     <div fxLayout="row" fxLayoutGap="100px">
@@ -12,13 +12,18 @@
         </h3>
       </div>
     </div>
-    <div fxLayout="column" class="requirements-itens" fxFlex="45">
-        <div fxLayout="row" *ngFor="let condition of conditions">
-            <div class="status">
+    <div fxLayout="column" class="requirements-itens" fxFlex="45" fxLayoutGap="40px">
+        <div fxLayout="row" *ngFor="let condition of conditions" fxLayoutGap="16px" fxLayoutAlign=" center">
+            <div class="status" [ngClass]="{'status-ok': condition.status}">
                 <i-x *ngIf="!condition.status"></i-x>
                 <i-check *ngIf="condition.status"></i-check>
             </div>
             <div>{{condition.message}}<br></div>
+        </div>
+        <div class="faucet-button-wrapper">
+          <button *ngIf="onlyAucConditionPending()" (click)="callFaucet()" class="action-button" [promiseBtn]="promise">
+            Get free rinkeby AUC for test
+          </button>
         </div>
     </div>
   </div>

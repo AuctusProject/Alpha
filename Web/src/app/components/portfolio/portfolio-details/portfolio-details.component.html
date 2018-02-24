@@ -1,3 +1,41 @@
-<p>
-  portfolio-details works!
-</p>
+<div class="portfolio-list-header">
+  <header></header>
+  <div class="header-text-container" fxLayout="row" *ngIf="portfolio">
+    <div fxFlex>
+      <h3 *ngIf="portfolio.risk">
+        {{getRiskDescription(portfolio.risk)}}
+      </h3>
+      <h1 *ngIf="portfolio.name">{{portfolio.name}}</h1>
+      <h2 *ngIf="portfolio.advisorName">{{portfolio.advisorName}}</h2>
+      <p>
+        <span *ngIf="portfolio.purchased">You have already purchased from this advisor -</span>
+        {{portfolio.purchaseQuantity}} sold
+      </p>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="portfolio">
+  <div fxLayout="row" fxLayoutAlign="space-around center">
+    <div fxFlex="60">
+      <div fxLayout="column" fxLayoutAlign="space-between">
+        <div class="advisor-info" fxFlex>
+          <b>Advisor Info</b>
+          <p>
+            {{portfolio.advisorDescription}}
+          </p>
+        </div>
+        <div class="portfolio-description" fxFlex>
+          <b>Portfolio description</b>
+          <p>
+            {{portfolio.description}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div fxFlex>
+      <portfolio-return-indicator *ngIf="portfolio.allDays" [estimatedReturn]="portfolio.allDays.expectedValue" [realReturn]="portfolio.allDays.value" [successRate]="portfolio.allDays.hitPercentage" [risk]="portfolio.risk">
+      </portfolio-return-indicator>
+    </div>
+  </div>
+  <portfolio-details-tabs *ngIf="portfolio" [portfolio]="portfolio"></portfolio-details-tabs>
+</ng-container>

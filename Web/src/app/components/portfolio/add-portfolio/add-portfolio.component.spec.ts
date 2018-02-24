@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WizardHeaderComponent } from './wizard-header.component';
+import { AddPortfolioComponent } from './add-portfolio.component';
 
-describe('WizardHeaderComponent', () => {
-  let component: WizardHeaderComponent;
-  let fixture: ComponentFixture<WizardHeaderComponent>;
+describe('AddPortfolioComponent', () => {
+  let component: AddPortfolioComponent;
+  let fixture: ComponentFixture<AddPortfolioComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WizardHeaderComponent ]
+      declarations: [ AddPortfolioComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WizardHeaderComponent);
+    fixture = TestBed.createComponent(AddPortfolioComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

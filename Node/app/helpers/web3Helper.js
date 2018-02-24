@@ -4,6 +4,7 @@ var Web3 = require('web3');
 var Web3Utils = require('web3-utils');
 var config = require('nconf');
 const Tx = require('ethereumjs-tx');
+var Error = require('../util/error.js');
 
 class Web3Helper {
   constructor() {

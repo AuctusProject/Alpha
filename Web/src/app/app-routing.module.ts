@@ -20,13 +20,14 @@ import { RoboAdvisorsComponent } from "./components/portfolio/robo-advisors/robo
 import { HumanAdvisorsComponent } from "./components/portfolio/human-advisors/human-advisors.component";
 import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provider';
 import { PortfolioDetailsComponent } from "./components/portfolio/portfolio-details/portfolio-details.component";
-
+import { MyInvestmentsComponent } from "./components/portfolio/my-investments/my-investments.component";
+import { AddPortfolioComponent } from "./components/portfolio/add-portfolio/add-portfolio.component";
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
-  { path: 'required', component: ProviderRequiredComponent },
-  { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
+    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
+    { path: 'required', component: ProviderRequiredComponent },
+    { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'try', component: WizardComponent },
@@ -39,6 +40,9 @@ const routes: Routes = [
     { path: 'robo-advisors', component: RoboAdvisorsComponent },
     { path: 'human-advisors', component: HumanAdvisorsComponent },
     { path: 'portfolio/:id', component: PortfolioDetailsComponent },
+    { path: 'investments', component: MyInvestmentsComponent },
+    { path: 'add-portfolio', component: AddPortfolioComponent },
+    { path: 'edit-portfolio/:id', component: AddPortfolioComponent },
 ];
 
 @NgModule({

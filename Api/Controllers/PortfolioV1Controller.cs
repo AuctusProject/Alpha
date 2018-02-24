@@ -35,6 +35,15 @@ namespace Api.Controllers
         }
 
         [Route("{portfolioId}")]
+        [HttpPut]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult UpdatePortfolioAndDistribution([FromRoute]int portfolioId, [FromBody]UpdatePortfolioWithDistributionRequest updatePortfolioRequest)
+        {
+            throw new NotImplementedException();
+            //return base.UpdatePortfolioAndDistribution(portfolioId, updatePortfolioRequest);
+        }
+
+        [Route("{portfolioId}")]
         [HttpDelete]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult DisablePortfolio([FromRoute]int portfolioId)

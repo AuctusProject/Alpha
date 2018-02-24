@@ -23,26 +23,27 @@ export class AccountService {
   private revokeApiKeyUrl = this.httpService.apiUrl("accounts/v1/apikeys");
   private validateEmailUrl = this.httpService.apiUrl("accounts/v1/emails");
   private validateUsernameUrl = this.httpService.apiUrl("accounts/v1/usernames");
+  private faucetUrl = this.httpService.apiUrl("accounts/v1/faucet");
 
-  constructor(private httpService : HttpService) { }
+  constructor(private httpService: HttpService) { }
 
   listGoalOptions(): Observable<GoalOption[]> {
     return this.httpService.get(this.listGoalOptionsUrl);
   }
 
-  fullRegister(fullRegisterDTO : FullRegister): Observable<FullRegister> {
+  fullRegister(fullRegisterDTO: FullRegister): Observable<FullRegister> {
     return this.httpService.post(this.fullRegisterUrl, fullRegisterDTO);
   }
 
-  simpleRegister(simpleRegisterDTO : SimpleRegister): Observable<SimpleRegister> {
+  simpleRegister(simpleRegisterDTO: SimpleRegister): Observable<SimpleRegister> {
     return this.httpService.post(this.simpleRegisterUrl, simpleRegisterDTO);
   }
 
-  setGoal(goalDTO : Goal): Observable<Goal> {
+  setGoal(goalDTO: Goal): Observable<Goal> {
     return this.httpService.post(this.setGoalUrl, goalDTO);
   }
 
-  confirmEmail(code : string): Observable<any> {
+  confirmEmail(code: string): Observable<any> {
     let confirmationRequest = {
       Code: code
     }
@@ -79,6 +80,10 @@ export class AccountService {
     return this.httpService.post(this.changePasswordUrl, changePasswordRequest);
   }
 
+  faucet(address: string): Observable<any> {
+    return this.httpService.post(this.faucetUrl, {Address: address});
+  }
+
   generateApiKey(): Observable<any> {
     return this.httpService.post(this.generateApiKeyUrl, null);
   }
@@ -92,10 +97,10 @@ export class AccountService {
   }
 
   validateEmail(email: string): Observable<any> {
-    return this.httpService.get(this.validateEmailUrl  + "/" + email);
+    return this.httpService.get(this.validateEmailUrl + "/" + email);
   }
 
   validateUsername(username: string): Observable<any> {
-    return this.httpService.get(this.validateUsernameUrl  + "/" + username);
+    return this.httpService.get(this.validateUsernameUrl + "/" + username);
   }
 }

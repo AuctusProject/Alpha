@@ -25,12 +25,6 @@ namespace Auctus.DataAccess.Core
         #endregion
 
         #region Connection
-        //protected MySqlConnection GetOpenConnection()
-        //{
-        //    var connection = new MySqlConnection(_connectionString);
-        //    connection.Open();
-        //    return connection;
-        //}
         protected SqlConnection GetOpenConnection()
         {
             var connection = new SqlConnection(_connectionString);
@@ -197,7 +191,7 @@ namespace Auctus.DataAccess.Core
             PropertyContainer propertyContainer = ParseProperties(obj);
             bool identity = !string.IsNullOrEmpty(propertyContainer.Identity);
             IEnumerable<string> columns = identity ? propertyContainer.ValueNames : propertyContainer.AllNames;
-            var sql = string.Format("INSERT INTO {0} ({1}) VALUES(@{2})",
+            var sql = string.Format("INSERT INTO [{0}] ({1}) VALUES(@{2})",
                 tableName ?? TableName,
                 string.Join(", ", columns.Select(item => string.Format("[{0}]", item))),
                 string.Join(", @", columns));
@@ -216,7 +210,7 @@ namespace Auctus.DataAccess.Core
             PropertyContainer propertyContainer = ParseProperties(obj);
             string sqlKeyPairs = GetSqlPairs(propertyContainer.KeyNames, " AND ");
             string sqlValuePairs = GetSqlPairs(propertyContainer.ValueNames, ", ");
-            string sql = string.Format("UPDATE {0} SET {1} WHERE {2} ", tableName ?? TableName, sqlValuePairs, sqlKeyPairs);
+            string sql = string.Format("UPDATE [{0}] SET {1} WHERE {2} ", tableName ?? TableName, sqlValuePairs, sqlKeyPairs);
             Execute(sql, propertyContainer.AllParameters);
         }
 
@@ -224,7 +218,7 @@ namespace Auctus.DataAccess.Core
         {
             PropertyContainer propertyContainer = ParseProperties(obj);
             string sqlKeyPairs = GetSqlPairs(propertyContainer.KeyNames, " AND ");
-            string sql = string.Format("DELETE FROM {0} WHERE {1} ", tableName ?? TableName, sqlKeyPairs);
+            string sql = string.Format("DELETE FROM [{0}] WHERE {1} ", tableName ?? TableName, sqlKeyPairs);
             Execute(sql, propertyContainer.KeyParameters);
         }
 

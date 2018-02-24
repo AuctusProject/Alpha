@@ -24,7 +24,6 @@ import { MatModule } from './mat.module';
 import { AppComponent } from './app.component';
 import { AccountService } from './services/account.service';
 import { StepperComponent } from './components/ui/stepper/stepper.component';
-import { RegisterStepComponent } from './components/register/register-step/register-step.component';
 import { ForgotPasswordEmailComponent } from './components/account/forgot-password-email/forgot-password-email.component';
 import { ForgotPasswordResetComponent } from './components/account/forgot-password-reset/forgot-password-reset.component';
 import { PendingEmailConfirmationComponent } from './components/account/pending-email-confirmation/pending-email-confirmation.component';
@@ -32,7 +31,6 @@ import { AdvisorService } from './services/advisor.service';
 import { PortfolioService } from './services/portfolio.service';
 import { FocusDirective } from './directives/focus.directive';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
-import { WizardHeaderComponent } from './components/register/wizard-header/wizard-header.component';
 import { HomeComponent } from './components/home/home.component';
 import { PaddingDirective } from './directives/padding.directive';
 import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
@@ -50,7 +48,6 @@ import { PortfolioDistributionComponent } from './components/dashboard/portfolio
 import { PortfolioHistogramComponent } from './components/dashboard/portfolio-histogram/portfolio-histogram.component';
 import { ChangePasswordComponent } from './components/account/change-password/change-password.component';
 import { ManageApiComponent } from './components/account/manage-api/manage-api.component';
-import { AccountHeaderComponent } from './components/account/account-header/account-header.component';
 
 import { IconsModule } from './icons.module';
 import { AdvisorWizardComponent } from './components/account/advisor-wizard/advisor-wizard.component';
@@ -78,6 +75,14 @@ import { AdvisorDetailsComponent } from './components/advisor/advisor-details/ad
 import { PortfolioDetailsComponent } from './components/portfolio/portfolio-details/portfolio-details.component';
 import { RiskIndicatorComponent } from './components/portfolio/risk-indicator/risk-indicator.component';
 import { HeaderComponent } from './components/ui/header/header.component';
+import { MyInvestmentsComponent } from './components/portfolio/my-investments/my-investments.component';
+import { FooterComponent } from './components/ui/footer/footer.component';
+import { AddPortfolioComponent } from './components/portfolio/add-portfolio/add-portfolio.component';
+import { PortfolioReturnIndicatorComponent } from './components/portfolio/portfolio-return-indicator/portfolio-return-indicator.component';
+import { PortfolioDetailsTabsComponent } from './components/portfolio/portfolio-details-tabs/portfolio-details-tabs.component';
+import { PortfolioProjectionComponent } from './components/portfolio/portfolio-projection/portfolio-projection.component';
+import { PortfolioHistoryComponent } from './components/portfolio/portfolio-history/portfolio-history.component';
+import { PortfolioAllocationComponent } from './components/portfolio/portfolio-allocation/portfolio-allocation.component';
 
 @NgModule({
   declarations: [
@@ -89,13 +94,11 @@ import { HeaderComponent } from './components/ui/header/header.component';
     RiskStepComponent,
     WizardComponent,
     StepperComponent,
-    RegisterStepComponent,
     ForgotPasswordEmailComponent,
     ForgotPasswordResetComponent,
     PendingEmailConfirmationComponent,
     FocusDirective,
     ConfirmEmailComponent,
-    WizardHeaderComponent,
     HomeComponent,
     PaddingDirective,
     DashboardComponent,
@@ -110,7 +113,6 @@ import { HeaderComponent } from './components/ui/header/header.component';
     PortfolioHistogramComponent,
     ChangePasswordComponent,
     ManageApiComponent,
-    AccountHeaderComponent,
     AdvisorWizardComponent,
     AdvisorStepComponent,
     PortfolioStepComponent,
@@ -129,7 +131,15 @@ import { HeaderComponent } from './components/ui/header/header.component';
     AdvisorDetailsComponent,
     PortfolioDetailsComponent,
     RiskIndicatorComponent,
-    HeaderComponent
+    HeaderComponent,
+    MyInvestmentsComponent,
+    FooterComponent,
+    AddPortfolioComponent,
+    PortfolioReturnIndicatorComponent,
+    PortfolioDetailsTabsComponent,
+    PortfolioProjectionComponent,
+    PortfolioHistoryComponent,
+    PortfolioAllocationComponent
   ],
   imports: [
     BrowserAnimationsModule,

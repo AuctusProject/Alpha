@@ -163,7 +163,7 @@ namespace Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult Faucet([FromRoute]FaucetRequest faucetRequest)
+        public new IActionResult Faucet([FromBody]FaucetRequest faucetRequest)
         {
             return base.Faucet(faucetRequest);
         }

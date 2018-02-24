@@ -34,7 +34,6 @@ export class MetamaskAccountMonitorComponent implements OnInit {
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {
-    console.log("onLoginConditionsSuccess");
     if (this.router.url == "/required"){
       this.zone.run(() => this.router.navigate(['home']));
     }

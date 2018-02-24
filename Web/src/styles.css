@@ -174,6 +174,11 @@ button.is-loading .btn-spinner {
   color: #4a90e2 !important;
 }
 
+.register-stepper .mat-step-header .mat-step-icon,
+.register-stepper .mat-step-header .mat-step-icon-not-touched {
+  margin-left: 16px;
+}
+
 .register-stepper .mat-horizontal-stepper-header-container {
   margin: 0 auto !important;
 }
@@ -200,6 +205,15 @@ button.is-loading .btn-spinner {
 
 .pull-right {
   float: right;
+}
+
+html{
+  min-height:100%;
+}
+
+body{
+  background-color: #fafafa;
+  min-height:100%;
 }
 
 body, p, span {
@@ -286,6 +300,19 @@ button {
   color: #3c91e6;
   cursor: pointer;
 }
+
+  .primary-button[disabled],
+  .primary-button:disabled,
+  .primary-blue-button[disabled],
+  .primary-blue-button:disabled,
+  .primary-button[disabled]:hover,
+  .primary-button:disabled:hover,
+  .primary-blue-button[disabled]:hover,
+  .primary-blue-button:disabled:hover {
+    background-color: lightgray;
+    color: gray;
+    border: solid 1px lightgray;
+  }
 
   .primary-button.bold, .primary-blue-button.bold {
     font-family: 'HelveticaNeueBold';
@@ -388,7 +415,7 @@ button.back {
   font-family: 'HelveticaNeueBold';
   font-size: 32px;
   text-align: center;
-  color: #4a4a4a;
+  color: #4a90e2;
 }
 
 
@@ -415,7 +442,7 @@ button.back {
   border-radius: 3px;
   border: solid 1px #3c91e6;
   height: 40px;
-  width: 104px;
+  width: 120px;
   font-size: 12px;
   padding-left: 22px;
   cursor: pointer;
@@ -522,6 +549,10 @@ input[type=number]::-webkit-outer-spin-button {
   background-size: cover;
 }
 
+.portfolio-list-subheader{
+  background-color: white;
+}
+
 .header-text-container {
   padding-left: 136px;
   padding-right: 136px;
@@ -534,8 +565,19 @@ input[type=number]::-webkit-outer-spin-button {
     color: #ffffff;
   }
 
+  .header-text-container h2 {
+    font-family: 'HelveticaNeueBold';
+    font-size: 24px;
+    color: #ffffff;
+  }
+
+  .header-text-container h3 {
+    font-family: 'HelveticaNeueBold';
+    font-size: 12px;
+    color: #ffffff;
+  }
+
   .header-text-container p {
-    width: 596px;
     font-size: 18px;
     line-height: 1.44;
     color: #ffffff;
@@ -551,10 +593,15 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .portfolio-list {
-  padding: 56px 136px;
+  padding: 56px 136px 0px 136px;
   background-color: #fafafa;
 }
 
   .portfolio-list .loading-card div {
     margin-bottom: 10px;
   }
+
+
+.mat-table {
+  background: unset !important;
+}

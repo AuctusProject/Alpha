@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
 import { Portfolio } from "../model/portfolio/portfolio";
 import { PortfolioRequest } from "../model/portfolio/portfolioRequest";
+import { PortfolioUpdateRequest } from "../model/portfolio/portfolioUpdateRequest";
 import { Projections } from "../model/portfolio/projections";
 import { PortfolioHistory } from "../model/portfolio/portfolioHistory";
 import { PortfolioDistribution } from "../model/portfolio/portfolioDistribution";
@@ -17,7 +18,8 @@ export class PortfolioService {
   private savePortfolioUrl = this.httpService.apiUrl("portfolios/v1/");
   private getPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/");
   private getRoboPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/robos");
-
+  private getPurchasedPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/purchases");
+  
   constructor(private httpService: HttpService) { }
 
   getProjections(): Observable<Projections> {
@@ -26,6 +28,14 @@ export class PortfolioService {
 
   getPortfolios(): Observable<Portfolio[]> {
     return this.httpService.get(this.getPortfoliosUrl);
+  }
+
+  getPortfolio(portfolioId): Observable<Portfolio> {
+    return this.httpService.get(this.getPortfoliosUrl + portfolioId);
+  }
+
+  getPurchasedPortfolios(): Observable<Portfolio[]> {
+    return this.httpService.get(this.getPurchasedPortfoliosUrl);
   }
 
   getPortfoliosHistory(): Observable<PortfolioHistory[]> {
@@ -40,8 +50,8 @@ export class PortfolioService {
     return this.httpService.post(this.savePortfolioUrl, portfolioRequest);
   }
 
-  updatePortfolio(portfolioRequest: PortfolioRequest): Observable<PortfolioRequest> {
-    return this.httpService.put(this.savePortfolioUrl, portfolioRequest);
+  updatePortfolio(portfolioId:number, portfolioRequest: PortfolioUpdateRequest): Observable<PortfolioRequest> {
+    return this.httpService.put(this.savePortfolioUrl + portfolioId, portfolioRequest);
   }
 
   getRoboPortfolios(goalOption: number, risk: number): Observable<ListRoboAdvisorsResponse> {

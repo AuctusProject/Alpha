@@ -1,5 +1,5 @@
 <div *ngIf="portfolioDistribution" class="dashboard-tab-container">
   <div class="dashboard-tab-title">Portfolio</div>
   <div class="dashboard-tab-subtitle">What you'll own in this portfolio</div>
-  <portfolio-distribution [portfolioDistributionModel]="portfolioDistribution"></portfolio-distribution>
+  <portfolio-distribution [assetDistributions]="portfolioDistribution.distribution"></portfolio-distribution>
 </div>

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { PortfolioHistory } from "../../../model/portfolio/portfolioHistory";
 import { HistoryValues } from "../../../model/advisor/historyValues";
 
 @Component({
@@ -8,19 +7,19 @@ import { HistoryValues } from "../../../model/advisor/historyValues";
   styleUrls: ['./portfolio-history-chart.component.css']
 })
 export class PortfolioHistoryChartComponent implements OnInit {
-  @Input() portfolioHistoryModel: PortfolioHistory;
+  @Input() historyValues: HistoryValues[];
   public historicalChartData: Array<any>;
   public historicalChartLabels: Array<any>;
 
   constructor() { }
 
   ngOnInit() {
-    if (this.portfolioHistoryModel != undefined) {
+    if (this.historyValues != undefined) {
       this.historicalChartData = [{ data: [] }];
       this.historicalChartLabels = [];
       var i = 0;
       var acum = 100;
-      for (let value of this.portfolioHistoryModel.values) {
+      for (let value of this.historyValues) {
         acum = acum * (1 + (value.value / 100.0));
         i++;
         this.historicalChartData[0].data.push(acum.toFixed(2));
