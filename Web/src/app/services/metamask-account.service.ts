@@ -23,7 +23,7 @@ export class MetamaskAccountService {
     this.monitoreAccount();
   }
 
-  monitoreAccount() {
+  private monitoreAccount() {
     let self = this;
     var accountInterval = setInterval(function () {
       self.web3Service.getAccount().subscribe(
@@ -31,7 +31,7 @@ export class MetamaskAccountService {
           if (self.account != account) {
             self.broadcastAccountChanged(account);
           }
-          if (account) {
+          if (account && self.isRinkeby()) {
             self.checkAUCBalance(account);
           }
           self.account = account;
@@ -39,7 +39,7 @@ export class MetamaskAccountService {
     }, 100);
   }
 
-  runChecks() {
+  private runChecks() {
     let self = this;
     this.web3Service.getWeb3().subscribe(
       web3 => {
@@ -53,7 +53,7 @@ export class MetamaskAccountService {
       })
   }
 
-  checkLoginConditions() {
+  private checkLoginConditions() {
     let self = this;
     this.checkAccountAndNetwork().subscribe(
       success => {
@@ -63,7 +63,7 @@ export class MetamaskAccountService {
       });
   }
 
-  checkAccountAndNetwork(): Observable<boolean> {
+  private checkAccountAndNetwork(): Observable<boolean> {
     let self = this;
     return new Observable(
       observer => {
@@ -71,7 +71,7 @@ export class MetamaskAccountService {
           .subscribe(function handleValues(values) {
             self.network = values[0];
             self.account = values[1];
-            if (!self.network || !self.account) {
+            if (!self.network || !self.account || !self.isRinkeby()) {
               observer.next(false);
               self.broadcastLoginConditionsFail();
             }
@@ -82,23 +82,20 @@ export class MetamaskAccountService {
       });
   }
 
-  checkAUCBalance(account) {
+  private checkAUCBalance(account) {
     let self = this;
     this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
       balance => {
-        self.broadcastLoginConditionsSuccess();
-        return;
-        /*
         if (self.aucBalance != balance) {
           self.broadcastBalanceChanged(balance);
         }
-        if (balance < constants.minimumAUCNecessary){
+        if (balance < constants.minimumAUCNecessary) {
           self.broadcastLoginConditionsFail();
         }
         else {
           self.broadcastLoginConditionsSuccess();
         }
-        self.aucBalance = balance;*/
+        self.aucBalance = balance;
       });
   }
 

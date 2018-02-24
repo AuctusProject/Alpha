@@ -20,7 +20,6 @@ class Escrow {
         this.sendEscrowResultTransaction(function (err, result) {
             if (err) cb(err);
             else {
-                transactionRequestCache.update(self.from + self.to, 'getEscrowResult');
                 cb(null, new TransactionObject(result));
             }
         })

@@ -51,7 +51,6 @@ class Wallet {
             this.sendAUC(function (err, result) {
                 if (err) cb(err);
                 else {
-                    transactionRequestCache.update(self.address, 'faucet');
                     cb(null, new TransactionObject(result));
                 }
             });
@@ -69,7 +68,7 @@ class Wallet {
         var transactionCount = web3Helper.getTransactionCount(config.get('OWNER_ADDRESS'));
         var nonce = web3Helper.toHex(transactionCount + 1);
         var data = web3Helper.getContractMethodData(config.get('AUC_TOKEN_ABI'), config.get('AUC_CONTRACT_ADDRESS'), 'mint', [this.address, aucToSendHex]);
-        web3Helper.sendTransaction(config.get('GAS_PRICE') + 1, 50000, config.get('OWNER_ADDRESS'), config.get('AUC_CONTRACT_ADDRESS'), 0, data, config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb, nonce);
+        web3Helper.sendTransaction(config.get('GAS_PRICE') + 1, 100000, config.get('OWNER_ADDRESS'), config.get('AUC_CONTRACT_ADDRESS'), 0, data, config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb, nonce);
     }
 
     sendETH(cb) {

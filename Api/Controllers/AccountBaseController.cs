@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Model.Account;
 using Auctus.DomainObjects.Account;
+using Auctus.DomainObjects.Web3;
 using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.Http;
@@ -54,31 +55,7 @@ namespace Api.Controllers
             }
             return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), data = login });
         }
-
-        //protected virtual async Task<IActionResult> FullRegister(FullRegisterRequest registerRequest)
-        //{
-        //    if (registerRequest == null || registerRequest.User == null || registerRequest.Goal == null)
-        //        return BadRequest();
-
-        //    User user;
-        //    try
-        //    {
-        //        user = await AccountServices.FullRegister(registerRequest.User.Email,
-        //                                                    registerRequest.User.Password,
-        //                                                    registerRequest.Goal.GoalOption.Id,
-        //                                                    registerRequest.Goal.Timeframe,
-        //                                                    registerRequest.Goal.Risk,
-        //                                                    registerRequest.Goal.TargetAmount,
-        //                                                    registerRequest.Goal.StartingAmount,
-        //                                                    registerRequest.Goal.MonthlyContribution);
-        //    }
-        //    catch (ArgumentException ex)
-        //    {
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //    return Ok(new { jwt = GenerateToken(registerRequest.User.Email.ToLower().Trim()), email = user.Email });
-        //}
-
+        
         protected virtual async Task<IActionResult> ForgotPassword(EmailRequest forgotPasswordRequest)
         {
             if (forgotPasswordRequest == null || forgotPasswordRequest.Email == null)
@@ -258,6 +235,24 @@ namespace Api.Controllers
             return Ok(new { isValid = isValid });
         }
 
+        protected virtual IActionResult IsValidAddressToRegister(string address)
+        {
+            if (string.IsNullOrEmpty(address))
+                return BadRequest();
+
+
+            bool isValid;
+            try
+            {
+                isValid = AccountServices.IsValidAddressToRegister(address);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { isValid = isValid });
+        }
+
         protected virtual IActionResult Faucet(FaucetRequest faucetRequest)
         {
             if (faucetRequest == null || string.IsNullOrWhiteSpace(faucetRequest.Address))
@@ -271,6 +266,13 @@ namespace Api.Controllers
                 var transactionHash = AccountServices.Faucet(faucetRequest.Address);
                 //MemoryCache.Set<string>(address, address, 15);
                 return Ok(new { transaction = transactionHash });
+            }
+            catch (Web3Exception ex)
+            {
+                if (ex.Code == 429)
+                    return new StatusCodeResult(429);
+                else
+                    return BadRequest(new { error = ex.Message });
             }
             catch (ArgumentException ex)
             {

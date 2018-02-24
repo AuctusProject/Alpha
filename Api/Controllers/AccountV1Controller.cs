@@ -150,6 +150,15 @@ namespace Api.Controllers
             return base.IsValidUsernameToRegister(username);
         }
 
+        [Route("addresses/{address}")]
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult IsValidAddressToRegister([FromRoute]string address)
+        {
+            return base.IsValidAddressToRegister(address);
+        }
+
         [Route("faucet")]
         [HttpPost]
         [AllowAnonymous]
