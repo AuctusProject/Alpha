@@ -4,6 +4,7 @@ import { Asset } from '../../../../model/asset/asset';
 import { RiskType } from '../../../../model/account/riskType'
 import { AssetDistribution } from '../../../../model/asset/assetDistribution'
 import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
+import { PortfolioUpdateRequest } from '../../../../model/portfolio/portfolioUpdateRequest'
 import { DistributionRequest } from '../../../../model/portfolio/distributionRequest'
 import { PortfolioService } from '../../../../services/portfolio.service'
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -17,7 +18,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class PortfolioRegisterComponent implements OnInit {
   @Input() index: number;
   @Input() assets: Asset[];
-  assetsDistributionRows: AssetDistribution[];
+  @Input() assetsDistributionRows: AssetDistribution[];
   @Input() model: PortfolioRequest;
   @Output() onPortfolioSaved = new EventEmitter();
   @ViewChild('portfolioRegisterForm') portfolioRegisterForm;
@@ -28,13 +29,15 @@ export class PortfolioRegisterComponent implements OnInit {
   constructor(private ref: ChangeDetectorRef, private portfolioService: PortfolioService) { }
 
   ngOnInit() {
-
     if (this.model == null) {
       this.model = new PortfolioRequest();
     }
-    this.assetsDistributionRows = [];
-    this.assetsDistributionRows.push(new AssetDistribution());
-    this.assetsDistributionRows[0].percentage = 100;
+    if (!this.assetsDistributionRows){
+      this.assetsDistributionRows = [];
+      this.assetsDistributionRows.push(new AssetDistribution());
+      this.assetsDistributionRows[0].percentage = 100;
+    }
+    
     this.portfolioRegisterForm.control.addControl("TotalPercentage", this.totalPercentageForm);
   }
 
@@ -126,7 +129,9 @@ export class PortfolioRegisterComponent implements OnInit {
           }
         });
     } else {
-      this.savePromise = this.portfolioService.updatePortfolio(this.model)
+      var portfolioUpdate = this.convertModelToPortfolioUpdateRequest();
+
+      this.savePromise = this.portfolioService.updatePortfolio(this.model.id, portfolioUpdate)
         .subscribe(model => {
           this.model.isEditing = false;
           if (this.onPortfolioSaved) {
@@ -135,4 +140,14 @@ export class PortfolioRegisterComponent implements OnInit {
         });
     }
   }
+
+  convertModelToPortfolioUpdateRequest() : PortfolioUpdateRequest {
+    var portfolioUpdateRequest = new PortfolioUpdateRequest();
+    portfolioUpdateRequest.description = this.model.description;
+    portfolioUpdateRequest.distribution = this.model.distribution;
+    portfolioUpdateRequest.name = this.model.name;
+    portfolioUpdateRequest.price = this.model.price;
+    return portfolioUpdateRequest;
+  }
 }
+

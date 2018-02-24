@@ -273,6 +273,7 @@ namespace Auctus.Business.Portfolio
             }).ToList();
             result.AssetDistribution = distribution == null ? null : distribution.Result.Select(c => new Model.Portfolio.Distribution()
             {
+                Id = c.AssetId,
                 Code = c.Asset.Code,
                 Name = c.Asset.Name,
                 Percentage = c.Percent

@@ -1,6 +1,7 @@
 import { RiskType } from "../account/riskType";
 import { Projection } from "./projection";
 import { HistoryResult } from "../advisor/historyResult";
+import { AssetDistribution } from "../asset/assetDistribution";
 
 export class Portfolio {
   id: number;
@@ -23,11 +24,13 @@ export class Portfolio {
   last7Days: HistoryResult;
   last30Days: HistoryResult;
   allDays: HistoryResult;
+  assetDistribution: AssetDistribution[];
 
   constructor(){
     this.lastDay = new HistoryResult();
     this.last7Days = new HistoryResult();
     this.last30Days = new HistoryResult();
     this.allDays = new HistoryResult();
+    this.assetDistribution = [];
   }
 }
