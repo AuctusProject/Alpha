@@ -83,6 +83,9 @@ import { FooterComponent } from './components/ui/footer/footer.component';
 import { AddPortfolioComponent } from './components/portfolio/add-portfolio/add-portfolio.component';
 import { PortfolioReturnIndicatorComponent } from './components/portfolio/portfolio-return-indicator/portfolio-return-indicator.component';
 import { PortfolioDetailsTabsComponent } from './components/portfolio/portfolio-details-tabs/portfolio-details-tabs.component';
+import { PortfolioProjectionComponent } from './components/portfolio/portfolio-projection/portfolio-projection.component';
+import { PortfolioHistoryComponent } from './components/portfolio/portfolio-history/portfolio-history.component';
+import { PortfolioAllocationComponent } from './components/portfolio/portfolio-allocation/portfolio-allocation.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +142,10 @@ import { PortfolioDetailsTabsComponent } from './components/portfolio/portfolio-
     FooterComponent,
     AddPortfolioComponent,
     PortfolioReturnIndicatorComponent,
-    PortfolioDetailsTabsComponent
+    PortfolioDetailsTabsComponent,
+    PortfolioProjectionComponent,
+    PortfolioHistoryComponent,
+    PortfolioAllocationComponent
   ],
   imports: [
     BrowserAnimationsModule,

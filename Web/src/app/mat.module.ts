@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCheckboxModule, MatButtonToggleModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatButtonToggleModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -29,7 +29,9 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTableModule,
     MatMenuModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     MatButtonModule, 
@@ -46,7 +48,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTableModule,
     MatMenuModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+    
   ],
   declarations: []
 })
