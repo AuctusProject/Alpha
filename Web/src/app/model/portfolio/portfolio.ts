@@ -2,6 +2,8 @@ import { RiskType } from "../account/riskType";
 import { Projection } from "./projection";
 import { HistoryResult } from "../advisor/historyResult";
 import { AssetDistribution } from "../asset/assetDistribution";
+import { HistoryValues } from "../advisor/historyValues";
+import { HistogramInfo } from "../advisor/histogramInfo";
 
 export class Portfolio {
   id: number;
@@ -25,6 +27,8 @@ export class Portfolio {
   last30Days: HistoryResult;
   allDays: HistoryResult;
   assetDistribution: AssetDistribution[];
+  historyData: HistoryValues[];
+  histogram: HistogramInfo[];
 
   constructor(){
     this.lastDay = new HistoryResult();
@@ -32,5 +36,7 @@ export class Portfolio {
     this.last30Days = new HistoryResult();
     this.allDays = new HistoryResult();
     this.assetDistribution = [];
+    this.historyData = [];
+    this.histogram = [];
   }
 }

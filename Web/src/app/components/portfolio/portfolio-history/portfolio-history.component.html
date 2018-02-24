@@ -1,3 +1,4 @@
-<p>
-  portfolio-history works!
-</p>
+<div class="tab-body" fxLayout="row">
+  <portfolio-history-chart fxFlex="60" *ngIf="portfolio" [historyValues]="portfolio.historyData"></portfolio-history-chart>
+  <portfolio-histogram fxFlex="40" *ngIf="portfolio" [histogram]="portfolio.histogram"></portfolio-histogram>
+</div>

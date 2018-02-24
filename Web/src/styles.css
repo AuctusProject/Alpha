@@ -419,7 +419,7 @@ button.back {
   font-family: 'HelveticaNeueBold';
   font-size: 32px;
   text-align: center;
-  color: #4a4a4a;
+  color: #4a90e2;
 }
 
 
@@ -604,3 +604,8 @@ input[type=number]::-webkit-outer-spin-button {
   .portfolio-list .loading-card div {
     margin-bottom: 10px;
   }
+
+
+.mat-table {
+  background: unset !important;
+}

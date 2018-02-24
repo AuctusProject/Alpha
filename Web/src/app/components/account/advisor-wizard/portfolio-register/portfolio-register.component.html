@@ -51,7 +51,10 @@
       <div class="portfolio-edition-title">Build the investment plan</div>
       <div class="portfolio-edition-subtitle">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras
         justo odio, dapibus ac.</div>
-      <div *ngIf="!assets">Loading</div>
+      <div *ngIf="!assets" fxLayout="row" fxLayoutGap="16px">
+        <loading-block class="loading-card" *ngIf="!portfolios" width="270" [height]="38"></loading-block>
+        <loading-block class="loading-card" *ngIf="!portfolios" width="70" [height]="38"></loading-block>
+      </div>
       <div *ngIf="assets">
         <portfolio-distribution-row *ngFor="let assetDistribution of assetsDistributionRows; let i = index" [rowNumber]="i" [assetDistribution]="assetDistribution"
           [availableAssets]="currentAvailableAssets(assetDistribution)" [disableRemoveButton]="assetsDistributionRows.length <= 1"

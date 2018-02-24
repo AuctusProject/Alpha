@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Auctus.Business.Account
 {
@@ -16,6 +17,11 @@ namespace Auctus.Business.Account
         public string Faucet(string address)
         {
             return Web3.Web3Business.FaucetTransaction(address).TransactionHash;
+        }
+
+        public bool IsValidAddress(string address)
+        {
+            return !string.IsNullOrEmpty(address) && Regex.IsMatch(address, "^(0x)?[0-9a-f]{40}$", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
         }
     }
 }

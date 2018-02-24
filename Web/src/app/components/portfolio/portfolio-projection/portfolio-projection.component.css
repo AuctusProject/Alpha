@@ -42,11 +42,6 @@ hr {
   border-top: 1px solid  #e9eff4;
 }
 
-.tab-body {
-  background: linear-gradient( #ECECEC, #FFFFFF00, #FFFFFF00,#FFFFFF00,#FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00); 
-  padding: 50px;
-}
-
 .mat-tab-label {
   width: 33%!important;
 }
