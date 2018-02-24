@@ -1,7 +1,6 @@
 <form #portfolioRegisterForm="ngForm" (ngSubmit)="onSubmit()" fxLayout="row">
   <div class="portfolio-card" fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="space-between center" class="portfolio-summary">
-
       <div fxLayout="column">
         <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
           <div fxLayout="column" fxFlex="100">
@@ -21,12 +20,12 @@
       </div>
       <div class="button">
         <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="!model.id || this.model.isEditing"
-          class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center">
+          class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
           <i-save></i-save>
           <span class="button-text bold"> SAVE</span>
         </button>
         <div *ngIf="model.id && !this.model.isEditing" class="step-edit-button rectangle-white-button" (click)="editPortfolio()"
-          fxLayout="row" fxLayoutAlign="none center">
+          fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
           <i-edit></i-edit>
           <span class="button-text bold"> EDIT</span>
         </div>

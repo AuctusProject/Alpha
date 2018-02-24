@@ -29,7 +29,7 @@ namespace Auctus.Service
         {
             return PortfolioBusiness.Update(email, portfolioId, price, name, description);
         }
-
+        
         public List<Model.Portfolio> ListPortfolios(string email)
         {
             return PortfolioBusiness.List(email);

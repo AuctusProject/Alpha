@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ForgotPasswordEmail } from '../../../model/account/forgotPasswordEmail';
 import { AccountService } from '../../../services/account.service';
 import { NotificationsService } from "angular2-notifications";
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-forgot-password-email',
@@ -11,6 +12,7 @@ import { NotificationsService } from "angular2-notifications";
 export class ForgotPasswordEmailComponent implements OnInit {
 
   @Input() forgotPassword: ForgotPasswordEmail = new ForgotPasswordEmail();
+  promise: Subscription;
 
   constructor(private accountService: AccountService, private notificationService: NotificationsService) { }
 
@@ -23,7 +25,7 @@ export class ForgotPasswordEmailComponent implements OnInit {
       this.notificationService.error("Error", "Email must be filled.");
     }
     else {
-      this.accountService.recoverPassword(this.forgotPassword.email).subscribe(response => {
+      this.promise = this.accountService.recoverPassword(this.forgotPassword.email).subscribe(response => {
         if (response) {
           this.forgotPassword.emailSent = true;
           this.notificationService.info("Verify you mail box", "Follow email instructions.");

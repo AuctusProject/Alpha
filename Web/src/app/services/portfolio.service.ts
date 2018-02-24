@@ -3,6 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
 import { Portfolio } from "../model/portfolio/portfolio";
 import { PortfolioRequest } from "../model/portfolio/portfolioRequest";
+import { PortfolioUpdateRequest } from "../model/portfolio/portfolioUpdateRequest";
 import { Projections } from "../model/portfolio/projections";
 import { PortfolioHistory } from "../model/portfolio/portfolioHistory";
 import { PortfolioDistribution } from "../model/portfolio/portfolioDistribution";
@@ -29,6 +30,10 @@ export class PortfolioService {
     return this.httpService.get(this.getPortfoliosUrl);
   }
 
+  getPortfolio(portfolioId): Observable<Portfolio> {
+    return this.httpService.get(this.getPortfoliosUrl + portfolioId);
+  }
+
   getPurchasedPortfolios(): Observable<Portfolio[]> {
     return this.httpService.get(this.getPurchasedPortfoliosUrl);
   }
@@ -45,8 +50,8 @@ export class PortfolioService {
     return this.httpService.post(this.savePortfolioUrl, portfolioRequest);
   }
 
-  updatePortfolio(portfolioRequest: PortfolioRequest): Observable<PortfolioRequest> {
-    return this.httpService.put(this.savePortfolioUrl, portfolioRequest);
+  updatePortfolio(portfolioId:number, portfolioRequest: PortfolioUpdateRequest): Observable<PortfolioRequest> {
+    return this.httpService.put(this.savePortfolioUrl + portfolioId, portfolioRequest);
   }
 
   getRoboPortfolios(goalOption: number, risk: number): Observable<ListRoboAdvisorsResponse> {

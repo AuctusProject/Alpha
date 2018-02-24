@@ -7,6 +7,7 @@ import { constants } from '../../util/contants';
 import { EventsService } from "angular-event-service";
 import { ChangeDetectorRef } from '@angular/core';
 import { AccountService } from "../../services/account.service";
+import { Subscription } from 'rxjs/Subscription';
 
 export class MetamaskCondition {
   private message: string;
@@ -24,7 +25,7 @@ export class MetamaskCondition {
   styleUrls: ['./provider-required.component.css']
 })
 export class ProviderRequiredComponent implements OnInit {
-
+  promise: Subscription;
 
   private conditions: Array<MetamaskCondition> = [
     new MetamaskCondition("Install metamask", true),
@@ -121,7 +122,7 @@ export class ProviderRequiredComponent implements OnInit {
   }
 
   private callFaucet(): void {
-    this.accountService.faucet(this.metamaskAccount.getAccount()).subscribe(
+    this.promise = this.accountService.faucet(this.metamaskAccount.getAccount()).subscribe(
       result => {
         console.log(result);
       }

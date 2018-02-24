@@ -6,6 +6,7 @@ import { NotificationsService } from "angular2-notifications";
 import { Router } from '@angular/router';
 import { Web3Service } from '../../../services/web3.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
   @Input() login: Login = new Login();
 
   public loginForm: FormGroup;
+  loginPromise: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +42,7 @@ export class LoginComponent implements OnInit {
 
   public onLoginClick() {
     if(this.loginForm.valid){
-      this.web3Service.getAccount().subscribe(address => {
+      this.loginPromise = this.web3Service.getAccount().subscribe(address => {
         this.login.address = address;
         this.doLogin();
       });    
@@ -48,7 +50,7 @@ export class LoginComponent implements OnInit {
   }
 
   doLogin() {
-    this.loginService.login(this.login)
+    this.loginPromise = this.loginService.login(this.login)
       .subscribe(response => {
         if (response.logged) {
           this.loginService.setLoginData(response.data);

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { MatButtonModule, MatCheckboxModule, MatButtonToggleModule } from '@angular/material';
+import { MatButtonModule, MatCheckboxModule, MatButtonToggleModule, MatDatepickerModule, MatNativeDateModule } from '@angular/material';
 import { MatInputModule } from '@angular/material';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from "@angular/material";
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -29,7 +30,10 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTableModule,
     MatMenuModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     MatButtonModule, 
@@ -46,7 +50,11 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatTableModule,
     MatMenuModule,
     MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+    MatDatepickerModule,
+    MatNativeDateModule
+    
   ],
   declarations: []
 })

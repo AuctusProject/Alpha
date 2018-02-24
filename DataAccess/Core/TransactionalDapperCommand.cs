@@ -38,7 +38,7 @@ namespace Auctus.DataAccess.Core
 
         private string GetTableName<T>(string tableName)
         {
-            return string.Format("[{0}]", tableName ?? typeof(T).Name);
+            return string.Format("{0}", tableName ?? typeof(T).Name);
         }
 
         public void Dispose()
