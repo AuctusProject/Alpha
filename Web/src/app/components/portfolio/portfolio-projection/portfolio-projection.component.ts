@@ -19,8 +19,8 @@ export class PortfolioProjectionComponent implements OnInit {
     years: 0,
     months: 0,
     days: 0,
-    estimatedTotalReturn: null,
-    totalPrice: null
+    estimatedTotalReturn: 0,
+    totalPrice: 0
   }
 
   public timeDescription: string;
@@ -33,11 +33,10 @@ export class PortfolioProjectionComponent implements OnInit {
     this.simulator.startDate = moment().startOf('date').toDate();
     this.simulator.endDate = moment().startOf('date').add(1, 'month').toDate();
 
-    this.onEndDateChange();
-
+    this.updateSimulator();
   }
 
-  public onEndDateChange() {
+  public updateSimulator() {
     this.calculateTime();
     this.setTimeDescription();
     this.calculateSimulator();
@@ -93,12 +92,15 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   public calculateSimulator() {
+    this.simulator.estimatedTotalReturn = 0;
+    this.simulator.totalPrice = 0;
+
     if (this.simulator.endDate) {
 
       let months = this.simulator.years * 12 + this.simulator.months + this.simulator.days / 30;
 
-      this.simulator.estimatedTotalReturn = Math.round(this.simulator.estimatedReturn * months);
-      this.simulator.totalPrice = Math.round(this.simulator.price * months);
+      this.simulator.estimatedTotalReturn = this.simulator.estimatedReturn * months;
+      this.simulator.totalPrice = this.simulator.price * months;
     }
   }
 

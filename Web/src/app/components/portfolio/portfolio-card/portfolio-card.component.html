@@ -14,7 +14,7 @@
   <div fxLayout="row" *ngIf="portfolio.allDays" fxFlex="270px" fxLayoutGap="40px">
     <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value expected-value bold">
-        {{portfolio.allDays.expectedValue}}%
+        {{portfolio.allDays.expectedValue.toFixed(2)}}%
       </div>
       <div class="performance-labels">
         Estimated return
@@ -22,7 +22,7 @@
     </div>
     <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value real-return bold">
-        {{portfolio.allDays.value}}%
+        {{portfolio.allDays.value.toFixed(2)}}%
       </div>
       <div class="performance-labels">
         Real return
@@ -30,7 +30,7 @@
     </div>
     <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value success-rate bold">
-        {{portfolio.allDays.hitPercentage}}%
+        {{portfolio.allDays.hitPercentage.toFixed(2)}}%
       </div>
       <div class="performance-labels">
         Success rate

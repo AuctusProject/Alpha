@@ -6,6 +6,7 @@ import { ChartsModule } from 'ng2-charts';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -161,7 +162,8 @@ import { PortfolioAllocationComponent } from './components/portfolio/portfolio-a
         handleCurrentBtnOnly: true,
     }),
     SimpleNotificationsModule.forRoot(),
-    EventsServiceModule.forRoot()
+    EventsServiceModule.forRoot(),
+    NgCircleProgressModule.forRoot()
   ],
   providers: [
     LoginService, 
