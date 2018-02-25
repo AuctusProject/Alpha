@@ -122,7 +122,7 @@ export class Web3Service {
             self.web3.eth.sendTransaction(transactionObj,
               function (err, result) {
                 if (result) {
-                  observer.next(result.transactionHash);
+                  observer.next(result);
                 }
                 else {
                   observer.next(null);

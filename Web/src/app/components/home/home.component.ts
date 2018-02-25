@@ -75,8 +75,4 @@ export class HomeComponent implements OnInit {
       return 'Username already registered.'
     }
   }
-
-  public purchase(){
-    this.metamaskAccountService.sendAUC(100);
-  }
 }

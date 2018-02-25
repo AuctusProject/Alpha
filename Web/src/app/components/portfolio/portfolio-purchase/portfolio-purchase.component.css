@@ -1,0 +1,133 @@
+.buy-box {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    border:2px solid #e9eff4;
+    background-color: white;
+    /* padding: 30px; */
+  }
+
+.buy-box-content {
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.advice-price {
+    font-size: 20px;
+    font-weight: bold;
+    color: #4a90e2;
+    font-family: 'HelveticaNeue';
+}
+
+.estimated-return-value {
+  font-size: 20px;
+  font-weight: bold;
+  color: #4a4a4a;
+  font-family: 'HelveticaNeue';
+}
+
+.month-price {
+    font-size: 10px;
+    font-weight: lighter;
+    font-family: 'HelveticaNeue';
+}
+
+.info-price {
+  font-family: 'HelveticaNeue';
+  font-size: 8px;
+  color: #808fa3;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid  #e9eff4;
+}
+
+.mat-tab-label {
+  width: 33%!important;
+}
+
+.mat-tab-labels {
+  display: block!important;
+}
+
+.text-left{
+  text-align: left;
+}
+
+.text-right{
+  text-align: right;
+}
+
+.date-label {
+  font-family: 'HelveticaNeue';
+  font-size: 10px;
+  color: #4a4a4a;
+}
+
+.month-qty {
+  font-family: 'HelveticaNeue';
+  font-size: 10px;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.date-box {
+  width: 100%;
+    border:1px solid #e9eff4;
+    background-color: transparent;
+    padding: 7px;
+    margin-top: 5px;
+}
+
+.start-date {
+  font-family: 'HelveticaNeue';
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(74, 74, 74, 0.4);
+}
+
+.end-date {
+  font-family: 'HelveticaNeue';
+  font-size: 18px;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.estimated-total-return {
+  font-family: 'HelveticaNeue';
+  font-size: 12px;
+  
+  color: #4a4a4a;
+  margin-top: 20px;
+}
+
+.desc-calc-price{
+  font-family: 'HelveticaNeue';
+  font-size: 12px;
+  font-weight: 300;
+  color: #55606e;
+}
+
+.mat-form-field.mat-form-field {
+  width: auto;
+}
+
+.total-price{
+  font-family: 'HelveticaNeue';
+  font-size: 12px;
+  font-weight: bold;
+  text-align: right;
+  color: #4a4a4a;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.small {
+  height: 15px;
+  width: 15px;
+}

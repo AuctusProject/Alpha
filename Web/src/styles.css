@@ -500,6 +500,10 @@ input[type=number]::-webkit-outer-spin-button {
   display: none;
 }
 
+.action-button.green {
+  background: #04e762 !important;
+}
+
 
 .action-button {
   font-family: 'HelveticaNeueBold';
