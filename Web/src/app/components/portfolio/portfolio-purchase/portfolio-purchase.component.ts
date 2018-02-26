@@ -23,7 +23,6 @@ export class PortfolioPurchaseComponent implements OnInit {
     estimatedReturn: null,
     startDate: null,
     endDate: null,
-    years: 0,
     months: 0,
     days: 0,
     estimatedTotalReturn: 0,
@@ -40,7 +39,7 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.simulator.price = this.portfolio.price;
     this.simulator.estimatedReturn = this.portfolio.projectionPercent;
     this.simulator.startDate = moment().startOf('date').toDate();
-    this.simulator.endDate = moment().startOf('date').add(1, 'month').toDate();
+    this.simulator.endDate = moment().startOf('date').add(30, 'days').toDate();
 
     this.updateSimulator();
   }
@@ -53,7 +52,6 @@ export class PortfolioPurchaseComponent implements OnInit {
 
   private calculateTime() {
 
-    this.simulator.years = 0;
     this.simulator.months = 0;
     this.simulator.days = 0;
 
@@ -62,34 +60,16 @@ export class PortfolioPurchaseComponent implements OnInit {
       let startDate = moment(this.simulator.startDate).startOf('date');
       let endDate = moment(this.simulator.endDate).startOf('date');
 
-      this.simulator.years = Math.floor(endDate.diff(startDate, 'year', true));
-      this.simulator.months = endDate.diff(startDate, 'month', true) - (this.simulator.years * 12);
+      let totalDays = endDate.diff(startDate, 'day');
 
-      if (this.simulator.months < 1) {
-        this.simulator.days = endDate.diff(startDate, 'day') - (this.simulator.years * 365);
-      } else if (this.simulator.months > Math.floor(this.simulator.months)) {
-
-        let auxDate = moment(this.simulator.startDate).add(Math.floor(this.simulator.months), 'month').startOf('date');
-        this.simulator.days = endDate.diff(auxDate, 'days') - (this.simulator.years * 365);
-
-        if (this.simulator.days > 29) {
-          this.simulator.months += 1;
-          this.simulator.days = 0;
-        }
-
-      }
-
-      this.simulator.months = Math.floor(this.simulator.months);
+      this.simulator.months = Math.floor(totalDays / 30);
+      this.simulator.days = totalDays - this.simulator.months * 30;
     }
   }
 
   public setTimeDescription() {
 
     this.timeDescription = "";
-
-    if (this.simulator.years > 0) {
-      this.timeDescription += this.simulator.years + (this.simulator.years > 1 ? " years " : " year ");
-    }
 
     if (this.simulator.months > 0) {
       this.timeDescription += this.simulator.months + (this.simulator.months > 1 ? " months " : " month ");
@@ -106,7 +86,7 @@ export class PortfolioPurchaseComponent implements OnInit {
 
     if (this.simulator.endDate) {
 
-      let months = this.simulator.years * 12 + this.simulator.months + this.simulator.days / 30;
+      let months = this.simulator.months + this.simulator.days / 30;
 
       this.simulator.estimatedTotalReturn = this.simulator.estimatedReturn * months;
       this.simulator.totalPrice = this.simulator.price * months;
