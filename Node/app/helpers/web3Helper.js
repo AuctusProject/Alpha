@@ -27,6 +27,15 @@ class Web3Helper {
     this._web3.eth.getTransactionReceipt(hash, cb);
   }
 
+  getFilterLogs(contractAddress, topics, cb) {
+    this._web3.eth.filter({
+      fromBlock: 0,
+      toBlock: 'latest',
+      address: contractAddress,
+      topics: [topics]
+    }).get(cb);
+  }
+
   getTransactionByHash(hash, cb) {
     var self = this;
     this.getTransactionReceipt(hash,
@@ -48,6 +57,24 @@ class Web3Helper {
           cb(null, result);
         }
       })
+  }
+
+  getEventLog(contractAddress, eventCompleteName, filterParameters, cb) {
+    var topics = this._web3.sha3(eventCompleteName);
+    if (filterParameters) {
+      if (value instanceof Array) {
+        for (var i = 0; i < filterParameters.length; i++) {
+          topics += this.parseEventParameter(filterParameters[i]);
+        }
+      } else {
+        topics += this.parseEventParameter(filterParameters);
+      }
+    }
+    this.getFilterLogs(contractAddress, topics, cb);
+  }
+
+  parseEventParameter(parameter) {
+    return "," + (this.isAddress(parameter) ? parameter : this._web3.toHex(parameter));
   }
 
   getETHBalance(address) {
