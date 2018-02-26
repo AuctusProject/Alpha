@@ -300,10 +300,16 @@ button {
   color: #3c91e6;
   cursor: pointer;
 }
+
+a.action-button{
+  text-decoration: none;
+}
+
   .action-button[disabled],
   .action-button:disabled,
   .action-button[disabled]:hover,
   .action-button:disabled:hover,
+  .action-button.disabled,
   .primary-button[disabled],
   .primary-button:disabled,
   .primary-blue-button[disabled],
@@ -498,6 +504,10 @@ input[type=number]::-webkit-outer-spin-button {
 
 .portfolio-register-component:last-child .portfolio-card-line {
   display: none;
+}
+
+.action-button.green {
+  background: #04e762 !important;
 }
 
 

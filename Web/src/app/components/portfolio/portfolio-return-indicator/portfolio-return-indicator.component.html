@@ -6,23 +6,18 @@
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <div fxFlex="20" class="text-left">
         <div class="return-value">
-          {{estimatedReturn}}%
+          {{estimatedReturn.toFixed(2)}}%
         </div>
         <div class="return-label">
           Estimated Return
         </div>
       </div>
-      <div fxFlex="60" class="circ">
-        <!-- <div>
-            78%
-          </div>
-          <div >
-            Success rate
-          </div> -->
+      <div fxFlex="60" class="text-center">
+        <circle-progress [percent]="successRate" [radius]="60" [toFixed]="2" [titleFontSize]="20" unitsFontSize="20" [maxPercent]="1000" [unitsColor]="'#2296f2'" [outerStrokeWidth]="10" [outerStrokeColor]="'#2296f2'" [innerStrokeWidth]="5" [titleColor]="'#2296f2'" [showBackground]="false" [showInnerStroke]="false" [subtitle]="'Success rate'" ></circle-progress>
       </div>
       <div fxFlex="20" class="text-right">
         <div class="return-value">
-          {{realReturn}}%
+          {{realReturn.toFixed(2)}}%
         </div>
         <div class="return-label">
           Real Return

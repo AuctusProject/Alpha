@@ -6,6 +6,7 @@ import { ChartsModule } from 'ng2-charts';
 
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { Angular2PromiseButtonModule } from 'angular2-promise-buttons/dist';
+import { NgCircleProgressModule } from 'ng-circle-progress';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -83,6 +84,8 @@ import { PortfolioDetailsTabsComponent } from './components/portfolio/portfolio-
 import { PortfolioProjectionComponent } from './components/portfolio/portfolio-projection/portfolio-projection.component';
 import { PortfolioHistoryComponent } from './components/portfolio/portfolio-history/portfolio-history.component';
 import { PortfolioAllocationComponent } from './components/portfolio/portfolio-allocation/portfolio-allocation.component';
+import { PortfolioPurchaseComponent } from './components/portfolio/portfolio-purchase/portfolio-purchase.component';
+import { PortfolioPurchasePopupComponent } from './components/portfolio/portfolio-purchase-popup/portfolio-purchase-popup.component';
 
 @NgModule({
   declarations: [
@@ -139,7 +142,9 @@ import { PortfolioAllocationComponent } from './components/portfolio/portfolio-a
     PortfolioDetailsTabsComponent,
     PortfolioProjectionComponent,
     PortfolioHistoryComponent,
-    PortfolioAllocationComponent
+    PortfolioAllocationComponent,
+    PortfolioPurchaseComponent,
+    PortfolioPurchasePopupComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -161,7 +166,8 @@ import { PortfolioAllocationComponent } from './components/portfolio/portfolio-a
         handleCurrentBtnOnly: true,
     }),
     SimpleNotificationsModule.forRoot(),
-    EventsServiceModule.forRoot()
+    EventsServiceModule.forRoot(),
+    NgCircleProgressModule.forRoot()
   ],
   providers: [
     LoginService, 
@@ -176,6 +182,7 @@ import { PortfolioAllocationComponent } from './components/portfolio/portfolio-a
     UserProfileAuthGuard,
     MetamaskAccountService
   ],
+  entryComponents: [PortfolioPurchasePopupComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
