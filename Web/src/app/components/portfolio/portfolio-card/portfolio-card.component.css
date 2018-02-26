@@ -29,8 +29,6 @@
   color: #55606e;
 }
 
-
-
 .performance-value {
   font-size: 16px;
   text-align: center;
@@ -38,6 +36,14 @@
 }
 
 .performance-labels {
-  font-size: 10px;
+  font-size: 9px;
   color: #808fa3;
+  text-align: center;
+}
+
+.history-not-available{
+  font-size: 12px;
+  color: #808fa3;
+  text-align: center;
+  width:100%;
 }

@@ -54,5 +54,16 @@
     line-height: 32px;
     background-color: #4a90e2;
     color: white;
+  }
+
+  .user-menu{
     cursor: pointer;
+  }
+
+  .username-menu-item{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 8px;
+    color: rgba(0, 0, 0, 0.78);
+    padding-left: 16px;
+    padding-right: 16px;
   }

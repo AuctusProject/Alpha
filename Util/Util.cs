@@ -30,5 +30,10 @@ namespace Auctus.Util
         {
             return (Int64)(datetime.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
         }
+
+        public static double ConvertMonthlyToDailyRate(double monthlyRate)
+        {
+            return Math.Pow((monthlyRate / 100.0) + 1.0, 1.0 / 30.0) - 1.0;
+        }
     }
 }

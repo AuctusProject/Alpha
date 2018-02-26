@@ -37,7 +37,7 @@ namespace Auctus.Business.Advisor
                         continue;
 
                     var projection = ProjectionBusiness.Get(purchase.ProjectionId);
-                    var dailyEstimatedPercentage = Math.Pow((projection.ProjectionValue / 100.0) + 1.0, 1.0 / 30.0) - 1.0;
+                    var dailyEstimatedPercentage = Util.Util.ConvertMonthlyToDailyRate(projection.ProjectionValue);
                     var estimatedPercentage = Math.Pow(1.0 + dailyEstimatedPercentage, purchase.Days) - 1.0;
 
                     var startValue = history.Where(c => c.Date == purchase.ExpirationDate.Value.AddDays(-purchase.Days)).Single().RealValue;
