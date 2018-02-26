@@ -78,9 +78,12 @@ hr {
 
 .date-box {
   width: 100%;
-    border:1px solid #e9eff4;
+    border-bottom:1px solid #e9eff4;
+    border-top:1px solid #e9eff4;
     background-color: transparent;
     padding: 7px;
+    padding-left: 25px;
+    padding-right: 25px;
     margin-top: 5px;
 }
 

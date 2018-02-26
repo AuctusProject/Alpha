@@ -80,12 +80,15 @@
     </div>
   </div>
   <div fxLayout="row" class="buy-box-content">
-    <button *ngIf="!portfolio.purchased" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
+    <button *ngIf="!portfolio.purchased && !portfolio.pendingConfirmation" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
       (click)="onBuyClick()">
       BUY
     </button>
     <button *ngIf="portfolio.purchased" type="button" class="action-button green text-center" style="width:100%">
       PURCHASED
     </button>
+    <a *ngIf="portfolio.pendingConfirmation" type="button" class="action-button disabled text-center" [attr.href]="transactionUrl" target="_blank" style="width:100%">
+        CHECK BUY TRANSACTION
+    </a>
   </div>
 </div>

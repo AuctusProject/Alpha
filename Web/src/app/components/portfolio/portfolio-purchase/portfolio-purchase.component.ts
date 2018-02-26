@@ -7,6 +7,7 @@ import { BuyRequest } from '../../../model/advisor/buyRequest';
 import { DateUtil } from "../../../util/dateUtil";
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'portfolio-purchase',
@@ -29,6 +30,7 @@ export class PortfolioPurchaseComponent implements OnInit {
     totalPrice: 0
   }
 
+  private transactionUrl: string;
   private purchasePromise: Subscription;
   public timeDescription: string;
 
@@ -127,22 +129,23 @@ export class PortfolioPurchaseComponent implements OnInit {
                     this.advisorService.setBuyTransaction(result.id, hash).subscribe(
                       success => {
                         if (success) {
-                          this.portfolio.purchased = true;
+                          this.portfolio.pendingConfirmation = true;
+                          this.transactionUrl = environment.etherscanUrl + "/tx/" + hash;
                           observer.next(true);
                         }
                         else {
-                          observer.next(false);
+                          observer.complete();
                         }
                       }
                     )
                   }
                   else {
-                    observer.next(false);
+                    observer.complete();
                   }
                 })
             }
             else {
-              observer.next(false);
+              observer.complete();
             }
           })
     }).subscribe();

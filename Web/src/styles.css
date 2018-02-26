@@ -300,10 +300,16 @@ button {
   color: #3c91e6;
   cursor: pointer;
 }
+
+a.action-button{
+  text-decoration: none;
+}
+
   .action-button[disabled],
   .action-button:disabled,
   .action-button[disabled]:hover,
   .action-button:disabled:hover,
+  .action-button.disabled,
   .primary-button[disabled],
   .primary-button:disabled,
   .primary-blue-button[disabled],
