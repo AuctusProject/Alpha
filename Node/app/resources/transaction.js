@@ -6,7 +6,7 @@ module.exports = function (router) {
 
   router.route('/:transactionHash')
     .get(function (req, res, next) {
-      new TransactionController().getTransactionByHash(req.params.transactionHash, baseResponse(res, next));
+      new TransactionController().getTransactionByHash(req.params.transactionHash, req.query["eventCompleteName"], baseResponse(res, next));
     });
 };
 

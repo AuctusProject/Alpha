@@ -5,10 +5,10 @@ var Error = require('../util/error.js');
 class TransactionController {
     constructor() {}
 
-    getTransactionByHash(hash, cb) {
+    getTransactionByHash(hash, eventCompleteName, cb) {
         if (!hash) throw new Error(400, 'transaction hash is mandatory');
         
-        TransactionObject.GetByHash(hash, cb);
+        TransactionObject.GetByHash(hash, eventCompleteName, cb);
     }
 }
 
