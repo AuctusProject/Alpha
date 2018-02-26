@@ -28,7 +28,7 @@ export class ProviderRequiredComponent implements OnInit {
   promise: Subscription;
   transactionUrl: String;
 
-  private conditions: Array<MetamaskCondition> = [
+  conditions: Array<MetamaskCondition> = [
     new MetamaskCondition("Install metamask", true),
     new MetamaskCondition("Select rinkeby network", true),
     new MetamaskCondition("Unlock account", true),
@@ -115,7 +115,7 @@ export class ProviderRequiredComponent implements OnInit {
       this.metamaskAccount.getAUCBalance() > constants.minimumAUCNecessary;
   }
 
-  private onlyAucConditionPending(): boolean {
+  onlyAucConditionPending(): boolean {
     return this.conditions[0].status &&
       this.conditions[1].status &&
       this.conditions[2].status &&
@@ -130,5 +130,6 @@ export class ProviderRequiredComponent implements OnInit {
         }
       }
     )
+    this.changeDetector.detectChanges();
   }
 }

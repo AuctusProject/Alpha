@@ -58,5 +58,5 @@
   </button>
 </div>
 
-<advisor-step [hidden]="currentStep !== wizardSteps.Advisor.Id" [advisorModel]="editedAdvisorModel" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></advisor-step>
-<portfolio-step [hidden]="currentStep !== wizardSteps.Portfolio.Id" [advisorModel]="advisorModel" [portfolioList]="portfolioList" (onBackStep)="backStep($event)" (onNextStep)="nextStep($event)"></portfolio-step>
+<advisor-step [hidden]="currentStep !== wizardSteps.Advisor.Id" [advisorModel]="editedAdvisorModel" (onBackStep)="backStep()" (onNextStep)="nextStep()"></advisor-step>
+<portfolio-step [hidden]="currentStep !== wizardSteps.Portfolio.Id" [advisorModel]="advisorModel" [portfolioList]="portfolioList" (onBackStep)="backStep()" (onNextStep)="nextStep()"></portfolio-step>

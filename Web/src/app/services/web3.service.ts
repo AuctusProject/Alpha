@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import Web3 from 'web3';
+import Web3Utils from 'web3-utils';
 import { EventsService } from 'angular-event-service';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
@@ -40,7 +41,7 @@ export class Web3Service {
   public getNetwork(): Observable<number> {
     let self = this;
     return new Observable(observer => {
-      self.web3.eth.net.getId((err, netId) => {
+      self.web3.version.getNetwork((err, netId) => {
         observer.next(netId);
       });
     })
@@ -67,16 +68,70 @@ export class Web3Service {
       self.web3.eth.call({
         to: tknContractAddress, // Contract address, used call the token balance of the address in question
         data: '0x70a08231000000000000000000000000' + (accountAddrs).substring(2) // Combination of contractData and tknAddress, required to call the balance of an address 
-      }).then(function (result) {
+      }, function (err, result) {
         if (result) {
-          var tokens = self.web3.utils.toBN(result).toString(); // Convert the result to a usable number string
-          var tokensEther = self.web3.utils.fromWei(tokens, 'ether');
+          var tokens = Web3Utils.toBN(result).toString(); // Convert the result to a usable number string
+          var tokensEther = Web3Utils.fromWei(tokens, 'ether');
           observer.next(parseFloat(tokensEther));
         }
         else {
           observer.next(0);
         }
       });
+    });
+  }
+
+  public toHex(val: string): string {
+    return Web3Utils.toHex(val);
+  }
+
+  public toWei(value: string, unit?: string) {
+    return Web3Utils.toWei(value, unit);
+  }
+
+  public getContractMethodData(abi: string, contractAddress: string, method: string, ...params: any[]) {
+    var contractInstance = this.web3.eth.contract(JSON.parse(abi)).at(contractAddress);
+    var data = contractInstance[method].getData.apply(null, params);
+    return data;
+  }
+
+  public sendTransaction(gasPrice: number, gasLimit: number, from: string, to: string,
+    value: number, data: string, chainId: string): Observable<string> {
+
+    const gasPriceWei = Web3Utils.toWei(gasPrice.toString(), 'gwei');
+    const valueWei = Web3Utils.toWei(value.toString(), 'ether');
+
+    let self = this;
+    return new Observable(observer => {
+
+      this.web3.eth.getTransactionCount(from,
+        function (err, result) {
+          if (err) observer.next(null);
+          else {
+            var transactionObj = {
+              nonce: Web3Utils.toHex(result),
+              gasPrice: Web3Utils.toHex(gasPriceWei),
+              gasLimit: Web3Utils.toHex(gasLimit),
+              from: from,
+              to: to,
+              value: Web3Utils.toHex(valueWei),
+              data: data,
+              chainId: Web3Utils.toHex(chainId)
+            };
+
+            self.web3.eth.sendTransaction(transactionObj,
+              function (err, result) {
+                if (result) {
+                  observer.next(result);
+                }
+                else {
+                  observer.next(null);
+                }
+              });
+          }
+        })
+
+
     });
   }
 

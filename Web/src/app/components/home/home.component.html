@@ -18,7 +18,8 @@
           <div class="blue-box">
             <div fxLayout="row">
               <mat-form-field fxFlex="100">
-                <input placeholder="Username" matInput [inputFocus]="true"  pattern="[a-zA-Z-_.]*" formControlName="username" [(ngModel)]="simpleRegister.username" usernameRegistration required>
+                <input placeholder="Username" matInput [inputFocus]="true" pattern="[a-zA-Z-_.]*" formControlName="username" [(ngModel)]="simpleRegister.username"
+                  usernameRegistration required>
                 <mat-error *ngIf="simpleRegisterForm.controls.username.invalid">
                   {{getErrorMessage(simpleRegisterForm.controls.username)}}
                 </mat-error>

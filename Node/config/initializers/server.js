@@ -36,8 +36,8 @@ var start = function (cb) {
     next(err);
   });
 
-  app.listen(config.get('NODE_PORT'));
-  logger.info('[SERVER] Listening on port ' + config.get('NODE_PORT'));
+  app.listen(process.env.PORT || config.get('NODE_PORT'));
+  logger.info('[SERVER] Listening on port ' + (process.env.PORT || config.get('NODE_PORT')));
 
   if (cb) {
     return cb();

@@ -99,6 +99,13 @@ export class MetamaskAccountService {
       });
   }
 
+  public sendAUC(value: number) : Observable<string> {
+    var aucToSendHex = this.web3Service.toHex(this.web3Service.toWei(value.toString()));
+    var data = this.web3Service.getContractMethodData(environment.aucTokenContract.abi,
+      environment.aucTokenContract.address, "transfer", environment.escrowContract.address, aucToSendHex);
+    return this.web3Service.sendTransaction(1, 80000, this.getAccount(), environment.aucTokenContract.address, 0, data, environment.chainId);
+  }
+
   private broadcastBalanceChanged(balance) {
     this.eventsService.broadcast("balanceChanged", balance);
   }

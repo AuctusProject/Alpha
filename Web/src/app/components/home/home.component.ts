@@ -5,6 +5,7 @@ import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
+import { MetamaskAccountService } from '../../services/metamask-account.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -14,6 +15,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 
 export class HomeComponent implements OnInit {
+  show: boolean;
   public simpleRegisterForm: FormGroup;
   public simpleRegister: SimpleRegister;
   createPromise: Subscription;
@@ -22,7 +24,8 @@ export class HomeComponent implements OnInit {
     private accountService: AccountService,
     private router: Router,
     private notificationService: NotificationsService,
-    private web3Service: Web3Service) {
+    private web3Service: Web3Service,
+    private metamaskAccountService : MetamaskAccountService) {
     this.simpleRegister = new SimpleRegister();
     this.buildForm();
   }
