@@ -39,6 +39,7 @@ export class PortfolioHistoryChartComponent implements OnInit {
         },
         type: 'time',
         time: {
+          unit: 'day',
           tooltipFormat: 'MMM D YYYY'
         }
       }],
@@ -46,7 +47,7 @@ export class PortfolioHistoryChartComponent implements OnInit {
         gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
         ticks: {
           fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10, callback: function (value, index, values) {
-            return '$' + value;
+            return '$' + value.toFixed(2);
           }
         }
       }]
@@ -56,7 +57,7 @@ export class PortfolioHistoryChartComponent implements OnInit {
   public lineChartLegend: boolean = true;
   public lineChartType: string = 'line';
 
-  public historicalChartColors: Array<any> = [
+  public historicalChartColorsOld: Array<any> = [
     {
       backgroundColor: 'rgba(148,159,177,0.2)',
       borderColor: 'rgba(148,159,177,1)',
@@ -64,6 +65,17 @@ export class PortfolioHistoryChartComponent implements OnInit {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    }];
+
+
+  public historicalChartColors: Array<any> = [
+    {
+      backgroundColor: 'rgba(108, 168, 255,0.2)',
+      borderColor: 'rgba(108, 168, 255,1)',
+      pointBackgroundColor: 'rgba(108, 168, 255,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(108, 168, 255,0.8)'
     }];
 
 }

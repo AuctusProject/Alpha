@@ -56,7 +56,7 @@ namespace Api.Controllers
             {
                 try
                 {
-                    Logger.LogTrace($"Job {action.Method.Name} started.");
+                    Logger.LogInformation($"Job {action.Method.Name} started.");
                     action();
                     Logger.LogTrace($"Job {action.Method.Name} ended.");
                 }
