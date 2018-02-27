@@ -8,6 +8,7 @@ import { DateUtil } from "../../../util/dateUtil";
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../../environments/environment';
+import { Goal } from '../../../model/account/goal';
 
 @Component({
   selector: 'portfolio-purchase',
@@ -17,6 +18,7 @@ import { environment } from '../../../../environments/environment';
 export class PortfolioPurchaseComponent implements OnInit {
 
   @Input() portfolio: Portfolio;
+  @Input() goal?: Goal;
 
   public simulator = {
     price: null,
@@ -96,17 +98,16 @@ export class PortfolioPurchaseComponent implements OnInit {
   public onBuyClick() {
     var self = this;
     var days = DateUtil.DiffDays(this.simulator.startDate, this.simulator.endDate);
-
     this.purchasePromise = new Observable(observer => {
       this.advisorService.buy(new BuyRequest(this.portfolio.id, days,
-        this.metamaskAccount.getAccount())).subscribe(
+        this.metamaskAccount.getAccount(), this.goal)).subscribe(
           result => {
             if (result) {
               var id = result.id;
               this.metamaskAccount.sendAUC(this.simulator.totalPrice).subscribe(
                 hash => {
                   if (hash) {
-                    this.advisorService.setBuyTransaction(result.id, hash).subscribe(
+                    this.advisorService.setBuyTransaction(id, hash).subscribe(
                       success => {
                         if (success) {
                           this.portfolio.pendingConfirmation = true;
@@ -120,7 +121,7 @@ export class PortfolioPurchaseComponent implements OnInit {
                     )
                   }
                   else {
-                    observer.complete();
+                    this.advisorService.cancelBuyTransaction(id).subscribe(result => observer.complete());
                   }
                 })
             }

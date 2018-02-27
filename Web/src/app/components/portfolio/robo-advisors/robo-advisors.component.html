@@ -19,7 +19,7 @@
     <div class="portfolio-list">
       <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
       <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
-      <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
+      <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio" [goal]="goal"></portfolio-card>
     </div>
   </ng-container>
 </div>

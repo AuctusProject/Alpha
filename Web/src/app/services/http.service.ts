@@ -7,11 +7,13 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { NotificationsService } from "angular2-notifications";
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
+import { LocalStorageService } from "./local-storage.service";
 
 @Injectable()
 export class HttpService {
 
-  constructor(private http: HttpClient, private notificationService: NotificationsService, private router: Router) { }
+  constructor(private http: HttpClient, private notificationService: NotificationsService, private router: Router,
+    private localStorageService: LocalStorageService) { }
 
   private jwt: string = "auc_jwt";
   private login: string = "auc_login";
@@ -21,32 +23,20 @@ export class HttpService {
   }
 
   private getAccessToken(): string {
-    return (this.getLocalStorage(this.jwt) as string);
+    return (this.localStorageService.getLocalStorage(this.jwt) as string);
   }
 
   private setAccessToken(newJwt: string): void {
-    this.setLocalStorage(this.jwt, newJwt);
+    this.localStorageService.setLocalStorage(this.jwt, newJwt);
   }
 
   public setLoginData(loginData: string): void {
-    this.setLocalStorage(this.login, JSON.stringify(loginData));
+    this.localStorageService.setLocalStorage(this.login, JSON.stringify(loginData));
   }
 
   public getLoginData(): any {
-    let loginData = this.getLocalStorage(this.login);
+    let loginData = this.localStorageService.getLocalStorage(this.login);
     return JSON.parse(loginData);
-  }
-
-  private setLocalStorage(key: string, value: any): void {
-    if (window) window.localStorage.setItem(key, value);
-  }
-
-  private getLocalStorage(key: string): any {
-    return window ? window.localStorage.getItem(key) : null;
-  }
-
-  private removeLocalStorage(key: string): void {
-    if (window) window.localStorage.removeItem(key);
   }
 
   getUser(): string {
@@ -54,8 +44,8 @@ export class HttpService {
   }
 
   logout(): void {
-    this.removeLocalStorage(this.jwt);
-    this.removeLocalStorage(this.login);
+    this.localStorageService.removeLocalStorage(this.jwt);
+    this.localStorageService.removeLocalStorage(this.login);
   }
 
   apiUrl(route: string): string {
@@ -98,40 +88,40 @@ export class HttpService {
   get(url: string, httpOptions: any = {}): Observable<any> {
     return this.http.get<any>(url, this.getHttpOptions(httpOptions))
       .pipe(
-      tap((response: any) => {
-        if (response && response.jwt) this.setAccessToken(response.jwt);
-      }),
-      catchError(this.handleError(url))
+        tap((response: any) => {
+          if (response && response.jwt) this.setAccessToken(response.jwt);
+        }),
+        catchError(this.handleError(url))
       );
   }
 
   put<T>(url: string, model: T, httpOptions: any = {}): Observable<any> {
     return this.http.put<any>(url, model, this.getHttpOptions(httpOptions))
       .pipe(
-      tap((response: any) => {
-        if (response && response.jwt) this.setAccessToken(response.jwt);
-      }),
-      catchError(this.handleError<T>(url))
+        tap((response: any) => {
+          if (response && response.jwt) this.setAccessToken(response.jwt);
+        }),
+        catchError(this.handleError<T>(url))
       );
   }
 
   patch<T>(url: string, model: T, httpOptions: any = {}): Observable<any> {
     return this.http.patch<any>(url, model, this.getHttpOptions(httpOptions))
       .pipe(
-      tap((response: any) => {
-        if (response && response.jwt) this.setAccessToken(response.jwt);
-      }),
-      catchError(this.handleError<T>(url))
+        tap((response: any) => {
+          if (response && response.jwt) this.setAccessToken(response.jwt);
+        }),
+        catchError(this.handleError<T>(url))
       );
   }
 
   delete<T>(url: string, httpOptions: any = {}): Observable<any> {
     return this.http.delete<any>(url, this.getHttpOptions(httpOptions))
       .pipe(
-      tap((response: any) => {
-        if (response && response.jwt) this.setAccessToken(response.jwt);
-      }),
-      catchError(this.handleError<T>(url))
+        tap((response: any) => {
+          if (response && response.jwt) this.setAccessToken(response.jwt);
+        }),
+        catchError(this.handleError<T>(url))
       );
   }
 
@@ -145,7 +135,7 @@ export class HttpService {
         if (response.error) {
           this.notificationService.error("Error", response.error.error);
         }
-        else if (response.statusText){
+        else if (response.statusText) {
           this.notificationService.error("Error", response.statusText);
         }
         else {

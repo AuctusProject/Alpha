@@ -27,6 +27,10 @@ export class AdvisorService {
   buy(buyRequest : BuyRequest): Observable<any> {
     return this.httpService.post(this.baseAdvisorsPurchaseUrl, buyRequest);
   }
+
+  cancelBuyTransaction(buyId : number): Observable<any> {
+    return this.httpService.delete(this.baseAdvisorsPurchaseUrl + "/" + buyId);
+  }
   
   setBuyTransaction(buyId, hash : string): Observable<string> {
     var setBuyRequest = {

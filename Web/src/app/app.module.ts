@@ -59,6 +59,7 @@ import { EthMachineComponent } from './components/eth-machine/eth-machine.compon
 import { PortfolioRegisterComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-register.component';
 import { PortfolioDistributionRowComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-distribution-row/portfolio-distribution-row.component';
 import { Web3Service } from './services/web3.service';
+import { LocalStorageService } from './services/local-storage.service';
 import { PublicService } from './services/public.service';
 import { MetamaskAccountService } from './services/metamask-account.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
@@ -182,7 +183,8 @@ import { PercentageLabelComponent } from './components/ui/percentage-label/perce
     Web3Service, 
     CanActivateViaAuthGuard,
     UserProfileAuthGuard,
-    MetamaskAccountService
+    MetamaskAccountService,
+    LocalStorageService
   ],
   entryComponents: [PortfolioPurchasePopupComponent],
   bootstrap: [AppComponent]
