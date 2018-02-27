@@ -4,6 +4,7 @@ import { PortfolioService } from '../../../services/portfolio.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { LocalStorageService } from "../../../services/local-storage.service";
 import { Goal } from '../../../model/account/goal';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-portfolio-details',
@@ -14,8 +15,12 @@ export class PortfolioDetailsComponent implements OnInit {
 
   public portfolio: Portfolio;
   private goal: Goal;
+  loginData: any;
 
-  constructor(private portfolioService: PortfolioService, private activatedRoute: ActivatedRoute, private localStorageService : LocalStorageService) { }
+  constructor(private portfolioService: PortfolioService,
+    private activatedRoute: ActivatedRoute,
+    private localStorageService: LocalStorageService,
+    private loginService: LoginService) { }
 
   ngOnInit() {
     if (this.localStorageService.getLocalStorage("currentGoal")){
@@ -25,6 +30,11 @@ export class PortfolioDetailsComponent implements OnInit {
     this.activatedRoute.params.subscribe((params: Params) => {
       this.getPortfolio(params['id']);
     });
+
+    let logged = this.loginService.isLoggedIn();
+    if (logged) {
+      this.loginData = this.loginService.getLoginData();
+    }
   }
 
   private getPortfolio(portfolioId){

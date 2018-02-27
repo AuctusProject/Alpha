@@ -79,7 +79,7 @@
       </div>
     </div>
   </div>
-  <div fxLayout="row" class="buy-box-content">
+  <div fxLayout="row" class="buy-box-content" *ngIf="portfolio.advisorId != loginData.humanAdvisorId">
     <button *ngIf="!portfolio.purchased && !portfolio.pendingConfirmation" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
       (click)="onBuyClick()">
       BUY

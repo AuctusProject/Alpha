@@ -12,11 +12,12 @@
         {{portfolio.purchaseQuantity}} sold
       </p>
     </div>
+    <div *ngIf="this.loginData && portfolio.advisorId == this.loginData.humanAdvisorId" fxFlex fxLayoutAlign="end center">
+      <div class="header-action-button" fxLayoutAlign="space-around center" routerLink="/edit-portfolio/{{portfolio.id}}">EDIT PORTFOLIO</div>
+    </div>
   </div>
 </div>
-<div class="body-loading" fxLayout="column" fxLayoutAlign="center center">
-  <mat-spinner [mode]="indeterminate" [diameter]="80" [color]="primary" *ngIf="!portfolio"></mat-spinner>
-</div>
+<loading-spinner *ngIf="!portfolio"></loading-spinner>
 <ng-container *ngIf="portfolio">
   <div fxLayout="row" fxLayoutAlign="space-around center">
     <div fxFlex="60">

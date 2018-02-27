@@ -1,12 +1,13 @@
 .internal-footer {
-    margin: 24px 56px;
-    background: white;
-    width: calc(100% - 112px);
-    border-radius: 6px;
-    padding: 21px 30px;
-    height: unset;
-    box-shadow: 0px -52px 85px 0 rgba(0, 0, 0, 0.09);
-  }
+  margin: 24px 56px;
+  background: white;
+  width: calc(100% - 112px);
+  min-width: 880px;
+  border-radius: 6px;
+  padding: 21px 30px;
+  height: unset;
+  box-shadow: 0px -52px 85px 0 rgba(0, 0, 0, 0.09);
+}
   
   .footer{
     background: unset;

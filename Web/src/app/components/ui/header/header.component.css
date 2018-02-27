@@ -2,6 +2,7 @@
     margin: 24px 56px;
     background: white;
     width: calc(100% - 112px);
+    min-width: 880px;
     border-radius: 6px;
     padding: 21px 30px;
     height: unset;
@@ -34,6 +35,7 @@
   .landing-logo {
       height: 40px;
       cursor:pointer;
+      margin-right: 20px;
   }
 
   .menu-button{

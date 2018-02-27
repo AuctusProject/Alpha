@@ -13,10 +13,8 @@
 
   <ng-container >
     <div class="portfolio-list">
-      <loading-block class="loading-card" *ngIf="!advisor || !advisor.portfolios" widthPercentage="100" [height]="76"></loading-block>
-      <loading-block class="loading-card" *ngIf="!advisor || !advisor.portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <loading-spinner *ngIf="!advisor || !advisor.portfolios"></loading-spinner>
       <advisor-portfolios *ngIf="advisor" [portfolios]="advisor.portfolios"></advisor-portfolios>
-
       <button *ngIf="advisor && advisor.owned" class="pull-right" mat-mini-fab color="primary" routerLink="/add-portfolio"><i-plus></i-plus></button>
     </div>
   </ng-container>

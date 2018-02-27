@@ -17,8 +17,7 @@
   <register-wizard *ngIf="!goal"  (onSubmitted)="onWizardSubmitted($event)"></register-wizard>
   <ng-container *ngIf="goal">
     <div class="portfolio-list">
-      <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
-      <loading-block class="loading-card" *ngIf="!portfolios" widthPercentage="100" [height]="76"></loading-block>
+      <loading-spinner *ngIf="!portfolios"></loading-spinner>
       <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio" [goal]="goal"></portfolio-card>
     </div>
   </ng-container>
