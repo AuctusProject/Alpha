@@ -60,7 +60,7 @@ namespace Auctus.DataAccess.Portfolio
                                                 INNER JOIN AdvisorDetail d ON d.AdvisorId = a.Id
                                                 INNER JOIN PortfolioDetail e on e.PortfolioId = p.Id 
                                                 WHERE 
-                                                {0} AND
+                                                ({0}) AND
                                                 d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) AND
                                                 e.Date = (SELECT max(e2.Date) FROM PortfolioDetail e2 WHERE e2.PortfolioId = p.Id)";
 
@@ -71,7 +71,7 @@ namespace Auctus.DataAccess.Portfolio
                                                     INNER JOIN AdvisorDetail e ON e.AdvisorId = a.Id
                                                     WHERE 
                                                     d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND
-                                                    e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id) AND {0}";
+                                                    e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id) AND ({0})";
         
         public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
