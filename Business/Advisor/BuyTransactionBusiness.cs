@@ -147,7 +147,7 @@ namespace Auctus.Business.Advisor
                         {
                             var purchase = BuyBusiness.GetSimple(buyId);
                             var escrowedValue = Util.Util.ConvertBigNumber(transaction.EventData[1], 18);
-                            if (purchase.Price != escrowedValue)
+                            if (purchase.Price > escrowedValue)
                                 status = TransactionStatus.Fraud;
                             else
                             {

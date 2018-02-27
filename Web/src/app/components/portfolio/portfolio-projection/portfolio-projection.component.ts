@@ -3,6 +3,7 @@ import { Portfolio } from '../../../model/portfolio/portfolio';
 import { Goal } from '../../../model/account/goal';
 import * as moment from 'moment';
 import Chart from 'chart.js';
+import 'chartjs-plugin-annotation';
 
 @Component({
   selector: 'portfolio-projection',
@@ -23,7 +24,9 @@ export class PortfolioProjectionComponent implements OnInit {
 
   ngOnInit() {
     this.startDate = moment().startOf('date').toDate();
-    this.endDate = moment().startOf('date').add(30, 'days').toDate();
+
+    let totalDays = this.goal != null ? this.goal.timeframe * 12 * 30 : 30;
+    this.endDate = moment().startOf('date').add(totalDays, 'days').toDate();
     this.buildChart();
   }
   public chartColors: Array<any> = [
@@ -37,54 +40,19 @@ export class PortfolioProjectionComponent implements OnInit {
       //Pessimistic
       backgroundColor: 'rgb(188, 255, 248)',
       borderColor: 'rgb(188, 255, 248)',
-      fill: 'origin'
+      fill: 'origin',
     },
     {
       //Projection
       backgroundColor: 'rgb(97, 237, 223)',
       borderColor: 'rgb(97, 237, 223)',
-      fill: 'origin'
+      fill: 'origin',
     },
     {
       //Optimistic
       backgroundColor: "rgb(15, 215, 185)",
       borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },{
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
+      fill: 'origin',
     }
   ];
   public chartData: Array<any> = new Array<any>();
@@ -103,7 +71,7 @@ export class PortfolioProjectionComponent implements OnInit {
         },
       }],
       yAxes: [{
-        drawBorder: false,
+        gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
         color: ['#FF0000'],
         ticks: {
           fontFamily: 'HelveticaNeueMedium',
@@ -135,22 +103,49 @@ export class PortfolioProjectionComponent implements OnInit {
   public onEndDateChange(endDate: Date) {
     this.endDate = endDate;
     this.chartData = [];
-    this.baseChart.datasets = [];
-    this.baseChart.labels = [];
-    console.log(this.baseChart);
     this.buildChart();
+    this.baseChart.refresh();
   }
 
   public buildChart() {
 
     this.buildChartLabels();
-    //this.buildMonthyContributionChart();
+    this.buildMonthyContributionChart();
     this.buildChartData(this.portfolio.pessimisticPercent, 'Pessimistic');
     this.buildChartData(this.portfolio.projectionPercent, 'Projection');
     this.buildChartData(this.portfolio.optimisticPercent, 'Optimistic');
     this.buildTargetLine();
   }
 
+  private buildMonthyContributionChart() {
+
+    let chartData = [];
+
+    if (this.goal != null && this.goal.monthlyContribution > 0) {
+      let estimatedDays = this.getEstimatedDays();
+
+      var projectionValue = [];
+      projectionValue.push(0);
+
+      chartData.push(0);
+
+      let extensionChartPoint = this.getExtensionChartPoint();
+
+      for (let day = 1; day <= extensionChartPoint; day++) {
+
+        let beforeValue = projectionValue[day - 1];
+        let currencyValue = beforeValue + this.goal.monthlyContribution / 30;
+        projectionValue.push(currencyValue);
+
+        if (day % this.getFilterConfig() == 0 || day == estimatedDays) {
+          chartData.push(currencyValue);
+        }
+      }
+
+    }
+
+    this.chartData.push({ data: chartData, label: 'Contributed' })
+  }
 
   private buildTargetLine() {
 
@@ -175,6 +170,7 @@ export class PortfolioProjectionComponent implements OnInit {
       }]
     }
 
+
     this.chartOptions.annotation = annotation;
   }
 
@@ -187,7 +183,7 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   private getStartingAmount() {
-    return 100;
+    return this.goal != null && this.goal.startingAmount > 0 ? this.goal.startingAmount : 100;
   }
 
   private getEstimatedDays() {
@@ -199,7 +195,7 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   private getExtensionChartPoint() {
-    return this.getEstimatedDays() + 5;
+    return this.getEstimatedDays() + (this.getFilterConfig() * 5);
   }
 
   private buildChartLabels() {
@@ -213,7 +209,9 @@ export class PortfolioProjectionComponent implements OnInit {
 
     for (let day = 1; day <= extensionChartPoint; day++) {
       let date = startDate.add('day', 1).toDate();
-      chartLabels.push(date);
+      if (day % this.getFilterConfig() == 0 || day == estimatedDays) {
+        chartLabels.push(date);
+      }
     }
 
     this.chartLabels = chartLabels;
@@ -225,23 +223,54 @@ export class PortfolioProjectionComponent implements OnInit {
     if (monthPercent > 0) {
       let estimatedDays = this.getEstimatedDays();
       let extensionChartPoint = this.getExtensionChartPoint();
-
-      var projectionValue = [];
-      projectionValue.push(this.getStartingAmount());
-
       chartData.push(this.getStartingAmount());
+
+      let totalMonthPercent = monthPercent * Math.round(estimatedDays / 30);
+      let dailyPercent = this.calculateDailyPercent(totalMonthPercent, estimatedDays);
+
+      let beforeValues = [];
+      beforeValues.push(this.getStartingAmount());
 
       for (let day = 1; day <= extensionChartPoint; day++) {
 
-        let beforeValue = projectionValue[day - 1];
-        let currencyValue = beforeValue + (beforeValue * monthPercent / 30 / 100);
+        let beforeValue = beforeValues[day - 1];
+        let currencyValue = beforeValue + (beforeValue * dailyPercent / 100);
 
-        //currencyValue += this.projection.currentGoal.monthlyContribution;
-        projectionValue.push(currencyValue);
-        chartData.push(currencyValue);
+        if(this.goal != null && day % 30 == 0){
+          currencyValue += this.goal.monthlyContribution;
+        }
+        
+        beforeValues.push(currencyValue)
+        if (day % this.getFilterConfig() == 0 || day == estimatedDays) {
+          chartData.push(currencyValue);
+        }
       }
     }
 
     this.chartData.push({ data: chartData, label: label });
+  }
+
+  private getFilterConfig() {
+
+    let estimatedDays = this.getEstimatedDays();
+
+    if (estimatedDays >= 10800) { return 180; }
+    if (estimatedDays >= 7200) { return 120; }
+    if (estimatedDays >= 3600) { return 60; }
+    if (estimatedDays >= 1800) { return 30; }
+    if (estimatedDays >= 720) { return 15; }
+    if (estimatedDays >= 60) { return 10; }
+    else { return 1; }
+  }
+
+  private calculateDailyPercent(monthPercent, totalDays) {
+    let aer = monthPercent * 1 / 100;
+    let daily = 0;
+    let monthly = 0;
+    let tempaer = (1 + aer);
+    daily = Math.pow(tempaer, (1 / totalDays)) - 1;
+    daily = daily * 100;
+
+    return daily;
   }
 }

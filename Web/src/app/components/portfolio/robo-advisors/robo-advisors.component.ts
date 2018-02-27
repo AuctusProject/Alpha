@@ -3,6 +3,7 @@ import { PortfolioService } from "../../../services/portfolio.service";
 import { Portfolio } from "../../../model/portfolio/portfolio";
 import { Goal } from "../../../model/account/goal";
 import { ListRoboAdvisorsResponse } from "../../../model/portfolio/listRoboAdvisorsResponse";
+import { LocalStorageService } from '../../../services/local-storage.service';
 
 
 @Component({
@@ -16,13 +17,14 @@ export class RoboAdvisorsComponent implements OnInit {
   goal: Goal;
 
 
-  constructor(private portfolioService: PortfolioService) { }
+  constructor(private portfolioService: PortfolioService, private localStorageService : LocalStorageService) { }
 
   ngOnInit() {
   }
 
   onWizardSubmitted(goal: Goal) {
     this.goal = goal;
+    this.localStorageService.setLocalStorage("currentGoal", JSON.stringify(goal));
     this.getPortfolios();
   }
 

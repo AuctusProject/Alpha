@@ -21,7 +21,7 @@ export class PortfolioPurchaseComponent implements OnInit {
   @Input() goal?: Goal;
   @Input() startDate: Date;
   @Input() endDate: Date;
-  @Output() onEndDateChange = new EventEmitter();
+  @Output() afterEndDateChange = new EventEmitter();
 
   public simulator = {
     price: null,
@@ -53,9 +53,13 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.calculateTime();
     this.setTimeDescription();
     this.calculateSimulator();
+  }
 
-    if(this.onEndDateChange) {
-      this.onEndDateChange.emit(this.simulator.endDate);
+  public onEndDateChange() {
+
+    this.updateSimulator()
+    if(this.afterEndDateChange) {
+      this.afterEndDateChange.emit(this.simulator.endDate);
     }
   }
 
