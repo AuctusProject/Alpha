@@ -111,13 +111,10 @@ export class PortfolioRegisterComponent implements OnInit {
 
 
   onSubmit() {
-    for (let row of this.assetsDistributionRows) {
-      let distribution = this.model.distribution.find(item => item.assetId === row.id);
-      if (distribution) {
-        distribution.percentage = row.percentage;
-      } else {
-        this.model.distribution.push({ assetId: row.id, percentage: row.percentage });
-      }
+
+    this.model.distribution = new Array<DistributionRequest>()
+    for (let row of this.assetsDistributionRows) { 
+      this.model.distribution.push({ assetId: row.id, percentage: row.percentage });
     }
 
     if (this.model.id == null) {
