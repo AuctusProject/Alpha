@@ -115,12 +115,12 @@ namespace Auctus.Business.Portfolio
             return !history.Any() ? null : new Model.Portfolio.HistoryResult()
             {
                 Value = (history.Select(c => 1 + (c.RealValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
-                ExpectedValue = (history.Select(c => 1 + (c.ProjectionValue / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                ExpectedValue = (history.Select(c => 1 + (Util.Util.ConvertMonthlyToDailyRate(c.ProjectionValue))).Aggregate((mult, c) => c * mult) - 1) * 100,
                 OptimisticExpectation = history.Any(c => !c.OptimisticProjectionValue.HasValue) ? (double?)null :
-                                        (history.Select(c => 1 + (c.OptimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
+                                        (history.Select(c => 1 + (Util.Util.ConvertMonthlyToDailyRate(c.OptimisticProjectionValue.Value))).Aggregate((mult, c) => c * mult) - 1) * 100,
                 PessimisticExpectation = history.Any(c => !c.PessimisticProjectionValue.HasValue) ? (double?)null :
-                                        (history.Select(c => 1 + (c.PessimisticProjectionValue.Value / 100.0)).Aggregate((mult, c) => c * mult) - 1) * 100,
-                HitPercentage = (double)history.Count(c => c.RealValue >= c.ProjectionValue) / (double)history.Count() * 100
+                                        (history.Select(c => 1 + (Util.Util.ConvertMonthlyToDailyRate(c.PessimisticProjectionValue.Value))).Aggregate((mult, c) => c * mult) - 1) * 100,
+                HitPercentage = (double)history.Count(c => (c.RealValue / 100.0) >= Util.Util.ConvertMonthlyToDailyRate(c.ProjectionValue)) / (double)history.Count() * 100
             };
         }
 

@@ -1,6 +1,6 @@
 <mat-toolbar class="header">
     <mat-toolbar-row class="internal-header">
-        <img src="./assets/logo.png" class="landing-logo">
+        <img src="./assets/logo.png" routerLink="" class="landing-logo">
         <span class="spacer"></span>
         <div *ngIf="loginData">
             <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
@@ -11,12 +11,19 @@
                 <div *ngIf="!loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
                 <div class="pull-right">
                     <mat-menu #appMenu="matMenu">
+                        <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
+                            <mat-icon>account_circle</mat-icon>
+                            <div>{{this.loginData.username}}</div>
+                        </div>
                         <button mat-menu-item routerLink="/change-password"> Change password </button>
-                        <button mat-menu-item routerLink="/manage-api"> Manage API </button>
+                        <!-- <button mat-menu-item routerLink="/manage-api"> Manage API </button> -->
                         <button mat-menu-item (click)="logout()"> Logout </button>
                     </mat-menu>
-                    <div class="user-menu-item" [matMenuTriggerFor]="appMenu">
-                        {{getUsernameFirstLetter()}}
+                    <div class="user-menu" [matMenuTriggerFor]="appMenu" fxLayout="row" fxLayoutAlign="space-around center">
+                        <div class="user-menu-item" >
+                            {{getUsernameFirstLetter()}}
+                        </div>
+                        <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
                     </div>
                 </div>
             </div>

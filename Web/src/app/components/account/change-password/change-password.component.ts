@@ -32,7 +32,7 @@ export class ChangePasswordComponent implements OnInit {
         response => {
           if (response) {
             this.notificationService.success("Sucess", "Password was changed.");
-            setTimeout(() => this.router.navigateByUrl('dashboard'), 3500);
+            this.router.navigateByUrl('');
           }
         }
       );

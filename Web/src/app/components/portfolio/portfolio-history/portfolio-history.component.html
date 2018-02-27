@@ -1,4 +1,10 @@
-<div class="tab-body" fxLayout="row">
-  <portfolio-history-chart fxFlex="60" *ngIf="portfolio" [historyValues]="portfolio.historyData"></portfolio-history-chart>
-  <portfolio-histogram fxFlex="40" *ngIf="portfolio" [histogram]="portfolio.histogram"></portfolio-histogram>
+<div class="tab-body">
+  <div *ngIf="portfolio.allDays" fxLayout="row" fxLayoutGap="10px">
+    <portfolio-history-chart fxFlex="60" *ngIf="portfolio" [historyValues]="portfolio.historyData"></portfolio-history-chart>
+    <portfolio-histogram fxFlex="40" *ngIf="portfolio" [histogram]="portfolio.histogram"></portfolio-histogram>
+  </div>
+  <div *ngIf="!portfolio.allDays" fxLayout="column" fxLayoutAlign="space-around center">
+    <img class="chart-svg" src="/assets/img/chart.svg"/>
+    <div class="history-not-available bold">Portfolio history data is not available yet.</div>
+  </div>
 </div>

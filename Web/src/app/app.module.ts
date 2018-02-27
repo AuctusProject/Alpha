@@ -59,6 +59,7 @@ import { EthMachineComponent } from './components/eth-machine/eth-machine.compon
 import { PortfolioRegisterComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-register.component';
 import { PortfolioDistributionRowComponent } from './components/account/advisor-wizard/portfolio-register/portfolio-distribution-row/portfolio-distribution-row.component';
 import { Web3Service } from './services/web3.service';
+import { LocalStorageService } from './services/local-storage.service';
 import { PublicService } from './services/public.service';
 import { MetamaskAccountService } from './services/metamask-account.service';
 import { CanActivateViaAuthGuard } from './providers/canActivateViaAuth.provider';
@@ -86,6 +87,7 @@ import { PortfolioHistoryComponent } from './components/portfolio/portfolio-hist
 import { PortfolioAllocationComponent } from './components/portfolio/portfolio-allocation/portfolio-allocation.component';
 import { PortfolioPurchaseComponent } from './components/portfolio/portfolio-purchase/portfolio-purchase.component';
 import { PortfolioPurchasePopupComponent } from './components/portfolio/portfolio-purchase-popup/portfolio-purchase-popup.component';
+import { PercentageLabelComponent } from './components/ui/percentage-label/percentage-label.component';
 import { PortfolioProjectionChartComponent } from './components/dashboard/portfolio-projection-chart/portfolio-projection-chart.component';
 
 @NgModule({
@@ -146,6 +148,7 @@ import { PortfolioProjectionChartComponent } from './components/dashboard/portfo
     PortfolioAllocationComponent,
     PortfolioPurchaseComponent,
     PortfolioPurchasePopupComponent,
+    PercentageLabelComponent,
     PortfolioProjectionChartComponent
   ],
   imports: [
@@ -182,7 +185,8 @@ import { PortfolioProjectionChartComponent } from './components/dashboard/portfo
     Web3Service, 
     CanActivateViaAuthGuard,
     UserProfileAuthGuard,
-    MetamaskAccountService
+    MetamaskAccountService,
+    LocalStorageService
   ],
   entryComponents: [PortfolioPurchasePopupComponent],
   bootstrap: [AppComponent]

@@ -14,6 +14,9 @@
     </div>
   </div>
 </div>
+<div class="body-loading" fxLayout="column" fxLayoutAlign="center center">
+  <mat-spinner [mode]="indeterminate" [diameter]="80" [color]="primary" *ngIf="!portfolio"></mat-spinner>
+</div>
 <ng-container *ngIf="portfolio">
   <div fxLayout="row" fxLayoutAlign="space-around center">
     <div fxFlex="60">
@@ -37,5 +40,5 @@
       </portfolio-return-indicator>
     </div>
   </div>
-  <portfolio-details-tabs *ngIf="portfolio" [portfolio]="portfolio"></portfolio-details-tabs>
+  <portfolio-details-tabs *ngIf="portfolio" [portfolio]="portfolio" [goal]="goal"></portfolio-details-tabs>
 </ng-container>

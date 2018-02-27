@@ -1,11 +1,12 @@
 import { NotificationsService } from 'angular2-notifications';
 import { SimpleRegister } from './../../model/account/simpleRegister';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
 import { Web3Service } from '../../services/web3.service';
 import { MetamaskAccountService } from '../../services/metamask-account.service';
+import { LoginService } from '../../services/login.service';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -22,10 +23,12 @@ export class HomeComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder,
     private accountService: AccountService,
+    private loginService: LoginService,
     private router: Router,
     private notificationService: NotificationsService,
     private web3Service: Web3Service,
-    private metamaskAccountService : MetamaskAccountService) {
+    private metamaskAccountService: MetamaskAccountService,
+    private zone: NgZone) {
     this.simpleRegister = new SimpleRegister();
     this.buildForm();
   }
@@ -51,8 +54,9 @@ export class HomeComponent implements OnInit {
   }
 
   private createAccount() {
-      this.createPromise = this.accountService.simpleRegister(this.simpleRegister).subscribe(success => {
-        this.router.navigateByUrl('');
+    this.createPromise = this.accountService.simpleRegister(this.simpleRegister).subscribe(result => {
+        this.loginService.setLoginData(result.data);
+        this.router.navigateByUrl('login');
       }, response => {
         this.notificationService.info("Info", response.error);
       });

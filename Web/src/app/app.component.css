@@ -1,3 +1,4 @@
 .fill-container{
     min-height: calc(100vh - 132px);
+    min-width: 992px;
 }

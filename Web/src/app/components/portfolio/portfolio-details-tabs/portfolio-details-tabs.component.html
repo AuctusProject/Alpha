@@ -7,7 +7,7 @@
               PROJECTION
             </div>
           </ng-template>
-          <portfolio-projection [portfolio]="portfolio"></portfolio-projection>
+          <portfolio-projection [portfolio]="portfolio" [goal]="goal"></portfolio-projection>
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
@@ -23,7 +23,7 @@
               ALLOCATION
             </div>
           </ng-template>
-          <portfolio-allocation [portfolio]="portfolio"></portfolio-allocation>
+          <portfolio-allocation [portfolio]="portfolio" [goal]="goal"></portfolio-allocation>
         </mat-tab>
       </mat-tab-group>
     </div>

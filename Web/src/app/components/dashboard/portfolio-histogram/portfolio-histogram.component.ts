@@ -21,13 +21,15 @@ export class PortfolioHistogramComponent implements OnInit {
         gridLines: { drawOnChartArea: false },
         ticks: {
           fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10
-        }
+        },
+        stacked:true
       }],
       yAxes: [{
         gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
         ticks: {
           fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10
-        }
+        },
+        stacked:true
       }]
     }
   };
@@ -37,11 +39,19 @@ export class PortfolioHistogramComponent implements OnInit {
 
   ngOnInit() {
     if (this.histogram != undefined) {
-      this.histogramData = [{ data: []}];
+      this.histogramData = [{ data: []},{ data: []}];
       this.histogramLabels = [];
       for (let histogramItem of this.histogram) {
-        this.histogramData[0].data.push(histogramItem.quantity);
-        this.histogramLabels.push((((histogramItem.lesser + histogramItem.greaterOrEqual)/2.0).toFixed(2)) + '%');
+        var labelValue = (histogramItem.lesser + histogramItem.greaterOrEqual) / 2.0;
+        if(labelValue < 0){
+          this.histogramData[0].data.push(histogramItem.quantity);
+          this.histogramData[1].data.push(0);
+        }
+        else{
+          this.histogramData[0].data.push(0);
+          this.histogramData[1].data.push(histogramItem.quantity);
+        }
+        this.histogramLabels.push(labelValue.toFixed(2) + '%');
       }
     }
 
@@ -49,12 +59,20 @@ export class PortfolioHistogramComponent implements OnInit {
 
   public histogramColors: Array<any> = [
     {
-      backgroundColor: 'rgba(148,159,177,0.8)',
+      backgroundColor: 'rgba(245,81,95,0.8)',
       borderColor: 'rgba(148,159,177,1)',
       pointBackgroundColor: 'rgba(148,159,177,1)',
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
+    },
+    {
+      backgroundColor: 'rgba(0,155,255,0.8)',
+      borderColor: 'rgba(108, 168, 255,1)',
+      pointBackgroundColor: 'rgba(108, 168, 255,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(108, 168, 255,0.8)'
     }];
 
 }

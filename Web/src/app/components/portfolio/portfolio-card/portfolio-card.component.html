@@ -7,22 +7,19 @@
       {{portfolio.name}}
     </div>
     <risk-indicator [risk]="portfolio.risk"></risk-indicator>
-    <!-- <div class="portfolio-risk">
-      {{getRiskDescription()}}
-    </div> -->
   </div>
-  <div fxLayout="row" *ngIf="portfolio.allDays" fxFlex="270px" fxLayoutGap="40px">
+  <div fxLayout="row" *ngIf="portfolio.allDays" fxFlex="280px" fxLayoutGap="40px">
     <div fxLayout="column" fxLayoutGap="4px">
-      <div class="performance-value expected-value bold">
-        {{portfolio.allDays.expectedValue.toFixed(2)}}%
+      <div class="performance-value expected-value">
+        <percentage-label [percentage]="portfolio.allDays.expectedValue"></percentage-label>
       </div>
       <div class="performance-labels">
         Estimated return
       </div>
     </div>
     <div fxLayout="column" fxLayoutGap="4px">
-      <div class="performance-value real-return bold">
-        {{portfolio.allDays.value.toFixed(2)}}%
+      <div class="performance-value real-return">
+        <percentage-label [percentage]="portfolio.allDays.value"></percentage-label>
       </div>
       <div class="performance-labels">
         Real return
@@ -37,8 +34,11 @@
       </div>
     </div> 
   </div>
+  <div fxLayout="row" *ngIf="!portfolio.allDays" fxFlex="280px" fxLayoutGap="40px">
+      <div class="history-not-available">Portfolio history data is not available yet.</div>
+  </div>
   <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
     <div class="price-box">{{portfolio.price}} AUC</div>
-    <div class="action-button" routerLink="/portfolio/{{portfolio.id}}">SEE DETAILS</div>
+    <div class="action-button" (click)="onDetailsClick()">SEE DETAILS</div>
   </div>
 </div>

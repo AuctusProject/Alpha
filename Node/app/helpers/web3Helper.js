@@ -27,16 +27,7 @@ class Web3Helper {
     this._web3.eth.getTransactionReceipt(hash, cb);
   }
 
-  getFilterLogs(contractAddress, topics, cb) {
-    this._web3.eth.filter({
-      fromBlock: 0,
-      toBlock: 'latest',
-      address: contractAddress,
-      topics: [topics]
-    }).get(cb);
-  }
-
-  getTransactionByHash(hash, cb) {
+  getTransactionByHash(hash, eventCompleteName, cb) {
     var self = this;
     this.getTransactionReceipt(hash,
       function (err, result) {
@@ -54,23 +45,50 @@ class Web3Helper {
             })
         }
         else {
+          result["eventData"] = self.parseTransactionLog(eventCompleteName, result);
           cb(null, result);
         }
       })
   }
-
-  getEventLog(contractAddress, eventCompleteName, filterParameters, cb) {
-    var topics = this._web3.sha3(eventCompleteName);
-    if (filterParameters) {
-      if (value instanceof Array) {
-        for (var i = 0; i < filterParameters.length; i++) {
-          topics += this.parseEventParameter(filterParameters[i]);
+  
+  parseTransactionLog(eventCompleteName, result) {
+    if (eventCompleteName && result.logs && result.logs.length > 0) {
+      var topic = this._web3.sha3(eventCompleteName);
+      var parameters = eventCompleteName.split("(")[1].split(")")[0].split(",");
+      if (parameters[0]) {
+        for(var i = 0; i < result.logs.length; ++i) {
+          if (result.logs[i].topics[0] == topic) {
+            var remainingTopicsArguments = result.logs[i].topics.length - 1;
+            var remainingDataArguments = parameters.length - remainingTopicsArguments;
+            var dataArgumentsCount = remainingDataArguments;
+            var formattedData = "";
+            if (remainingDataArguments > 0) {
+              formattedData = result.logs[i].data.substr(2);
+            }
+            var events = [];
+            for(var j = 0; j < parameters.length; ++j) {
+              var argument = null;
+              if (remainingTopicsArguments > 0) {
+                argument = result.logs[i].topics[result.logs[i].topics.length - remainingTopicsArguments].substr(2);
+                remainingTopicsArguments = remainingTopicsArguments - 1;
+              } else if (remainingDataArguments > 0) {
+                argument = formattedData.substr((dataArgumentsCount - remainingDataArguments) * 64, 64);
+                remainingDataArguments = remainingDataArguments - 1;
+              }
+              if (argument) {
+                if (parameters[j] == "address") {
+                  events.push('0x' + argument.substr(24));
+                } else {
+                  events.push(this._web3.toBigNumber('0x' + argument));
+                }
+              }
+            }
+            return events;
+          }
         }
-      } else {
-        topics += this.parseEventParameter(filterParameters);
       }
     }
-    this.getFilterLogs(contractAddress, topics, cb);
+    return null;
   }
 
   parseEventParameter(parameter) {
@@ -112,6 +130,10 @@ class Web3Helper {
 
   toHex(value) {
     return this._web3.toHex(value);
+  }
+
+  toBigNumber(hexValue) {
+    return hexValue ? this._web3.toBigNumber(hexValue) : null;
   }
 
   sendTransaction(gasPrice, gasLimit, from, to, value, data, pk, chainId, cb, nonce) {

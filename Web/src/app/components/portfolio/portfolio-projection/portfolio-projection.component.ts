@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Portfolio } from '../../../model/portfolio/portfolio';
+import { Goal } from '../../../model/account/goal';
 import * as moment from 'moment';
 import Chart from 'chart.js';
 
@@ -11,6 +12,7 @@ import Chart from 'chart.js';
 export class PortfolioProjectionComponent implements OnInit {
 
   @Input() portfolio: Portfolio;
+  @Input() goal?: Goal;
   @ViewChild("baseChart") baseChart: any;
 
   public startDate: Date;
