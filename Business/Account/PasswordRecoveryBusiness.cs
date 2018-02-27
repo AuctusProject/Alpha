@@ -52,8 +52,16 @@ namespace Auctus.Business.Account
         {
             await Email.SendAsync(
                 new string[] { email },
-                "Recover your password from Auctus Alpha",
-                string.Format("To recover your password from Auctus Alpha <a href='{0}/forgot-password-reset?c={1}' target='_blank'>click here</a><br/><br/><small>If you did not ask for a password reset, please ignore this message.</small>", Config.WEB_URL, code));
+                "Reset your password - Auctus Alpha",
+                string.Format(@"Hello,
+<br/><br/>
+You told us you forgot your password. If you really did, <a href='{0}/forgot-password-reset?c={1}' target='_blank'>click here</a> to choose a new one.
+<br/><br/>
+If you didn't mean to reset your password, then you can just ignore this email. Your password will not change.
+<br/><br/>
+Thanks,
+<br/>
+Auctus Team", Config.WEB_URL, code));
         }
     }
 }
