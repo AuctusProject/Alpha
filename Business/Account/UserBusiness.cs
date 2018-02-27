@@ -187,8 +187,16 @@ namespace Auctus.Business.Account
         {
             await Email.SendAsync(
                 new string[] { email },
-                "Verify your email on Auctus Alpha",
-                string.Format("Thank you for support to Auctus Alpha. <br/><br/>To verify your account <a href='{0}/confirm?c={1}' target='_blank'>click here</a><br/><br/><small>If you do not recognize this email, just ignore the message.</small>", Config.WEB_URL, code));
+                "Verify your email address - Auctus Alpha",
+                string.Format(@"Hello,
+<br/><br/>
+To activate your account please verify your email address and complete your registration <a href='{0}/confirm?c={1}' target='_blank'>click here</a>.
+<br/><br/>
+If you didn’t ask to verify this address, you can ignore this email.
+<br/><br/>
+Thanks,
+<br/>
+Auctus Team", Config.WEB_URL, code));
         }
 
         private User SetBaseUserCreation(string username, string email, string password)
