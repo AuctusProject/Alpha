@@ -33,6 +33,7 @@
   
   .landing-logo {
       height: 40px;
+      cursor:pointer;
   }
 
   .menu-button{

@@ -7,6 +7,7 @@ import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest'
 import { PortfolioUpdateRequest } from '../../../../model/portfolio/portfolioUpdateRequest'
 import { DistributionRequest } from '../../../../model/portfolio/distributionRequest'
 import { PortfolioService } from '../../../../services/portfolio.service'
+import { LoginService } from '../../../../services/login.service'
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -26,7 +27,7 @@ export class PortfolioRegisterComponent implements OnInit {
   totalPercentageForm: FormControl = new FormControl("", [Validators.required, Validators.min(100), Validators.max(100)]);
   savePromise: Subscription;
 
-  constructor(private ref: ChangeDetectorRef, private portfolioService: PortfolioService) { }
+  constructor(private ref: ChangeDetectorRef, private portfolioService: PortfolioService, private loginService: LoginService) { }
 
   ngOnInit() {
     if (this.model == null) {
@@ -120,6 +121,7 @@ export class PortfolioRegisterComponent implements OnInit {
     }
 
     if (this.model.id == null) {
+      this.model.advisorId = this.loginService.getLoginData().humanAdvisorId;
       this.savePromise = this.portfolioService.createPortfolio(this.model)
         .subscribe(model => {
           this.model.id = model.id;
