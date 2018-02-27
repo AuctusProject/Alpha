@@ -44,7 +44,7 @@
     <div fxFlex="45">
       <mat-form-field floatLabel="never" style="width:100%" class="end-date">
         <input matInput [min]="simulator.startDate" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="simulator.endDate"
-          (ngModelChange)="updateSimulator()">
+          (ngModelChange)="onEndDateChange()">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
