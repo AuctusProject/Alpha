@@ -28,7 +28,7 @@ class Escrow {
     sendEscrowResultTransaction(cb) {
         var valueHex = web3Helper.toHex(web3Helper.toWei(this.value));
         var data = web3Helper.getContractMethodData(config.get('PURCHASE_ESCROW_ABI'), config.get('PURCHASE_ESCROW_CONTRACT_ADDRESS'), 'escrowResult', [this.from, this.to, valueHex]);
-        web3Helper.sendTransaction(config.get('GAS_PRICE'), 200000, config.get('OWNER_ADDRESS'), config.get('PURCHASE_ESCROW_CONTRACT_ADDRESS'), 0, data, config.get('PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
+        web3Helper.sendTransaction(config.get('GAS_PRICE'), 200000, config.get('ESCROW_OWNER_ADDRESS'), config.get('PURCHASE_ESCROW_CONTRACT_ADDRESS'), 0, data, config.get('ESCROW_OWNER_PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
     }
 }
 
