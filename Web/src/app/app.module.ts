@@ -88,6 +88,7 @@ import { PortfolioAllocationComponent } from './components/portfolio/portfolio-a
 import { PortfolioPurchaseComponent } from './components/portfolio/portfolio-purchase/portfolio-purchase.component';
 import { PortfolioPurchasePopupComponent } from './components/portfolio/portfolio-purchase-popup/portfolio-purchase-popup.component';
 import { PercentageLabelComponent } from './components/ui/percentage-label/percentage-label.component';
+import { PortfolioProjectionChartComponent } from './components/dashboard/portfolio-projection-chart/portfolio-projection-chart.component';
 
 @NgModule({
   declarations: [
@@ -147,7 +148,8 @@ import { PercentageLabelComponent } from './components/ui/percentage-label/perce
     PortfolioAllocationComponent,
     PortfolioPurchaseComponent,
     PortfolioPurchasePopupComponent,
-    PercentageLabelComponent
+    PercentageLabelComponent,
+    PortfolioProjectionChartComponent
   ],
   imports: [
     BrowserAnimationsModule,
