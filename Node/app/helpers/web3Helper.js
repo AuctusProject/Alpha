@@ -79,7 +79,7 @@ class Web3Helper {
                 if (parameters[j] == "address") {
                   events.push('0x' + argument.substr(24));
                 } else {
-                  events.push(this._web3.toBigNumber('0x' + argument));
+                  events.push(this._web3.toBigNumber('0x' + argument).toString(10));
                 }
               }
             }

@@ -16,12 +16,12 @@ class TransactionObject {
             function (err, result) {
                 if (err) cb(err);
                 else {
-                    
+                    var st = web3Helper.toBigNumber(result.status);
                     cb(null, new TransactionObject(result.transactionHash || result.hash,
                         result.blockNumber,
                         result.blockHash,
                         result.contractAddress,
-                        web3Helper.toBigNumber(result.status),
+                        (st ? parseInt(st) : null),
                         result.eventData));
                 }
             }
