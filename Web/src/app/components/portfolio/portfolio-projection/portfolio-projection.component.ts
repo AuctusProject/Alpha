@@ -225,8 +225,7 @@ export class PortfolioProjectionComponent implements OnInit {
       let extensionChartPoint = this.getExtensionChartPoint();
       chartData.push(this.getStartingAmount());
 
-      let totalMonthPercent = monthPercent * Math.round(estimatedDays / 30);
-      let dailyPercent = this.calculateDailyPercent(totalMonthPercent, estimatedDays);
+      let dailyPercent = this.calculateDailyPercent(monthPercent, 30);
 
       let beforeValues = [];
       beforeValues.push(this.getStartingAmount());
