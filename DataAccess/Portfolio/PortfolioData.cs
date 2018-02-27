@@ -151,6 +151,13 @@ namespace Auctus.DataAccess.Portfolio
                             }, "Id,Id,Id,Id", parameters).SingleOrDefault();
         }
 
+        public DomainObjects.Portfolio.Portfolio GetSimple(int portfolioId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Id", portfolioId, DbType.Int32);
+            return SelectByParameters<DomainObjects.Portfolio.Portfolio>(parameters).SingleOrDefault();
+        }
+
         public IEnumerable<DomainObjects.Portfolio.Portfolio> ListAll()
         {
             var cache = new Dictionary<int, DomainObjects.Portfolio.Portfolio>();

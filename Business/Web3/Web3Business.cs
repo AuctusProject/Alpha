@@ -7,14 +7,18 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Web;
 
 namespace Auctus.Business.Web3
 {
     public class Web3Business
     {
-        public static Transaction CheckTransaction(string transactionHash)
+        public static Transaction CheckTransaction(string transactionHash, string eventCompleteName = null)
         {
-            return Get<Transaction>($"api/v1/transaction/{transactionHash}", 429, 404);
+            var route = $"api/v1/transaction/{transactionHash}";
+            if (!string.IsNullOrEmpty(eventCompleteName))
+                route += $"?eventCompleteName={HttpUtility.UrlEncode(eventCompleteName)}";
+            return Get<Transaction>(route, 429, 404);
         }
 
         public static Transaction FaucetTransaction(string address)
@@ -22,7 +26,7 @@ namespace Auctus.Business.Web3
             return Post<Transaction>("api/v1/faucet", new { address }, 429);
         }
 
-        public static Transaction MakeEscrowResultTransaction(string from, string to, double value)
+        public static Transaction MakeEscrowResultTransaction(string from, string to, decimal value)
         {
             return Post<Transaction>("api/v1/escrowresult", new { from , to, value }, 429);
         }
@@ -67,6 +71,7 @@ namespace Auctus.Business.Web3
             client.BaseAddress = new Uri(Config.WEB3_URL);
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            client.DefaultRequestHeaders.Add("x-api-key", Config.WEB3_API_KEY);
             return client;
         }
     }

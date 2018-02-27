@@ -9,7 +9,7 @@ namespace Auctus.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public bool Purchased { get; set; }
         public bool Owned { get; set; }
         public bool Enabled { get; set; }
@@ -35,15 +35,15 @@ namespace Auctus.Model
 
         public class Owner
         {
-            public double AucEscrow { get; set; }
-            public double AucReached { get; set; }
-            public double AucLost { get; set; }
+            public decimal AucEscrow { get; set; }
+            public decimal AucReached { get; set; }
+            public decimal AucLost { get; set; }
         }
 
         public class Purchase
         {
-            public double Price { get; set; }
-            public double AucEscrow { get; set; }
+            public decimal Price { get; set; }
+            public decimal AucEscrow { get; set; }
             public int Risk { get; set; }
             public DateTime CreationDate { get; set; }
             public DateTime? ExpirationDate { get; set; }

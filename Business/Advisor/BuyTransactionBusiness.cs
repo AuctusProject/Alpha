@@ -55,6 +55,24 @@ namespace Auctus.Business.Advisor
                 throw new ArgumentException("Invalid transaction status.");
         }
 
+        public List<Model.Portfolio.Distribution> CheckTransactionHash(string email, int buyId, string transactionHash)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var buy = BuyBusiness.Get(buyId);
+            if (buy == null || buy.UserId != user.Id || buy.ExpirationDate.HasValue || buy.LastTransaction == null 
+                || buy.LastTransaction.TransactionStatus != TransactionStatus.Pending)
+                throw new ArgumentException("Invalid purchase.");
+
+            var status = CheckAndProcessTransaction(buy.LastTransaction, buy.Id);
+            if (status == TransactionStatus.Success)
+            {
+                var portfolio = PortfolioBusiness.GetSimple(buy.PortfolioId);
+                return DistributionBusiness.ListByProjection(portfolio.ProjectionId.Value);
+            }
+            else
+                return null;
+        }
+
         public void Cancel(string email, int buyId)
         {
             var user = UserBusiness.GetValidUser(email);
@@ -115,6 +133,55 @@ namespace Auctus.Business.Advisor
             transaction.Insert(buyTrans);
         }
 
+        private TransactionStatus CheckAndProcessTransaction(Transaction buyTransaction, int buyId)
+        {
+            TransactionStatus status = TransactionStatus.Pending;
+            try
+            {
+                var transaction = Web3.Web3Business.CheckTransaction(buyTransaction.TransactionHash, "Escrow(address,uint256)");
+                if (transaction.BlockNumber.HasValue)
+                {
+                    if (transaction.Status.Value == 1)
+                    {
+                        if (transaction.EventData != null && transaction.EventData.Length == 2)
+                        {
+                            var purchase = BuyBusiness.GetSimple(buyId);
+                            var escrowedValue = Util.Util.ConvertBigNumber(transaction.EventData[1], 18);
+                            if (purchase.Price != escrowedValue)
+                                status = TransactionStatus.Fraud;
+                            else
+                            {
+                                using (var trans = new TransactionalDapperCommand())
+                                {
+                                    purchase.ExpirationDate = DateTime.UtcNow.Date.AddDays(purchase.Days);
+                                    trans.Update(purchase);
+                                    buyTransaction.TransactionStatus = TransactionStatus.Success;
+                                    buyTransaction.ProcessedDate = DateTime.UtcNow;
+                                    trans.Update(buyTransaction);
+                                    trans.Commit();
+                                }
+                            }
+                        }
+                        else
+                            status = TransactionStatus.Fraud;
+                    }
+                    else
+                        status = TransactionStatus.Error;
+
+                    if (status != TransactionStatus.Success)
+                        TransactionBusiness.Process(buyTransaction, status);
+                }
+            }
+            catch (DomainObjects.Web3.Web3Exception ex)
+            {
+                if (ex.Code == 404 && TransactionBusiness.TransactionCanBeConsideredLost(buyTransaction))
+                    HandleLostTransaction(buyTransaction, buyTransaction.UserId, buyId, null);
+                else
+                    throw;
+            }
+            return status;
+        }
+
         public void CheckTransactions()
         {
             var pendingTransactions = Data.ListPendingTransactions();
@@ -122,16 +189,7 @@ namespace Auctus.Business.Advisor
             {
                 try
                 {
-                    var transaction = Web3.Web3Business.CheckTransaction(pending.Transaction.TransactionHash);
-                    if (transaction.BlockNumber.HasValue)
-                        TransactionBusiness.Process(pending.Transaction, transaction.Status.Value == 1 ? TransactionStatus.Success : TransactionStatus.Error);
-                }
-                catch (DomainObjects.Web3.Web3Exception ex)
-                {
-                    if (ex.Code == 404 && TransactionBusiness.TransactionCanBeConsideredLost(pending.Transaction))
-                        HandleLostTransaction(pending.Transaction, pending.Transaction.UserId, pending.BuyId, null);
-                    else
-                        throw;
+                    CheckAndProcessTransaction(pending.Transaction, pending.BuyId);
                 }
                 catch (Exception ex)
                 {

@@ -8,7 +8,7 @@ namespace Api.Model.Portfolio
     public class PortfolioRequest : ProjectionRequest
     {
         public int AdvisorId { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

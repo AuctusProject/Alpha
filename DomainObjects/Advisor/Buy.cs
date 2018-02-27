@@ -17,7 +17,7 @@ namespace Auctus.DomainObjects.Advisor
         [DapperType(System.Data.DbType.Int32)]
         public int Days { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime? ExpirationDate { get; set; }
         [DapperType(System.Data.DbType.Int32)]

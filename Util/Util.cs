@@ -35,5 +35,17 @@ namespace Auctus.Util
         {
             return Math.Pow((monthlyRate / 100.0) + 1.0, 1.0 / 30.0) - 1.0;
         }
+
+        public static decimal ConvertBigNumber(string bigNumber, int decimals)
+        {
+            if (bigNumber.Length <= decimals)
+                return decimal.Parse($"0.{bigNumber.PadLeft(decimals, '0')}");
+            else
+            {
+                var integerPart = bigNumber.Substring(0, bigNumber.Length - decimals);
+                var decimalPart = bigNumber.Substring(bigNumber.Length - decimals, decimals);
+                return decimal.Parse($"{integerPart}.{decimalPart}");
+            }
+        }
     }
 }

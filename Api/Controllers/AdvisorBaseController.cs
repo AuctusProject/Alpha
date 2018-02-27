@@ -102,6 +102,22 @@ namespace Api.Controllers
             return Ok();
         }
 
+        protected virtual IActionResult CheckBuyTransaction(int buyId, string transactionHash)
+        {
+            if (string.IsNullOrWhiteSpace(transactionHash))
+                return BadRequest();
+
+            try
+            {
+                var distribution = AdvisorServices.CheckBuyTransaction(GetUser(), buyId, transactionHash);
+                return Ok(distribution);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         protected virtual IActionResult CancelBuyTransaction(int buyId)
         {
             if (buyId == 0)

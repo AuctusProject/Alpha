@@ -19,18 +19,18 @@ namespace Auctus.Service
             PortfolioBusiness.UpdateAllPortfoliosHistory();
         }
 
-        public Portfolio CreatePortfolio(string email, int advisorId, double price, string name, string description, double projection, 
+        public Portfolio CreatePortfolio(string email, int advisorId, decimal price, string name, string description, double projection, 
             double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)
         {
             return PortfolioBusiness.Create(email, advisorId, price, name, description, projection, optimisticProjection, pessimisticProjection, distribution);
         }
 
-        public Portfolio UpdatePortfolio(string email, int portfolioId, double price, string name, string description)
+        public Portfolio UpdatePortfolio(string email, int portfolioId, decimal price, string name, string description)
         {
             return PortfolioBusiness.Update(email, portfolioId, price, name, description);
         }
 
-        public Portfolio UpdatePortfolioAndDistribution(string email, int portfolioId, double price, string name, string description, Dictionary<int, double> distribution)
+        public Portfolio UpdatePortfolioAndDistribution(string email, int portfolioId, decimal price, string name, string description, Dictionary<int, double> distribution)
         {
             return PortfolioBusiness.UpdateWithDistribution(email, portfolioId, price, name, description, distribution);
         }

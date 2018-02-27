@@ -11,5 +11,6 @@ namespace Auctus.DomainObjects.Web3
         public string BlockHash { get; set; }
         public string ContractAddress { get; set; }
         public int? Status { get; set; }
+        public string[] EventData { get; set; }
     }
 }

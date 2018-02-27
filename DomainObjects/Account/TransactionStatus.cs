@@ -10,6 +10,7 @@ namespace Auctus.DomainObjects.Account
         Success = 1,
         Error = 2,
         Cancel = 3,
-        Lost = 4
+        Lost = 4,
+        Fraud = 5
     }
 }

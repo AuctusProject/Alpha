@@ -16,9 +16,9 @@ namespace Auctus.DomainObjects.Advisor
         [DapperType(System.Data.DbType.Int32)]
         public int BuyId { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public double BuyerTokenResult { get; set; }
+        public decimal BuyerTokenResult { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public double OwnerTokenResult { get; set; }
+        public decimal OwnerTokenResult { get; set; }
 
         public Transaction LastTransaction { get; set; }
     }

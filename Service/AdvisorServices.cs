@@ -44,6 +44,11 @@ namespace Auctus.Service
             BuyTransactionBusiness.SetTransactionHash(email, buyId, transactionHash);
         }
 
+        public List<Model.Portfolio.Distribution> CheckBuyTransaction(string email, int buyId, string transactionHash)
+        {
+            return BuyTransactionBusiness.CheckTransactionHash(email, buyId, transactionHash);
+        }
+
         public void CancelBuyTransaction(string email, int buyId)
         {
             BuyTransactionBusiness.Cancel(email, buyId);

@@ -19,7 +19,7 @@ namespace Auctus.Business.Portfolio
     {
         public PortfolioBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public DomainObjects.Portfolio.Portfolio Create(string email, int advisorId, double price, string name, string description, 
+        public DomainObjects.Portfolio.Portfolio Create(string email, int advisorId, decimal price, string name, string description, 
             double projectionValue, double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)
         {
             var advisor = AdvisorBusiness.GetWithOwner(advisorId, email);
@@ -58,7 +58,7 @@ namespace Auctus.Business.Portfolio
             return portfolio;
         }
 
-        public DomainObjects.Portfolio.Portfolio Update(string email, int portfolioId, double price, string name, string description)
+        public DomainObjects.Portfolio.Portfolio Update(string email, int portfolioId, decimal price, string name, string description)
         {
             var user = UserBusiness.GetValidUser(email);
             var portfolio = GetValidByOwner(user.Id, portfolioId);
@@ -69,7 +69,7 @@ namespace Auctus.Business.Portfolio
             return portfolio;
         }
 
-        public DomainObjects.Portfolio.Portfolio UpdateWithDistribution(string email, int portfolioId, double price, string name, 
+        public DomainObjects.Portfolio.Portfolio UpdateWithDistribution(string email, int portfolioId, decimal price, string name, 
             string description, Dictionary<int, double> distribution)
         {
             var user = UserBusiness.GetValidUser(email);
@@ -169,6 +169,11 @@ namespace Auctus.Business.Portfolio
             }
             else
                 return RiskType.VeryHigh;
+        }
+
+        public DomainObjects.Portfolio.Portfolio GetSimple(int portfolioId)
+        {
+            return Data.GetSimple(portfolioId);
         }
 
         public DomainObjects.Portfolio.Portfolio GetWithDetails(int portfolioId)
@@ -280,7 +285,7 @@ namespace Auctus.Business.Portfolio
 
             Task<List<Distribution>> distribution = null;
             Task<List<EscrowResult>> escrowResult = null;
-            Task<double?> purchaseAmount = null;
+            Task<decimal?> purchaseAmount = null;
             if (purchased && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success)
             {
                 distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));

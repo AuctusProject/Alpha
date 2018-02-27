@@ -78,7 +78,12 @@ namespace Auctus.Business.Portfolio
             if (!purchased && !owned)
                 throw new ArgumentException("Invalid portfolio distribution.");
 
-            return List(new int[] { portfolio.Result.ProjectionId.Value }).Select(c => new Model.Portfolio.Distribution()
+            return ListByProjection(portfolio.Result.ProjectionId.Value);
+        }
+
+        public List<Model.Portfolio.Distribution> ListByProjection(int projectionId)
+        {
+            return List(new int[] { projectionId }).Select(c => new Model.Portfolio.Distribution()
             {
                 Id = c.AssetId,
                 Code = c.Asset.Code,

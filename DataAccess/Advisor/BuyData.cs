@@ -65,7 +65,8 @@ namespace Auctus.DataAccess.Advisor
                                                         INNER JOIN PortfolioDetail d ON d.Id = b.PortfolioDetailId 
                                                         LEFT JOIN Goal g ON g.Id = b.GoalId 
                                                         WHERE b.UserId = @UserId AND b.PortfolioId = @PortfolioId AND
-                                                        t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2
+                                                        b.CreationDate = (SELECT max(b2.CreationDate) FROM Buy b2 WHERE b2.UserId = b.UserId AND b2.PortfolioId = b.PortfolioId)
+                                                        AND t.CreationDate = (SELECT max(t2.CreationDate) FROM BuyTransaction bt2
                                                                             INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
                                                                             WHERE bt2.BuyId = b.Id)";
 
@@ -135,11 +136,18 @@ namespace Auctus.DataAccess.Advisor
             return SelectByParameters<Buy>(parameters).ToList();
         }
 
-        public double? ListPortfolioPurchaseAmount(int portfolioId)
+        public Buy GetSimple(int id)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Id", id, DbType.Int32);
+            return SelectByParameters<Buy>(parameters).SingleOrDefault();
+        }
+
+        public decimal? ListPortfolioPurchaseAmount(int portfolioId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("PortfolioId", portfolioId, DbType.Int32);
-            return Query<double?>(SELECT_PORTFOLIO_PURCHASE_AMOUNT, parameters).SingleOrDefault();
+            return Query<decimal?>(SELECT_PORTFOLIO_PURCHASE_AMOUNT, parameters).SingleOrDefault();
         }
 
         public Dictionary<int, int> ListPortfoliosPurchases(IEnumerable<int> portfolioIds)
