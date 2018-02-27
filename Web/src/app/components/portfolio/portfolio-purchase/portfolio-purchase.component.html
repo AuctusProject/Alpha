@@ -33,15 +33,15 @@
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="space-between center" class="date-box">
-    <div fxFlex="45" class="text-left">
+    <div fxFlex="95px" class="text-left">
       <div class="start-date">
         {{simulator.startDate | date:'M/dd/yyyy'}}
       </div>
     </div>
-    <div fxFlex="10" class="text-center">
+    <div fxFlex="25px" class="text-center">
       <i-arrow-right class="icon"></i-arrow-right>
     </div>
-    <div fxFlex="45">
+    <div fxFlex="120px">
       <mat-form-field floatLabel="never" style="height: 48px; width:100%" class="end-date">
         <input matInput [min]="simulator.startDate" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="simulator.endDate"
           (ngModelChange)="onEndDateChange()">
