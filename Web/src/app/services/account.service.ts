@@ -5,6 +5,7 @@ import { GoalOption } from "../model/account/goalOption";
 import { FullRegister } from "../model/account/fullRegister";
 import { Goal } from '../model/account/goal';
 import { SimpleRegister } from '../model/account/simpleRegister';
+import { LoginResult } from '../model/account/loginResult';
 
 @Injectable()
 export class AccountService {
@@ -35,7 +36,7 @@ export class AccountService {
     return this.httpService.post(this.fullRegisterUrl, fullRegisterDTO);
   }
 
-  simpleRegister(simpleRegisterDTO: SimpleRegister): Observable<SimpleRegister> {
+  simpleRegister(simpleRegisterDTO: SimpleRegister): Observable<LoginResult> {
     return this.httpService.post(this.simpleRegisterUrl, simpleRegisterDTO);
   }
 

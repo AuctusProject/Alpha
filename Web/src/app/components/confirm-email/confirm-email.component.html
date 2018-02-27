@@ -1,0 +1,9 @@
+<header></header>
+<div class="main-content" fxLayoutAlign="space-evenly center">
+  <label *ngIf="!loading && success">Your e-mail is confirmed. You will be redirected.</label>
+  <label *ngIf="!loading && !success">Sorry, an error ocurred.</label>
+  <div *ngIf="loading" fxLayout="column" fxLayoutAlign="space-evenly center" fxLayoutGap="20px">
+    <label>Your e-mail is being confirmed.</label>
+    <mat-spinner [mode]="indeterminate" [diameter]="80" [color]="primary"></mat-spinner>
+  </div>
+</div>

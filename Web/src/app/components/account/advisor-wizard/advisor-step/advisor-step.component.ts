@@ -2,6 +2,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Advisor } from '../../../../model/advisor/advisor'
 import { AdvisorService } from '../../../../services/advisor.service'
+import { LoginService } from '../../../../services/login.service'
 import { AdvisorWizardStep } from './../advisor-wizard-step.enum';
 
 
@@ -18,7 +19,7 @@ export class AdvisorStepComponent implements OnInit {
   @Output() onBackStep = new EventEmitter<Advisor>();
   @Output() onNextStep = new EventEmitter<Advisor>();
 
-  constructor(private advisorService : AdvisorService) { }
+  constructor(private advisorService : AdvisorService, private loginService : LoginService) { }
 
   ngOnInit() {
   }
@@ -42,6 +43,9 @@ export class AdvisorStepComponent implements OnInit {
   }
 
   afterSave(advisor) {
+    let loginData = this.loginService.getLoginData();
+    loginData.humanAdvisorId = advisor.id;
+    this.loginService.setLoginData(loginData);
     this.advisorModel.id = advisor.id;
     this.next();
   }
