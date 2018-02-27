@@ -48,10 +48,10 @@ namespace Api
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    
-                    ValidateAudience = true,
+
+                    ValidateAudience = false,
                     ValidAudience = Config.WEB_URL,
-                    ValidateIssuer = true,
+                    ValidateIssuer = false,
                     ValidIssuer = Config.API_URL,
                     ValidateIssuerSigningKey = true,
                     //IssuerSigningKey = new X509SecurityKey(new X509Certificate2(Path.Combine(env.ContentRootPath, "auctus.pfx"), "")),
@@ -59,11 +59,11 @@ namespace Api
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero,
                     RequireExpirationTime = true,
-                    
+
                 };
                 options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                //options.RequireHttpsMetadata = true;
+                //options.RequireHttpsMetadata = false;
+                options.RequireHttpsMetadata = true;
             });
 
             services.AddAuthorization(auth =>
@@ -72,25 +72,25 @@ namespace Api
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
                     .RequireAuthenticatedUser().Build());
             });
-            
+
             services.AddCors(options =>
             {
-                options.AddPolicy("Default", builder => 
-                    builder.WithOrigins(Config.WEB_URL, "http://auctusalphaweb.azurewebsites.net")
+                options.AddPolicy("Default", builder =>
+                    builder.WithOrigins(Config.WEB_URL, "http://auctusalphaweb.azurewebsites.net", "http://localhost:4200")
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials());
-                options.AddPolicy("AllowAll", builder => 
+                options.AddPolicy("AllowAll", builder =>
                     builder.AllowAnyOrigin()
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials());
             });
-            
+
             services.AddMvc();
             services.AddSingleton<Cache>();
             services.AddNodeServices();
-            
+
         }
 
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory, IHostingEnvironment env)
@@ -106,7 +106,7 @@ namespace Api
             app.UseAuthentication();
             app.UseCors("Default");
             app.UseMvcWithDefaultRoute();
-            
+
         }
     }
 }

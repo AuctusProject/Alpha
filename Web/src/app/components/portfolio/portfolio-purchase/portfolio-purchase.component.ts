@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../../environments/environment';
 import { Goal } from '../../../model/account/goal';
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'portfolio-purchase',
@@ -22,6 +23,7 @@ export class PortfolioPurchaseComponent implements OnInit {
   @Input() startDate: Date;
   @Input() endDate: Date;
   @Output() afterEndDateChange = new EventEmitter();
+  loginData: any;
 
   public simulator = {
     price: null,
@@ -38,7 +40,7 @@ export class PortfolioPurchaseComponent implements OnInit {
   public purchasePromise: Subscription;
   public timeDescription: string;
 
-  constructor(private metamaskAccount: MetamaskAccountService, private advisorService: AdvisorService) { }
+  constructor(private metamaskAccount: MetamaskAccountService, private advisorService: AdvisorService, private loginService: LoginService) { }
 
   ngOnInit() {
     this.simulator.price = this.portfolio.price;
@@ -47,6 +49,11 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.simulator.endDate = this.endDate;
 
     this.updateSimulator();
+
+    let logged = this.loginService.isLoggedIn();
+    if (logged) {
+      this.loginData = this.loginService.getLoginData();
+    }
   }
 
   public updateSimulator() {

@@ -619,3 +619,9 @@ input[type=number]::-webkit-outer-spin-button {
 .mat-table {
   background: unset !important;
 }
+
+
+.body-loading {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
