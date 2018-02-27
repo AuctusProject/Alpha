@@ -54,8 +54,14 @@ class Web3Helper {
   parseTransactionLog(eventCompleteName, result) {
     if (eventCompleteName && result.logs && result.logs.length > 0) {
       var topic = this._web3.sha3(eventCompleteName);
-      var parameters = eventCompleteName.split("(")[1].split(")")[0].split(",");
-      if (parameters[0]) {
+      
+      var parameters = eventCompleteName.split("(")[1];
+      if (parameters)
+        parameters = parameters.split(")")[0];
+      if (parameters)
+        parameters = parameters.split(",");
+        
+      if (parameters && parameters.length > 0 && parameters[0]) {
         for(var i = 0; i < result.logs.length; ++i) {
           if (result.logs[i].topics[0] == topic) {
             var remainingTopicsArguments = result.logs[i].topics.length - 1;
