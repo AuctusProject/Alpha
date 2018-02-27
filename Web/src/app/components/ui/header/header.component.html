@@ -32,7 +32,7 @@
             <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
                 <a href="https://auctus.org" target="_blank">WHAT IS AUCTUS?</a>
                 <a href="mailto:contact@auctus.org">CONTACT US</a>
-                <a routerLink="/login" routerLinkActive="active">LOGIN</a>
+                <a *ngIf="!hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
             </div>
         </div>
     </mat-toolbar-row>
