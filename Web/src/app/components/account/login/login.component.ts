@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Web3Service } from '../../../services/web3.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
+import { EventsService } from "angular-event-service";
 
 @Component({
   selector: 'app-login',
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
   loginPromise: Subscription;
 
   constructor(
+    private eventsService: EventsService,
     private formBuilder: FormBuilder,
     private loginService: LoginService, 
     private notificationService: NotificationsService, 
@@ -33,19 +35,25 @@ export class LoginComponent implements OnInit {
       this.loginForm = this.formBuilder.group({
         emailOrUsername: ['', Validators.compose([Validators.required])],
         password: ['', Validators.compose([Validators.required])],
+        address: ['']
       });
     }
 
   ngOnInit() {
     this.pendingConfirmation = false;
-  } 
+    this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    
+  }
+
+  private onLoginConditionsSuccess: Function = (payload: any) => {
+    this.web3Service.getAccount().subscribe(address => {
+      this.login.address = address;
+    });
+  }
 
   public onLoginClick() {
     if(this.loginForm.valid){
-      this.loginPromise = this.web3Service.getAccount().subscribe(address => {
-        this.login.address = address;
-        this.doLogin();
-      });    
+      this.doLogin();
     }
   }
 

@@ -15,7 +15,7 @@ export class UserProfileAuthGuard implements CanActivate {
       let loginData = this.loginService.getLoginData();
       if (loginData) {
         if (loginData.hasInvestment) {
-          this.router.navigateByUrl('my-investments');
+          this.router.navigateByUrl('investments');
         } else if (loginData.humanAdvisorId) {
           this.router.navigateByUrl('advisor/' + loginData.humanAdvisorId);
         } else {

@@ -18,7 +18,12 @@
           <div class="blue-box">
             <div fxLayout="row">
               <mat-form-field fxFlex="100">
-                <input placeholder="Username" matInput [inputFocus]="true" pattern="[a-zA-Z-_.]*" formControlName="username" [(ngModel)]="simpleRegister.username"
+                <input matInput placeholder="Wallet Address" formControlName="address" [(ngModel)]="simpleRegister.address" type="text" [readonly]=true/>
+              </mat-form-field>
+            </div>
+            <div fxLayout="row">
+              <mat-form-field fxFlex="100">
+                <input placeholder="Username" matInput [inputFocus]="true" pattern="[0-9a-zA-Z-_.]*" formControlName="username" [(ngModel)]="simpleRegister.username"
                   required>
                 <mat-error *ngIf="simpleRegisterForm.controls.username.invalid">
                   {{getErrorMessage(simpleRegisterForm.controls.username)}}
