@@ -19,7 +19,7 @@
             <div fxLayout="row">
               <mat-form-field fxFlex="100">
                 <input placeholder="Username" matInput [inputFocus]="true" pattern="[a-zA-Z-_.]*" formControlName="username" [(ngModel)]="simpleRegister.username"
-                  usernameRegistration required>
+                  required>
                 <mat-error *ngIf="simpleRegisterForm.controls.username.invalid">
                   {{getErrorMessage(simpleRegisterForm.controls.username)}}
                 </mat-error>
@@ -27,7 +27,7 @@
             </div>
             <div fxLayout="row">
               <mat-form-field fxFlex="100">
-                <input placeholder="Email" matInput formControlName="email" [(ngModel)]="simpleRegister.email" emailRegistration required>
+                <input placeholder="Email" matInput formControlName="email" [(ngModel)]="simpleRegister.email" required>
                 <mat-error *ngIf="simpleRegisterForm.controls.email.invalid">
                   {{getErrorMessage(simpleRegisterForm.controls.email)}}
                 </mat-error>

@@ -39,6 +39,6 @@
   </div>
   <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
     <div class="price-box">{{portfolio.price}} AUC</div>
-    <div class="action-button" routerLink="/portfolio/{{portfolio.id}}">SEE DETAILS</div>
+    <div class="action-button" (click)="onDetailsClick()">SEE DETAILS</div>
   </div>
 </div>

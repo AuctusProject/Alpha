@@ -80,9 +80,11 @@ namespace Auctus.Business.Portfolio
 
             return List(new int[] { portfolio.Result.ProjectionId.Value }).Select(c => new Model.Portfolio.Distribution()
             {
+                Id = c.AssetId,
                 Code = c.Asset.Code,
                 Name = c.Asset.Name,
-                Percentage = c.Percent
+                Percentage = c.Percent,
+                Type = (int)c.Asset.Type
             }).OrderByDescending(c => c.Percentage).ToList();
         }
     }

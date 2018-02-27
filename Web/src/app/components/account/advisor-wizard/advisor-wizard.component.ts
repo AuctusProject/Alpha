@@ -1,6 +1,7 @@
 import { AdvisorWizardStep } from './advisor-wizard-step.enum';
 import { Advisor } from './../../../model/advisor/advisor';
 import { PortfolioRequest } from './../../../model/portfolio/portfolioRequest';
+import { LoginService } from './../../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -19,9 +20,10 @@ export class AdvisorWizardComponent implements OnInit {
   public portfolioList: Array<PortfolioRequest>;
   public wizardSteps = AdvisorWizardStep;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private loginService:LoginService) {
     this.portfolioList = new Array<PortfolioRequest>();
     this.advisorModel = new Advisor();
+    this.editedAdvisorModel = new Advisor();
   }
 
   ngOnInit() {
@@ -78,6 +80,6 @@ export class AdvisorWizardComponent implements OnInit {
   }
 
   public onMyPortfoliosClick() {
-    this.router.navigateByUrl('dashboard');
+    this.router.navigateByUrl('advisor/'+this.loginService.getLoginData().humanAdvisorId);
   }
 }

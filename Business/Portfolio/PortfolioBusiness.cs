@@ -312,7 +312,8 @@ namespace Auctus.Business.Portfolio
                 Id = c.AssetId,
                 Code = c.Asset.Code,
                 Name = c.Asset.Name,
-                Percentage = c.Percent
+                Percentage = c.Percent,
+                Type = (int)c.Asset.Type
             }).OrderByDescending(c => c.Percentage).ToList();
 
             if (purchased)

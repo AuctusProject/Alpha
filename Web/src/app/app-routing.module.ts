@@ -33,7 +33,6 @@ const routes: Routes = [
     { path: 'try', component: WizardComponent },
     { path: 'confirm', component: ConfirmEmailComponent },
     { path: 'advisor/:id', component: AdvisorDetailsComponent, canActivate: [CanActivateViaAuthGuard] },
-    { path: 'dashboard', component: DashboardComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'manage-api', component: ManageApiComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'become-advisor', component: AdvisorWizardComponent },
