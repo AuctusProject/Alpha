@@ -8,10 +8,16 @@
   }
 
 .buy-box-content {
-    padding-left: 30px;
-    padding-right: 30px;
-    padding-bottom: 20px;
-    padding-top: 20px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 24px;
+    padding-top: 24px;
+}
+
+.date-and-month{
+  margin-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .advice-price {
@@ -77,13 +83,12 @@ hr {
 }
 
 .date-box {
-  width: 100%;
-    border-bottom:1px solid #e9eff4;
-    border-top:1px solid #e9eff4;
     background-color: transparent;
-    padding: 7px;
-    padding-left: 25px;
-    padding-right: 25px;
+    border: 1px solid #e9eff4;
+    background-color: transparent;
+    padding: 0px 16px;
+    margin-left: 16px;
+    margin-right: 16px;
     margin-top: 5px;
 }
 
@@ -101,12 +106,19 @@ hr {
   color: #4a4a4a;
 }
 
+/deep/ .end-date .mat-input-infix{
+  border-top: unset;
+  margin-top: 5px;
+}
+
 .estimated-total-return {
   font-family: 'HelveticaNeue';
   font-size: 12px;
-  
   color: #4a4a4a;
-  margin-top: 20px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .desc-calc-price{
@@ -114,6 +126,10 @@ hr {
   font-size: 12px;
   font-weight: 300;
   color: #55606e;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .mat-form-field.mat-form-field {
@@ -126,11 +142,15 @@ hr {
   font-weight: bold;
   text-align: right;
   color: #4a4a4a;
-  margin-top: 15px;
-  margin-bottom: 15px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .small {
   height: 15px;
   width: 15px;
+}
+
+hr{
+  margin: 0px 16px;
 }

@@ -1,10 +1,10 @@
-<div fxLayout="row" fxLayoutAlign="space-around center" class="tab-body">
-  <div fxFlex="40">
+<div fxLayout="row" fxLayoutAlign="space-around center" class="tab-body" fxLayoutGap="40px">
+  <div fxFlex="320px">
     <portfolio-purchase [portfolio]="portfolio" [goal]="goal" [startDate]="startDate" [endDate]="endDate" (onEndDateChange)="onEndDateChange($event)"></portfolio-purchase>
   </div>
-  <div fxFlex="70">
+  <div fxFlex>
     <canvas baseChart #baseChart="base-chart" [chartType]="chartType" [colors]="chartColors" [datasets]="chartData" [labels]="chartLabels" [legend]="chartLegend"
       [options]="chartOptions">
     </canvas>
-</div>
+  </div>
 </div> 
