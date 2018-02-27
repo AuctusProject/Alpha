@@ -248,7 +248,7 @@ namespace Auctus.Business.Portfolio
                 return new List<Model.Portfolio>();
 
             var portfoliosQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(purchases.Select(c => c.PortfolioId)));
-            var portfolios = Task.Factory.StartNew(() => PortfolioBusiness.ListWithDetails(purchases.Select(c => c.PortfolioId)));
+            var portfolios = Task.Factory.StartNew(() => Data.List(purchases.Select(c => c.PortfolioId)));
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (var buy in purchases)
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(buy.PortfolioId)));
@@ -262,11 +262,16 @@ namespace Auctus.Business.Portfolio
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
+        public DomainObjects.Portfolio.Portfolio Get(int id)
+        {
+            return Data.List(new int[] { id }).SingleOrDefault();
+        }
+
         public Model.Portfolio Get(string email, int portfolioId)
         {
             var user = UserBusiness.GetValidUser(email);
             var purchase = Task.Factory.StartNew(() => BuyBusiness.Get(user.Id, portfolioId));
-            var portfolio = Task.Factory.StartNew(() => Data.Get(portfolioId));
+            var portfolio = Task.Factory.StartNew(() => Get(portfolioId));
             Task.WaitAll(portfolio, purchase);
 
             var owned = user.Id == portfolio.Result.Advisor.UserId;

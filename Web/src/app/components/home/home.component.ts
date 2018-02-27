@@ -8,6 +8,7 @@ import { Web3Service } from '../../services/web3.service';
 import { MetamaskAccountService } from '../../services/metamask-account.service';
 import { LoginService } from '../../services/login.service';
 import { Subscription } from 'rxjs/Subscription';
+import { EventsService } from "angular-event-service";
 
 @Component({
   selector: 'app-home',
@@ -21,7 +22,9 @@ export class HomeComponent implements OnInit {
   public simpleRegister: SimpleRegister;
   createPromise: Subscription;
 
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private eventsService: EventsService,
+    private formBuilder: FormBuilder,
     private accountService: AccountService,
     private loginService: LoginService,
     private router: Router,
@@ -34,7 +37,13 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+  }
 
+  private onLoginConditionsSuccess: Function = (payload: any) => {
+    this.web3Service.getAccount().subscribe(address => {
+      this.simpleRegister.address = address;
+    });
   }
 
   private buildForm() {
@@ -42,15 +51,12 @@ export class HomeComponent implements OnInit {
       username: ['', Validators.compose([Validators.required, Validators.minLength(6), Validators.maxLength(30)])],
       email: ['', Validators.compose([Validators.email, Validators.required])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(8), Validators.maxLength(100)])],
+      address: ['']
     });
   }
 
   public onSubmit() {
-    this.createPromise = this.web3Service.getAccount().subscribe(success => {
-      this.simpleRegister.address = success;
-      this.createAccount();
-    });
-
+    this.createAccount();
   }
 
   private createAccount() {
@@ -72,7 +78,7 @@ export class HomeComponent implements OnInit {
     } else if (formField.hasError('maxlength')) {
       return 'Field can be max ' + formField.errors.maxlength.requiredLength + ' characters long.'
     } else if (formField.hasError('pattern')) {
-      return 'Field must be only [a-zA-Z-_.] characters'
+      return 'Field must be only [0-9a-zA-Z-_.] characters'
     } else if (formField.hasError('emailRegistration')) {
       return 'Email already registered.'
     } else if (formField.hasError('usernameRegistration')) {

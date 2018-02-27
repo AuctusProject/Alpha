@@ -6,6 +6,11 @@
       <div fxLayout="column" fxLayoutAlign="space-evenly center">
         <div fxLayout="row" fxLayoutGap="20px">
           <mat-form-field>
+            <input matInput placeholder="Wallet Address" formControlName="address" [(ngModel)]="login.address" type="text" [readonly]=true/>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" fxLayoutGap="20px">
+          <mat-form-field>
             <input matInput placeholder="Email or username" [(ngModel)]="login.emailOrUsername" formControlName="emailOrUsername" type="text"
               autocomplete="username email" />
             <mat-error *ngIf="loginForm.controls.emailOrUsername.invalid">
