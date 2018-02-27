@@ -27,6 +27,7 @@ export class PortfolioProjectionComponent implements OnInit {
 
     let totalDays = this.goal != null ? this.goal.timeframe * 12 * 30 : 30;
     this.endDate = moment().startOf('date').add(totalDays, 'days').toDate();
+
     this.buildChart();
   }
   public chartColors: Array<any> = [
@@ -114,7 +115,7 @@ export class PortfolioProjectionComponent implements OnInit {
     this.buildChartData(this.portfolio.pessimisticPercent, 'Pessimistic');
     this.buildChartData(this.portfolio.projectionPercent, 'Projection');
     this.buildChartData(this.portfolio.optimisticPercent, 'Optimistic');
-    this.buildTargetLine();
+    this.buildTargetLines();
   }
 
   private buildMonthyContributionChart() {
@@ -125,9 +126,10 @@ export class PortfolioProjectionComponent implements OnInit {
       let estimatedDays = this.getEstimatedDays();
 
       var projectionValue = [];
-      projectionValue.push(0);
+      projectionValue.push(this.getStartingAmount());
 
-      chartData.push(0);
+      let lastChartValue = this.getStartingAmount();
+      chartData.push(lastChartValue);
 
       let extensionChartPoint = this.getExtensionChartPoint();
 
@@ -137,8 +139,9 @@ export class PortfolioProjectionComponent implements OnInit {
         let currencyValue = beforeValue + this.goal.monthlyContribution / 30;
         projectionValue.push(currencyValue);
 
-        if (day % this.getFilterConfig() == 0 || day == estimatedDays) {
-          chartData.push(currencyValue);
+        if (day % this.getChartDaysInterval() == 0 || day == estimatedDays) {
+          lastChartValue = day % 30 == 0 ? currencyValue : lastChartValue;
+          chartData.push(lastChartValue);
         }
       }
 
@@ -147,18 +150,36 @@ export class PortfolioProjectionComponent implements OnInit {
     this.chartData.push({ data: chartData, label: 'Contributed' })
   }
 
-  private buildTargetLine() {
+  private buildTargetLines() {
+
+    let annotationsList = [];
 
     let endDate = this.getEndDate();
+    let timeTargetAnnotation = {
+      id: 'vline',
+      type: 'line',
+      mode: 'vertical',
+      scaleID: 'x-axis-0',
+      value: endDate.format('YYYY-MM-DD'),
+      borderColor: '#002d78',
+      borderWidth: 2,
+      label: {
+        backgroundColor: '#002d78',
+        content: 'Target',// - ' + goalDate.format('MMM YYYY'),
+        enabled: true,
+        position: 'top'
+      },
+    };
+    annotationsList.push(timeTargetAnnotation);
 
-    let annotation = {
-      drawTime: 'afterDatasetsDraw',
-      annotations: [{
-        id: 'vline',
+    if (this.goal != null) {
+      let targetAmount = this.goal.targetAmount;
+      let targetAmountAnnotation = {
+        id: 'hline',
         type: 'line',
-        mode: 'vertical',
-        scaleID: 'x-axis-0',
-        value: endDate.format('YYYY-MM-DD'),
+        mode: 'horizontal',
+        scaleID: 'y-axis-0',
+        value: targetAmount.toFixed(2),
         borderColor: '#002d78',
         borderWidth: 2,
         label: {
@@ -167,9 +188,15 @@ export class PortfolioProjectionComponent implements OnInit {
           enabled: true,
           position: 'top'
         },
-      }]
+      };
+      annotationsList.push(targetAmountAnnotation);
     }
 
+
+    let annotation = {
+      drawTime: 'afterDatasetsDraw',
+      annotations: annotationsList
+    }
 
     this.chartOptions.annotation = annotation;
   }
@@ -195,7 +222,7 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   private getExtensionChartPoint() {
-    return this.getEstimatedDays() + (this.getFilterConfig() * 5);
+    return this.getEstimatedDays() + (this.getChartDaysInterval() * 5);
   }
 
   private buildChartLabels() {
@@ -209,7 +236,7 @@ export class PortfolioProjectionComponent implements OnInit {
 
     for (let day = 1; day <= extensionChartPoint; day++) {
       let date = startDate.add('day', 1).toDate();
-      if (day % this.getFilterConfig() == 0 || day == estimatedDays) {
+      if (day % this.getChartDaysInterval() == 0 || day == estimatedDays) {
         chartLabels.push(date);
       }
     }
@@ -235,12 +262,12 @@ export class PortfolioProjectionComponent implements OnInit {
         let beforeValue = beforeValues[day - 1];
         let currencyValue = beforeValue + (beforeValue * dailyPercent / 100);
 
-        if(this.goal != null && day % 30 == 0){
+        if (this.goal != null && day % 30 == 0) {
           currencyValue += this.goal.monthlyContribution;
         }
-        
+
         beforeValues.push(currencyValue)
-        if (day % this.getFilterConfig() == 0 || day == estimatedDays) {
+        if (day % this.getChartDaysInterval() == 0 || day == estimatedDays) {
           chartData.push(currencyValue);
         }
       }
@@ -249,7 +276,7 @@ export class PortfolioProjectionComponent implements OnInit {
     this.chartData.push({ data: chartData, label: label });
   }
 
-  private getFilterConfig() {
+  private getChartDaysInterval() {
 
     let estimatedDays = this.getEstimatedDays();
 
