@@ -86,6 +86,7 @@ import { PortfolioHistoryComponent } from './components/portfolio/portfolio-hist
 import { PortfolioAllocationComponent } from './components/portfolio/portfolio-allocation/portfolio-allocation.component';
 import { PortfolioPurchaseComponent } from './components/portfolio/portfolio-purchase/portfolio-purchase.component';
 import { PortfolioPurchasePopupComponent } from './components/portfolio/portfolio-purchase-popup/portfolio-purchase-popup.component';
+import { PortfolioProjectionChartComponent } from './components/dashboard/portfolio-projection-chart/portfolio-projection-chart.component';
 
 @NgModule({
   declarations: [
@@ -144,7 +145,8 @@ import { PortfolioPurchasePopupComponent } from './components/portfolio/portfoli
     PortfolioHistoryComponent,
     PortfolioAllocationComponent,
     PortfolioPurchaseComponent,
-    PortfolioPurchasePopupComponent
+    PortfolioPurchasePopupComponent,
+    PortfolioProjectionChartComponent
   ],
   imports: [
     BrowserAnimationsModule,

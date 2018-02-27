@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Portfolio } from '../../../model/portfolio/portfolio';
 import { MetamaskAccountService } from "../../../services/metamask-account.service";
 import { AdvisorService } from "../../../services/advisor.service";
@@ -17,6 +17,9 @@ import { environment } from '../../../../environments/environment';
 export class PortfolioPurchaseComponent implements OnInit {
 
   @Input() portfolio: Portfolio;
+  @Input() startDate: Date;
+  @Input() endDate: Date;
+  @Output() onEndDateChange = new EventEmitter();
 
   public simulator = {
     price: null,
@@ -29,8 +32,8 @@ export class PortfolioPurchaseComponent implements OnInit {
     totalPrice: 0
   }
 
-  private transactionUrl: string;
-  private purchasePromise: Subscription;
+  public transactionUrl: string;
+  public purchasePromise: Subscription;
   public timeDescription: string;
 
   constructor(private metamaskAccount: MetamaskAccountService, private advisorService: AdvisorService) { }
@@ -38,8 +41,8 @@ export class PortfolioPurchaseComponent implements OnInit {
   ngOnInit() {
     this.simulator.price = this.portfolio.price;
     this.simulator.estimatedReturn = this.portfolio.projectionPercent;
-    this.simulator.startDate = moment().startOf('date').toDate();
-    this.simulator.endDate = moment().startOf('date').add(30, 'days').toDate();
+    this.simulator.startDate = this.startDate;
+    this.simulator.endDate = this.endDate;
 
     this.updateSimulator();
   }
@@ -48,6 +51,10 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.calculateTime();
     this.setTimeDescription();
     this.calculateSimulator();
+
+    if(this.onEndDateChange) {
+      this.onEndDateChange.emit(this.simulator.endDate);
+    }
   }
 
   private calculateTime() {
