@@ -1,31 +1,23 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { Portfolio } from '../../../model/portfolio/portfolio';
-import { Goal } from '../../../model/account/goal';
+import { Portfolio } from './../../../model/portfolio/portfolio';
+import { Component, OnInit, Input } from '@angular/core';
 import * as moment from 'moment';
+
 import Chart from 'chart.js';
+//import 'chartjs-plugin-annotation';
 
 @Component({
-  selector: 'portfolio-projection',
-  templateUrl: './portfolio-projection.component.html',
-  styleUrls: ['./portfolio-projection.component.css']
+  selector: 'portfolio-projection-chart',
+  templateUrl: './portfolio-projection-chart.component.html',
+  styleUrls: ['./portfolio-projection-chart.component.css']
 })
-export class PortfolioProjectionComponent implements OnInit {
+export class PortfolioProjectionChartComponent implements OnInit {
 
   @Input() portfolio: Portfolio;
-  @Input() goal?: Goal;
-  @ViewChild("baseChart") baseChart: any;
+  @Input() startDate: Date;
+  @Input() endDate: Date;
 
-  public startDate: Date;
-  public endDate: Date;
+  constructor() { }
 
-  constructor() {
-  }
-
-  ngOnInit() {
-    this.startDate = moment().startOf('date').toDate();
-    this.endDate = moment().startOf('date').add(30, 'days').toDate();
-    this.buildChart();
-  }
   public chartColors: Array<any> = [
     {
       //Contributed
@@ -43,41 +35,6 @@ export class PortfolioProjectionComponent implements OnInit {
       //Projection
       backgroundColor: 'rgb(97, 237, 223)',
       borderColor: 'rgb(97, 237, 223)',
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },{
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
-      fill: 'origin'
-    },
-    {
-      //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
       fill: 'origin'
     },
     {
@@ -108,7 +65,7 @@ export class PortfolioProjectionComponent implements OnInit {
         ticks: {
           fontFamily: 'HelveticaNeueMedium',
           callback: function (label, index, labels) {
-            return '$' + label.toFixed(2);
+            return PortfolioProjectionChartComponent.formatCurrency(label, '$');
           }
         }
       }]
@@ -121,10 +78,11 @@ export class PortfolioProjectionComponent implements OnInit {
       mode: 'single',
       callbacks: {
         title: function (tooltipItems, data) {
-          return moment(tooltipItems[0].xLabel).format('MMMM DD YYYY');
+          return moment(tooltipItems[0].xLabel).format('MMMM YYYY');
         },
         label: function (tooltipItems, data) {
-          return data.datasets[tooltipItems.datasetIndex].label + ": $" + tooltipItems.yLabel.toFixed(2);
+          let formatValue = PortfolioProjectionChartComponent.formatCurrency(tooltipItems.yLabel, '$');
+          return data.datasets[tooltipItems.datasetIndex].label + ":" + formatValue;
         }
       }
     },
@@ -132,22 +90,27 @@ export class PortfolioProjectionComponent implements OnInit {
   };
   public chartType: string = 'line';
 
-  public onEndDateChange(endDate: Date) {
-    this.endDate = endDate;
-    this.chartData = [];
-    this.baseChart.datasets = [];
-    this.baseChart.labels = [];
-    console.log(this.baseChart);
+  private static formatCurrency(valueToFormat: any, currency: string): string {
+    let value = Number(valueToFormat);
+    if (value >= 1000000) {
+      return currency + (value / 1000000).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'M'
+    } else if (value > 1000) {
+      return currency + (value / 1000).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + 'k'
+    } else {
+      return currency + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+  }
+
+  ngOnInit() {
     this.buildChart();
   }
 
-  public buildChart() {
-
+  private buildChart() {
     this.buildChartLabels();
     //this.buildMonthyContributionChart();
-    this.buildChartData(this.portfolio.pessimisticPercent, 'Pessimistic');
+    //this.buildChartData(this.portfolio.pessimisticPercent, 'Pessimistic');
     this.buildChartData(this.portfolio.projectionPercent, 'Projection');
-    this.buildChartData(this.portfolio.optimisticPercent, 'Optimistic');
+   // this.buildChartData(this.portfolio.optimisticPercent, 'Optimistic');
     this.buildTargetLine();
   }
 
@@ -199,7 +162,7 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   private getExtensionChartPoint() {
-    return this.getEstimatedDays() + 5;
+    return Math.round(this.getEstimatedDays() * 1.2);
   }
 
   private buildChartLabels() {
@@ -212,8 +175,10 @@ export class PortfolioProjectionComponent implements OnInit {
     chartLabels.push(startDate.toDate());
 
     for (let day = 1; day <= extensionChartPoint; day++) {
+
       let date = startDate.add('day', 1).toDate();
       chartLabels.push(date);
+      
     }
 
     this.chartLabels = chartLabels;
@@ -221,27 +186,25 @@ export class PortfolioProjectionComponent implements OnInit {
 
   private buildChartData(monthPercent, label) {
 
+    let estimatedDays = this.getEstimatedDays();
+    let extensionChartPoint = this.getExtensionChartPoint();
+
+    var projectionValue = [];
+    projectionValue.push(this.getStartingAmount());
+
     let chartData = [];
-    if (monthPercent > 0) {
-      let estimatedDays = this.getEstimatedDays();
-      let extensionChartPoint = this.getExtensionChartPoint();
+    chartData.push(this.getStartingAmount());
 
-      var projectionValue = [];
-      projectionValue.push(this.getStartingAmount());
+    for (let day = 1; day <= extensionChartPoint; day++) {
 
-      chartData.push(this.getStartingAmount());
+      let beforeValue = projectionValue[day - 1];
+      let currencyValue = beforeValue + (beforeValue * monthPercent / 30 / 100);
 
-      for (let day = 1; day <= extensionChartPoint; day++) {
-
-        let beforeValue = projectionValue[day - 1];
-        let currencyValue = beforeValue + (beforeValue * monthPercent / 30 / 100);
-
-        //currencyValue += this.projection.currentGoal.monthlyContribution;
-        projectionValue.push(currencyValue);
-        chartData.push(currencyValue);
-      }
+      //currencyValue += this.projection.currentGoal.monthlyContribution;
+      projectionValue.push(currencyValue);
+      chartData.push(currencyValue);
     }
 
-    this.chartData.push({ data: chartData, label: label });
+    this.chartData.push({ data: chartData, label: label })
   }
 }
