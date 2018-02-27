@@ -33,12 +33,12 @@ export class PortfolioRegisterComponent implements OnInit {
     if (this.model == null) {
       this.model = new PortfolioRequest();
     }
-    if (!this.assetsDistributionRows){
+    if (!this.assetsDistributionRows) {
       this.assetsDistributionRows = [];
       this.assetsDistributionRows.push(new AssetDistribution());
       this.assetsDistributionRows[0].percentage = 100;
     }
-    
+
     this.portfolioRegisterForm.control.addControl("TotalPercentage", this.totalPercentageForm);
   }
 
@@ -112,11 +112,11 @@ export class PortfolioRegisterComponent implements OnInit {
 
   onSubmit() {
     for (let row of this.assetsDistributionRows) {
-      if (!this.model.distribution.some(item => item.assetId === row.id)) {
-        this.model.distribution.push({
-          assetId: row.id,
-          percentage: row.percentage
-        });
+      let distribution = this.model.distribution.find(item => item.assetId === row.id);
+      if (distribution) {
+        distribution.percentage = row.percentage;
+      } else {
+        this.model.distribution.push({ assetId: row.id, percentage: row.percentage });
       }
     }
 
@@ -143,7 +143,7 @@ export class PortfolioRegisterComponent implements OnInit {
     }
   }
 
-  convertModelToPortfolioUpdateRequest() : PortfolioUpdateRequest {
+  convertModelToPortfolioUpdateRequest(): PortfolioUpdateRequest {
     var portfolioUpdateRequest = new PortfolioUpdateRequest();
     portfolioUpdateRequest.description = this.model.description;
     portfolioUpdateRequest.distribution = this.model.distribution;
