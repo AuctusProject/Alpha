@@ -62,7 +62,6 @@ namespace Api
 
                 };
                 options.SaveToken = true;
-                //options.RequireHttpsMetadata = false;
                 options.RequireHttpsMetadata = true;
             });
 
@@ -76,7 +75,7 @@ namespace Api
             services.AddCors(options =>
             {
                 options.AddPolicy("Default", builder =>
-                    builder.WithOrigins(Config.WEB_URL, "http://auctusalphaweb.azurewebsites.net", "http://localhost:4200")
+                    builder.WithOrigins(Config.WEB_URL)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials());

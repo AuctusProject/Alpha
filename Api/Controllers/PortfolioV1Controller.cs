@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Api.Model.Portfolio;
 using Auctus.Util;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.NodeServices;
@@ -15,6 +16,7 @@ namespace Api.Controllers
     [Produces("application/json")]
     [Route("api/portfolios/v1/")]
     [Authorize("Bearer")]
+    [EnableCors("Default")]
     public class PortfolioV1Controller : PortfolioBaseController
     {
         public PortfolioV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }

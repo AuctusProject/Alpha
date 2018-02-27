@@ -21,6 +21,7 @@ namespace Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/accounts/v1/")]
+    [EnableCors("Default")]
     public class AccountV1Controller : AccountBaseController
     {
         public AccountV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }

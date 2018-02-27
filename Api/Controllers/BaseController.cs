@@ -21,7 +21,6 @@ using Microsoft.AspNetCore.NodeServices;
 
 namespace Api.Controllers
 {
-    [Microsoft.AspNetCore.Cors.EnableCors("Default")]
     public class BaseController : Controller
     {
         protected readonly ILoggerFactory LoggerFactory;
