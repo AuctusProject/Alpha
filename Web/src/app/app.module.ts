@@ -90,6 +90,7 @@ import { PortfolioPurchasePopupComponent } from './components/portfolio/portfoli
 import { PercentageLabelComponent } from './components/ui/percentage-label/percentage-label.component';
 import { PortfolioProjectionChartComponent } from './components/dashboard/portfolio-projection-chart/portfolio-projection-chart.component';
 import { LoadingSpinnerComponent } from './components/ui/loading-spinner/loading-spinner.component';
+import { MobileNotSupportedComponent } from './components/ui/mobile-not-supported/mobile-not-supported.component';
 
 @NgModule({
   declarations: [
@@ -151,7 +152,8 @@ import { LoadingSpinnerComponent } from './components/ui/loading-spinner/loading
     PortfolioPurchasePopupComponent,
     PercentageLabelComponent,
     PortfolioProjectionChartComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    MobileNotSupportedComponent
   ],
   imports: [
     BrowserAnimationsModule,

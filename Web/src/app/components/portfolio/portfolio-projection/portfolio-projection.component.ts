@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { Portfolio } from '../../../model/portfolio/portfolio';
+import { PortfolioPurchaseComponent } from '../portfolio-purchase/portfolio-purchase.component';
 import { Goal } from '../../../model/account/goal';
 import * as moment from 'moment';
 import Chart from 'chart.js';
@@ -15,21 +16,19 @@ export class PortfolioProjectionComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
   @ViewChild("baseChart") baseChart: any;
-
-  public startDate: Date;
-  public endDate: Date;
+  @ViewChild(PortfolioPurchaseComponent) portfolioPurchaseComponent;
 
   constructor() {
   }
 
   ngOnInit() {
-    this.startDate = moment().startOf('date').toDate();
+    
+  }
 
-    let totalDays = this.goal != null ? this.goal.timeframe * 12 * 30 : 30;
-    this.endDate = moment().startOf('date').add(totalDays, 'days').toDate();
-
+  ngAfterViewInit() {
     this.buildChart();
   }
+
   public chartColors: Array<any> = [
     {
       //Contributed
@@ -101,8 +100,7 @@ export class PortfolioProjectionComponent implements OnInit {
   };
   public chartType: string = 'line';
 
-  public onEndDateChange(endDate: Date) {
-    this.endDate = endDate;
+  public onEndDateChange() {
     this.chartData = [];
     this.buildChart();
     this.baseChart.refresh();
@@ -202,11 +200,11 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   private getStartDate() {
-    return moment(this.startDate).startOf('date');
+    return moment(this.portfolioPurchaseComponent.getStartDate()).startOf('date');
   }
 
   private getEndDate() {
-    return moment(this.endDate).startOf('date');
+    return moment(this.portfolioPurchaseComponent.getEndDate()).startOf('date');
   }
 
   private getStartingAmount() {

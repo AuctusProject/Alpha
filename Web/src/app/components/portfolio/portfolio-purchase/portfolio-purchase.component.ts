@@ -20,10 +20,10 @@ export class PortfolioPurchaseComponent implements OnInit {
 
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
-  @Input() startDate: Date;
-  @Input() endDate: Date;
   @Output() afterEndDateChange = new EventEmitter();
   loginData: any;
+  startDate: Date;
+  endDate: Date;
 
   public simulator = {
     price: null,
@@ -43,6 +43,12 @@ export class PortfolioPurchaseComponent implements OnInit {
   constructor(private metamaskAccount: MetamaskAccountService, private advisorService: AdvisorService, private loginService: LoginService) { }
 
   ngOnInit() {
+
+    this.startDate = moment().startOf('date').toDate();
+
+    let totalDays = this.goal != null ? this.goal.timeframe * 12 * 30 : 30;
+    this.endDate = moment().startOf('date').add(totalDays, 'days').toDate();
+
     this.simulator.price = this.portfolio.price;
     this.simulator.estimatedReturn = this.portfolio.projectionPercent;
     this.simulator.startDate = this.startDate;
@@ -56,6 +62,14 @@ export class PortfolioPurchaseComponent implements OnInit {
     }
   }
 
+  public getStartDate() {
+    return this.simulator.startDate;
+  }
+
+  public getEndDate() {
+    return this.simulator.endDate;
+  }
+
   public updateSimulator() {
     this.calculateTime();
     this.setTimeDescription();
@@ -65,7 +79,11 @@ export class PortfolioPurchaseComponent implements OnInit {
   public onEndDateChange() {
 
     this.updateSimulator()
-    if(this.afterEndDateChange) {
+    this.emitEndDateEvent();
+  }
+
+  private emitEndDateEvent() {
+    if (this.afterEndDateChange) {
       this.afterEndDateChange.emit(this.simulator.endDate);
     }
   }
