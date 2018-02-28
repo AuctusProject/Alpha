@@ -1,0 +1,39 @@
+.legend-row{
+    padding-bottom: 10px;
+}
+
+.chart-label {
+    font-size: 10px;
+    color: #4a4a4a;
+}
+
+.inline{
+    display: inline-block;
+    margin-right: 4px;
+}
+
+.circle{
+    width: 10px;
+    height: 10px;
+    background-color: #f3f5f8;
+    border-radius: 10px;
+}
+
+.less-likely{
+    background-color: #BCFFF8;
+}
+
+.more-likely{
+    background-color: #0FD7B9;
+}
+  
+.contributed {
+    background-color: #4a90e2;
+}
+
+.chart-title{
+    font-size: 24px;
+    font-weight: bold;
+    color: #4a4a4a;
+}
+      

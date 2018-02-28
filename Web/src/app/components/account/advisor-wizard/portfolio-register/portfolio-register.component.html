@@ -6,7 +6,7 @@
           <div fxLayout="column" fxFlex="100">
             <span class="risk-description bold" *ngIf="!model.isEditing">{{model.name}}</span>
             <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px" *ngIf="model.isEditing">
-              <input type="text" placeholder="Name" matInput name="Name" [(ngModel)]="model.name" required>
+              <input type="text" placeholder="Portfolio Name" matInput name="Name" [(ngModel)]="model.name" required>
             </mat-form-field>
           </div>
         </div>
@@ -43,14 +43,12 @@
       <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
         <div fxLayout="column" fxFlex="100">
           <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px">
-            <input matInput type="number" placeholder="Price" name="Price" required [(ngModel)]="model.price">
+            <input matInput type="number" placeholder="Monthly fee" name="Price" required [(ngModel)]="model.price">
             <span matSuffix>AUC&nbsp;</span>
           </mat-form-field>
         </div>
       </div>
-      <div class="portfolio-edition-title">Build the investment plan</div>
-      <div class="portfolio-edition-subtitle">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Cras
-        justo odio, dapibus ac.</div>
+      <div class="portfolio-edition-title">Portfolio allocation</div>
       <div *ngIf="!assets" fxLayout="row" fxLayoutGap="16px">
         <loading-block class="loading-card" *ngIf="!portfolios" width="270" [height]="38"></loading-block>
         <loading-block class="loading-card" *ngIf="!portfolios" width="70" [height]="38"></loading-block>
@@ -80,9 +78,9 @@
           <div fxFlex="16" class="total-percentage-value">{{this.totalDistributionPercentage}}%</div>
         </div>
       </div>
-      <div class="portfolio-edition-title">What do you think your annual return will be?</div>
-      <div class="portfolio-edition-subtitle">This is the return the investment will generate over time. Historically, the 30-year return of the S&P 500 has been
-        roughly 11%</div>
+      <div class="portfolio-edition-title">Monthly Expected Return</div>
+      <div class="portfolio-edition-subtitle">You will only receive fees when your portfolio performance is greater than the expected return. Historically, the monthly
+        return of the S&P 500 has been roughly 0.78%</div>
       <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
         <div fxLayout="column" fxFlex="25">
           <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">

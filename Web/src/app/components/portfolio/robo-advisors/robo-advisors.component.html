@@ -2,19 +2,23 @@
   <div class="portfolio-list-header">
     <header></header>
     <div class="header-text-container" fxLayout="row">
-      <div fxFlex>
+      <div fxFlex *ngIf="!goal">
         <h1>Robo Advisors</h1>
-        <p *ngIf="!goal">
+        <p>
           We need some information about your goal to get the best portfolio for your savings
         </p>
-        <p *ngIf="goal">
-          Select one portfolio at the list for your {{goal.goalOption.description}} goal.
+      </div>
+      <div fxFlex *ngIf="goal">
+        <h1>Get your personalized portfolio based on your goals</h1>
+        <p>
+          Our robo-advisor service provides you with a diversified portfolio of traditional and cryptocurrency assets, based on your
+          risk tolerance and time horizon, making strategic adjustments to try and protect against losses and boost returns.
         </p>
       </div>
     </div>
   </div>
 
-  <register-wizard *ngIf="!goal"  (onSubmitted)="onWizardSubmitted($event)"></register-wizard>
+  <register-wizard *ngIf="!goal" (onSubmitted)="onWizardSubmitted($event)"></register-wizard>
   <ng-container *ngIf="goal">
     <div class="portfolio-list">
       <loading-spinner *ngIf="!portfolios"></loading-spinner>
@@ -22,5 +26,3 @@
     </div>
   </ng-container>
 </div>
-
-

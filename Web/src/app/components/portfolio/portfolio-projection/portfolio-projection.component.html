@@ -2,9 +2,30 @@
   <div fxFlex="320px">
     <portfolio-purchase [portfolio]="portfolio" [goal]="goal" (afterEndDateChange)="onEndDateChange()"></portfolio-purchase>
   </div>
-  <div fxFlex >
-    <canvas baseChart #baseChart="base-chart" [chartType]="chartType" [colors]="chartColors" [datasets]="chartData" [labels]="chartLabels"
-      [legend]="chartLegend" [options]="chartOptions">
-    </canvas>
+  <div fxFlex>
+    <div fxLayout="row" class="legend-row">
+      <div fxFlex class="chart-title">
+        Projection
+      </div>
+      <div fxFlex="15" class="chart-label">
+        <div class="circle less-likely inline"></div>
+        Less Likely
+      </div>
+      <div fxFlex="15" class="chart-label">
+        <div class="circle more-likely inline"></div>
+        More Likely
+      </div>
+      <div fxFlex="15" class="chart-label">
+        <div class="circle contributed inline"></div>
+        Contributed
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div fxFlex>
+        <canvas baseChart #baseChart="base-chart" [chartType]="chartType" [colors]="chartColors" [datasets]="chartData" [labels]="chartLabels"
+          [legend]="chartLegend" [options]="chartOptions" *ngIf="chartData.length > 0">
+        </canvas>
+      </div>
+    </div>
   </div>
 </div>

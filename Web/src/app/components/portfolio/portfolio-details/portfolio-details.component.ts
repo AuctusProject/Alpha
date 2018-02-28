@@ -14,7 +14,7 @@ import { LoginService } from '../../../services/login.service';
 export class PortfolioDetailsComponent implements OnInit {
 
   public portfolio: Portfolio;
-  private goal: Goal;
+  public goal: Goal;
   loginData: any;
 
   constructor(private portfolioService: PortfolioService,

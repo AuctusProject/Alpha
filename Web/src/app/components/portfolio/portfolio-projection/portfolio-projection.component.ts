@@ -22,11 +22,10 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   ngOnInit() {
-    
   }
 
   ngAfterViewInit() {
-    this.buildChart();
+    setTimeout(() => { this.buildChart() }, 100);
   }
 
   public chartColors: Array<any> = [
@@ -159,10 +158,10 @@ export class PortfolioProjectionComponent implements OnInit {
       mode: 'vertical',
       scaleID: 'x-axis-0',
       value: endDate.format('YYYY-MM-DD'),
-      borderColor: '#002d78',
-      borderWidth: 2,
+      borderColor: '#EF5350',
+      borderWidth: 1,
       label: {
-        backgroundColor: '#002d78',
+        backgroundColor: '#EF5350',
         content: 'Target',// - ' + goalDate.format('MMM YYYY'),
         enabled: true,
         position: 'top'
@@ -178,13 +177,13 @@ export class PortfolioProjectionComponent implements OnInit {
         mode: 'horizontal',
         scaleID: 'y-axis-0',
         value: targetAmount.toFixed(2),
-        borderColor: '#002d78',
-        borderWidth: 2,
+        borderColor: '#EF5350',
+        borderWidth: 1,
         label: {
-          backgroundColor: '#002d78',
+          backgroundColor: '#EF5350',
           content: 'Target',// - ' + goalDate.format('MMM YYYY'),
           enabled: true,
-          position: 'top'
+          position: 'left'
         },
       };
       annotationsList.push(targetAmountAnnotation);
