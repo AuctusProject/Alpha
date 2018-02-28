@@ -17,6 +17,7 @@ namespace Api.Controllers
     [Produces("application/json")]
     [Route("api/advisors/v1/")]
     [Authorize("Bearer")]
+    [EnableCors("Default")]
     public class AdvisorV1Controller : AdvisorBaseController
     {
         public AdvisorV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }

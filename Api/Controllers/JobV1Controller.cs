@@ -3,6 +3,7 @@ using Auctus.DomainObjects.Account;
 using Auctus.Util;
 using Auctus.Util.NotShared;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.NodeServices;
@@ -21,6 +22,7 @@ namespace Api.Controllers
     [Produces("application/json")]
     [Route("api/jobs/v1/")]
     [Authorize("Bearer")]
+    [EnableCors("Default")]
     public class JobV1Controller : JobBaseController
     {
         public JobV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }

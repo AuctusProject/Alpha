@@ -62,7 +62,6 @@ namespace Api
 
                 };
                 options.SaveToken = true;
-                //options.RequireHttpsMetadata = false;
                 options.RequireHttpsMetadata = true;
             });
 
