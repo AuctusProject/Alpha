@@ -154,3 +154,10 @@ hr {
 hr{
   margin: 0px 16px;
 }
+
+.need-email-confirmation{
+  font-size: 12px;
+  color: #55606e;
+  margin-top: 10px;
+  text-align: center;
+}
