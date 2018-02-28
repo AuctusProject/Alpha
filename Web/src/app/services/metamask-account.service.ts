@@ -28,7 +28,7 @@ export class MetamaskAccountService {
     var accountInterval = setInterval(function () {
       self.web3Service.getAccount().subscribe(
         account => {
-          if (self.account != account) {
+          if (self.account && self.account != account) {
             self.broadcastAccountChanged(account);
           }
           if (account && self.isRinkeby()) {
