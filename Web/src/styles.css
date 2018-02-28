@@ -628,12 +628,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 @media (max-width: 640px) {
   .only-web {
-    display:none;
+    display:none !important;
   }
 }
 
 @media (min-width: 641px) {
   .only-mobile {
-    display: none;
+    display: none !important;
   }
 }
