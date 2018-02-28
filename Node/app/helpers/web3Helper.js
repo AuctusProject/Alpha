@@ -142,11 +142,11 @@ class Web3Helper {
     return hexValue ? this._web3.toBigNumber(hexValue) : null;
   }
 
-  sendTransaction(gasPrice, gasLimit, from, to, value, data, pk, chainId, cb, nonce) {
+  sendTransaction(gasPrice, gasLimit, from, to, value, data, pk, chainId, cb) {
     const gasPriceWei = this._web3.toWei(gasPrice, 'gwei');
     const valueWei = this._web3.toWei(value, 'ether');
     const rawTx = {
-      nonce: nonce ? nonce : this._web3.toHex(this._web3.eth.getTransactionCount(from)),
+      nonce: this._web3.toHex(this._web3.eth.getTransactionCount(from)),
       gasPrice: this._web3.toHex(gasPriceWei),
       gasLimit: this._web3.toHex(gasLimit),
       to: to,

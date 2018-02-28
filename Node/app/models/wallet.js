@@ -65,10 +65,8 @@ class Wallet {
 
     sendAUC(cb) {
         var aucToSendHex = web3Helper.toHex(web3Helper.toWei(config.get('AUC_SEND_FAUCET')));
-        var transactionCount = web3Helper.getTransactionCount(config.get('TOKEN_OWNER_ADDRESS'));
-        var nonce = web3Helper.toHex(transactionCount + 1);
         var data = web3Helper.getContractMethodData(config.get('AUC_TOKEN_ABI'), config.get('AUC_CONTRACT_ADDRESS'), 'mint', [this.address, aucToSendHex]);
-        web3Helper.sendTransaction(config.get('GAS_PRICE') + 1, 100000, config.get('TOKEN_OWNER_ADDRESS'), config.get('AUC_CONTRACT_ADDRESS'), 0, data, config.get('TOKEN_OWNER_PRIVATE_KEY'), config.get('CHAIN_ID'), cb, nonce);
+        web3Helper.sendTransaction(config.get('GAS_PRICE') + 1, 100000, config.get('TOKEN_OWNER_ADDRESS'), config.get('AUC_CONTRACT_ADDRESS'), 0, data, config.get('TOKEN_OWNER_PRIVATE_KEY'), config.get('CHAIN_ID'), cb);
     }
 
     sendETH(cb) {
