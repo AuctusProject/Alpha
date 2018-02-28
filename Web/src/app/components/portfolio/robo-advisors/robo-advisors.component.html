@@ -2,15 +2,12 @@
   <div class="portfolio-list-header">
     <header></header>
     <div class="header-text-container" fxLayout="row">
-      <div fxFlex *ngIf="!goal">
-        <h1>Robo Advisors</h1>
-        <p>
+      <div fxFlex>
+        <h1>Get your personalized portfolio based on your goals</h1>
+        <p *ngIf="!goal">
           We need some information about your goal to get the best portfolio for your savings
         </p>
-      </div>
-      <div fxFlex *ngIf="goal">
-        <h1>Get your personalized portfolio based on your goals</h1>
-        <p>
+        <p *ngIf="goal">
           Our robo-advisor service provides you with a diversified portfolio of traditional and cryptocurrency assets, based on your
           risk tolerance and time horizon, making strategic adjustments to try and protect against losses and boost returns.
         </p>
