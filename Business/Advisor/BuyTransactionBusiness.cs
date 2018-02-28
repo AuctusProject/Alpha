@@ -163,11 +163,12 @@ namespace Auctus.Business.Advisor
                                         status = TransactionStatus.Fraud;
                                     else
                                     {
+                                        status = TransactionStatus.Success;
                                         using (var trans = new TransactionalDapperCommand())
                                         {
                                             purchase.ExpirationDate = DateTime.UtcNow.Date.AddDays(purchase.Days);
                                             trans.Update(purchase);
-                                            buyTransaction.TransactionStatus = TransactionStatus.Success.Value;
+                                            buyTransaction.TransactionStatus = status.Value;
                                             buyTransaction.ProcessedDate = DateTime.UtcNow;
                                             trans.Update(buyTransaction);
                                             trans.Commit();
