@@ -79,13 +79,13 @@ namespace Api.Controllers
 
             try
             {
-                AccountServices.ConfirmEmail(confirmEmailRequest.Code);
+                var login = AccountServices.ConfirmEmail(confirmEmailRequest.Code);
+                return Ok(new { jwt = GenerateToken(login.Email), data = login });
             }
             catch (ArgumentException)
             {
                 return BadRequest(new { error = "Email could not be confirmed." });
             }
-            return Ok();
         }
 
         protected virtual IActionResult ChangePassword(ChangePasswordRequest changePasswordRequest)

@@ -24,9 +24,9 @@ namespace Auctus.Service
             PasswordRecoveryBusiness.RecoverPassword(code, password);
         }
 
-        public void ConfirmEmail(string code)
+        public Login ConfirmEmail(string code)
         {
-            UserBusiness.ConfirmEmail(code);
+            return UserBusiness.ConfirmEmail(code);
         }
 
         public async Task SendEmailForForgottenPassword(string email)

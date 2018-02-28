@@ -90,7 +90,7 @@ namespace Auctus.Business.Account
             await SendEmailConfirmation(email, user.ConfirmationCode);
         }
         
-        public void ConfirmEmail(string code)
+        public Login ConfirmEmail(string code)
         {
             var user = Data.GetByConfirmationCode(code);
             if (user == null)
@@ -98,6 +98,14 @@ namespace Auctus.Business.Account
 
             user.ConfirmationDate = DateTime.UtcNow;
             Data.Update(user);
+
+            return new Login()
+            {
+                Address = user.Wallet.Address,
+                Email = user.Email,
+                Username = user.Username,
+                PendingConfirmation = !user.ConfirmationDate.HasValue
+            };
         }
 
         public bool IsValidEmailToRegister(string email)

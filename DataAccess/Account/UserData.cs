@@ -28,6 +28,9 @@ namespace Auctus.DataAccess.Account
         private const string SELECT_WITH_WALLET_BY_ID = @"SELECT u.*, w.* FROM [User] u INNER JOIN [Wallet] w ON w.UserId = u.Id 
                                                    WHERE u.Id = @Id";
 
+        private const string SELECT_WITH_WALLET_BY_CODE = @"SELECT u.*, w.* FROM [User] u INNER JOIN [Wallet] w ON w.UserId = u.Id 
+                                                   WHERE u.ConfirmationCode = @ConfirmationCode";
+
         private const string SELECT_BUY_OWNER = @"SELECT u.*, w.* FROM 
                                                     [User] u 
                                                     INNER JOIN [Wallet] w ON w.UserId = u.Id 
@@ -124,7 +127,12 @@ namespace Auctus.DataAccess.Account
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("ConfirmationCode", confirmationCode, DbType.AnsiString);
-            return SelectByParameters<User>(parameters).SingleOrDefault();
+            return Query<User, Wallet, User>(SELECT_WITH_WALLET_BY_CODE,
+                                (user, wallet) =>
+                                {
+                                    user.Wallet = wallet;
+                                    return user;
+                                }, "UserId", parameters).SingleOrDefault();
         }
 
         public User Get(Guid guid)
