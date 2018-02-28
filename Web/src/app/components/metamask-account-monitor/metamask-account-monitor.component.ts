@@ -18,6 +18,7 @@ export class MetamaskAccountMonitorComponent implements OnInit {
     private loginService: LoginService) { }
 
   ngOnInit() {
+    this.eventsService.on("accountChanged", this.onAccountChanged);
     this.eventsService.on("loginConditionsFail", this.onLoginConditionsFail);
     this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
   }
@@ -25,6 +26,7 @@ export class MetamaskAccountMonitorComponent implements OnInit {
   ngOnDestroy() {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.
+    this.eventsService.destroyListener("accountChanged", this.onAccountChanged);
     this.eventsService.destroyListener("loginConditionsFail", this.onLoginConditionsFail);
     this.eventsService.destroyListener("loginConditionsSuccess", this.onLoginConditionsSuccess);
   }
@@ -40,6 +42,10 @@ export class MetamaskAccountMonitorComponent implements OnInit {
     if (this.router.url == "/required") {
       this.zone.run(() => this.router.navigate(['home']));
     }
+  }
+
+  private onAccountChanged: Function = (payload: any) => {
+    this.loginService.logoutWithoutRedirect();
   }
 
 }
