@@ -1,6 +1,6 @@
 <div fxLayout="row" class="tab-body" fxLayoutGap="40px">
   <div fxFlex="320px">
-    <portfolio-purchase [portfolio]="portfolio" [goal]="goal" [startDate]="startDate" [endDate]="endDate" (afterEndDateChange)="onEndDateChange($event)"></portfolio-purchase>
+    <portfolio-purchase [portfolio]="portfolio" [goal]="goal" (afterEndDateChange)="onEndDateChange($event)"></portfolio-purchase>
   </div>
   <div fxFlex >
     <canvas baseChart #baseChart="base-chart" [chartType]="chartType" [colors]="chartColors" [datasets]="chartData" [labels]="chartLabels"
