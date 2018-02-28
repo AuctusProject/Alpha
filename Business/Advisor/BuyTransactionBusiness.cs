@@ -36,7 +36,7 @@ namespace Auctus.Business.Advisor
             else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Error.Value)
                 Create(user.Id, buyId, transactionHash);
             else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending.Value && TransactionBusiness.TransactionCanBeConsideredLost(buy.LastTransaction) 
-                && buy.LastTransaction.TransactionHash.ToLower().Trim() != transactionHash.ToLower().Trim())
+                && buy.LastTransaction.TransactionHash != transactionHash.ToLower().Trim())
             {
                 try
                 {
@@ -143,22 +143,37 @@ namespace Auctus.Business.Advisor
                 {
                     if (transaction.Status.Value == 1)
                     {
-                        if (transaction.EventData != null && transaction.EventData.Length == 2)
+                        if (transaction.EventData != null && transaction.EventData.Length == 2 && 
+                            !string.IsNullOrEmpty(transaction.EventData[0]) && !string.IsNullOrEmpty(transaction.EventData[1]))
                         {
-                            var purchase = BuyBusiness.GetSimple(buyId);
-                            var escrowedValue = Util.Util.ConvertBigNumber(transaction.EventData[1], 18);
-                            if (purchase.Price > escrowedValue)
+                            var wallet = WalletBusiness.GetByUser(buyTransaction.UserId);
+                            if (transaction.EventData[0].ToLower().Trim() != wallet.Address)
                                 status = TransactionStatus.Fraud;
                             else
                             {
-                                using (var trans = new TransactionalDapperCommand())
+                                var purchase = BuyBusiness.GetSimple(buyId);
+                                var escrowedValue = Util.Util.ConvertBigNumber(transaction.EventData[1], 18);
+                                if (purchase.Price > escrowedValue)
+                                    status = TransactionStatus.Fraud;
+                                else
                                 {
-                                    purchase.ExpirationDate = DateTime.UtcNow.Date.AddDays(purchase.Days);
-                                    trans.Update(purchase);
-                                    buyTransaction.TransactionStatus = TransactionStatus.Success.Value;
-                                    buyTransaction.ProcessedDate = DateTime.UtcNow;
-                                    trans.Update(buyTransaction);
-                                    trans.Commit();
+                                    var transactions = ListByUserAndHash(buyTransaction.UserId, buyTransaction.TransactionHash);
+                                    if (transactions.Count > 1 && (transactions.Any(c => c.BuyId != buyId) 
+                                        || transactions.Any(c => c.Transaction.TransactionStatus != TransactionStatus.Pending.Value)))
+                                        status = TransactionStatus.Fraud;
+                                    else
+                                    {
+                                        status = TransactionStatus.Success;
+                                        using (var trans = new TransactionalDapperCommand())
+                                        {
+                                            purchase.ExpirationDate = DateTime.UtcNow.Date.AddDays(purchase.Days);
+                                            trans.Update(purchase);
+                                            buyTransaction.TransactionStatus = status.Value;
+                                            buyTransaction.ProcessedDate = DateTime.UtcNow;
+                                            trans.Update(buyTransaction);
+                                            trans.Commit();
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -208,6 +223,11 @@ namespace Auctus.Business.Advisor
                 InternalCreate(trans, userId, buyId, transactionHash);
                 trans.Commit();
             }
+        }
+
+        private List<BuyTransaction> ListByUserAndHash(int userId, string transactionHash)
+        {
+            return Data.ListByUserAndHash(userId, transactionHash);
         }
     }
 }

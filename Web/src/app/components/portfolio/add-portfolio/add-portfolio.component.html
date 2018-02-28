@@ -1,7 +1,7 @@
 <header></header>
 <div class="main-content" fxLayoutAlign="center center" fxLayout="column">
-  <div class="inside-step-title" *ngIf="!portfolioId">Create your financial portfolio</div>
-  <div class="inside-step-title" *ngIf="portfolioId">Edit your financial portfolio</div>
+  <div class="inside-step-title" *ngIf="!portfolioId">Recommend an investment portfolio</div>
+  <div class="inside-step-title" *ngIf="portfolioId">Edit your investment portfolio</div>
   <loading-spinner *ngIf="portfolioId && !portfolio"></loading-spinner>
   <portfolio-register *ngIf="portfolio" class="portfolio-register-component" [model]="portfolio" [assets]="assets" [assetsDistributionRows]="assetsDistributionRows" (onPortfolioSaved)="onPortfolioSaved()"></portfolio-register>
 </div>

@@ -133,7 +133,8 @@ namespace Auctus.Business.Advisor
         {
             return purchase != null && purchase.LastTransaction != null &&
                 ((purchase.ExpirationDate.HasValue && purchase.ExpirationDate.Value >= DateTime.UtcNow.Date) ||
-                 (!purchase.ExpirationDate.HasValue && purchase.LastTransaction.TransactionStatus != TransactionStatus.Cancel.Value));
+                 (!purchase.ExpirationDate.HasValue && purchase.LastTransaction.TransactionStatus != TransactionStatus.Cancel.Value
+                    && purchase.LastTransaction.TransactionStatus != TransactionStatus.Fraud.Value));
         }
     }
 }

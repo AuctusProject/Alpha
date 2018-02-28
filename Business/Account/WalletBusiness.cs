@@ -23,5 +23,24 @@ namespace Auctus.Business.Account
         {
             return !string.IsNullOrEmpty(address) && Regex.IsMatch(address, "^(0x)?[0-9a-f]{40}$", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
         }
+
+        public Wallet GetByUser(int userId)
+        {
+            return Data.GetByUser(userId);
+        }
+
+        public string GetAddressFormatted(string address)
+        {
+            if (string.IsNullOrWhiteSpace(address))
+                throw new ArgumentException("Address cannot be empty.");
+            if (!IsValidAddress(address))
+                throw new ArgumentException("Invalid address.");
+
+            address = address.ToLower().Trim();
+            if (address.StartsWith("0x"))
+                return address;
+            else
+                return "0x" + address;
+        }
     }
 }
