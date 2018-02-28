@@ -322,6 +322,7 @@ a.action-button{
     background: lightgray !important;
     color: gray;
     border: solid 1px lightgray;
+    cursor: default;
   }
 
   .primary-button.bold, .primary-blue-button.bold {

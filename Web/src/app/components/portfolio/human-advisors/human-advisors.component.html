@@ -3,24 +3,14 @@
         <header></header>
         <div class="header-text-container" fxLayout="row">
             <div fxFlex>
-                <h1>Create goal</h1>
-                <p>Para investir bem, é necessário organizar o seu dinheiro, e a melhor forma, é investir por objetivos. Você
-                    vai poder criar quantos quiser, mas vamos começar pelo primeiro</p>
-            </div>
-            <div fxFlex fxLayoutAlign="end center">
-                <div class="header-action-button" fxLayoutAlign="space-around center" routerLink="/try" >CREATE A NEW TARGET</div>
-            </div>
-        </div>
-    </div>
-    <div class="portfolio-list-subheader">
-        <div class="header-text-container" fxLayout="row">
-            <div fxFlex>
                 <h1>Start investing</h1>
+                <p>Find and follow the best performing portfolios with traditional and cryptocurrency assets made by financial
+                    experts.</p>
             </div>
         </div>
     </div>
     <div class="portfolio-list">
-      <loading-spinner *ngIf="!portfolios"></loading-spinner>
-      <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
+        <loading-spinner *ngIf="!portfolios"></loading-spinner>
+        <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
     </div>
 </div>

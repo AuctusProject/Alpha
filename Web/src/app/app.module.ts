@@ -91,6 +91,7 @@ import { PercentageLabelComponent } from './components/ui/percentage-label/perce
 import { PortfolioProjectionChartComponent } from './components/dashboard/portfolio-projection-chart/portfolio-projection-chart.component';
 import { LoadingSpinnerComponent } from './components/ui/loading-spinner/loading-spinner.component';
 import { MobileNotSupportedComponent } from './components/ui/mobile-not-supported/mobile-not-supported.component';
+import { SetHashPopupComponent } from './components/portfolio/set-hash-popup/set-hash-popup.component';
 
 @NgModule({
   declarations: [
@@ -153,7 +154,8 @@ import { MobileNotSupportedComponent } from './components/ui/mobile-not-supporte
     PercentageLabelComponent,
     PortfolioProjectionChartComponent,
     LoadingSpinnerComponent,
-    MobileNotSupportedComponent
+    MobileNotSupportedComponent,
+    SetHashPopupComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -192,7 +194,7 @@ import { MobileNotSupportedComponent } from './components/ui/mobile-not-supporte
     MetamaskAccountService,
     LocalStorageService
   ],
-  entryComponents: [PortfolioPurchasePopupComponent],
+  entryComponents: [PortfolioPurchasePopupComponent, SetHashPopupComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

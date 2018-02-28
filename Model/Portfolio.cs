@@ -33,7 +33,8 @@ namespace Auctus.Model
         public Owner OwnerData { get; set; }
         public List<Distribution> AssetDistribution { get; set; }
         public int? BuyTransactionStatus { get; set; }
-
+        public string BuyTransactionHash { get; set; }
+        public int? BuyTransactionId { get; set; }
         public class Owner
         {
             public decimal AucEscrow { get; set; }

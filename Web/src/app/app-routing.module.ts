@@ -30,7 +30,6 @@ const routes: Routes = [
     { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
-    { path: 'try', component: WizardComponent },
     { path: 'confirm', component: ConfirmEmailComponent },
     { path: 'advisor/:id', component: AdvisorDetailsComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'change-password', component: ChangePasswordComponent },
