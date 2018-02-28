@@ -398,7 +398,9 @@ namespace Auctus.Business.Portfolio
 
         public List<DomainObjects.Portfolio.Portfolio> List(int advisorId, bool onlyEnabled = true)
         {
-            return List(new int[] { advisorId }, onlyEnabled).Single().Value;
+            var advisorData = List(new int[] { advisorId }, onlyEnabled).SingleOrDefault();
+            return advisorData.Equals(default(KeyValuePair<int, List<DomainObjects.Portfolio.Portfolio>>))
+                ? new List<DomainObjects.Portfolio.Portfolio>() : advisorData.Value;
         }
 
         public List<DomainObjects.Portfolio.Portfolio> ListWithHistory(int advisorId, bool onlyEnabled = true)
