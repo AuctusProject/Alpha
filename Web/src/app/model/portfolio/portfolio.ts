@@ -20,6 +20,7 @@ export class Portfolio {
   advisorId: number;
   advisorName: string;
   advisorDescription: string;
+  advisorType: number;
   risk: number;
   projectionPercent: number;
   optimisticPercent: number;

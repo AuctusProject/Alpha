@@ -12,6 +12,7 @@ import { Goal } from "../../../model/account/goal";
 import { LoginService } from "../../../services/login.service";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { SetHashPopupComponent } from "../set-hash-popup/set-hash-popup.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: "portfolio-purchase",
@@ -45,10 +46,15 @@ export class PortfolioPurchaseComponent implements OnInit {
     private metamaskAccount: MetamaskAccountService,
     private advisorService: AdvisorService,
     private loginService: LoginService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   ngOnInit() {
+    if (this.portfolio.advisorType != 0 && !this.goal) {
+      this.router.navigateByUrl('robo-advisors');
+      return;
+    }
     this.startDate = moment()
       .startOf("date")
       .toDate();
