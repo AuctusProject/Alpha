@@ -32,6 +32,7 @@ namespace Auctus.Model
         public Purchase PurchaseData { get; set; }
         public Owner OwnerData { get; set; }
         public List<Distribution> AssetDistribution { get; set; }
+        public int? BuyTransactionStatus { get; set; }
 
         public class Owner
         {
