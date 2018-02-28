@@ -73,7 +73,7 @@ namespace Auctus.Business.Portfolio
             var portfolio = Task.Factory.StartNew(() => PortfolioBusiness.GetWithDetails(portfolioId));
             Task.WaitAll(purchase, portfolio);
 
-            var purchased = purchase.Result != null && BuyBusiness.IsValidPurchase(purchase.Result) && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success;
+            var purchased = purchase.Result != null && BuyBusiness.IsValidPurchase(purchase.Result) && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success.Value;
             var owned = portfolio.Result != null && portfolio.Result.Advisor.UserId == user.Id;
             if (!purchased && !owned)
                 throw new ArgumentException("Invalid portfolio distribution.");

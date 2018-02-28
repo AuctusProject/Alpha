@@ -38,13 +38,14 @@ namespace Auctus.Util
 
         public static decimal ConvertBigNumber(string bigNumber, int decimals)
         {
+            char separator = Convert.ToChar(Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator);
             if (bigNumber.Length <= decimals)
-                return decimal.Parse($"0.{bigNumber.PadLeft(decimals, '0')}");
+                return decimal.Parse($"0{separator}{bigNumber.PadLeft(decimals, '0')}");
             else
             {
                 var integerPart = bigNumber.Substring(0, bigNumber.Length - decimals);
                 var decimalPart = bigNumber.Substring(bigNumber.Length - decimals, decimals);
-                return decimal.Parse($"{integerPart}.{decimalPart}");
+                return decimal.Parse($"{integerPart}{separator}{decimalPart}");
             }
         }
     }

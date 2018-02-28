@@ -73,11 +73,11 @@ namespace Auctus.Business.Asset
         private static Dictionary<DateTime, double> GetAssetValuesByDate(DomainObjects.Asset.Asset asset, DateTime startDate)
         {
             Dictionary<DateTime, double> assetDateAndValues;
-            if (asset.Type == DomainObjects.Asset.AssetType.Traditional)
+            if (asset.Type == DomainObjects.Asset.AssetType.Traditional.Value)
             {
                 assetDateAndValues = AlphaVantageApi.GetCloseAdjustedValues(asset.Code);
             }
-            else if (asset.Type == DomainObjects.Asset.AssetType.Crypto)
+            else if (asset.Type == DomainObjects.Asset.AssetType.Crypto.Value)
             {
                 assetDateAndValues = ExchangeApi.GetCloseCryptoValue(asset.Code, startDate);
             }

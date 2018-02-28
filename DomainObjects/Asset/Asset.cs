@@ -15,6 +15,6 @@ namespace Auctus.DomainObjects.Asset
         [DapperType(System.Data.DbType.AnsiString)]
         public string Code { get; set; }
         [DapperType(System.Data.DbType.Int32)]
-        public AssetType Type { get; set; }
+        public int Type { get; set; }
     }
 }

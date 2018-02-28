@@ -126,7 +126,7 @@ namespace Auctus.Business.Portfolio
         public RiskType GetRisk(double projectionValue, Dictionary<int, double> distribution)
         {
             IEnumerable<DomainObjects.Asset.Asset> assets = AssetBusiness.ListAssets().Where(c => distribution.ContainsKey(c.Id));
-            double cryptoAssetsPercentage = assets.Count(c => c.Type == AssetType.Crypto) / assets.Count() * 100.0;
+            double cryptoAssetsPercentage = assets.Count(c => c.Type == AssetType.Crypto.Value) / assets.Count() * 100.0;
             if (cryptoAssetsPercentage == 0)
             {
                 if (projectionValue >= 3)
@@ -194,7 +194,7 @@ namespace Auctus.Business.Portfolio
                 portfolios = MemoryCache.Get<List<DomainObjects.Portfolio.Portfolio>>(defaultPortfoliosKey);
             if (portfolios == null)
             {
-                portfolios = List(roboAdvisorId).Where(c => c.Advisor.Type == DomainObjects.Advisor.AdvisorType.Robo).ToList();
+                portfolios = List(roboAdvisorId).Where(c => c.Advisor.Type == DomainObjects.Advisor.AdvisorType.Robo.Value).ToList();
                 if (roboAdvisorId == AdvisorBusiness.DefaultAdvisorId)
                     MemoryCache.Set<List<DomainObjects.Portfolio.Portfolio>>(defaultPortfoliosKey, portfolios);
             }
@@ -291,7 +291,7 @@ namespace Auctus.Business.Portfolio
             Task<List<Distribution>> distribution = null;
             Task<List<EscrowResult>> escrowResult = null;
             Task<decimal?> purchaseAmount = null;
-            if (purchased && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success)
+            if (purchased && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success.Value)
             {
                 distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
                 Task.WaitAll(history, portfolioQty, distribution);
@@ -355,7 +355,7 @@ namespace Auctus.Business.Portfolio
                 result.OwnerData = new Model.Portfolio.Owner();
                 if (purchaseAmount.Result.HasValue && purchaseAmount.Result.Value > 0)
                 {
-                    var validResults = escrowResult.Result.Where(c => c.LastTransaction.TransactionStatus == TransactionStatus.Success);
+                    var validResults = escrowResult.Result.Where(c => c.LastTransaction.TransactionStatus == TransactionStatus.Success.Value);
                     result.OwnerData.AucReached = validResults.Sum(c => c.OwnerTokenResult);
                     result.OwnerData.AucLost = validResults.Sum(c => c.BuyerTokenResult);
                     result.OwnerData.AucEscrow = purchaseAmount.Result.Value - result.OwnerData.AucReached - result.OwnerData.AucLost;

@@ -1,23 +1,20 @@
-﻿using System;
+﻿using Auctus.Util;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Auctus.DomainObjects.Account
 {
-    public class RiskType
+    public class RiskType : IntType
     {
         public static readonly RiskType VeryLow = new RiskType(1);
         public static readonly RiskType Low = new RiskType(2);
         public static readonly RiskType Medium = new RiskType(3);
         public static readonly RiskType High = new RiskType(4);
         public static readonly RiskType VeryHigh = new RiskType(5);
-
-        public int Value { get; private set; }
-
-        private RiskType(int risk)
-        {
-            Value = risk;
-        }
+        
+        private RiskType(int risk) : base (risk)
+        { }
 
         public static RiskType Get(int risk)
         {

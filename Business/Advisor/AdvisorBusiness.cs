@@ -29,7 +29,7 @@ namespace Auctus.Business.Advisor
 
             advisor = new DomainObjects.Advisor.Advisor();
             advisor.UserId = user.Id;
-            advisor.Type = AdvisorType.Human;
+            advisor.Type = AdvisorType.Human.Value;
             using (var transaction = new TransactionalDapperCommand())
             {
                 transaction.Insert(advisor);
@@ -133,7 +133,7 @@ namespace Auctus.Business.Advisor
 
             var advisor = GetWithDetail(advisorId);
             var owned = (user != null && user.Id == advisor.UserId);
-            if (advisor.Type == AdvisorType.Robo || (!advisor.Detail.Enabled && !owned))
+            if (advisor.Type == AdvisorType.Robo.Value || (!advisor.Detail.Enabled && !owned))
                 throw new ArgumentException("Invalid advisor.");
 
             Task<List<Buy>> purchases = null;

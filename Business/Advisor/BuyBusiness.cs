@@ -40,7 +40,7 @@ namespace Auctus.Business.Advisor
             using (var transaction = new TransactionalDapperCommand())
             {
                 Goal goal = null;
-                if (portfolio.Advisor.Type == AdvisorType.Robo)
+                if (portfolio.Advisor.Type == AdvisorType.Robo.Value)
                 {
                     if (!goalOptionId.HasValue || !timeframe.HasValue || !risk.HasValue || !startingAmount.HasValue || !monthlyContribution.HasValue)
                         throw new ArgumentException("Invalid goal data.");
@@ -131,7 +131,7 @@ namespace Auctus.Business.Advisor
         {
             return purchase != null && purchase.LastTransaction != null &&
                 ((purchase.ExpirationDate.HasValue && purchase.ExpirationDate.Value >= DateTime.UtcNow.Date) ||
-                 (!purchase.ExpirationDate.HasValue && purchase.LastTransaction.TransactionStatus != TransactionStatus.Cancel));
+                 (!purchase.ExpirationDate.HasValue && purchase.LastTransaction.TransactionStatus != TransactionStatus.Cancel.Value));
         }
     }
 }

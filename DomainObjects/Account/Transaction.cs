@@ -17,7 +17,7 @@ namespace Auctus.DomainObjects.Account
         [DapperType(System.Data.DbType.AnsiString)]
         public string TransactionHash { get; set; }
         [DapperType(System.Data.DbType.Int32)]
-        public TransactionStatus TransactionStatus { get; set; }
+        public int TransactionStatus { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime? ProcessedDate { get; set; }
     }

@@ -16,14 +16,14 @@ namespace Auctus.Business.Account
         public Transaction SetNew(int userId, string transactionHash = null)
         {
             var transaction = BaseCreation(userId, transactionHash);
-            transaction.TransactionStatus = TransactionStatus.Pending;
+            transaction.TransactionStatus = TransactionStatus.Pending.Value;
             return transaction;
         }
 
         public Transaction SetCanceled(int userId)
         {
             var transaction = BaseCreation(userId, null);
-            transaction.TransactionStatus = TransactionStatus.Cancel;
+            transaction.TransactionStatus = TransactionStatus.Cancel.Value;
             transaction.ProcessedDate = DateTime.UtcNow;
             return transaction;
         }
@@ -38,7 +38,7 @@ namespace Auctus.Business.Account
         
         public Transaction Process(Transaction transaction, TransactionStatus transactionStatus)
         {
-            transaction.TransactionStatus = transactionStatus;
+            transaction.TransactionStatus = transactionStatus.Value;
             transaction.ProcessedDate = DateTime.UtcNow;
             Data.Update(transaction);
             return transaction;

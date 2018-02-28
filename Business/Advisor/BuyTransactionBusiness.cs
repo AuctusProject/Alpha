@@ -31,11 +31,11 @@ namespace Auctus.Business.Advisor
             if (buy == null || buy.UserId != user.Id || buy.ExpirationDate.HasValue)
                 throw new ArgumentException("Invalid purchase.");
             
-            if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending && string.IsNullOrEmpty(buy.LastTransaction.TransactionHash))
+            if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending.Value && string.IsNullOrEmpty(buy.LastTransaction.TransactionHash))
                 TransactionBusiness.SetTransactionHash(buy.LastTransaction, transactionHash);
-            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Error)
+            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Error.Value)
                 Create(user.Id, buyId, transactionHash);
-            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending && TransactionBusiness.TransactionCanBeConsideredLost(buy.LastTransaction) 
+            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending.Value && TransactionBusiness.TransactionCanBeConsideredLost(buy.LastTransaction) 
                 && buy.LastTransaction.TransactionHash.ToLower().Trim() != transactionHash.ToLower().Trim())
             {
                 try
@@ -60,7 +60,7 @@ namespace Auctus.Business.Advisor
             var user = UserBusiness.GetValidUser(email);
             var buy = BuyBusiness.Get(buyId);
             if (buy == null || buy.UserId != user.Id || buy.ExpirationDate.HasValue || buy.LastTransaction == null 
-                || buy.LastTransaction.TransactionStatus != TransactionStatus.Pending)
+                || buy.LastTransaction.TransactionStatus != TransactionStatus.Pending.Value)
                 throw new ArgumentException("Invalid purchase.");
 
             var status = CheckAndProcessTransaction(buy.LastTransaction, buy.Id);
@@ -80,7 +80,7 @@ namespace Auctus.Business.Advisor
             if (buy == null || buy.UserId != user.Id || buy.ExpirationDate.HasValue)
                 throw new ArgumentException("Invalid purchase.");
 
-            if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending)
+            if (buy.LastTransaction.TransactionStatus == TransactionStatus.Pending.Value)
             {
                 if (string.IsNullOrEmpty(buy.LastTransaction.TransactionHash))
                     TransactionBusiness.Process(buy.LastTransaction, TransactionStatus.Cancel);
@@ -100,7 +100,7 @@ namespace Auctus.Business.Advisor
                     }
                 }
             }
-            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Error)
+            else if (buy.LastTransaction.TransactionStatus == TransactionStatus.Error.Value)
             {
                 using (var transaction = new TransactionalDapperCommand())
                 {
@@ -155,7 +155,7 @@ namespace Auctus.Business.Advisor
                                 {
                                     purchase.ExpirationDate = DateTime.UtcNow.Date.AddDays(purchase.Days);
                                     trans.Update(purchase);
-                                    buyTransaction.TransactionStatus = TransactionStatus.Success;
+                                    buyTransaction.TransactionStatus = TransactionStatus.Success.Value;
                                     buyTransaction.ProcessedDate = DateTime.UtcNow;
                                     trans.Update(buyTransaction);
                                     trans.Commit();
@@ -202,7 +202,7 @@ namespace Auctus.Business.Advisor
         {
             using (var trans = new TransactionalDapperCommand())
             {
-                transaction.TransactionStatus = TransactionStatus.Lost;
+                transaction.TransactionStatus = TransactionStatus.Lost.Value;
                 transaction.ProcessedDate = DateTime.UtcNow;
                 trans.Update(transaction);
                 InternalCreate(trans, userId, buyId, transactionHash);

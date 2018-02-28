@@ -86,7 +86,7 @@ namespace Auctus.Business.Advisor
         {
             using (var trans = new TransactionalDapperCommand())
             {
-                transaction.TransactionStatus = TransactionStatus.Lost;
+                transaction.TransactionStatus = TransactionStatus.Lost.Value;
                 transaction.ProcessedDate = DateTime.UtcNow;
                 trans.Update(transaction);
                 var newTransaction = TransactionBusiness.SetNew(userId);
