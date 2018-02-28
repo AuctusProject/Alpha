@@ -231,8 +231,8 @@ export class PortfolioPurchaseComponent implements OnInit {
 
   showCancelBuyButton() {
     return (
-      this.portfolio.buyTransactionStatus == 0 ||
-      (this.portfolio.buyTransactionStatus == 2 &&
+      this.portfolio.buyTransactionStatus == 2 ||
+      (this.portfolio.buyTransactionStatus == 0 &&
         !this.portfolio.buyTransactionHash)
     );
   }
@@ -250,8 +250,8 @@ export class PortfolioPurchaseComponent implements OnInit {
 
   showSendTransactionButton() {
     return (
-      this.portfolio.buyTransactionStatus == 0 ||
-      (this.portfolio.buyTransactionStatus == 2 &&
+      this.portfolio.buyTransactionStatus == 2 ||
+      (this.portfolio.buyTransactionStatus == 0 &&
         !this.portfolio.buyTransactionHash)
     );
   }

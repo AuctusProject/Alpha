@@ -80,10 +80,10 @@
     </div>
   </div>
   <div fxLayout="column" fxLayoutGap="8px" class="buy-box-content" *ngIf="portfolio.advisorId != loginData.humanAdvisorId">
-    <div fxLayout="row" class="need-email-confirmation" *ngIf="isTransactionPendingConfirmation()">
-        Your transaction is been processed and need to be confirmed to you be able to check the portfolio distribution. Click <a [attr.href]="getTransactionUrl()">here</a> to check it.
+    <div class="need-email-confirmation" *ngIf="isTransactionPendingConfirmation()">
+        Your transaction is been processed and need to be confirmed to you be able to check the portfolio distribution. Click <a [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
     </div>
-    <div fxLayout="row" class="need-email-confirmation" *ngIf="isTransactionPendingToSend()">
+    <div class="need-email-confirmation" *ngIf="isTransactionPendingToSend()">
         Your buy request was processed. You need to send it with Metamask, if some error ocurred, you can try again clicking on send transaction below. If you already sent, please inform the transaction hash.
     </div>
     <button *ngIf="!portfolio.purchased" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
