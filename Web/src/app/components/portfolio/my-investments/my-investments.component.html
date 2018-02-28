@@ -12,7 +12,7 @@
     <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
     <div *ngIf="portfolios && portfolios.length == 0" class="no-investments">
       <div class="no-investments-title">You still don't have any investments.</div>
-      <div class="no-investments-subtitle">Select one option bellow and start now!</div>
+      <div class="no-investments-subtitle">Select one option below and start now!</div>
       <div class="advisor-selection">
         <div class="advisor-selection-option" routerLink="/human-advisors" routerLinkActive="active">
           <span>HUMAN ADVISORS</span>

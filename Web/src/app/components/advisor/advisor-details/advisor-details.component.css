@@ -1,0 +1,15 @@
+.no-investments{
+    text-align: center;
+}
+
+.no-investments-title{
+    font-size: 24px;
+    color: #4a4a4a;
+}
+
+.no-investments-subtitle{
+    font: size 14px;
+    color: #55606e;
+    margin-top:6px;
+    margin-bottom:6px;
+}

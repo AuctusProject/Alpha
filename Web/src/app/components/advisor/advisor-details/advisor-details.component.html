@@ -14,6 +14,11 @@
   <ng-container >
     <div class="portfolio-list">
       <loading-spinner *ngIf="!advisor || !advisor.portfolios"></loading-spinner>
+      <div *ngIf="advisor.portfolios.length == 0" class="no-portfolios">
+        <div *ngIf="!advisor.owned" class="no-portfolios-title">This advisor still doesn't have any portfolios.</div>
+        <div *ngIf="advisor.owned" class="no-portfolios-title">You still don't have any portfolios.</div>
+        <div *ngIf="advisor.owned" class="no-portfolios-subtitle">Create one, clicking below!</div>
+      </div>
       <advisor-portfolios *ngIf="advisor" [portfolios]="advisor.portfolios"></advisor-portfolios>
       <button *ngIf="advisor && advisor.owned" class="pull-right" mat-mini-fab color="primary" routerLink="/add-portfolio"><i-plus></i-plus></button>
     </div>
