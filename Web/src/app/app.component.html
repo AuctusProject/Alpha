@@ -1,6 +1,9 @@
-<div class="fill-container">
-<metamask-account-monitor></metamask-account-monitor>
-<simple-notifications [options]="notificationOptions"></simple-notifications>
-<router-outlet></router-outlet>
+<div class="only-web">
+  <div class="fill-container">
+    <metamask-account-monitor></metamask-account-monitor>
+    <simple-notifications [options]="notificationOptions"></simple-notifications>
+    <router-outlet></router-outlet>
+  </div>
+  <footer></footer>
 </div>
-<footer></footer>
+<app-mobile-not-supported></app-mobile-not-supported>
