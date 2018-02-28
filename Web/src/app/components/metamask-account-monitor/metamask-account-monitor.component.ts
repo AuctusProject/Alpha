@@ -45,7 +45,7 @@ export class MetamaskAccountMonitorComponent implements OnInit {
   }
 
   private onAccountChanged: Function = (payload: any) => {
-    this.loginService.logoutWithoutRedirect();
+    this.loginService.logout();
   }
 
 }
