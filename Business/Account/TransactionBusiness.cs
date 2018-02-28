@@ -27,11 +27,11 @@ namespace Auctus.Business.Account
             transaction.ProcessedDate = DateTime.UtcNow;
             return transaction;
         }
-
+        
         public Transaction SetTransactionHash(Transaction transaction, string transactionHash)
         {
             ValidateTransaction(transactionHash);
-            transaction.TransactionHash = transactionHash.Trim();
+            transaction.TransactionHash = transactionHash.Trim().ToLower();
             Data.Update(transaction);
             return transaction;
         }
@@ -55,13 +55,14 @@ namespace Auctus.Business.Account
             var transaction = new Transaction();
             transaction.CreationDate = DateTime.UtcNow;
             transaction.UserId = userId;
-            transaction.TransactionHash = transactionHash?.Trim();
+            transaction.TransactionHash = transactionHash?.Trim().ToLower();
             return transaction;
         }
 
         public bool TransactionCanBeConsideredLost(Transaction transaction)
         {
-            return !string.IsNullOrEmpty(transaction.TransactionHash) && transaction.CreationDate < DateTime.UtcNow.AddMinutes(-20);
+            return !string.IsNullOrEmpty(transaction.TransactionHash) && transaction.TransactionStatus == TransactionStatus.Pending.Value &&
+                transaction.CreationDate < DateTime.UtcNow.AddMinutes(-20);
         }
     }
 }

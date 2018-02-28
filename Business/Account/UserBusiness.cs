@@ -23,14 +23,14 @@ namespace Auctus.Business.Account
 
         public Login Login(string address, string emailOrUsername, string password)
         {
-            BaseAddressValidation(address);
-            BasePasswordValidation(password);
             BaseEmailOrUsernameValidation(emailOrUsername);
-            
+            BasePasswordValidation(password);
+            address = WalletBusiness.GetAddressFormatted(address);
+
             var user = Data.GetByEmailOrUsername(emailOrUsername);
             if(user == null)
                 throw new ArgumentException("Email or username is invalid.");
-            else if (user.Wallet.Address.ToUpper() != address.ToUpper())
+            else if (user.Wallet.Address != address)
                 throw new ArgumentException("Wallet is invalid.");
             else if (user.Password != Security.Hash(password))
                 throw new ArgumentException("Password is invalid.");
@@ -159,8 +159,12 @@ namespace Auctus.Business.Account
 
         private void ValidateUserAddress(User user, string address)
         {
-            if (address != null && user.Wallet.Address.ToLower() != address.ToLower())
-                throw new ArgumentException("Invalid user wallet.");
+            if (address != null)
+            {
+                address = WalletBusiness.GetAddressFormatted(address);
+                if (user.Wallet.Address != address)
+                    throw new ArgumentException("Invalid user wallet.");
+            }
         }
         
         public User Get(Guid guid)
@@ -225,7 +229,7 @@ Auctus Team", Config.WEB_URL, code));
 
         private Wallet SetWalletCreation(int userId, string address)
         {
-            BaseAddressValidation(address);
+            address = WalletBusiness.GetAddressFormatted(address);
 
             User user = Data.GetByWalletAddress(address);
             if (user != null)
@@ -260,13 +264,6 @@ Auctus Team", Config.WEB_URL, code));
         {
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password must be filled.");
-        }
-        private void BaseAddressValidation(string address)
-        {
-            if (string.IsNullOrEmpty(address))
-                throw new ArgumentException("Address must be filled.");
-            if (!WalletBusiness.IsValidAddress(address))
-                throw new ArgumentException("Invalid address.");
         }
 
         private void PasswordValidation(string password)
