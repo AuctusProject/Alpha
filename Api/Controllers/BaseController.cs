@@ -89,21 +89,6 @@ namespace Api.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        protected bool IsValidRecaptcha(string recaptchaResponse)
-        {
-            string url = string.Format("https://www.google.com/recaptcha/api/siteverify?secret={0}&response={1}", Config.GOOGLE_CAPTCHA_SECRET, recaptchaResponse);
-            using (HttpClient client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/x-www-form-urlencoded"));
-                using (HttpResponseMessage response = client.PostAsync(url, null).Result)
-                {
-                    RecaptchaResponse result = JsonConvert.DeserializeObject<RecaptchaResponse>(response.Content.ReadAsStringAsync().Result);
-                    return result != null && result.Success;
-                }
-            }
-        }
-
         protected AccountServices AccountServices { get { return new AccountServices(LoggerFactory, MemoryCache, NodeServices); } }
         protected AdvisorServices AdvisorServices { get { return new AdvisorServices(LoggerFactory, MemoryCache, NodeServices); } }
         protected AssetServices AssetServices { get { return new AssetServices(LoggerFactory, MemoryCache, NodeServices); } }

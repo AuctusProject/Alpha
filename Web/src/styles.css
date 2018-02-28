@@ -625,3 +625,15 @@ input[type=number]::-webkit-outer-spin-button {
   margin-top: 60px;
   margin-bottom: 60px;
 }
+
+@media (max-width: 640px) {
+  .only-web {
+    display:none;
+  }
+}
+
+@media (min-width: 641px) {
+  .only-mobile {
+    display: none;
+  }
+}
