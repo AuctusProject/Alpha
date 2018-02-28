@@ -30,7 +30,7 @@ namespace Auctus.Business.Account
             var user = Data.GetByEmailOrUsername(emailOrUsername);
             if(user == null)
                 throw new ArgumentException("Email or username is invalid.");
-            else if (user.Wallet.Address != address)
+            else if (user.Wallet.Address?.ToUpper() != address?.ToUpper())
                 throw new ArgumentException("Wallet is invalid.");
             else if (user.Password != Security.Hash(password))
                 throw new ArgumentException("Password is invalid.");
