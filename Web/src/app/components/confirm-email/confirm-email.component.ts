@@ -32,13 +32,14 @@ export class ConfirmEmailComponent implements OnInit {
           this.notificationService.success("Sucess", "Email confirmed!");
           if(this.loginService.isLoggedIn()){
             let loginData = this.loginService.getLoginData();
-            loginData.pendingConfirmation = false;
-            this.loginService.setLoginData(loginData);
-            this.router.navigateByUrl('');
+            if(loginData){
+              loginData.pendingConfirmation = false;
+              this.loginService.setLoginData(loginData);
+              this.router.navigateByUrl('');
+              return;
+            }
           }
-          else{
-            this.router.navigateByUrl('login');
-          }
+          this.router.navigateByUrl('login');
         }
       }
     );
