@@ -7,15 +7,15 @@
       <div fxFlex class="chart-title">
         Projection
       </div>
-      <div fxFlex="15" class="chart-label">
+      <div fxFlex="15" class="chart-label" *ngIf="isShowLikelyLegend()">
         <div class="circle less-likely inline"></div>
         Less Likely
       </div>
-      <div fxFlex="15" class="chart-label">
+      <div fxFlex="15" class="chart-label" *ngIf="isShowLikelyLegend()">
         <div class="circle more-likely inline"></div>
         More Likely
       </div>
-      <div fxFlex="15" class="chart-label">
+      <div fxFlex="15" class="chart-label" *ngIf="goal != null && goal.monthlyContribution > 0">
         <div class="circle contributed inline"></div>
         Contributed
       </div>

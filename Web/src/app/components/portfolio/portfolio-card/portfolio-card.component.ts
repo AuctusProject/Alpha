@@ -9,9 +9,12 @@ import { LocalStorageService } from "../../../services/local-storage.service";
   templateUrl: './portfolio-card.component.html',
   styleUrls: ['./portfolio-card.component.css']
 })
+
 export class PortfolioCardComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
+
+  public readonly roboAdvisorType: number = 1;
 
   constructor(private router: Router, private localStorageService: LocalStorageService) { }
 

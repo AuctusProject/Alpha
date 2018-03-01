@@ -67,6 +67,9 @@ export class PortfolioProjectionComponent implements OnInit {
         type: 'time',
         ticks: {
           fontFamily: 'HelveticaNeueMedium',
+          callback: function (label, index, labels) {
+            return label.includes('AM') && labels.length > 0 ? moment(labels[index].value).format('MMM DD') : label;
+          }
         },
       }],
       yAxes: [{
@@ -295,5 +298,10 @@ export class PortfolioProjectionComponent implements OnInit {
     daily = daily * 100;
 
     return daily;
+  }
+
+  public isShowLikelyLegend() {
+    return this.portfolio && this.portfolio.projectionPercent > 0 && 
+      (this.portfolio.pessimisticPercent > 0 || this.portfolio.optimisticPercent > 0)
   }
 }
