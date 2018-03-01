@@ -47,3 +47,17 @@
   text-align: center;
   width:100%;
 }
+
+.icon-check-color{
+  color: #4a90e2; 
+}
+
+
+.purchased-box {
+  min-width: 92px;
+  text-align: center;
+  background-color: #e9eff4;
+  border-radius: 5px;
+  padding: 9px;
+  color: #4a4a4a;
+}

@@ -38,7 +38,14 @@
       <div class="history-not-available">Portfolio history data is not available yet.</div>
   </div>
   <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
-    <div class="price-box">{{portfolio.price | number :'1.0-2'}} AUC</div>
+    <div class="price-box" *ngIf="!portfolio.purchased">
+        <span>
+            {{portfolio.price | number :'1.0-2'}} AUC
+        </span>
+    </div>
+    <div class="purchased-box" *ngIf="portfolio.purchased">
+        <i-check-circle class="icon icon-check-color" ></i-check-circle>
+    </div>
     <div class="action-button" (click)="onDetailsClick()">SEE DETAILS</div>
   </div>
 </div>
