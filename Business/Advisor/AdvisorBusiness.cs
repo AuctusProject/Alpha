@@ -65,6 +65,7 @@ namespace Auctus.Business.Advisor
             var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
             var goalOption = GoalOptionsBusiness.Get(goalOptionId);
             var riskType = RiskType.Get(risk, goalOption.Risk);
+            var riskPriority = RiskType.GetRiskPriority(riskType);
             var advisors = Data.ListRobosAvailable();
             var portfolios = Task.Factory.StartNew(() => PortfolioBusiness.List(advisors.Select(c => c.Id)));
             
@@ -84,18 +85,33 @@ namespace Auctus.Business.Advisor
             List<Model.Portfolio> portfolioWithLittleHigherRisk = new List<Model.Portfolio>();
             List<Model.Portfolio> portfolioWithLowerRisk = new List<Model.Portfolio>();
             List<Model.Portfolio> portfolioWithHigherRisk = new List<Model.Portfolio>();
+            List<Model.Portfolio> portfolioWithVeryLowerRisk = new List<Model.Portfolio>();
+            List<Model.Portfolio> portfolioWithVeryHigherRisk = new List<Model.Portfolio>();
             foreach (KeyValuePair<int, List<DomainObjects.Portfolio.Portfolio>> advisorPortfolios in portfolios.Result)
             {
                 var advisor = advisors.Single(c => c.Id == advisorPortfolios.Key);
                 advisorPortfolios.Value.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
-
-                var riskPriority = RiskType.GetRiskPriority(riskType);
                 foreach(var r in riskPriority)
                 {
-                    var sameRisk = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);
-                    if (sameRisk != null)
+                    var riskFound = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);
+                    if (riskFound != null)
                     {
-                        portfolioWithSameRisk.Add(PortfolioBusiness.FillPortfolioModel(sameRisk, advisor, user, purchases.Result, portfolioQty.Result));
+                        var port = PortfolioBusiness.FillPortfolioModel(riskFound, advisor, user, purchases.Result, portfolioQty.Result);
+                        var difference = riskFound.Projection.RiskType.Value - riskType.Value;
+                        if (difference == 0)
+                            portfolioWithSameRisk.Add(port);
+                        else if (difference == 1)
+                            portfolioWithLittleHigherRisk.Add(port);
+                        else if (difference == -1)
+                            portfolioWithLittleLowerRisk.Add(port);
+                        else if (difference == 2)
+                            portfolioWithHigherRisk.Add(port);
+                        else if (difference == -2)
+                            portfolioWithLowerRisk.Add(port);
+                        else if (difference > 2)
+                            portfolioWithVeryHigherRisk.Add(port);
+                        else
+                            portfolioWithVeryLowerRisk.Add(port);
                         break;
                     }
                 }
@@ -105,6 +121,8 @@ namespace Auctus.Business.Advisor
             result.AddRange(portfolioWithLittleHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
             result.AddRange(portfolioWithLowerRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
             result.AddRange(portfolioWithHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
+            result.AddRange(portfolioWithVeryLowerRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
+            result.AddRange(portfolioWithVeryHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
 
             return new KeyValuePair<int, IEnumerable<Model.Portfolio>>(riskType.Value, result);
         }
