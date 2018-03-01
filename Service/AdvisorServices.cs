@@ -1,4 +1,5 @@
 ﻿using Auctus.DomainObjects.Advisor;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
@@ -13,7 +14,7 @@ namespace Auctus.Service
     {
         public AdvisorServices(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public Advisor CreateAdvisor(string email, string name, string description)
+        public DomainObjects.Advisor.Advisor CreateAdvisor(string email, string name, string description)
         {
             return AdvisorBusiness.Create(email, name, description);
         }
@@ -44,9 +45,9 @@ namespace Auctus.Service
             BuyTransactionBusiness.SetTransactionHash(email, buyId, transactionHash);
         }
 
-        public List<Model.Portfolio.Distribution> CheckBuyTransaction(string email, int buyId, string transactionHash)
+        public CheckTransaction CheckBuyTransaction(string email, int buyId)
         {
-            return BuyTransactionBusiness.CheckTransactionHash(email, buyId, transactionHash);
+            return BuyTransactionBusiness.CheckTransactionHash(email, buyId);
         }
 
         public void CancelBuyTransaction(string email, int buyId)
