@@ -135,4 +135,9 @@ export class Web3Service {
     });
   }
 
+  public isTransactionMined(hash) : Observable<boolean> {
+    return new Observable(observer => this.web3.eth.getTransactionReceipt(hash, function(err, receipt){ 
+      observer.next(receipt && receipt.blockNumber);
+    }));
+  }
 }

@@ -1,13 +1,13 @@
 <div fxLayout="row" fxLayoutAlign="space-around center">
     <div fxFlex style="padding-top:30px">
-      <mat-tab-group mat-stretch-tabs>
+      <mat-tab-group [selectedIndex]="selectedIndex" mat-stretch-tabs>
         <mat-tab>
           <ng-template mat-tab-label>
             <div class="tab-title">
               PROJECTION
             </div>
           </ng-template>
-          <portfolio-projection [portfolio]="portfolio" [goal]="goal"></portfolio-projection>
+          <portfolio-projection [portfolio]="portfolio" [goal]="goal" (afterPurchaseCompleted)="afterPurchaseCompleted()"></portfolio-projection>
         </mat-tab>
         <mat-tab>
           <ng-template mat-tab-label>
