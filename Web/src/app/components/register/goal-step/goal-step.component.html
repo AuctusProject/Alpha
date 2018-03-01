@@ -19,8 +19,7 @@
             <div class="target-amount" fxLayout="column" fxLayoutAlign="center center">
                 <span class="input-label">Target Amount</span>
                 <mat-form-field>
-                    <mat-icon matPrefix>attach_money</mat-icon>
-                    <input type="number" matInput name="TargetAmount" [(ngModel)]="model.targetAmount">
+                    <input matInput currencyMask name="TargetAmount" [(ngModel)]="model.targetAmount" [options]="{ align: 'center' }">
                     <mat-hint>Optional</mat-hint>
                 </mat-form-field>
             </div>

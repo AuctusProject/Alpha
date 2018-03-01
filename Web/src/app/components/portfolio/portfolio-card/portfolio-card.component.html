@@ -27,7 +27,7 @@
     </div>
     <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value success-rate bold">
-        {{portfolio.allDays.hitPercentage.toFixed(2)}}%
+        {{portfolio.allDays.hitPercentage | number:'1.0-2'}}%
       </div>
       <div class="performance-labels">
         Success rate
@@ -38,7 +38,7 @@
       <div class="history-not-available">Portfolio history data is not available yet.</div>
   </div>
   <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
-    <div class="price-box">{{portfolio.price}} AUC</div>
+    <div class="price-box">{{portfolio.price | number :'1.0-2'}} AUC</div>
     <div class="action-button" (click)="onDetailsClick()">SEE DETAILS</div>
   </div>
 </div>

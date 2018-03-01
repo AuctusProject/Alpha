@@ -10,12 +10,11 @@
     </div>
 
     <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-      <div fxLayout="row" fxLayoutGap="20px">
+      <div fxLayout="row">
         <div fxLayout="column" fxLayoutAlign="center center">
             <span class="input-label">Starting Amount</span>
             <mat-form-field>
-                <mat-icon matPrefix>attach_money</mat-icon>
-                <input matInput type="number" name="StartingAmount" [(ngModel)]="model.startingAmount" required>
+                <input matInput currencyMask [options]="{ align: 'center' }" name="StartingAmount" [(ngModel)]="model.startingAmount" required>
             </mat-form-field>
         </div>
       </div>
@@ -23,8 +22,7 @@
           <div fxLayout="column" fxLayoutAlign="center center">
               <span class="input-label">Monthly contribution</span>
               <mat-form-field>
-                  <mat-icon matPrefix>attach_money</mat-icon>
-                  <input matInput type="number" name="MonthlyContribution" [(ngModel)]="model.monthlyContribution" required>
+                  <input matInput currencyMask [options]="{ align: 'center' }" name="MonthlyContribution" [(ngModel)]="model.monthlyContribution" required>
               </mat-form-field>
           </div>
       </div>

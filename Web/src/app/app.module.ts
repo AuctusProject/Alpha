@@ -92,6 +92,7 @@ import { PortfolioProjectionChartComponent } from './components/dashboard/portfo
 import { LoadingSpinnerComponent } from './components/ui/loading-spinner/loading-spinner.component';
 import { MobileNotSupportedComponent } from './components/ui/mobile-not-supported/mobile-not-supported.component';
 import { SetHashPopupComponent } from './components/portfolio/set-hash-popup/set-hash-popup.component';
+import { CurrencyMaskModule } from "ng2-currency-mask";
 
 @NgModule({
   declarations: [
@@ -169,6 +170,7 @@ import { SetHashPopupComponent } from './components/portfolio/set-hash-popup/set
     FlexLayoutModule,
     ChartsModule,
     IconsModule,
+    CurrencyMaskModule,
     Angular2PromiseButtonModule
       .forRoot({
         spinnerTpl: '<span class="btn-spinner"></span>',

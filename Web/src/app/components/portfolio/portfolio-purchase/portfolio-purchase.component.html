@@ -2,7 +2,7 @@
   <div class="buy-box-content" fxLayout="row" fxLayoutAlign="space-between center">
     <div fxFlex="50" class="text-left">
       <div class="advice-price">
-        {{simulator.price}} AUC
+        {{simulator.price | number:'1.0-2'}} AUC
         <span class="month-price">/ month</span>
       </div>
       <div class="info-price">
@@ -11,7 +11,7 @@
     </div>
     <div fxFlex="50" class="text-right">
       <div class="estimated-return-value">
-        {{simulator.estimatedReturn}}%
+        {{simulator.estimatedReturn | number:'1.0-2'}}%
         <span class="month-price">/ month</span>
       </div>
       <div class="info-price">
@@ -55,7 +55,7 @@
       Estimated total return
     </div>
     <div fxFlex="30" class="text-right">
-      {{simulator.estimatedTotalReturn.toFixed(2)}}%
+      {{simulator.estimatedTotalReturn | number:'1.0-2'}}%
     </div>
   </div>
   <hr>
@@ -64,7 +64,7 @@
       Advise price
     </div>
     <div fxFlex="50" class="text-right">
-      {{portfolio.price}} AUC X {{timeDescription}}
+      {{portfolio.price | number:'1.0-2'}} AUC X {{timeDescription}}
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="space-between center" class="total-price">
@@ -75,7 +75,7 @@
     </div>
     <div fxFlex="50" class="text-right">
       <div>
-        {{simulator.totalPrice.toFixed(2)}} AUC
+        {{simulator.totalPrice | number:'1.0-2'}} AUC
       </div>
     </div>
   </div>
