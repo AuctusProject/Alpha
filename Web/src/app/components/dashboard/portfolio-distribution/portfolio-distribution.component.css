@@ -62,3 +62,11 @@
   display: inline-block;
   width: 26px;
 }
+
+.disclaimer {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #55606e;
+  padding: 30px;
+  text-align: center;
+}
