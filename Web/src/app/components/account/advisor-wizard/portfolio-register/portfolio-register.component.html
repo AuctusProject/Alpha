@@ -1,9 +1,9 @@
 <form #portfolioRegisterForm="ngForm" (ngSubmit)="onSubmit()" fxLayout="row">
   <div class="portfolio-card" fxLayout="column">
     <div fxLayout="row" fxLayoutAlign="space-between center" class="portfolio-summary">
-      <div fxLayout="column">
+      <div fxLayout="column" fxFlex="100">
         <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
-          <div fxLayout="column" fxFlex="100">
+          <div fxLayout="column" fxFlex="90">
             <span class="risk-description bold" *ngIf="!model.isEditing">{{model.name}}</span>
             <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px" *ngIf="model.isEditing">
               <input type="text" placeholder="Portfolio Name" matInput name="Name" [(ngModel)]="model.name" required>
@@ -18,7 +18,7 @@
           </span>
         </span>
       </div>
-      <div class="button">
+      <div class="button" fxFlex>
         <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="!model.id || this.model.isEditing"
           class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
           <i-save></i-save>

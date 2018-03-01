@@ -60,22 +60,25 @@ namespace Auctus.Business.Advisor
         {
             var user = UserBusiness.GetValidUser(email);
             var buy = BuyBusiness.Get(buyId);
-            if (buy == null || buy.UserId != user.Id || buy.ExpirationDate.HasValue || buy.LastTransaction == null 
-                || buy.LastTransaction.TransactionStatus != TransactionStatus.Pending.Value)
+            if (buy == null || buy.UserId != user.Id || buy.LastTransaction == null)
                 throw new ArgumentException("Invalid purchase.");
 
-            var status = CheckAndProcessTransaction(buy.LastTransaction, buy.Id);
-            if (status == TransactionStatus.Success)
+            var status = buy.LastTransaction.TransactionStatus;
+            if (status == TransactionStatus.Success.Value || status == TransactionStatus.Pending.Value)
             {
-                var portfolio = PortfolioBusiness.GetSimple(buy.PortfolioId);
-                return new CheckTransaction()
+                if (status == TransactionStatus.Pending.Value)
+                    status = CheckAndProcessTransaction(buy.LastTransaction, buy.Id).Value;
+                if (status == TransactionStatus.Success.Value)
                 {
-                    Status = status.Value,
-                    Distribution = DistributionBusiness.ListByProjection(portfolio.ProjectionId.Value)
-                };
+                    var portfolio = PortfolioBusiness.GetSimple(buy.PortfolioId);
+                    return new CheckTransaction()
+                    {
+                        Status = status,
+                        Distribution = DistributionBusiness.ListByProjection(portfolio.ProjectionId.Value)
+                    };
+                }
             }
-            else
-                return new CheckTransaction() { Status = status.Value };
+            return new CheckTransaction() { Status = status };
         }
 
         public void Cancel(string email, int buyId)
