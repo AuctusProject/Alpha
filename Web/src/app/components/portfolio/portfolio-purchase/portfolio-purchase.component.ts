@@ -13,6 +13,8 @@ import { LoginService } from "../../../services/login.service";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { SetHashPopupComponent } from "../set-hash-popup/set-hash-popup.component";
 import { Router } from '@angular/router';
+import { Web3Service } from "../../../services/web3.service";
+import { NotificationsService } from "angular2-notifications";
 
 @Component({
   selector: "portfolio-purchase",
@@ -23,10 +25,13 @@ export class PortfolioPurchaseComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
   @Output() afterEndDateChange = new EventEmitter();
+  @Output() afterPurchaseCompleted = new EventEmitter();
+
   loginData: any;
   startDate: Date;
   endDate: Date;
   hashInformed:string;
+  checkTransactionInterval: any;
 
   public simulator = {
     price: null,
@@ -47,11 +52,13 @@ export class PortfolioPurchaseComponent implements OnInit {
     private advisorService: AdvisorService,
     private loginService: LoginService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private web3Service: Web3Service,
+    private notificationService: NotificationsService
   ) {}
 
   ngOnInit() {
-    if (this.portfolio.advisorType != 0 && !this.goal) {
+    if (this.portfolio.advisorType != 0 && !this.goal && !this.portfolio.purchased && !this.portfolio.owned) {
       this.router.navigateByUrl('robo-advisors');
       return;
     }
@@ -182,6 +189,7 @@ export class PortfolioPurchaseComponent implements OnInit {
             this.portfolio.buyTransactionId = id;
             this.portfolio.buyTransactionHash = hash;
             this.portfolio.buyTransactionStatus = 0;
+            this.setCheckTransactionInterval();
             if (observer) observer.next(true);
           } else {
             if (observer) observer.complete();
@@ -193,6 +201,34 @@ export class PortfolioPurchaseComponent implements OnInit {
         });
       }
     });
+  }
+
+  setCheckTransactionInterval(){
+    if(this.checkTransactionInterval){
+      clearInterval(this.checkTransactionInterval);
+    }
+    let self = this;
+    this.checkTransactionInterval = setInterval(function () {
+      self.web3Service.isTransactionMined(self.portfolio.buyTransactionHash).subscribe(
+        result => {
+          if (result) {
+            clearInterval(self.checkTransactionInterval);
+            self.advisorService.checkBuyTransaction(self.portfolio.buyTransactionId).subscribe(
+              result => {
+                self.portfolio.buyTransactionStatus = result.status;
+                if(result.distribution){
+                  self.portfolio.purchased = true;
+                  self.portfolio.assetDistribution = result.distribution;
+                  self.notificationService.success("Sucess", "Your buy transaction was successfully processed.");
+                  if(self.afterPurchaseCompleted){
+                    self.afterPurchaseCompleted.emit();
+                  }
+                }
+              }
+            );
+          }
+        })
+    }, 1000);
   }
 
   getTransactionUrl() {
@@ -231,6 +267,7 @@ export class PortfolioPurchaseComponent implements OnInit {
         this.dialog.closeAll();
         if (success) {
           this.portfolio.buyTransactionHash = hash;
+          this.setCheckTransactionInterval();
         }
       });
   }

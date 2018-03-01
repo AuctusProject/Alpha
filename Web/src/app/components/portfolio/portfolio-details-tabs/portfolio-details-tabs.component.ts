@@ -11,10 +11,15 @@ export class PortfolioDetailsTabsComponent implements OnInit {
 
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
+  selectedIndex : number;
   
   constructor() { }
 
   ngOnInit() {
+    this.selectedIndex = 0;
   }
 
+  afterPurchaseCompleted(){
+    this.selectedIndex = 2;
+  }
 }

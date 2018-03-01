@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { Portfolio } from '../../../model/portfolio/portfolio';
 import { PortfolioPurchaseComponent } from '../portfolio-purchase/portfolio-purchase.component';
 import { Goal } from '../../../model/account/goal';
@@ -17,6 +17,7 @@ export class PortfolioProjectionComponent implements OnInit {
   @Input() goal?: Goal;
   @ViewChild("baseChart") baseChart: any;
   @ViewChild(PortfolioPurchaseComponent) portfolioPurchaseComponent;
+  @Output() afterPurchaseCompleted = new EventEmitter();
 
   constructor() {
   }
@@ -67,6 +68,9 @@ export class PortfolioProjectionComponent implements OnInit {
         type: 'time',
         ticks: {
           fontFamily: 'HelveticaNeueMedium',
+          callback: function (label, index, labels) {
+            return label.includes('AM') && labels.length > 0 ? moment(labels[index].value).format('MMM DD') : label;
+          }
         },
       }],
       yAxes: [{
@@ -295,5 +299,16 @@ export class PortfolioProjectionComponent implements OnInit {
     daily = daily * 100;
 
     return daily;
+  }
+
+  public isShowLikelyLegend() {
+    return this.portfolio && this.portfolio.projectionPercent > 0 && 
+      (this.portfolio.pessimisticPercent > 0 || this.portfolio.optimisticPercent > 0)
+  }
+
+  internalAfterPurchaseCompleted(){
+    if(this.afterPurchaseCompleted){
+      this.afterPurchaseCompleted.emit();
+    }
   }
 }
