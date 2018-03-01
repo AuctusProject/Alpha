@@ -2,6 +2,7 @@
 using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Advisor;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
@@ -55,7 +56,7 @@ namespace Auctus.Business.Advisor
                 throw new ArgumentException("Invalid transaction status.");
         }
 
-        public List<Model.Portfolio.Distribution> CheckTransactionHash(string email, int buyId, string transactionHash)
+        public CheckTransaction CheckTransactionHash(string email, int buyId)
         {
             var user = UserBusiness.GetValidUser(email);
             var buy = BuyBusiness.Get(buyId);
@@ -67,10 +68,14 @@ namespace Auctus.Business.Advisor
             if (status == TransactionStatus.Success)
             {
                 var portfolio = PortfolioBusiness.GetSimple(buy.PortfolioId);
-                return DistributionBusiness.ListByProjection(portfolio.ProjectionId.Value);
+                return new CheckTransaction()
+                {
+                    Status = status.Value,
+                    Distribution = DistributionBusiness.ListByProjection(portfolio.ProjectionId.Value)
+                };
             }
             else
-                return null;
+                return new CheckTransaction() { Status = status.Value };
         }
 
         public void Cancel(string email, int buyId)
@@ -139,7 +144,7 @@ namespace Auctus.Business.Advisor
             try
             {
                 var transaction = Web3.Web3Business.CheckTransaction(buyTransaction.TransactionHash, "Escrow(address,uint256)");
-                if (transaction.BlockNumber.HasValue)
+                if (transaction.Status.HasValue)
                 {
                     if (transaction.Status.Value == 1)
                     {

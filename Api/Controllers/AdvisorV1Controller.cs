@@ -69,12 +69,12 @@ namespace Api.Controllers
             return base.CancelBuyTransaction(buyId);
         }
 
-        [Route("purchases/{buyId}/transaction/{transactionHash}")]
+        [Route("purchases/{buyId}/check")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult CheckBuyTransaction([FromRoute]int buyId, [FromRoute]string transactionHash)
+        public new IActionResult CheckBuyTransaction([FromRoute]int buyId)
         {
-            return base.CheckBuyTransaction(buyId, transactionHash);
+            return base.CheckBuyTransaction(buyId);
         }
 
         [AllowAnonymous]

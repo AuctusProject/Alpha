@@ -102,15 +102,12 @@ namespace Api.Controllers
             return Ok();
         }
 
-        protected virtual IActionResult CheckBuyTransaction(int buyId, string transactionHash)
+        protected virtual IActionResult CheckBuyTransaction(int buyId)
         {
-            if (string.IsNullOrWhiteSpace(transactionHash))
-                return BadRequest();
-
             try
             {
-                var distribution = AdvisorServices.CheckBuyTransaction(GetUser(), buyId, transactionHash);
-                return Ok(distribution);
+                var check = AdvisorServices.CheckBuyTransaction(GetUser(), buyId);
+                return Ok(check);
             }
             catch (ArgumentException ex)
             {
