@@ -5,6 +5,7 @@ import { Advisor } from "../model/advisor/advisor";
 import { Portfolio } from "../model/portfolio/portfolio";
 import { Goal } from '../model/account/goal';
 import { BuyRequest } from '../model/advisor/buyRequest';
+import { CheckTransaction } from '../model/advisor/checkTransaction';
 
 @Injectable()
 export class AdvisorService {
@@ -12,7 +13,8 @@ export class AdvisorService {
   private baseGetAdvisorsUrl = this.httpService.apiUrl("advisors/v1");
   private baseAdvisorsPurchaseUrl = this.httpService.apiUrl("advisors/v1/purchases");
   private setBuyTransactionUrl = this.httpService.apiUrl("advisors/v1/purchases/{0}/transaction");
-
+  private checkBuyTransactionUrl = this.httpService.apiUrl("advisors/v1/purchases/{0}/check");
+  
   
   constructor(private httpService : HttpService) { }
 
@@ -37,6 +39,10 @@ export class AdvisorService {
       transactionHash: hash
     };
     return this.httpService.post(this.setBuyTransactionUrl.replace("{0}", buyId), setBuyRequest);
+  }
+
+  checkBuyTransaction(buyId): Observable<CheckTransaction> {
+    return this.httpService.post(this.checkBuyTransactionUrl.replace("{0}", buyId));
   }
 
   updateAdvisor(advisor: Advisor): Observable<void> {

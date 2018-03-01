@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { Portfolio } from '../../../model/portfolio/portfolio';
 import { PortfolioPurchaseComponent } from '../portfolio-purchase/portfolio-purchase.component';
 import { Goal } from '../../../model/account/goal';
@@ -17,6 +17,7 @@ export class PortfolioProjectionComponent implements OnInit {
   @Input() goal?: Goal;
   @ViewChild("baseChart") baseChart: any;
   @ViewChild(PortfolioPurchaseComponent) portfolioPurchaseComponent;
+  @Output() afterPurchaseCompleted = new EventEmitter();
 
   constructor() {
   }
@@ -295,5 +296,11 @@ export class PortfolioProjectionComponent implements OnInit {
     daily = daily * 100;
 
     return daily;
+  }
+
+  internalAfterPurchaseCompleted(){
+    if(this.afterPurchaseCompleted){
+      this.afterPurchaseCompleted.emit();
+    }
   }
 }

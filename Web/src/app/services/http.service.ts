@@ -76,7 +76,7 @@ export class HttpService {
     return httpOptions;
   }
 
-  post<T>(url: string, model: T, httpOptions: any = {}): Observable<any> {
+  post<T>(url: string, model?: T, httpOptions: any = {}): Observable<any> {
     return this.http.post<any>(url, model, this.getHttpOptions(httpOptions)).pipe(
       tap((response: any) => {
         if (response && response.jwt) this.setAccessToken(response.jwt);

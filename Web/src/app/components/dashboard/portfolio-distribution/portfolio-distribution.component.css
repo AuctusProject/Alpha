@@ -20,8 +20,9 @@
 }
 
 .mat-column-holdings {
-  flex: 0 0 260px !important;
-  width: 260px !important;
+  flex: 0 0 280px !important;
+  width: 280px !important;
+  padding-right: 4px;
 }
 
 .mat-header-row {
@@ -60,5 +61,5 @@
 
 .percentage-value {
   display: inline-block;
-  width: 26px;
+  width: 34px;
 }
