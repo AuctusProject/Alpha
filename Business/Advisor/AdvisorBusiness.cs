@@ -89,33 +89,17 @@ namespace Auctus.Business.Advisor
                 var advisor = advisors.Single(c => c.Id == advisorPortfolios.Key);
                 advisorPortfolios.Value.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
 
-                var sameRisk = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == riskType);
-                if (sameRisk != null)
-                    portfolioWithSameRisk.Add(PortfolioBusiness.FillPortfolioModel(sameRisk, advisor, user, purchases.Result, portfolioQty.Result));
-                else
+                var riskPriority = RiskType.GetRiskPriority(riskType);
+                foreach(var r in riskPriority)
                 {
-                    var littleLower = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 1));
-                    if (littleLower != null)
-                        portfolioWithLittleLowerRisk.Add(PortfolioBusiness.FillPortfolioModel(littleLower, advisor, user, purchases.Result, portfolioQty.Result));
-                    else
+                    var sameRisk = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);
+                    if (sameRisk != null)
                     {
-                        var littleHigher = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value + 1));
-                        if (littleHigher != null)
-                            portfolioWithLittleHigherRisk.Add(PortfolioBusiness.FillPortfolioModel(littleHigher, advisor, user, purchases.Result, portfolioQty.Result));
-                        else
-                        {
-                            var lower = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType.Value == (riskType.Value - 2));
-                            if (lower != null)
-                                portfolioWithLowerRisk.Add(PortfolioBusiness.FillPortfolioModel(lower, advisor, user, purchases.Result, portfolioQty.Result));
-                            else
-                                portfolioWithHigherRisk.Add(PortfolioBusiness.FillPortfolioModel(
-                                    advisorPortfolios.Value.Single(c => c.Projection.RiskType.Value == (riskType.Value + 2)), 
-                                    advisor, user, purchases.Result, portfolioQty.Result));
-                        }
+                        portfolioWithSameRisk.Add(PortfolioBusiness.FillPortfolioModel(sameRisk, advisor, user, purchases.Result, portfolioQty.Result));
+                        break;
                     }
                 }
             }
-
             var result = portfolioWithSameRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
             result.AddRange(portfolioWithLittleLowerRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
             result.AddRange(portfolioWithLittleHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
