@@ -87,7 +87,7 @@
         Your buy request was processed. You need to send it with Metamask, if some error ocurred, you can try again clicking on send transaction below. If you already sent, please inform the transaction hash.
     </div>
     <button *ngIf="!portfolio.purchased" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
-      (click)="onBuyClick()" [class.disabled]="loginData.pendingConfirmation">
+      (click)="!loginData.pendingConfirmation && onBuyClick()" [class.disabled]="loginData.pendingConfirmation">
       BUY
     </button>
     <button *ngIf="showSendTransactionButton()" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"

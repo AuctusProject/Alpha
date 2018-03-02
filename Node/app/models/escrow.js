@@ -12,9 +12,9 @@ class Escrow {
     }
 
     getEscrowResult(cb) {
-        if (!transactionRequestCache.valid(this.from + this.to, 'getEscrowResult')) {
-            throw new Error(429, 'Too many requests.');
-        }
+        //if (!transactionRequestCache.valid(this.from + this.to, 'getEscrowResult')) {
+        //    throw new Error(429, 'Too many requests.');
+        //}
 
         var self = this;
         this.sendEscrowResultTransaction(function (err, result) {

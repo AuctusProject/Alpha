@@ -60,7 +60,18 @@ namespace Auctus.Business.Web3
             if (response.IsSuccessStatusCode)
                 return JsonConvert.DeserializeObject<T>(responseContent);
             else if (expectedErrors != null && expectedErrors.Contains((int)response.StatusCode))
-                throw new Web3Exception((int)response.StatusCode, JsonConvert.DeserializeObject<Error>(responseContent).Message);
+            {
+                string message;
+                try
+                {
+                    message = JsonConvert.DeserializeObject<Error>(responseContent).Message;
+                }
+                catch
+                {
+                    message = responseContent;
+                }
+                throw new Web3Exception((int)response.StatusCode, message);
+            }
             else
                 throw new Exception(responseContent);
         }

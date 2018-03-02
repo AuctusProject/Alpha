@@ -1,7 +1,6 @@
 <div fxLayout="column" class="advisor-steps-main-content" fxLayoutAlign="center center">
 
-  <div class="inside-step-title">Create your financial portfolio</div>
-  <div class="inside-step-subtitle">Nullam quis risus eget urna mollis ornare vel eu leo. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Aenean lacinia bibendum nulla sed consectetur.</div>
+  <div class="inside-step-title">Recommend an investment portfolio</div>
   <div class="portfolio-risks" fxLayout="column" fxLayoutGap="24px">
     <portfolio-register class="portfolio-register-component" *ngFor="let portfolio of portfolioList; let i = index" [index]="i" [model]="portfolio" [assets]="assets"></portfolio-register>
   </div>

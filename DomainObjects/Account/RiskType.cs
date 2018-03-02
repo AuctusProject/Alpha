@@ -35,6 +35,48 @@ namespace Auctus.DomainObjects.Account
             }
         }
 
+        public static List<RiskType> GetRiskPriority(RiskType riskType)
+        {
+            var result = new List<RiskType>();
+            result.Add(riskType);
+            if (riskType == RiskType.VeryLow)
+            {
+                result.Add(RiskType.Low);
+                result.Add(RiskType.Medium);
+                result.Add(RiskType.High);
+                result.Add(RiskType.VeryHigh);
+            }
+            else if (riskType == RiskType.Low)
+            {
+                result.Add(RiskType.VeryLow);
+                result.Add(RiskType.Medium);
+                result.Add(RiskType.High);
+                result.Add(RiskType.VeryHigh);
+            }
+            else if (riskType == RiskType.Medium)
+            {
+                result.Add(RiskType.Low);
+                result.Add(RiskType.High);
+                result.Add(RiskType.VeryLow);
+                result.Add(RiskType.VeryHigh);
+            }
+            else if (riskType == RiskType.High)
+            {
+                result.Add(RiskType.Medium);
+                result.Add(RiskType.VeryHigh);
+                result.Add(RiskType.Low);
+                result.Add(RiskType.VeryLow);
+            }
+            else 
+            {
+                result.Add(RiskType.High);
+                result.Add(RiskType.Medium);
+                result.Add(RiskType.Low);
+                result.Add(RiskType.VeryLow);
+            }
+            return result;
+        }
+
         public static RiskType Get(int goalRisk, int goalOptionRisk)
         {
             RiskType optionRisk = Get(goalOptionRisk);

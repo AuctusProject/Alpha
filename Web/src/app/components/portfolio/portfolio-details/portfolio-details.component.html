@@ -28,7 +28,7 @@
             {{portfolio.advisorDescription}}
           </p>
         </div>
-        <div class="portfolio-description" fxFlex>
+        <div *ngIf="portfolio.description" class="portfolio-description" fxFlex>
           <b>Portfolio description</b>
           <p>
             {{portfolio.description}}
