@@ -29,6 +29,7 @@ export class MetamaskAccountService {
       self.web3Service.getAccount().subscribe(
         account => {
           if (!self.isRinkeby()){
+            self.broadcastLoginConditionsFail();
             return;
           }
 
