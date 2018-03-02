@@ -79,19 +79,32 @@
       </div>
     </div>
   </div>
+  <hr>
+  <div fxLayout="row">
+    <div fxFlex class="good-advices">
+      <b>Pay Only for good advices </b>
+      <br/>
+      Tokens corresponding to the entire period will be locked through smart contracts and you can be redeemed in case of unsatisfactory
+      results. read more <a href="https://blog.auctus.org/auc-token-model-how-it-works-a225c81af269"  target="_blank">here</a>
+    </div>
+  </div>
+  <hr>
   <div fxLayout="column" fxLayoutGap="8px" class="buy-box-content" *ngIf="portfolio.advisorId != loginData.humanAdvisorId">
     <div class="need-email-confirmation" *ngIf="isTransactionPendingConfirmation()">
-        Your transaction is been processed and need to be confirmed to you be able to check the portfolio distribution. Click <a [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
+      Your transaction is been processed and need to be confirmed to you be able to check the portfolio distribution. Click
+      <a
+        [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
     </div>
     <div class="need-email-confirmation" *ngIf="isTransactionPendingToSend()">
-        Your buy request was processed. You need to send it with Metamask, if some error ocurred, you can try again clicking on send transaction below. If you already sent, please inform the transaction hash.
+      Your buy request was processed. You need to send it with Metamask, if some error ocurred, you can try again clicking on send
+      transaction below. If you already sent, please inform the transaction hash.
     </div>
     <button *ngIf="!portfolio.purchased" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
       (click)="!loginData.pendingConfirmation && onBuyClick()" [class.disabled]="loginData.pendingConfirmation">
       BUY
     </button>
-    <button *ngIf="showSendTransactionButton()" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
-      (click)="onSendTransactionClick()">
+    <button *ngIf="showSendTransactionButton()" type="button" [promiseBtn]="purchasePromise" class="action-button text-center"
+      style="width:100%" (click)="onSendTransactionClick()">
       SEND TRANSACTION
     </button>
     <button *ngIf="showCancelBuyButton()" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
@@ -103,8 +116,8 @@
       SET TRANSACTION HASH
     </button>
     <div fxLayout="row" class="need-email-confirmation" *ngIf="loginData.pendingConfirmation">
-        You need to confirm your email to be able to buy portfolios.
+      You need to confirm your email to be able to buy portfolios.
     </div>
   </div>
-  
+
 </div>

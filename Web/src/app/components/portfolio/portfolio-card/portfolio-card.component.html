@@ -39,8 +39,10 @@
   </div>
   <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
     <div class="price-box" *ngIf="!portfolio.purchased || portfolio.advisorType == roboAdvisorType">
-      <span>
-        {{portfolio.price | number :'1.0-2'}} AUC
+      {{portfolio.price | number :'1.0-2'}} AUC
+      <br/>
+      <span style="font-size:8px">
+        / month
       </span>
     </div>
     <div class="purchased-box" *ngIf="portfolio.purchased && portfolio.advisorType != roboAdvisorType ">
