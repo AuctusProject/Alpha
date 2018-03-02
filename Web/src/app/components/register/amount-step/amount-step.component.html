@@ -14,7 +14,7 @@
         <div fxLayout="column" fxLayoutAlign="center center">
             <span class="input-label">Starting Amount</span>
             <mat-form-field>
-                <input matInput currencyMask [options]="{ align: 'center' }" name="StartingAmount" [(ngModel)]="model.startingAmount" required>
+                <input matInput currencyMask [options]="{ align: 'center', allowNegative : false }" name="StartingAmount" [(ngModel)]="model.startingAmount" required>
             </mat-form-field>
         </div>
       </div>
@@ -22,7 +22,7 @@
           <div fxLayout="column" fxLayoutAlign="center center">
               <span class="input-label">Monthly contribution</span>
               <mat-form-field>
-                  <input matInput currencyMask [options]="{ align: 'center' }" name="MonthlyContribution" [(ngModel)]="model.monthlyContribution" required>
+                  <input matInput currencyMask [options]="{ align: 'center', allowNegative : false }" name="MonthlyContribution" [(ngModel)]="model.monthlyContribution" required>
               </mat-form-field>
           </div>
       </div>
