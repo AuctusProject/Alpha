@@ -1,10 +1,10 @@
 <div class="portfolio-card" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="40px">
   <div fxLayout="column" fxFlex>
     <div class="portfolio-name">
-    {{portfolio.advisorName}}
+      {{portfolio.name}}
     </div>
     <div class="portfolio-description">
-      {{portfolio.name}}
+      {{portfolio.advisorName}}
     </div>
     <risk-indicator [risk]="portfolio.risk"></risk-indicator>
   </div>
@@ -32,19 +32,19 @@
       <div class="performance-labels">
         Success rate
       </div>
-    </div> 
+    </div>
   </div>
   <div fxLayout="row" *ngIf="!portfolio.allDays" fxFlex="280px" fxLayoutGap="40px">
-      <div class="history-not-available">Portfolio history data is not available yet.</div>
+    <div class="history-not-available">Portfolio history data is not available yet.</div>
   </div>
   <div fxFlex="348px" fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="end center">
     <div class="price-box" *ngIf="!portfolio.purchased || portfolio.advisorType == roboAdvisorType">
-        <span>
-            {{portfolio.price | number :'1.0-2'}} AUC
-        </span>
+      <span>
+        {{portfolio.price | number :'1.0-2'}} AUC
+      </span>
     </div>
     <div class="purchased-box" *ngIf="portfolio.purchased && portfolio.advisorType != roboAdvisorType ">
-        <i-check-circle class="icon icon-check-color" ></i-check-circle>
+      <i-check-circle class="icon icon-check-color"></i-check-circle>
     </div>
     <div class="action-button" (click)="onDetailsClick()">SEE DETAILS</div>
   </div>
