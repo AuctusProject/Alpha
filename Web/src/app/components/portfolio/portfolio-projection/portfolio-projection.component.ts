@@ -44,14 +44,14 @@ export class PortfolioProjectionComponent implements OnInit {
     },
     {
       //Projection
-      backgroundColor: 'rgb(97, 237, 223)',
-      borderColor: 'rgb(97, 237, 223)',
+      backgroundColor: "rgb(15, 215, 185)",
+      borderColor: "rgb(15, 215, 185)",
       fill: 'origin',
     },
     {
       //Optimistic
-      backgroundColor: "rgb(15, 215, 185)",
-      borderColor: "rgb(15, 215, 185)",
+      backgroundColor: 'rgb(188, 255, 248)',
+      borderColor: 'rgb(188, 255, 248)',
       fill: 'origin',
     }
   ];

@@ -20,8 +20,8 @@
 }
 
 .mat-column-holdings {
-  flex: 0 0 280px !important;
-  width: 280px !important;
+  flex: 0 0 320px !important;
+  width: 320px !important;
   padding-right: 4px;
 }
 
@@ -61,7 +61,7 @@
 
 .percentage-value {
   display: inline-block;
-  width: 34px;
+  width: 48px;
 }
 
 .disclaimer {
