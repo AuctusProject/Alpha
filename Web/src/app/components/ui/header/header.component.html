@@ -26,6 +26,7 @@
                         <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
                     </div>
                 </div>
+              
             </div>
         </div>
         <div *ngIf="!loginData">
@@ -35,5 +36,8 @@
                 <a *ngIf="!hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
             </div>
         </div>
+        <a href="https://t.me/AuctusProject"  target="_blank" title="Give us feedback on Telegram">
+            <img src="./assets/icons/telegram.png" class="telegram">
+        </a>
     </mat-toolbar-row>
 </mat-toolbar>
