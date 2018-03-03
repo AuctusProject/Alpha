@@ -28,6 +28,9 @@ export class MetamaskAccountService {
     var accountInterval = setInterval(function () {
       self.web3Service.getAccount().subscribe(
         account => {
+          if (!self.getNetwork()){
+            return;
+          }
           if (!self.isRinkeby()){
             self.broadcastLoginConditionsFail();
             return;
@@ -136,7 +139,7 @@ export class MetamaskAccountService {
   }
 
   public isRinkeby(): boolean {
-    return this.network == 4;
+    return this.network && this.network == 4;
   }
 
   public getNetwork(): number {
