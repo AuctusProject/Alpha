@@ -18,9 +18,16 @@ export class MetamaskAccountService {
   private network: number;
   private aucBalance: number;
 
-  constructor(private router: Router, private eventsService: EventsService, private web3Service: Web3Service) {
-    this.runChecks();
-    this.monitoreAccount();
+  constructor(private router: Router, private eventsService: EventsService,
+    private web3Service: Web3Service) {
+    let self = this;
+    self.runChecks().subscribe(success => {
+      self.broadcastLoginConditionsSuccess();
+      self.monitoreAccount();
+    }, error => {
+      self.broadcastLoginConditionsFail();
+    })
+
   }
 
   private monitoreAccount() {
@@ -28,11 +35,10 @@ export class MetamaskAccountService {
     var accountInterval = setInterval(function () {
       self.web3Service.getAccount().subscribe(
         account => {
-          if (!self.isRinkeby()){
+          if (!self.isRinkeby()) {
             self.broadcastLoginConditionsFail();
             return;
           }
-
           if (self.account && self.account != account) {
             self.broadcastAccountChanged(account);
           }
@@ -44,28 +50,33 @@ export class MetamaskAccountService {
     }, 100);
   }
 
-  private runChecks() {
+  private runChecks(): Observable<any> {
     let self = this;
-    this.web3Service.getWeb3().subscribe(
-      web3 => {
-        self.hasMetamask = web3 != null;
-        if (!web3) {
-          self.broadcastLoginConditionsFail();
-        }
-        else {
-          self.checkLoginConditions();
-        }
-      })
+    return Observable.create(observer => {
+      this.web3Service.getWeb3().subscribe(
+        web3 => {
+          self.hasMetamask = web3 != null;
+          if (!web3) {
+            observer.throw();
+          } else {
+            self.checkLoginConditions().subscribe(success => observer.next())
+          }
+        });
+    });
   }
 
-  private checkLoginConditions() {
+  private checkLoginConditions(): Observable<any> {
     let self = this;
-    this.checkAccountAndNetwork().subscribe(
-      success => {
-        if (success) {
-          this.checkAUCBalance(self.account);
-        }
-      });
+    return Observable.create(observer => {
+      this.checkAccountAndNetwork().subscribe(
+        success => {
+          if (success) {
+            this.checkAUCBalance(self.account).subscribe(success => observer.next());
+          } else {
+            observer.throw();
+          }
+        });
+    });
   }
 
   private checkAccountAndNetwork(): Observable<boolean> {
@@ -87,24 +98,24 @@ export class MetamaskAccountService {
       });
   }
 
-  private checkAUCBalance(account) {
+  private checkAUCBalance(account): Observable<any> {
     let self = this;
-    this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
-      balance => {
-        if (self.aucBalance != balance) {
-          self.broadcastBalanceChanged(balance);
-        }
-        if (balance < constants.minimumAUCNecessary) {
-          self.broadcastLoginConditionsFail();
-        }
-        else {
-          self.broadcastLoginConditionsSuccess();
-        }
-        self.aucBalance = balance;
-      });
+    return Observable.create(observer => {
+      this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
+        balance => {
+          if (self.aucBalance != balance) {
+            self.broadcastBalanceChanged(balance);
+          }
+          if (balance < constants.minimumAUCNecessary) {
+            observer.throw();
+          }
+          self.aucBalance = balance;
+          observer.next();
+        });
+    });
   }
 
-  public sendAUC(value: number) : Observable<string> {
+  public sendAUC(value: number): Observable<string> {
     var aucToSendHex = this.web3Service.toHex(this.web3Service.toWei(value.toString()));
     var data = this.web3Service.getContractMethodData(environment.aucTokenContract.abi,
       environment.aucTokenContract.address, "transfer", environment.escrowContract.address, aucToSendHex);

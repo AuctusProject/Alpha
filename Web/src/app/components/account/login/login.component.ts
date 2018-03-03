@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Login } from '../../../model/account/login';
 import { LoginResult } from '../../../model/account/loginResult';
 import { LoginService } from '../../../services/login.service';
@@ -27,7 +27,8 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService, 
     private notificationService: NotificationsService, 
     private router: Router,
-    private web3Service: Web3Service) { 
+    private web3Service: Web3Service,
+    private chRef: ChangeDetectorRef) { 
       this.buildForm();
     }
 
@@ -48,6 +49,7 @@ export class LoginComponent implements OnInit {
   private onLoginConditionsSuccess: Function = (payload: any) => {
     this.web3Service.getAccount().subscribe(address => {
       this.login.address = address;
+      this.chRef.detectChanges();
     });
   }
 

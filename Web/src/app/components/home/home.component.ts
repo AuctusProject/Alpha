@@ -1,6 +1,6 @@
 import { NotificationsService } from 'angular2-notifications';
 import { SimpleRegister } from './../../model/account/simpleRegister';
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
@@ -31,7 +31,8 @@ export class HomeComponent implements OnInit {
     private notificationService: NotificationsService,
     private web3Service: Web3Service,
     private metamaskAccountService: MetamaskAccountService,
-    private zone: NgZone) {
+    private zone: NgZone,
+    private chRef: ChangeDetectorRef) {
     this.simpleRegister = new SimpleRegister();
     this.buildForm();
   }
@@ -43,6 +44,7 @@ export class HomeComponent implements OnInit {
   private onLoginConditionsSuccess: Function = (payload: any) => {
     this.web3Service.getAccount().subscribe(address => {
       this.simpleRegister.address = address;
+      this.chRef.detectChanges();
     });
   }
 
