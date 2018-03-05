@@ -24,6 +24,5 @@ export class PeriodStepComponent implements OnInit {
   }
 
   onChangeSlider(){
-    console.log(this.model);
   }
 }

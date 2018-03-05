@@ -38,8 +38,10 @@ export class GoalStepComponent implements OnInit {
   ngAfterViewInit() {
     //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
     //Add 'implements AfterViewInit' to the class.
-    let windowWidth = this.winRef.nativeWindow.innerWidth;
-    this.onWidth(innerWidth);
+    setTimeout(() => {
+      let windowWidth = this.winRef.nativeWindow.innerWidth;
+      this.onWidth(innerWidth);
+    }, 0)
   }
 
   onOptionChange(optionId) {

@@ -40,7 +40,6 @@ export class PortfolioDetailsComponent implements OnInit {
   private getPortfolio(portfolioId){
     this.portfolioService.getPortfolio(portfolioId)
     .subscribe(response => {
-      console.log(response)
       this.portfolio = response
     })
   }

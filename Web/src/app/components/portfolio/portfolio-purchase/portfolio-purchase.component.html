@@ -24,12 +24,12 @@
       <div fxLayout="row" fxLayoutAlign="space-between center" >
         <div class="amount-field" fxflex>
           <mat-form-field>
-            <input matInput placeholder="Target amount" (blur)="onTargetAmountChange()" [(ngModel)]="simulator.targetAmount" type="text" currencyMask name="TargetAmount" [options]="{ align: 'right', allowNegative : false }"/>
+            <input matInput placeholder="Target amount" (blur)="onTargetAmountChange()" [(ngModel)]="simulator.targetAmount" type="text" currencyMask name="TargetAmount" [options]="{ allowNegative : false }"/>
           </mat-form-field>
         </div>
         <div class="amount-field" fxflex>
           <mat-form-field>
-            <input matInput placeholder="Monthly contribution" (blur)="onMontlhyAmountChange()" [(ngModel)]="simulator.monthlyContribution" type="text" currencyMask name="MonthlyContribution" [options]="{ align: 'right', allowNegative : false }"/>
+            <input matInput placeholder="Monthly contribution" (blur)="onMontlhyAmountChange()" [(ngModel)]="simulator.monthlyContribution" type="text" currencyMask name="MonthlyContribution" [options]="{ allowNegative : false }"/>
           </mat-form-field>
         </div> 
       </div>
