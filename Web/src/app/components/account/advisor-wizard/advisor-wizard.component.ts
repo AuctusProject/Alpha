@@ -57,7 +57,7 @@ export class AdvisorWizardComponent implements OnInit {
         this.advisorModel = JSON.parse(JSON.stringify(this.editedAdvisorModel));
         break;
       case this.wizardSteps.Portfolio.Id:
-        this.currentStep = this.wizardSteps.Start.Id;
+        this.router.navigate(['advisor/' + this.loginService.getLoginData().humanAdvisorId]);
         break;
     }
   }

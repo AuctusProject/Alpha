@@ -47,4 +47,8 @@ export class PortfolioStepComponent implements OnInit {
   public hasEditingPortfolio(): boolean {
     return this.portfolioList.some(item => item.isEditing);
   }
+
+  public hasSavedPortfolio() {
+    return this.portfolioList.some(item => item.id > 0);
+  }
 }

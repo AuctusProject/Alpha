@@ -14,7 +14,7 @@
     <button class="back" mat-icon-button type="submit" (click)="back()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <button class="next" mat-icon-button type="submit" (click)="next()">
+    <button class="next" mat-icon-button type="submit" (click)="next()" *ngIf="hasSavedPortfolio()">
       <mat-icon>arrow_forward</mat-icon>
     </button>
   </div>

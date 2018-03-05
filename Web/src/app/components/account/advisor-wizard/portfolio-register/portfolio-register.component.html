@@ -12,7 +12,8 @@
         </div>
         <span class="products-details">
           <span *ngIf="!model.projectionValue">No products registered</span>
-          <span *ngIf="model.projectionValue">Expected Return: {{model.projectionValue}}% | {{assetsDistributionRows.length}}
+          <span *ngIf="model.projectionValue">
+            Expected Return: {{model.projectionValue}}% | {{assetsDistributionRows.length}}
             <span *ngIf="assetsDistributionRows.length == 1">asset</span>
             <span *ngIf="assetsDistributionRows.length != 1">assets</span>
           </span>
@@ -20,12 +21,12 @@
       </div>
       <div class="button" fxFlex>
         <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="!model.id || this.model.isEditing"
-          class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
+                class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
           <i-save></i-save>
           <span class="button-text bold"> SAVE</span>
         </button>
         <div *ngIf="model.id && !this.model.isEditing" class="step-edit-button rectangle-white-button" (click)="editPortfolio()"
-          fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
+             fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
           <i-edit></i-edit>
           <span class="button-text bold"> EDIT</span>
         </div>
@@ -36,7 +37,7 @@
         <div fxLayout="column" fxFlex="100">
           <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px">
             <textarea type="text" placeholder="Description" matAutosizeMinRows="1" matAutosizeMaxRows="3" matInput name="Description"
-              [(ngModel)]="model.description"></textarea>
+                      [(ngModel)]="model.description"></textarea>
           </mat-form-field>
         </div>
       </div>
@@ -55,12 +56,12 @@
       </div>
       <div *ngIf="assets">
         <portfolio-distribution-row *ngFor="let assetDistribution of assetsDistributionRows; let i = index" [rowNumber]="i" [assetDistribution]="assetDistribution"
-          [availableAssets]="currentAvailableAssets(assetDistribution)" [disableRemoveButton]="assetsDistributionRows.length <= 1"
-          [showAddButton]="(i+1) == assetsDistributionRows.length && assetsDistributionRows.length < assets.length" [formGroup]="portfolioRegisterForm.control"
-          (addNewRow)="addNewRow(i)" (removeRow)="!(assetsDistributionRows.length <= 1) && removeRow(i)" (assetDistributionChanged)="onAssetDistributionChanged($event, i)"
-          (onAddFormControls)="addFormControls(i, $event)" (onRemoveFormControls)="removeFormControls(i)"></portfolio-distribution-row>
+                                    [availableAssets]="currentAvailableAssets(assetDistribution)" [disableRemoveButton]="assetsDistributionRows.length <= 1"
+                                    [showAddButton]="(i+1) == assetsDistributionRows.length && assetsDistributionRows.length < assets.length" [formGroup]="portfolioRegisterForm.control"
+                                    (addNewRow)="addNewRow(i)" (removeRow)="!(assetsDistributionRows.length <= 1) && removeRow(i)" (assetDistributionChanged)="onAssetDistributionChanged($event, i)"
+                                    (onAddFormControls)="addFormControls(i, $event)" (onRemoveFormControls)="removeFormControls(i)"></portfolio-distribution-row>
         <div class="total-percentage" [class.success]="this.totalDistributionPercentage == 100" [class.error]="this.totalDistributionPercentage != 100"
-          fxLayout="row" fxLayoutAlign="none center">
+             fxLayout="row" fxLayoutAlign="none center">
           <div fxLayout="row" fxFlex="65" fxLayoutAlign="none center">
             <i-alert-triangle class="icon" *ngIf="this.totalDistributionPercentage != 100"></i-alert-triangle>
             <i-check class="icon" *ngIf="this.totalDistributionPercentage == 100"></i-check>
@@ -79,15 +80,24 @@
         </div>
       </div>
       <div class="portfolio-edition-title">Monthly Expected Return</div>
-      <div class="portfolio-edition-subtitle">You will only receive fees when your portfolio performance is greater than the expected return. Historically, the monthly
-        return of the S&P 500 has been roughly 0.78%</div>
-      <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
-        <div fxLayout="column" fxFlex="25">
-          <mat-form-field class="percentage-value" [floatLabel]="'always'" fxFlexOffset="25px">
+      <div class="portfolio-edition-subtitle">
+        You will only receive fees when your portfolio performance is greater than the expected return. Historically, the monthly
+        return of the S&P 500 has been roughly 0.78%
+      </div>
+      <div fxLayout="row" fxLayoutGap="32px" fxLayoutAlign="space-between center">
+        <div class="portfolio-input" fxFlex="80">
+          <mat-form-field class="percentage-value" [floatLabel]="'always'">
             <input type="number" placeholder="Expected Return" matInput class="percentage-input" name="ExpectedReturn" [(ngModel)]="model.projectionValue"
-              [disabled]="model.id" required>
+                   [disabled]="model.id" required>
             <span matSuffix [ngClass]="{'suffix-disabled': model.id}">%</span>
           </mat-form-field>
+        </div>
+        <div class="button" fxFlex>
+          <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="!model.id || this.model.isEditing"
+                  class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
+            <i-save></i-save>
+            <span class="button-text bold"> SAVE</span>
+          </button>
         </div>
       </div>
     </div>
