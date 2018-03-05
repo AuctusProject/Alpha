@@ -172,3 +172,17 @@ hr{
   margin-top: 10px;
   text-align: center;
 }
+
+.amount-field{
+  margin-top: 16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #4a90e2;
+  font-family: 'HelveticaNeue';
+}
+
+/deep/ .amount-field .mat-input-infix{
+  width:100%;
+}

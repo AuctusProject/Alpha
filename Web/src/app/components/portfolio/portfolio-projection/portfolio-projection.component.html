@@ -1,6 +1,6 @@
 <div fxLayout="row" class="tab-body" fxLayoutGap="40px">
   <div fxFlex="320px">
-    <portfolio-purchase [portfolio]="portfolio" [goal]="goal" (afterEndDateChange)="onEndDateChange()" (afterPurchaseCompleted)="internalAfterPurchaseCompleted()"></portfolio-purchase>
+    <portfolio-purchase [portfolio]="portfolio" [goal]="goal" (afterSimulatorChange)="onSimulatorChange()" (afterPurchaseCompleted)="internalAfterPurchaseCompleted()"></portfolio-purchase>
   </div>
   <div fxFlex>
     <div fxLayout="row" class="legend-row">

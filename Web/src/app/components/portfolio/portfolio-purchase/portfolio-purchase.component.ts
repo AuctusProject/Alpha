@@ -24,7 +24,7 @@ import { NotificationsService } from "angular2-notifications";
 export class PortfolioPurchaseComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
-  @Output() afterEndDateChange = new EventEmitter();
+  @Output() afterSimulatorChange = new EventEmitter();
   @Output() afterPurchaseCompleted = new EventEmitter();
 
   loginData: any;
@@ -36,6 +36,8 @@ export class PortfolioPurchaseComponent implements OnInit {
   public simulator = {
     price: null,
     estimatedReturn: null,
+    targetAmount: 0,
+    monthlyContribution: 0,
     startDate: null,
     endDate: null,
     months: 0,
@@ -72,6 +74,11 @@ export class PortfolioPurchaseComponent implements OnInit {
       .add(totalDays, "days")
       .toDate();
 
+    if(this.goal != null) {
+      this.simulator.monthlyContribution = this.goal.monthlyContribution;
+      this.simulator.targetAmount = this.goal.targetAmount;
+    }
+
     this.simulator.price = this.portfolio.price;
     this.simulator.estimatedReturn = this.portfolio.projectionPercent;
     this.simulator.startDate = this.startDate;
@@ -99,14 +106,28 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.calculateSimulator();
   }
 
-  public onEndDateChange() {
-    this.updateSimulator();
-    this.emitEndDateEvent();
+  public onTargetAmountChange() {
+    if(this.simulator.targetAmount !== this.goal.targetAmount){
+      this.goal.targetAmount = this.simulator.targetAmount;
+      this.onSimulatorChange();
+    }
   }
 
-  private emitEndDateEvent() {
-    if (this.afterEndDateChange) {
-      this.afterEndDateChange.emit(this.simulator.endDate);
+  public onMontlhyAmountChange() {
+    if(this.simulator.monthlyContribution !== this.goal.monthlyContribution){
+      this.goal.monthlyContribution = this.simulator.monthlyContribution;
+      this.onSimulatorChange();
+    }
+  }
+
+  public onSimulatorChange() {
+    this.updateSimulator();
+    this.onSimulatorChangeCompleted();
+  }
+
+  private onSimulatorChangeCompleted() {
+    if (this.afterSimulatorChange) {
+      this.afterSimulatorChange.emit(this.simulator.endDate);
     }
   }
 

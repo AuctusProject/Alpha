@@ -35,25 +35,25 @@ export class PortfolioProjectionComponent implements OnInit {
       backgroundColor: 'rgb(74, 144, 226)',
       borderColor: 'rgb(74, 144, 226)',
       fill: 'false'
-    },
-    {
+  },
+  {
       //Pessimistic
       backgroundColor: 'rgb(188, 255, 248)',
       borderColor: 'rgb(188, 255, 248)',
-      fill: 'origin',
-    },
-    {
+      fill: 'origin'
+  },
+  {
       //Projection
+      backgroundColor: 'rgb(97, 237, 223)',
+      borderColor: 'rgb(97, 237, 223)',
+      fill: 'origin'
+  },
+  {
+      //Optimistic
       backgroundColor: "rgb(15, 215, 185)",
       borderColor: "rgb(15, 215, 185)",
-      fill: 'origin',
-    },
-    {
-      //Optimistic
-      backgroundColor: 'rgb(188, 255, 248)',
-      borderColor: 'rgb(188, 255, 248)',
-      fill: 'origin',
-    }
+      fill: 'origin'
+  }
   ];
   public chartData: Array<any> = new Array<any>();
   public chartLabels: Array<string> = new Array<string>();
@@ -103,7 +103,7 @@ export class PortfolioProjectionComponent implements OnInit {
   };
   public chartType: string = 'line';
 
-  public onEndDateChange() {
+  public onSimulatorChange() {
     this.chartData = [];
     this.buildChart();
     this.baseChart.refresh();

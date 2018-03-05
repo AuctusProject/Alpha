@@ -19,6 +19,21 @@
       </div>
     </div>
   </div>
+  <div *ngIf="goal != null">
+      <hr>
+      <div fxLayout="row" fxLayoutAlign="space-between center" >
+        <div class="amount-field" fxflex>
+          <mat-form-field>
+            <input matInput placeholder="Target amount" (blur)="onTargetAmountChange()" [(ngModel)]="simulator.targetAmount" type="text" currencyMask name="TargetAmount" [options]="{ align: 'right', allowNegative : false }"/>
+          </mat-form-field>
+        </div>
+        <div class="amount-field" fxflex>
+          <mat-form-field>
+            <input matInput placeholder="Monthly contribution" (blur)="onMontlhyAmountChange()" [(ngModel)]="simulator.monthlyContribution" type="text" currencyMask name="MonthlyContribution" [options]="{ align: 'right', allowNegative : false }"/>
+          </mat-form-field>
+        </div> 
+      </div>
+  </div>
   <hr>
   <div class="date-and-month" fxLayout="row" fxLayoutAlign="space-between center">
     <div fxFlex="50" class="text-left">
@@ -44,7 +59,7 @@
     <div fxFlex="120px">
       <mat-form-field floatLabel="never" style="height: 48px; width:100%" class="end-date">
         <input matInput [min]="simulator.startDate" [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="simulator.endDate"
-          (ngModelChange)="onEndDateChange()">
+          (ngModelChange)="onSimulatorChange()">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -83,17 +98,16 @@
   <div fxLayout="row">
     <div fxFlex class="good-advices">
       <b>Pay Only for good advices </b>
-      <br/>
-      Tokens corresponding to the entire period will be locked through smart contracts and you can be redeemed in case of unsatisfactory
-      results. read more <a href="https://blog.auctus.org/auc-token-model-how-it-works-a225c81af269"  target="_blank">here</a>
+      <br/> Tokens corresponding to the entire period will be locked through smart contracts and you can be redeemed in case of
+      unsatisfactory results. read more
+      <a href="https://blog.auctus.org/auc-token-model-how-it-works-a225c81af269" target="_blank">here</a>
     </div>
   </div>
   <hr>
   <div fxLayout="column" fxLayoutGap="8px" class="buy-box-content" *ngIf="portfolio.advisorId != loginData.humanAdvisorId">
     <div class="need-email-confirmation" *ngIf="isTransactionPendingConfirmation()">
       Your transaction is been processed and need to be confirmed to you be able to check the portfolio distribution. Click
-      <a
-        [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
+      <a [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
     </div>
     <div class="need-email-confirmation" *ngIf="isTransactionPendingToSend()">
       Your buy request was processed. You need to send it with Metamask, if some error ocurred, you can try again clicking on send
