@@ -61,8 +61,14 @@ namespace Auctus.Business.Advisor
 
         public KeyValuePair<int, IEnumerable<Model.Portfolio>> ListRoboAdvisors(string email, int goalOptionId, int risk)
         {
-            var user = UserBusiness.GetValidUser(email);
-            var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+            User user = null;
+            if (!string.IsNullOrEmpty(email))
+                user = UserBusiness.GetValidUser(email);
+
+            Task<List<Buy>> purchases = null;
+            if (user != null)
+                purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+            
             var goalOption = GoalOptionsBusiness.Get(goalOptionId);
             var riskType = RiskType.Get(risk, goalOption.Risk);
             var riskPriority = RiskType.GetRiskPriority(riskType);
@@ -77,7 +83,10 @@ namespace Auctus.Business.Advisor
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios.Result.SelectMany(c => c.Value))
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
 
-            Task.WaitAll(purchases, portfolioQty);
+            if (user != null)
+                Task.WaitAll(purchases, portfolioQty);
+            else
+                Task.WaitAll(portfolioQty);
             Task.WaitAll(histories.ToArray());
 
             List<Model.Portfolio> portfolioWithSameRisk = new List<Model.Portfolio>();
@@ -96,7 +105,7 @@ namespace Auctus.Business.Advisor
                     var riskFound = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);
                     if (riskFound != null)
                     {
-                        var port = PortfolioBusiness.FillPortfolioModel(riskFound, advisor, user, purchases.Result, portfolioQty.Result);
+                        var port = PortfolioBusiness.FillPortfolioModel(riskFound, advisor, user, purchases?.Result, portfolioQty.Result);
                         var difference = riskFound.Projection.RiskType.Value - riskType.Value;
                         if (difference == 0)
                             portfolioWithSameRisk.Add(port);

@@ -15,13 +15,13 @@ namespace Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/portfolios/v1/")]
-    [Authorize("Bearer")]
     [EnableCors("Default")]
     public class PortfolioV1Controller : PortfolioBaseController
     {
         public PortfolioV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }
 
         [HttpPost]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult Portfolio([FromBody]PortfolioRequest portfolioRequest)
         {
@@ -30,6 +30,7 @@ namespace Api.Controllers
 
         [Route("{portfolioId}")]
         [HttpPatch]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult UpdatePortfolio([FromRoute]int portfolioId, [FromBody]UpdatePortfolioRequest updatePortfolioRequest)
         {
@@ -38,6 +39,7 @@ namespace Api.Controllers
 
         [Route("{portfolioId}")]
         [HttpPut]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult UpdatePortfolioAndDistribution([FromRoute]int portfolioId, [FromBody]UpdatePortfolioWithDistributionRequest updatePortfolioRequest)
         {
@@ -46,6 +48,7 @@ namespace Api.Controllers
 
         [Route("{portfolioId}")]
         [HttpDelete]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult DisablePortfolio([FromRoute]int portfolioId)
         {
@@ -54,6 +57,7 @@ namespace Api.Controllers
 
         [Route("{portfolioId}/distribution")]
         [HttpPost]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult Distribution([FromRoute]int portfolioId, [FromBody]List<DistributionRequest> newDistributionRequest)
         {
@@ -61,6 +65,7 @@ namespace Api.Controllers
         }
         
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult ListPortfolios()
         {
@@ -69,6 +74,7 @@ namespace Api.Controllers
 
         [Route("purchases")]
         [HttpGet]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult ListPurchasedPortfolios()
         {
@@ -77,6 +83,7 @@ namespace Api.Controllers
 
         [Route("robos")]
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult ListRoboAdvisors([FromQuery]int? goalOption, [FromQuery]int? risk)
         {
@@ -85,6 +92,7 @@ namespace Api.Controllers
 
         [Route("{portfolioId}")]
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult GetPortfolio([FromRoute]int portfolioId)
         {
@@ -93,6 +101,7 @@ namespace Api.Controllers
 
         [Route("{portfolioId}/distribution")]
         [HttpGet]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult GetDistribution([FromRoute]int portfolioId)
         {
