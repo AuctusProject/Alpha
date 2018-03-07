@@ -24,7 +24,7 @@ import { MyInvestmentsComponent } from "./components/portfolio/my-investments/my
 import { AddPortfolioComponent } from "./components/portfolio/add-portfolio/add-portfolio.component";
 
 const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: '', component: RoboAdvisorsComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'required', component: ProviderRequiredComponent },
     { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },

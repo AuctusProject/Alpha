@@ -15,6 +15,7 @@ import { SetHashPopupComponent } from "../set-hash-popup/set-hash-popup.componen
 import { Router } from '@angular/router';
 import { Web3Service } from "../../../services/web3.service";
 import { NotificationsService } from "angular2-notifications";
+import { LocalStorageService } from "../../../services/local-storage.service";
 
 @Component({
   selector: "portfolio-purchase",
@@ -30,7 +31,7 @@ export class PortfolioPurchaseComponent implements OnInit {
   loginData: any;
   startDate: Date;
   endDate: Date;
-  hashInformed:string;
+  hashInformed: string;
   checkTransactionInterval: any;
 
   public simulator = {
@@ -56,8 +57,9 @@ export class PortfolioPurchaseComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private web3Service: Web3Service,
-    private notificationService: NotificationsService
-  ) {}
+    private notificationService: NotificationsService,
+    private localStorageService: LocalStorageService
+  ) { }
 
   ngOnInit() {
     if (this.portfolio.advisorType != 0 && !this.goal && !this.portfolio.purchased && !this.portfolio.owned) {
@@ -74,7 +76,7 @@ export class PortfolioPurchaseComponent implements OnInit {
       .add(totalDays, "days")
       .toDate();
 
-    if(this.goal != null) {
+    if (this.goal != null) {
       this.simulator.monthlyContribution = this.goal.monthlyContribution;
       this.simulator.targetAmount = this.goal.targetAmount;
     }
@@ -107,14 +109,14 @@ export class PortfolioPurchaseComponent implements OnInit {
   }
 
   public onTargetAmountChange() {
-    if(this.simulator.targetAmount !== this.goal.targetAmount){
+    if (this.simulator.targetAmount !== this.goal.targetAmount) {
       this.goal.targetAmount = this.simulator.targetAmount;
       this.onSimulatorChange();
     }
   }
 
   public onMontlhyAmountChange() {
-    if(this.simulator.monthlyContribution !== this.goal.monthlyContribution){
+    if (this.simulator.monthlyContribution !== this.goal.monthlyContribution) {
       this.goal.monthlyContribution = this.simulator.monthlyContribution;
       this.onSimulatorChange();
     }
@@ -175,30 +177,41 @@ export class PortfolioPurchaseComponent implements OnInit {
   }
 
   public onBuyClick() {
-    var self = this;
-    var days = DateUtil.DiffDays(
-      this.simulator.startDate,
-      this.simulator.endDate
-    );
-    this.purchasePromise = new Observable(observer => {
-      this.advisorService
-        .buy(
-          new BuyRequest(
-            this.portfolio.id,
-            days,
-            this.metamaskAccount.getAccount(),
-            this.goal
+
+    if (!this.loginData) {
+
+      if(this.goal) {
+        this.localStorageService.setLocalStorage("currentGoal", JSON.stringify(this.goal));
+      }
+      this.loginService.setLoginRedirectUrl(this.router.url);
+      this.router.navigate(['home']);
+
+    } else if(!this.loginData.pendingConfirmation) {
+      var self = this;
+      var days = DateUtil.DiffDays(
+        this.simulator.startDate,
+        this.simulator.endDate
+      );
+      this.purchasePromise = new Observable(observer => {
+        this.advisorService
+          .buy(
+            new BuyRequest(
+              this.portfolio.id,
+              days,
+              this.metamaskAccount.getAccount(),
+              this.goal
+            )
           )
-        )
-        .subscribe(result => {
-          if (result) {
-            var id = result.id;
-            this.generateMetamaskTransaction(id, observer);
-          } else {
-            observer.complete();
-          }
-        });
-    }).subscribe();
+          .subscribe(result => {
+            if (result) {
+              var id = result.id;
+              this.generateMetamaskTransaction(id, observer);
+            } else {
+              observer.complete();
+            }
+          });
+      }).subscribe();
+    }
   }
 
   generateMetamaskTransaction(id: number, observer?: any) {
@@ -224,8 +237,8 @@ export class PortfolioPurchaseComponent implements OnInit {
     });
   }
 
-  setCheckTransactionInterval(){
-    if(this.checkTransactionInterval){
+  setCheckTransactionInterval() {
+    if (this.checkTransactionInterval) {
       clearInterval(this.checkTransactionInterval);
     }
     let self = this;
@@ -237,11 +250,11 @@ export class PortfolioPurchaseComponent implements OnInit {
             self.advisorService.checkBuyTransaction(self.portfolio.buyTransactionId).subscribe(
               result => {
                 self.portfolio.buyTransactionStatus = result.status;
-                if(result.distribution){
+                if (result.distribution) {
                   self.portfolio.purchased = true;
                   self.portfolio.assetDistribution = result.distribution;
                   self.notificationService.success("Sucess", "Your buy transaction was successfully processed.");
-                  if(self.afterPurchaseCompleted){
+                  if (self.afterPurchaseCompleted) {
                     self.afterPurchaseCompleted.emit();
                   }
                 }
@@ -274,7 +287,7 @@ export class PortfolioPurchaseComponent implements OnInit {
     dialogConfig.data = {
       hash: ""
     };
-    
+
     let dialogRef = this.dialog.open(SetHashPopupComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
       this.onSendHashModalClick(result);

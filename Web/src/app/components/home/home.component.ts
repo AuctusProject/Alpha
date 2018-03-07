@@ -61,11 +61,16 @@ export class HomeComponent implements OnInit {
 
   private createAccount() {
     this.createPromise = this.accountService.simpleRegister(this.simpleRegister).subscribe(result => {
-        this.loginService.setLoginData(result.data);
-        this.router.navigateByUrl('login');
-      }, response => {
-        this.notificationService.info("Info", response.error);
-      });
+      this.loginService.setLoginData(result.data);
+      let afterCreateUrl = this.loginService.getLoginRedirectUrl();
+      if (!afterCreateUrl) {
+        afterCreateUrl = 'login';
+      }
+      this.loginService.setLoginRedirectUrl('');
+      this.router.navigateByUrl(afterCreateUrl);
+    }, response => {
+      this.notificationService.info("Info", response.error);
+    });
   }
 
   public getErrorMessage(formField: any) {
