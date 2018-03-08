@@ -9,6 +9,7 @@
             <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
             <a *ngIf="loginData" routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
             <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
+            <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
             <div *ngIf="loginData" class="pull-right">
                 <mat-menu #appMenu="matMenu">
                     <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
@@ -26,7 +27,6 @@
                     <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
                 </div>
             </div>
-            <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
             <a *ngIf="!loginData && !hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
         </div>
         <a href="https://t.me/AuctusProject" target="_blank" title="Give us feedback on Telegram">

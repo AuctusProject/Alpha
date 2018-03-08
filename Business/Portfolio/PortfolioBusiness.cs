@@ -327,8 +327,8 @@ namespace Auctus.Business.Portfolio
                 Task.WaitAll(history, portfolioQty);
 
             portfolio.Result.PortfolioHistory = history.Result;
-            var result = FillPortfolioModel(portfolio.Result, portfolio.Result.Advisor, user, 
-                purchase.Result != null ? new Buy[] { purchase.Result } : null, portfolioQty.Result);
+            var result = FillPortfolioModel(portfolio.Result, portfolio.Result.Advisor, user,
+                purchase?.Result != null ? new Buy[] { purchase.Result } : null, portfolioQty.Result);
 
             result.Purchased = purchased;
             result.Histogram = PortfolioHistoryBusiness.GetHistogram(history.Result);
