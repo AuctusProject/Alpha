@@ -32,7 +32,7 @@ export class MetamaskAccountMonitorComponent implements OnInit {
   }
 
   private onLoginConditionsFail: Function = (payload: any) => {
-    if (this.router.url != "/required") {
+    if (this.router.url == "/login" || this.router.url == "/home") {
       this.loginService.logoutWithoutRedirect();
       this.zone.run(() => this.router.navigateByUrl('required'));
     }

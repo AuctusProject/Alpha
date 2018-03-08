@@ -122,7 +122,7 @@ export class MetamaskAccountService {
     this.eventsService.broadcast("accountChanged", account);
   }
 
-  private broadcastLoginConditionsFail() {
+  public broadcastLoginConditionsFail() {
     this.eventsService.broadcast("loginConditionsFail");
   }
 

@@ -37,7 +37,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    if(this.metamaskAccountService.getAccount()) {
+      this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    } else {
+      this.metamaskAccountService.broadcastLoginConditionsFail();
+    }
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {

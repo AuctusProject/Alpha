@@ -8,6 +8,7 @@ import { Web3Service } from '../../../services/web3.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { EventsService } from "angular-event-service";
+import { MetamaskAccountService } from './../../../services/metamask-account.service';
 
 @Component({
   selector: 'app-login',
@@ -27,7 +28,8 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService,
     private notificationService: NotificationsService,
     private router: Router,
-    private web3Service: Web3Service) {
+    private web3Service: Web3Service,
+    private metamaskAccountService: MetamaskAccountService) {
     this.buildForm();
   }
 
@@ -40,9 +42,12 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.pendingConfirmation = false;
-    this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
-
+    if(this.metamaskAccountService.getAccount()) {
+      this.pendingConfirmation = false;
+      this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    } else {
+      this.metamaskAccountService.broadcastLoginConditionsFail();
+    }
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {

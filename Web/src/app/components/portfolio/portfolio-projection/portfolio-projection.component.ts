@@ -173,7 +173,7 @@ export class PortfolioProjectionComponent implements OnInit {
     };
     annotationsList.push(timeTargetAnnotation);
 
-    if (this.goal) {
+    if (this.goal && this.goal.targetAmount) {
       let targetAmount = this.goal.targetAmount;
       let targetAmountAnnotation = {
         id: 'hline',

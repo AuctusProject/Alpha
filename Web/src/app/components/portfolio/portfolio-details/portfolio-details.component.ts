@@ -17,16 +17,14 @@ export class PortfolioDetailsComponent implements OnInit {
   public goal: Goal;
   loginData: any;
 
+  private readonly roboAdvisorType: number = 1;
+
   constructor(private portfolioService: PortfolioService,
     private activatedRoute: ActivatedRoute,
     private localStorageService: LocalStorageService,
     private loginService: LoginService) { }
 
   ngOnInit() {
-    if (this.localStorageService.getLocalStorage("currentGoal")){
-      this.goal = JSON.parse(this.localStorageService.getLocalStorage("currentGoal"));
-      this.localStorageService.removeLocalStorage("currentGoal");
-    }
     this.activatedRoute.params.subscribe((params: Params) => {
       this.getPortfolio(params['id']);
     });
@@ -40,8 +38,16 @@ export class PortfolioDetailsComponent implements OnInit {
   private getPortfolio(portfolioId){
     this.portfolioService.getPortfolio(portfolioId)
     .subscribe(response => {
-      this.portfolio = response
+      this.portfolio = response;
+      this.setGoal();
     })
+  }
+
+  private setGoal(){
+    if (this.portfolio.advisorType == this.roboAdvisorType && this.localStorageService.getLocalStorage("currentGoal")){
+      this.goal = JSON.parse(this.localStorageService.getLocalStorage("currentGoal"));
+    }
+    this.localStorageService.removeLocalStorage("currentGoal");
   }
 
   private getRiskDescription(risk) {
