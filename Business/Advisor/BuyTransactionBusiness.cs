@@ -179,6 +179,8 @@ namespace Auctus.Business.Advisor
                                             buyTransaction.TransactionStatus = status.Value;
                                             buyTransaction.ProcessedDate = DateTime.UtcNow;
                                             trans.Update(buyTransaction);
+                                            var cashFlow = CashFlowBusiness.SetNew(purchase.UserId, -purchase.Invested);
+                                            trans.Insert(cashFlow);
                                             trans.Commit();
                                         }
                                     }

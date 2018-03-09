@@ -41,7 +41,7 @@ namespace Auctus.Business.Advisor
             if (invested <= 0)
                 throw new ArgumentException("Amount to invest not allowed.");
 
-            decimal balance = DepositBusiness.GetUserBalance(user.Id);
+            decimal balance = CashFlowBusiness.GetUserBalance(user.Id);
             if (invested > balance)
                 throw new ArgumentException("Insufficient funds for investment.");
 
@@ -64,8 +64,6 @@ namespace Auctus.Business.Advisor
                 transaction.Insert(trans);
                 var buyTrans = BuyTransactionBusiness.SetNew(buy.Id, trans.Id);
                 transaction.Insert(buyTrans);
-                var deposit = DepositBusiness.SetNew(user.Id, -invested);
-                transaction.Insert(deposit);
                 buy.Goal = goal;
                 buy.Portfolio = portfolio;
                 buy.PortfolioDetail = portfolio.Detail;

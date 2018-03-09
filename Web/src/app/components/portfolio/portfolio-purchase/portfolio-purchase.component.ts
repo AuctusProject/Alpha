@@ -252,9 +252,6 @@ export class PortfolioPurchaseComponent implements OnInit {
                   self.portfolio.purchased = true;
                   self.portfolio.assetDistribution = result.distribution;
                   self.notificationService.success("Sucess", "Your buy transaction was successfully processed.");
-                  if(self.afterPurchaseCompleted){
-                    self.afterPurchaseCompleted.emit();
-                  }
                 }
               }
             );

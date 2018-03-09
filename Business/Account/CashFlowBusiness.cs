@@ -10,14 +10,14 @@ using System.Text;
 
 namespace Auctus.Business.Account
 {
-    public class DepositBusiness : BaseBusiness<Deposit, DepositData>
+    public class CashFlowBusiness : BaseBusiness<CashFlow, CashFlowData>
     {
         public static decimal InitialDeposit = 10000;
-        public DepositBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
+        public CashFlowBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public Deposit SetNew(int userId, decimal value)
+        public CashFlow SetNew(int userId, decimal value)
         {
-            var deposit = new Deposit();
+            var deposit = new CashFlow();
             deposit.UserId = userId;
             deposit.Value = value;
             return deposit;

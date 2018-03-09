@@ -34,13 +34,16 @@ namespace Auctus.Business.Account
                 throw new ArgumentException("Wallet is invalid.");
             else if (user.Password != Security.Hash(password))
                 throw new ArgumentException("Password is invalid.");
+
+            decimal availableToInvest = GetAvailableToInvest(user.Id);
             
             var result = new Model.Login()
             {
                 Address = user.Wallet.Address,
                 Email = user.Email,
                 Username = user.Username,
-                PendingConfirmation = !user.ConfirmationDate.HasValue
+                PendingConfirmation = !user.ConfirmationDate.HasValue,
+                AvailableToInvest = availableToInvest
             };
             if (!result.PendingConfirmation)
             {
@@ -67,7 +70,7 @@ namespace Auctus.Business.Account
                 var wallet = SetWalletCreation(user.Id, address);
                 user.Wallet = wallet;
                 transaction.Insert(wallet);
-                var deposit = DepositBusiness.SetNew(user.Id, DepositBusiness.InitialDeposit);
+                var deposit = CashFlowBusiness.SetNew(user.Id, CashFlowBusiness.InitialDeposit);
                 transaction.Insert(deposit);
                 transaction.Commit();
             }
@@ -284,6 +287,14 @@ Auctus Team", Config.WEB_URL, code));
                 throw new ArgumentException("Password cannot have more than 100 characters.");
             if (password.Contains(" "))
                 throw new ArgumentException("Password cannot have spaces.");
+        }
+
+        public decimal GetCurrentInvestedAmount(int userId) {
+            return 0;
+        }
+
+        public decimal GetAvailableToInvest(int userId) {
+            return CashFlowBusiness.GetUserBalance(userId);
         }
     }
 }
