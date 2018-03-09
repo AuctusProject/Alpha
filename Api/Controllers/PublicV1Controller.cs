@@ -80,14 +80,6 @@ namespace Api.Controllers
         {
             return base.Distribution(guid, portfolioId, newDistributionRequest);
         }
-
-        [Route("check")]
-        [HttpGet]
- 
-        public void Check()
-        {
-            PortfolioServices.Check();
-        }
     }
 
 

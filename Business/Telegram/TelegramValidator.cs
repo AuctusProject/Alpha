@@ -1,21 +1,35 @@
-﻿using System;
+﻿using Auctus.Util.NotShared;
+using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot.Types.Enums;
 
 namespace Auctus.Business.WrapTelegram
 {
-    public class TelegramValdiator
+    public class TelegramValidator
     {
         public static bool CheckPhoneIsMember(string phoneNumber)
         {
-            Telegram.Bot.TelegramBotClient client = new Telegram.Bot.TelegramBotClient("508703489:AAGL4_1v8kGjzB5DMoVnklAAuYo1Vk3-XcA");
-            var t = client.GetChatMemberAsync("-1001394089260", 128844089);
-            var s = t.Result.Status;
-            if (s.ToString().Length > 25)
-                return false;
-            return true;
+            Telegram.Bot.TelegramBotClient client = new Telegram.Bot.TelegramBotClient(Config.TELEGRAM_BOT_TOKEN);
+            var sendContactResult = client.SendContactAsync(Config.TELEGRAM_CHAT_ID, phoneNumber, "NAME").Result;
+            var userId = sendContactResult.Contact.UserId;
 
-            //Status tem que estar como Member;
+            if (userId == 0)
+            {
+                throw new ArgumentException("Phone number not linked to a Telegram account.");
+            }
+
+            var getChatMemberResult = client.GetChatMemberAsync(Config.TELEGRAM_CHAT_ID, userId).Result;
+            
+            if (!getChatMemberResult.Status.Equals(ChatMemberStatus.Member) &&
+                !getChatMemberResult.Status.Equals(ChatMemberStatus.Creator) &&
+                !getChatMemberResult.Status.Equals(ChatMemberStatus.Restricted) &&
+                !getChatMemberResult.Status.Equals(ChatMemberStatus.Administrator))
+            {
+                throw new Exception("User is not a member of Auctus Telegram group.");
+            }
+
+            return true;
         }
     }
 }

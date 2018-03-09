@@ -71,11 +71,5 @@ namespace Auctus.Service
         {
             return DistributionBusiness.ListByUserPortfolio(email, portfolioId);
         }
-
-        public object Check()
-        {
-            wTelegramWrapper.Check();
-            return null;
-        }
     }
 }
