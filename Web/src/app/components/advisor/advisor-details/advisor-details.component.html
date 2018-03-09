@@ -11,16 +11,23 @@
     </div>
   </div>
 
-  <ng-container >
+  <ng-container>
     <div class="portfolio-list">
       <loading-spinner *ngIf="!advisor || !advisor.portfolios"></loading-spinner>
       <div *ngIf="advisor && advisor.portfolios.length == 0" class="no-portfolios">
         <div *ngIf="!advisor.owned" class="no-portfolios-title">This advisor still doesn't have any portfolios.</div>
-        <div *ngIf="advisor.owned" class="no-portfolios-title">You still don't have any portfolios.</div>
+        <div *ngIf="advisor.owned" class="no-portfolios-title">You still don't have any portfolios. You can create up to {{maximumNumberOfPortfoliosPerAdvisor}}.</div>
         <div *ngIf="advisor.owned" class="no-portfolios-subtitle">Create one, clicking below!</div>
       </div>
+      <div class="max-number-portfolios-label">
+        <span *ngIf="advisor && advisor.portfolios.length > 0 && advisor.portfolios.length < maximumNumberOfPortfoliosPerAdvisor">You can create up to {{maximumNumberOfPortfoliosPerAdvisor}} portfolios.</span>
+        <span *ngIf="advisor && advisor.portfolios.length == maximumNumberOfPortfoliosPerAdvisor">You have reached the maximum number of portfolios allowed.</span>
+      </div>
       <advisor-portfolios *ngIf="advisor" [portfolios]="advisor.portfolios"></advisor-portfolios>
-      <button *ngIf="advisor && advisor.owned" class="pull-right" mat-mini-fab color="primary" routerLink="/add-portfolio"><i-plus></i-plus></button>
+      <button *ngIf="advisor && advisor.owned && advisor.portfolios.length < maximumNumberOfPortfoliosPerAdvisor" class="pull-right"
+        mat-mini-fab color="primary" routerLink="/add-portfolio">
+        <i-plus></i-plus>
+      </button>
     </div>
   </ng-container>
 </div>

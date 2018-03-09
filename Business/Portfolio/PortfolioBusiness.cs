@@ -26,6 +26,10 @@ namespace Auctus.Business.Portfolio
             if (advisor == null)
                 throw new ArgumentException("Invalid advisor.");
 
+            var portfoliosFromAdvisor = PortfolioBusiness.CountByAdvisor(advisor.Id);
+            if (portfoliosFromAdvisor != null && portfoliosFromAdvisor.Value >= Auctus.Business.Advisor.AdvisorBusiness.MaximumNumberOfPortfolios)
+                throw new InvalidOperationException("Maximum number of portfolios reached");
+
             var risk = GetRisk(projectionValue, distribution);
             var advisorDetail = AdvisorDetailBusiness.GetForAutoEnabled(advisorId);
 
@@ -184,6 +188,11 @@ namespace Auctus.Business.Portfolio
         public List<DomainObjects.Portfolio.Portfolio> ListWithDetails(IEnumerable<int> portfolioIds)
         {
             return Data.ListWithDetails(portfolioIds);
+        }
+
+        private int? CountByAdvisor(int advisorId)
+        {
+            return Data.CountByAdvisor(advisorId);
         }
 
         public DomainObjects.Portfolio.Portfolio GetByRisk(int roboAdvisorId, RiskType riskType)

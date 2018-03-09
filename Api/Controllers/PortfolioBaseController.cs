@@ -29,6 +29,10 @@ namespace Api.Controllers
                     portfolioRequest.Description, portfolioRequest.ProjectionValue, portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
                     portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });

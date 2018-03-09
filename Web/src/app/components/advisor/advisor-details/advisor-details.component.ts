@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { AdvisorService } from "../../../services/advisor.service"
 import { Advisor } from "../../../model/advisor/advisor"
+import { constants } from "../../../util/contants";
 
 @Component({
   selector: 'app-advisor-details',
@@ -10,6 +11,9 @@ import { Advisor } from "../../../model/advisor/advisor"
 })
 export class AdvisorDetailsComponent implements OnInit {
   advisor: Advisor;
+
+  maximumNumberOfPortfoliosPerAdvisor : number = constants.maximumNumberOfPortfoliosPerAdvisor;
+
   constructor(private route: ActivatedRoute, private advisorService: AdvisorService) { }
 
   ngOnInit() {
