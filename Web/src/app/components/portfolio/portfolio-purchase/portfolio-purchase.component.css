@@ -183,6 +183,12 @@ hr{
   font-family: 'HelveticaNeue';
 }
 
+.invest-box{
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 16px;
+}
+
 /deep/ .amount-field .mat-input-infix{
   width:100%;
 }

@@ -67,6 +67,8 @@ namespace Auctus.Business.Account
                 var wallet = SetWalletCreation(user.Id, address);
                 user.Wallet = wallet;
                 transaction.Insert(wallet);
+                var deposit = DepositBusiness.SetNew(user.Id, DepositBusiness.InitialDeposit);
+                transaction.Insert(deposit);
                 transaction.Commit();
             }
 

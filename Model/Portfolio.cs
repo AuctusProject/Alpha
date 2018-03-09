@@ -10,6 +10,7 @@ namespace Auctus.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
+        public decimal Invested { get; set; }
         public bool Purchased { get; set; }
         public bool Owned { get; set; }
         public bool Enabled { get; set; }
