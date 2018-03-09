@@ -43,7 +43,8 @@ export class PortfolioPurchaseComponent implements OnInit {
     months: 0,
     days: 0,
     estimatedTotalReturn: 0,
-    totalPrice: 0
+    totalPrice: 0,
+    invested: 0
   };
 
   public purchasePromise: Subscription;
@@ -89,6 +90,14 @@ export class PortfolioPurchaseComponent implements OnInit {
     let logged = this.loginService.isLoggedIn();
     if (logged) {
       this.loginData = this.loginService.getLoginData();
+    }
+
+    this.checkTransactionStatus();
+  }
+
+  private checkTransactionStatus(){
+    if (this.portfolio.buyTransactionHash && this.portfolio.buyTransactionStatus == 0){
+      this.setCheckTransactionInterval();
     }
   }
 
@@ -187,6 +196,7 @@ export class PortfolioPurchaseComponent implements OnInit {
             this.portfolio.id,
             days,
             this.metamaskAccount.getAccount(),
+            this.simulator.invested,
             this.goal
           )
         )
@@ -207,6 +217,7 @@ export class PortfolioPurchaseComponent implements OnInit {
         this.purchasePromise = this.advisorService.setBuyTransaction(id, hash).subscribe(success => {
           if (success) {
             this.portfolio.purchased = true;
+            this.portfolio.invested = this.simulator.invested;
             this.portfolio.buyTransactionId = id;
             this.portfolio.buyTransactionHash = hash;
             this.portfolio.buyTransactionStatus = 0;
@@ -241,9 +252,6 @@ export class PortfolioPurchaseComponent implements OnInit {
                   self.portfolio.purchased = true;
                   self.portfolio.assetDistribution = result.distribution;
                   self.notificationService.success("Sucess", "Your buy transaction was successfully processed.");
-                  if(self.afterPurchaseCompleted){
-                    self.afterPurchaseCompleted.emit();
-                  }
                 }
               }
             );

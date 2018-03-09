@@ -16,7 +16,7 @@ namespace Auctus.Business.Advisor
     {
         public BuyBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public Buy Create(string email, string address, int portfolioId, int days, int? goalOptionId = null, int? timeframe = null, 
+        public Buy Create(string email, string address, int portfolioId, int days, decimal invested, int? goalOptionId = null, int? timeframe = null, 
             int? risk = null, double? targetAmount = null, double? startingAmount = null, double? monthlyContribution = null)
         {
             if (string.IsNullOrWhiteSpace(address))
@@ -38,6 +38,13 @@ namespace Auctus.Business.Advisor
             if (purchases.Any(c => c.PortfolioId == portfolio.Id))
                 throw new ArgumentException("Portfolio already bought.");
 
+            if (invested <= 0)
+                throw new ArgumentException("Amount to invest not allowed.");
+
+            decimal balance = CashFlowBusiness.GetUserBalance(user.Id);
+            if (invested > balance)
+                throw new ArgumentException("Insufficient funds for investment.");
+
             Buy buy;
             using (var transaction = new TransactionalDapperCommand())
             {
@@ -51,7 +58,7 @@ namespace Auctus.Business.Advisor
                     transaction.Insert(goal);
                 }
                 var price = Math.Floor(portfolio.Detail.Price * (decimal)(1000000.0 * days) / (decimal)30.0) / (decimal)1000000.0;
-                buy = SetNew(days, price, portfolio.Id, portfolio.ProjectionId.Value, portfolio.Detail.Id, user.Id, goal?.Id);
+                buy = SetNew(days, price, portfolio.Id, portfolio.ProjectionId.Value, portfolio.Detail.Id, user.Id, invested, goal?.Id);
                 transaction.Insert(buy);
                 var trans = TransactionBusiness.SetNew(user.Id);
                 transaction.Insert(trans);
@@ -65,7 +72,7 @@ namespace Auctus.Business.Advisor
             return buy;
         }
         
-        public Buy SetNew(int days, decimal price, int portfolioId, int projectionId, int portfolioDetailId, int userId, int? goalId)
+        public Buy SetNew(int days, decimal price, int portfolioId, int projectionId, int portfolioDetailId, int userId, decimal invested, int? goalId)
         {
             var buy = new Buy();
             buy.CreationDate = DateTime.UtcNow;
@@ -76,6 +83,7 @@ namespace Auctus.Business.Advisor
             buy.PortfolioDetailId = portfolioDetailId;
             buy.UserId = userId;
             buy.GoalId = goalId;
+            buy.Invested = invested;
             return buy;
         }
 

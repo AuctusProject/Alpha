@@ -20,19 +20,21 @@
     </div>
   </div>
   <div *ngIf="goal != null">
-      <hr>
-      <div fxLayout="row" fxLayoutAlign="space-between center" >
-        <div class="amount-field" fxflex>
-          <mat-form-field>
-            <input matInput placeholder="Target amount" (blur)="onTargetAmountChange()" [(ngModel)]="simulator.targetAmount" type="text" currencyMask name="TargetAmount" [options]="{ allowNegative : false }"/>
-          </mat-form-field>
-        </div>
-        <div class="amount-field" fxflex>
-          <mat-form-field>
-            <input matInput placeholder="Monthly contribution" (blur)="onMontlhyAmountChange()" [(ngModel)]="simulator.monthlyContribution" type="text" currencyMask name="MonthlyContribution" [options]="{ allowNegative : false }"/>
-          </mat-form-field>
-        </div> 
+    <hr>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="amount-field" fxflex>
+        <mat-form-field>
+          <input matInput placeholder="Target amount" (blur)="onTargetAmountChange()" [(ngModel)]="simulator.targetAmount" type="text"
+            currencyMask name="TargetAmount" [options]="{ allowNegative : false }" />
+        </mat-form-field>
       </div>
+      <div class="amount-field" fxflex>
+        <mat-form-field>
+          <input matInput placeholder="Monthly contribution" (blur)="onMontlhyAmountChange()" [(ngModel)]="simulator.monthlyContribution"
+            type="text" currencyMask name="MonthlyContribution" [options]="{ allowNegative : false }" />
+        </mat-form-field>
+      </div>
+    </div>
   </div>
   <hr>
   <div class="date-and-month" fxLayout="row" fxLayoutAlign="space-between center">
@@ -63,6 +65,22 @@
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
+    </div>
+  </div>
+  <div>
+    <div *ngIf="portfolio.invested == 0" class="invest-box" fxLayout="row">
+      <mat-form-field fxFlex>
+        <input matInput placeholder="Amount To Invest" [(ngModel)]="simulator.invested" type="text" currencyMask name="AmountToInvest"
+          [options]="{ allowNegative : false }" />
+      </mat-form-field>
+    </div>
+    <div *ngIf="portfolio.invested > 0" fxLayout="row" fxLayoutAlign="space-between center" class="estimated-total-return ">
+      <div fxFlex="70" class="text-left">
+        Invested
+      </div>
+      <div fxFlex="30" class="text-right">
+        ${{portfolio.invested | number:'1.0-2'}}
+      </div>
     </div>
   </div>
   <div fxLayout="row" fxLayoutAlign="space-between center" class="estimated-total-return ">
@@ -106,7 +124,7 @@
   <hr>
   <div fxLayout="column" fxLayoutGap="8px" class="buy-box-content" *ngIf="portfolio.advisorId != loginData.humanAdvisorId">
     <div class="need-email-confirmation" *ngIf="isTransactionPendingConfirmation()">
-      Your transaction is been processed and need to be confirmed to you be able to check the portfolio distribution. Click
+      Your transaction is being processed. Click
       <a [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
     </div>
     <div class="need-email-confirmation" *ngIf="isTransactionPendingToSend()">

@@ -75,6 +75,11 @@ namespace Auctus.DataAccess.Portfolio
 
         private const string COUNT_PORTFOLIOS_BY_ADVISOR = @"SELECT count(p.Id) FROM Portfolio p WHERE p.AdvisorId = @AdvisorId";
 
+        private const string TOTAL_INVESTED_BY_PORTFOLIO_BY_USER = @"SELECT sum(b.Invested) FROM Buy as b 
+                                                                        INNER JOIN BuyTransaction as bt on bt.BuyId = b.Id 
+                                                                        INNER JOIN [dbo].[Transaction] as t on bt.TransactionId = t.Id 
+                                                                     WHERE b.PortfolioId = @PortfolioId and b.UserId = @UserId and t.TransactionStatus = 1";
+
         public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -233,6 +238,14 @@ namespace Auctus.DataAccess.Portfolio
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("AdvisorId", advisorId, DbType.Int32);
             return Query<int?>(COUNT_PORTFOLIOS_BY_ADVISOR, parameters).SingleOrDefault();
+        }
+
+        public decimal? GetInvestedByUser(int portfolioId, int userId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("PortfolioId", portfolioId, DbType.Int32);
+            parameters.Add("UserId", userId, DbType.Int32);
+            return Query<decimal?>(TOTAL_INVESTED_BY_PORTFOLIO_BY_USER, parameters).SingleOrDefault();
         }
     }
 }

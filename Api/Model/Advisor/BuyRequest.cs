@@ -10,6 +10,7 @@ namespace Api.Model.Advisor
     {
         public int PortfolioId { get; set; }
         public int Days { get; set; }
+        public decimal Invested { get; set; }
         public string Address { get; set; }
         public SetGoalRequest Goal { get; set; }
     }
