@@ -226,6 +226,23 @@ namespace Auctus.Business.Portfolio
             return Data.GetValidByOwner(userId, portfolioId);
         }
 
+        public List<Model.Portfolio> ListPerformance(string email, DateTime date)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var portfolios = Data.ListAllValids();
+            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
+            foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
+                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
+            Task.WaitAll(histories.ToArray());
+
+            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && g.Date >= date.Date.AddDays(1) && g.Date <= date.Date)).ToList());
+
+            return portfolios
+                .Where(c => c.PortfolioHistory.Any())
+                .Select(c => FillPortfolioModel(c, c.Advisor, user, Enumerable.Empty<Buy>(), new Dictionary<int,int>()))
+                .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
+        }
+
         public List<Model.Portfolio> List(string email)
         {
             var user = UserBusiness.GetValidUser(email);
@@ -287,16 +304,11 @@ namespace Auctus.Business.Portfolio
             
             var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(new int[] { portfolioId }));
             var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolioId));
+            Task<List<Distribution>> distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
 
-            Task<List<Distribution>> distribution = null;
             Task<List<EscrowResult>> escrowResult = null;
             Task<decimal?> purchaseAmount = null;
-            if (purchased && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success.Value)
-            {
-                distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
-                Task.WaitAll(history, portfolioQty, distribution);
-            }
-            else if (owned)
+            if (owned)
             {
                 distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
                 escrowResult = Task.Factory.StartNew(() => EscrowResultBusiness.ListByPortfolio(portfolio.Result.Id));
@@ -304,7 +316,7 @@ namespace Auctus.Business.Portfolio
                 Task.WaitAll(history, portfolioQty, distribution, escrowResult, purchaseAmount);
             }
             else
-                Task.WaitAll(history, portfolioQty);
+                Task.WaitAll(history, portfolioQty, distribution);
 
             portfolio.Result.PortfolioHistory = history.Result;
             var result = FillPortfolioModel(portfolio.Result, portfolio.Result.Advisor, user, 

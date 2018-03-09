@@ -1,7 +1,7 @@
 <div class="portfolio-card" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="40px">
   <div fxLayout="column" fxFlex>
     <div class="portfolio-name">
-      {{portfolio.name}}
+      <span *ngIf="position">{{position}}. </span>{{portfolio.name}}
     </div>
     <div class="portfolio-description">
       {{portfolio.advisorName}}

@@ -34,7 +34,6 @@ import { FocusDirective } from './directives/focus.directive';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { HomeComponent } from './components/home/home.component';
 import { PaddingDirective } from './directives/padding.directive';
-import { DashboardComponent } from './components/dashboard/dashboard/dashboard.component';
 import { GoalHeaderComponent } from './components/dashboard/goal-header/goal-header.component';
 import { ProjectionTabComponent } from './components/dashboard/projection-tab/projection-tab.component';
 import { GoalOptionComponent } from './components/register/goal-step/goal-option/goal-option.component';
@@ -93,6 +92,7 @@ import { LoadingSpinnerComponent } from './components/ui/loading-spinner/loading
 import { MobileNotSupportedComponent } from './components/ui/mobile-not-supported/mobile-not-supported.component';
 import { SetHashPopupComponent } from './components/portfolio/set-hash-popup/set-hash-popup.component';
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import { AdvisorPerformanceComponent } from './components/ranking/advisor-performance/advisor-performance.component';
 
 @NgModule({
   declarations: [
@@ -111,7 +111,6 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     ConfirmEmailComponent,
     HomeComponent,
     PaddingDirective,
-    DashboardComponent,
     GoalHeaderComponent,
     ProjectionTabComponent,
     GoalOptionComponent,
@@ -156,7 +155,8 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     PortfolioProjectionChartComponent,
     LoadingSpinnerComponent,
     MobileNotSupportedComponent,
-    SetHashPopupComponent
+    SetHashPopupComponent,
+    AdvisorPerformanceComponent
   ],
   imports: [
     BrowserAnimationsModule,

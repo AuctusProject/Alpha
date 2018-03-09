@@ -7,7 +7,6 @@ import { ForgotPasswordResetComponent } from './components/account/forgot-passwo
 import { AdvisorDetailsComponent } from './components/advisor/advisor-details/advisor-details.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { HomeComponent } from "./components/home/home.component";
-import { DashboardComponent } from "./components/dashboard/dashboard/dashboard.component";
 import { ProjectionTabComponent } from "./components/dashboard/projection-tab/projection-tab.component";
 import { PortfolioTabComponent } from "./components/dashboard/portfolio-tab/portfolio-tab.component";
 import { HistoricalTabComponent } from "./components/dashboard/historical-tab/historical-tab.component";
@@ -22,6 +21,7 @@ import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provid
 import { PortfolioDetailsComponent } from "./components/portfolio/portfolio-details/portfolio-details.component";
 import { MyInvestmentsComponent } from "./components/portfolio/my-investments/my-investments.component";
 import { AddPortfolioComponent } from "./components/portfolio/add-portfolio/add-portfolio.component";
+import { AdvisorPerformanceComponent } from './components/ranking/advisor-performance/advisor-performance.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -41,6 +41,7 @@ const routes: Routes = [
     { path: 'investments', component: MyInvestmentsComponent },
     { path: 'add-portfolio', component: AddPortfolioComponent },
     { path: 'edit-portfolio/:id', component: AddPortfolioComponent },
+    { path: 'ranking/advisor', component: AdvisorPerformanceComponent },
 ];
 
 @NgModule({

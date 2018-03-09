@@ -8,23 +8,20 @@ import { Projections } from "../model/portfolio/projections";
 import { PortfolioHistory } from "../model/portfolio/portfolioHistory";
 import { PortfolioDistribution } from "../model/portfolio/portfolioDistribution";
 import { ListRoboAdvisorsResponse } from "../model/portfolio/listRoboAdvisorsResponse";
+import * as moment from "moment";
 
 @Injectable()
 export class PortfolioService {
   
-  private getProjectionsUrl = this.httpService.apiUrl("portfolios/v1/projections");
   private getPortfoliosHistoryUrl = this.httpService.apiUrl("portfolios/v1/history");
   private getPortfoliosDistributionUrl = this.httpService.apiUrl("portfolios/v1/distribution");
   private savePortfolioUrl = this.httpService.apiUrl("portfolios/v1/");
   private getPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/");
+  private getPortfoliosPerformanceUrl = this.httpService.apiUrl("portfolios/v1/performance/");
   private getRoboPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/robos");
   private getPurchasedPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/purchases");
   
   constructor(private httpService: HttpService) { }
-
-  getProjections(): Observable<Projections> {
-    return this.httpService.get(this.getProjectionsUrl);
-  }
 
   getPortfolios(): Observable<Portfolio[]> {
     return this.httpService.get(this.getPortfoliosUrl);
@@ -32,6 +29,10 @@ export class PortfolioService {
 
   getPortfolio(portfolioId): Observable<Portfolio> {
     return this.httpService.get(this.getPortfoliosUrl + portfolioId);
+  }
+
+  getPortfoliosPerformance(date : Date): Observable<Portfolio[]> {
+    return this.httpService.get(this.getPortfoliosPerformanceUrl + moment(date).format("YYYY-MM-DD"));
   }
 
   getPurchasedPortfolios(): Observable<Portfolio[]> {
