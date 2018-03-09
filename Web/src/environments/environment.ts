@@ -5,7 +5,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: "http://localhost:52448/api/",
+  apiUrl: "https://homauctusalphaapi.azurewebsites.net/api/",
   tokenAddress: "0xff733a2DA444c9e8ec47f74c6AB15A34Ed0C7265",
   etherscanUrl: "https://rinkeby.etherscan.io",
   aucTokenContract: {

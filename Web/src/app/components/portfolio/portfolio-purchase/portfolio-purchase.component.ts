@@ -37,7 +37,7 @@ export class PortfolioPurchaseComponent implements OnInit {
   public simulator = {
     price: null,
     estimatedReturn: null,
-    targetAmount: 0,
+    startingAmount: 0,
     monthlyContribution: 0,
     startDate: null,
     endDate: null,
@@ -78,7 +78,7 @@ export class PortfolioPurchaseComponent implements OnInit {
 
     if (this.goal != null) {
       this.simulator.monthlyContribution = this.goal.monthlyContribution;
-      this.simulator.targetAmount = this.goal.targetAmount;
+      this.simulator.startingAmount = this.goal.startingAmount;
     }
 
     this.simulator.price = this.portfolio.price;
@@ -108,9 +108,9 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.calculateSimulator();
   }
 
-  public onTargetAmountChange() {
-    if (this.simulator.targetAmount !== this.goal.targetAmount) {
-      this.goal.targetAmount = this.simulator.targetAmount;
+  public onStartingAmountChange() {
+    if (this.simulator.startingAmount !== this.goal.startingAmount) {
+      this.goal.startingAmount = this.simulator.startingAmount;
       this.onSimulatorChange();
     }
   }
