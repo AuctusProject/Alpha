@@ -13,6 +13,7 @@ import { LocalStorageService } from "../../../services/local-storage.service";
 export class PortfolioCardComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
+  @Input() position: number;
 
   public readonly roboAdvisorType: number = 1;
 

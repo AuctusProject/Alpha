@@ -12,16 +12,6 @@
                 (chartClick)="chartClicked($event)"></canvas>
       </div>
     </div>
-    <div fxLayout="row" fxLayoutGap="20px" fxLayoutMargin fxLayoutAlign="space-evenly center">
-      <div>
-        <div class="portfolio-type-percentage">{{totalTraditionalPercentage}}%</div>
-        <div class="portfolio-type-description">Traditional</div>
-      </div>
-      <div>
-        <div class="portfolio-type-percentage">{{totalCryptoPercentage}}%</div>
-        <div class="portfolio-type-description">Crypto</div>
-      </div>
-    </div>
   </div>
   <div fxLayout="column" fxLayoutGap="20px" fxFlex="<grow>">
     <mat-table #table [dataSource]="portfolioDataSource" width="500px">

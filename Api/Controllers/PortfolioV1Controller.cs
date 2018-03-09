@@ -67,6 +67,14 @@ namespace Api.Controllers
             return base.ListPortfolios();
         }
 
+        [Route("performance/{date}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListPortfoliosPerformance(DateTime date)
+        {
+            return base.ListPortfoliosPerformance(date);
+        }
+
         [Route("purchases")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
