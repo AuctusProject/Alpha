@@ -1,4 +1,5 @@
-﻿using Auctus.DomainObjects.Account;
+﻿using Auctus.Business.WrapTelegram;
+using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
@@ -69,6 +70,12 @@ namespace Auctus.Service
         public List<Model.Portfolio.Distribution> ListPortfolioDistribution(string email, int portfolioId)
         {
             return DistributionBusiness.ListByUserPortfolio(email, portfolioId);
+        }
+
+        public object Check()
+        {
+            wTelegramWrapper.Check();
+            return null;
         }
     }
 }
