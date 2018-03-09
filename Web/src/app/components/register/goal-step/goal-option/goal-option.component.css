@@ -1,8 +1,8 @@
 .goal-option{
     background: white;
     border: solid 2px #ebeaea;
-    max-width: 107px;
-    width: 107px;
+    max-width: 100px;
+    width: 100px;
     height: 105px;
     cursor: pointer;
 }
