@@ -18,6 +18,8 @@ namespace Auctus.Business.Advisor
     {
         public int DefaultAdvisorId { get { return 1; } }
 
+        public static int MaximumNumberOfPortfolios = 5;
+
         public AdvisorBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public DomainObjects.Advisor.Advisor Create(string email, string name, string description)

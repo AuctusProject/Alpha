@@ -4,6 +4,7 @@ import { RiskType } from '../../../../model/account/riskType';
 import { Asset } from '../../../../model/asset/asset';
 import { PublicService } from '../../../../services/public.service';
 import { PortfolioRequest } from '../../../../model/portfolio/portfolioRequest';
+import { constants } from "../../../../util/contants";
 
 @Component({
   selector: 'portfolio-step',
@@ -16,6 +17,8 @@ export class PortfolioStepComponent implements OnInit {
   @Input() portfolioList: Array<PortfolioRequest>;
   @Output() onBackStep = new EventEmitter<Advisor>();
   @Output() onNextStep = new EventEmitter<Advisor>();
+
+  maximumNumberOfPortfoliosPerAdvisor : number = constants.maximumNumberOfPortfoliosPerAdvisor;
 
   public assets: Asset[];
   

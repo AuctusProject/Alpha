@@ -72,7 +72,9 @@ namespace Auctus.DataAccess.Portfolio
                                                     WHERE 
                                                     d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND
                                                     e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id) AND ({0})";
-        
+
+        private const string COUNT_PORTFOLIOS_BY_ADVISOR = @"SELECT count(p.Id) FROM Portfolio p WHERE p.AdvisorId = @AdvisorId";
+
         public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -224,6 +226,13 @@ namespace Auctus.DataAccess.Portfolio
                                 p.Advisor.Detail = ad;
                                 return p;
                             }, "Id,Id,Id", parameters).ToList();
+        }
+
+        public int? CountByAdvisor(int advisorId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("AdvisorId", advisorId, DbType.Int32);
+            return Query<int?>(COUNT_PORTFOLIOS_BY_ADVISOR, parameters).SingleOrDefault();
         }
     }
 }

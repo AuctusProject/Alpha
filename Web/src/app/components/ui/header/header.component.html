@@ -4,7 +4,7 @@
         <span class="spacer"></span>
         <div *ngIf="loginData">
             <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
-                <a routerLink="/robo-advisors" routerLinkActive="active">ROBO ADVISORS</a>
+                <!-- <a routerLink="/robo-advisors" routerLinkActive="active">ROBO ADVISORS</a> -->
                 <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
                 <a routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
                 <a *ngIf="loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
