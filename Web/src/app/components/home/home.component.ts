@@ -9,6 +9,8 @@ import { MetamaskAccountService } from '../../services/metamask-account.service'
 import { LoginService } from '../../services/login.service';
 import { Subscription } from 'rxjs/Subscription';
 import { EventsService } from "angular-event-service";
+import { MatDialog, MatDialogConfig } from "@angular/material";
+import { TelegramValidatorComponent } from "./telegram-validator/telegram-validator.component";
 
 @Component({
   selector: 'app-home',
@@ -31,7 +33,8 @@ export class HomeComponent implements OnInit {
     private notificationService: NotificationsService,
     private web3Service: Web3Service,
     private metamaskAccountService: MetamaskAccountService,
-    private zone: NgZone) {
+    private zone: NgZone,
+    private dialog: MatDialog) {
     this.simpleRegister = new SimpleRegister();
     this.buildForm();
   }
@@ -56,7 +59,16 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmit() {
-    this.createAccount();
+    
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.autoFocus = true;
+
+    dialogConfig.data = {
+    };
+   
+    this.dialog.open(TelegramValidatorComponent, dialogConfig);
+    // this.createAccount();
   }
 
   private createAccount() {
