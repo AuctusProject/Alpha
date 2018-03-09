@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auctus.DomainObjects.Account
 {
-    public class Deposit
+    public class CashFlow
     {
         [DapperKey(true)]
         [DapperType(System.Data.DbType.Int32)]

@@ -8,17 +8,17 @@ using System.Text;
 
 namespace Auctus.DataAccess.Account
 {
-    public class DepositData : BaseData<Deposit>
+    public class CashFlowData : BaseData<CashFlow>
     {
-        public override string TableName => "Deposit";
+        public override string TableName => "CashFlow";
 
-        private const string LIST_BY_USER = @"SELECT d.* FROM Deposit d WHERE d.UserId = @UserId";
+        private const string LIST_BY_USER = @"SELECT c.* FROM CashFlow c WHERE c.UserId = @UserId";
 
-        public List<Deposit> ListByUserId(int userId)
+        public List<CashFlow> ListByUserId(int userId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int32);
-            return Query<Deposit>(LIST_BY_USER, parameters).ToList();
+            return Query<CashFlow>(LIST_BY_USER, parameters).ToList();
         }
     }
 }
