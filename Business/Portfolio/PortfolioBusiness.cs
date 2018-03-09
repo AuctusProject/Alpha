@@ -405,7 +405,7 @@ namespace Auctus.Business.Portfolio
                 Purchased = purchases != null && purchases.Any(x => x.PortfolioId == portfolio.Id),
                 BuyTransactionStatus = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.LastTransaction?.TransactionStatus,
                 BuyTransactionHash = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.LastTransaction?.TransactionHash,
-                BuyTransactionId = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.LastTransaction?.Id,
+                BuyTransactionId = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.Id,
                 Enabled = portfolio.Detail.Enabled && advisor.Detail.Enabled,
                 PurchaseQuantity = purchasesQty.ContainsKey(portfolio.Id) ? purchasesQty[portfolio.Id] : 0,
                 TotalDays = portfolio.PortfolioHistory.Count,
