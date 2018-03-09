@@ -92,6 +92,14 @@ export class PortfolioPurchaseComponent implements OnInit {
     if (logged) {
       this.loginData = this.loginService.getLoginData();
     }
+
+    this.checkTransactionStatus();
+  }
+
+  private checkTransactionStatus(){
+    if (this.portfolio.buyTransactionHash && this.portfolio.buyTransactionStatus == 0){
+      this.setCheckTransactionInterval();
+    }
   }
 
   public getStartDate() {
