@@ -72,7 +72,14 @@ namespace Auctus.DataAccess.Portfolio
                                                     WHERE 
                                                     d.Date = (SELECT max(d2.Date) FROM PortfolioDetail d2 WHERE d2.PortfolioId = p.Id) AND
                                                     e.Date = (SELECT max(e2.Date) FROM AdvisorDetail e2 WHERE e2.AdvisorId = a.Id) AND ({0})";
-        
+
+        private const string COUNT_PORTFOLIOS_BY_ADVISOR = @"SELECT count(p.Id) FROM Portfolio p WHERE p.AdvisorId = @AdvisorId";
+
+        private const string TOTAL_INVESTED_BY_PORTFOLIO_BY_USER = @"SELECT sum(b.Invested) FROM Buy as b 
+                                                                        INNER JOIN BuyTransaction as bt on bt.BuyId = b.Id 
+                                                                        INNER JOIN [dbo].[Transaction] as t on bt.TransactionId = t.Id 
+                                                                     WHERE b.PortfolioId = @PortfolioId and b.UserId = @UserId and t.TransactionStatus = 1";
+
         public DomainObjects.Portfolio.Portfolio GetValidByOwner(int userId, int portfolioId)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -224,6 +231,21 @@ namespace Auctus.DataAccess.Portfolio
                                 p.Advisor.Detail = ad;
                                 return p;
                             }, "Id,Id,Id", parameters).ToList();
+        }
+
+        public int? CountByAdvisor(int advisorId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("AdvisorId", advisorId, DbType.Int32);
+            return Query<int?>(COUNT_PORTFOLIOS_BY_ADVISOR, parameters).SingleOrDefault();
+        }
+
+        public decimal? GetInvestedByUser(int portfolioId, int userId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("PortfolioId", portfolioId, DbType.Int32);
+            parameters.Add("UserId", userId, DbType.Int32);
+            return Query<decimal?>(TOTAL_INVESTED_BY_PORTFOLIO_BY_USER, parameters).SingleOrDefault();
         }
     }
 }

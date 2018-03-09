@@ -92,7 +92,7 @@ export class MetamaskAccountService {
 
   private checkAUCBalance(account) {
     let self = this;
-    this.web3Service.getTokenBalance(environment.tokenAddress, account).subscribe(
+    this.web3Service.getTokenBalance(environment.aucTokenContract.address, account).subscribe(
       balance => {
         if (self.aucBalance != balance) {
           self.broadcastBalanceChanged(balance);

@@ -75,7 +75,7 @@ namespace Api.Controllers
             Buy buy;
             try
             {
-                buy = AdvisorServices.Buy(GetUser(), buyRequest.Address, buyRequest.PortfolioId, buyRequest.Days, buyRequest.Goal?.GoalOptionId,
+                buy = AdvisorServices.Buy(GetUser(), buyRequest.Address, buyRequest.PortfolioId, buyRequest.Days, buyRequest.Invested, buyRequest.Goal?.GoalOptionId,
                         buyRequest.Goal?.Timeframe, buyRequest.Goal?.Risk, buyRequest.Goal?.TargetAmount, buyRequest.Goal?.StartingAmount,
                         buyRequest.Goal?.MonthlyContribution);
             }

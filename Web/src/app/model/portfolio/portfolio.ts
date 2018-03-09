@@ -11,6 +11,7 @@ export class Portfolio {
   description: string;
   price: number;
   purchased: boolean;
+  invested: number;
   buyTransactionStatus: number;
   buyTransactionHash: string;
   buyTransactionId: number;

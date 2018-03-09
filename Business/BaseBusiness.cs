@@ -25,6 +25,7 @@ namespace Auctus.Business
         private PasswordRecoveryBusiness _passwordRecoveryBusiness;
         private GoalOptionBusiness _goalOptionsBusiness;
         private GoalBusiness _goalBusiness;
+        private DepositBusiness _depositBusiness;
         private AdvisorBusiness _advisorBusiness;
         private AdvisorDetailBusiness _advisorDetailBusiness;
         private BuyBusiness _buyBusiness;
@@ -117,6 +118,16 @@ namespace Auctus.Business
                 if (_goalBusiness == null)
                     _goalBusiness = new GoalBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _goalBusiness;
+            }
+        }
+
+        protected DepositBusiness DepositBusiness
+        {
+            get
+            {
+                if (_depositBusiness == null)
+                    _depositBusiness = new DepositBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _depositBusiness;
             }
         }
 

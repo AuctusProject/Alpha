@@ -29,6 +29,10 @@ namespace Api.Controllers
                     portfolioRequest.Description, portfolioRequest.ProjectionValue, portfolioRequest.OptimisticProjection, portfolioRequest.PessimisticProjection,
                     portfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
             catch (ArgumentException ex)
             {
                 return BadRequest(new { error = ex.Message });
@@ -105,6 +109,20 @@ namespace Api.Controllers
             try
             {
                 portfolios = PortfolioServices.ListPortfolios(GetUser());
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(portfolios);
+        }
+
+        protected virtual IActionResult ListPortfoliosPerformance(DateTime date)
+        {
+            List<Auctus.Model.Portfolio> portfolios;
+            try
+            {
+                portfolios = PortfolioServices.ListPortfoliosPerformance(GetUser(), date);
             }
             catch (ArgumentException ex)
             {

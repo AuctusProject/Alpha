@@ -1,0 +1,49 @@
+<div class="advisor-performance">
+  <div class="portfolio-list-header">
+      <header></header>
+      <div class="header-text-container" fxLayout="row">
+          <div fxFlex>
+              <h1>Advisor Performance Ranking</h1>
+          </div>
+      </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-around center">
+      <div fxFlex>
+        <mat-tab-group [selectedIndex]="selectedIndex" mat-stretch-tabs>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="tab-title">
+                DAILY
+              </div>
+            </ng-template>
+            <div class="portfolio-list">
+                <mat-form-field class="end-date">
+                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="rankingDate"
+                      (ngModelChange)="onRankingDateChange()">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </mat-form-field>
+                <loading-spinner *ngIf="!dailyPortfolios"></loading-spinner>
+                <div *ngIf="dailyPortfolios && dailyPortfolios.length == 0" class="no-portfolios">No ranking information for the selected date.</div>
+                <portfolio-card *ngFor="let portfolio of dailyPortfolios; let i = index" [portfolio]="portfolio" [position]="i+1"></portfolio-card>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="tab-title">
+                ALL TIME
+              </div>
+            </ng-template>
+            <div class="portfolio-list">
+                <loading-spinner *ngIf="!portfolios"></loading-spinner>
+                <div *ngIf="portfolios && portfolios.length == 0" class="no-portfolios">Ranking information is not available.</div>
+                <portfolio-card *ngFor="let portfolio of portfolios; let i = index" [portfolio]="portfolio" [position]="i+1"></portfolio-card>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  
+
+  
+</div>

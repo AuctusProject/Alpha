@@ -34,10 +34,10 @@ namespace Auctus.Service
             return AdvisorBusiness.ListDetails(email, advisorId);
         }
 
-        public Buy Buy(string email, string address, int portfolioId, int days, int? goalOptionId, int? timeframe, 
+        public Buy Buy(string email, string address, int portfolioId, int days, decimal invested, int? goalOptionId, int? timeframe, 
             int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
-            return BuyBusiness.Create(email, address, portfolioId, days, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+            return BuyBusiness.Create(email, address, portfolioId, days, invested, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
         }
 
         public void SetBuyTransaction(string email, int buyId, string transactionHash)

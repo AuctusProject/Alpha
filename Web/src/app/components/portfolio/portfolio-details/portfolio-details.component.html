@@ -8,8 +8,7 @@
       <h1 *ngIf="portfolio.name">{{portfolio.name}}</h1>
       <h2 *ngIf="portfolio.advisorName">{{portfolio.advisorName}}</h2>
       <p>
-        <span *ngIf="portfolio.purchased">You have already purchased from this advisor -</span>
-        {{portfolio.purchaseQuantity | number:'1.0-2'}} sold
+        <span *ngIf="portfolio.purchased">You have already purchased from this advisor</span>
       </p>
     </div>
     <div *ngIf="this.loginData && portfolio.advisorId == this.loginData.humanAdvisorId" fxFlex fxLayoutAlign="end center">
