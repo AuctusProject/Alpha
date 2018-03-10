@@ -22,6 +22,7 @@ import { PortfolioDetailsComponent } from "./components/portfolio/portfolio-deta
 import { MyInvestmentsComponent } from "./components/portfolio/my-investments/my-investments.component";
 import { AddPortfolioComponent } from "./components/portfolio/add-portfolio/add-portfolio.component";
 import { AdvisorPerformanceComponent } from './components/ranking/advisor-performance/advisor-performance.component';
+import { UserPerformanceComponent } from './components/ranking/user-performance/user-performance.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -42,6 +43,7 @@ const routes: Routes = [
     { path: 'add-portfolio', component: AddPortfolioComponent },
     { path: 'edit-portfolio/:id', component: AddPortfolioComponent },
     { path: 'ranking/advisor', component: AdvisorPerformanceComponent },
+    { path: 'ranking/user', component: UserPerformanceComponent },
 ];
 
 @NgModule({

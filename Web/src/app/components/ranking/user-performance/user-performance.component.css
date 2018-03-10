@@ -1,0 +1,17 @@
+.card-list {
+  padding: 56px 330px 56px 330px;
+}
+
+.tab-title {
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  color: #4a90e2;
+  font-family: 'HelveticaNeue';
+}
+
+/deep/ .mat-tab-header {
+  padding-left: 136px;
+  padding-right: 136px;
+  background-color: #ffffff;
+}

@@ -93,6 +93,9 @@ import { MobileNotSupportedComponent } from './components/ui/mobile-not-supporte
 import { SetHashPopupComponent } from './components/portfolio/set-hash-popup/set-hash-popup.component';
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { AdvisorPerformanceComponent } from './components/ranking/advisor-performance/advisor-performance.component';
+import { UserPerformanceComponent } from './components/ranking/user-performance/user-performance.component';
+import { UserCardComponent } from './components/ranking/user-performance/user-card/user-card.component';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -156,7 +159,10 @@ import { AdvisorPerformanceComponent } from './components/ranking/advisor-perfor
     LoadingSpinnerComponent,
     MobileNotSupportedComponent,
     SetHashPopupComponent,
-    AdvisorPerformanceComponent
+    AdvisorPerformanceComponent,
+    UserPerformanceComponent,
+    UserCardComponent,
+    FilterPipe
   ],
   imports: [
     BrowserAnimationsModule,

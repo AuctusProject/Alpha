@@ -1,0 +1,27 @@
+<div class="user-card" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="40px">
+  <div fxLayout="row" fxFlex fxLayoutGap="25px">
+    <div class="user-rank">
+      {{user.rank}}
+    </div>
+    <div class="user-name">
+      {{user.name}}
+    </div>
+  </div>
+  <div fxFlex="348px" fxLayout="row" fxLayoutGap="50px" fxLayoutAlign="end center">
+    <div fxLayout="column" fxLayoutGap="4px">
+      <div class="performance-value expected-value">
+        <percentage-label [percentage]="user.percentageValue"></percentage-label>
+      </div>
+      <div class="performance-labels">
+        Percentual Gains
+      </div>
+    </div>
+    <div class="price-box">
+      {{user.totalValue | currency}}
+      <br/>
+      <span style="font-size:8px">
+        Total
+      </span>
+    </div>
+  </div>
+</div>

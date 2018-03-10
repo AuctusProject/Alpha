@@ -1,0 +1,45 @@
+.user-card {
+  width: calc(100% - 2px);
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  border: solid 1px rgba(128, 143, 163, 0.2);
+  padding: 8px;
+}
+
+.price-box {
+  min-width: 80px;
+  text-align: center;
+  background-color: #4a90e2;
+  border-radius: 5px;
+  padding: 7px 15px;
+  font-size: 14px;
+  color: #e9eff4;
+  min-height: 24px;
+  line-height: 14px;
+  font-family: HelveticaNeue;
+}
+
+.user-rank {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4a90e2;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #4a4a4a;
+}
+
+.performance-value {
+  font-size: 16px;
+  text-align: center;
+  color: #4a4a4a;
+}
+
+.performance-labels {
+  font-size: 9px;
+  color: #808fa3;
+  text-align: center;
+}
