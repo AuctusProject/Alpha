@@ -300,9 +300,16 @@ Auctus Team", Config.WEB_URL, code));
             return investedAmount;
         }
 
-        //public List<User> ListUsersByPerformance() {
-        //    var allUsers = Data.ListAll();
-        //}
+        public List<User> ListUsersByPerformance()
+        {
+            var allUsers = Data.ListAll();
+            List<int> userIdsOrderedByPerformance = allUsers.Select(u => UserBusiness.GetUserBalance(u.Email))
+                                                            .OrderByDescending(ub => ub.InvestedAmount)
+                                                            .Select(ub => ub.UserId)
+                                                            .ToList();
+            List<User> usersByPerformance = allUsers.OrderBy(u => userIdsOrderedByPerformance.IndexOf(u.Id)).ToList();
+            return usersByPerformance;
+        }
 
         public decimal GetAvailableToInvest(int userId) {
             return CashFlowBusiness.GetUserBalance(userId);
@@ -318,8 +325,9 @@ Auctus Team", Config.WEB_URL, code));
 
             return new UserBalance()
             {
-                investedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
-                availableAmount = availableToInvest != null ? availableToInvest.Result : 0
+                UserId = user.Id,
+                InvestedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
+                AvailableAmount = availableToInvest != null ? availableToInvest.Result : 0
             };
         }
 

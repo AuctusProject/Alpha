@@ -6,7 +6,8 @@ namespace Auctus.Model
 {
     public class UserBalance
     {
-        public decimal investedAmount { get; set; }
-        public decimal availableAmount { get; set; }
+        public int UserId { get; set; }
+        public decimal InvestedAmount { get; set; }
+        public decimal AvailableAmount { get; set; }
     }
 }
