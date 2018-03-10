@@ -21,7 +21,7 @@ namespace Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/jobs/v1/")]
-    [Authorize("Bearer")]
+    //[Authorize("Bearer")]
     [EnableCors("Default")]
     public class JobV1Controller : JobBaseController
     {

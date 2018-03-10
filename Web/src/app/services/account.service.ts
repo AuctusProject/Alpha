@@ -14,6 +14,7 @@ export class AccountService {
   private fullRegisterUrl = this.httpService.apiUrl("accounts/v1/registration/full");
   private simpleRegisterUrl = this.httpService.apiUrl("accounts/v1/registration/simple");
   private setGoalUrl = this.httpService.apiUrl("accounts/v1/goals");
+  private checkTelegramUrl = this.httpService.apiUrl("accounts/v1/checkTelegram");
   private confirmEmailUrl = this.httpService.apiUrl("accounts/v1/confirmation");
   private forgotPasswordUrl = this.httpService.apiUrl("accounts/v1/password/forgotten");
   private resetPasswordUrl = this.httpService.apiUrl("accounts/v1/password/recovery");
@@ -38,6 +39,10 @@ export class AccountService {
 
   simpleRegister(simpleRegisterDTO: SimpleRegister): Observable<LoginResult> {
     return this.httpService.post(this.simpleRegisterUrl, simpleRegisterDTO);
+  }
+
+  checkTelegram(phoneNumber: string) {
+    return this.httpService.post(this.checkTelegramUrl, phoneNumber);
   }
 
   setGoal(goalDTO: Goal): Observable<Goal> {

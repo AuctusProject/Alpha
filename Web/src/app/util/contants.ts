@@ -1,4 +1,4 @@
 export const constants = {
-    minimumAUCNecessary: 1000,
+    minimumAUCNecessary: 0,
     maximumNumberOfPortfoliosPerAdvisor: 5
 }

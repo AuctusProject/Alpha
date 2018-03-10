@@ -4,9 +4,9 @@
     fxFlex="55">
     <div fxLayout="row" fxLayoutGap="100px">
       <div fxLayout="column">
-        <h1 class="bold">Welcome to Auctus Alpha Platform</h1>
+        <h1 class="bold">Welcome to Auctus Tournament</h1>
         <h3>
-          The first release of our platform, Auctus Alpha, focuses on limited use cases: Robo and Human advisor portfolio recommendations.
+          TOThe first release of our platform, Auctus Alpha, focuses on limited use cases: Robo and Human advisor portfolio recommendations.
           <br/> 
           <br/> 
           It enables you to get a personalized portfolio based on your goals from our robo-advisor.
@@ -15,7 +15,17 @@
         </h3>
       </div>
     </div>
-    <div fxLayout="column" class="requirements-itens" fxFlex="45" fxLayoutGap="40px">
+    <div>
+      <span>Login</span>
+      <input type="text" name="user" />
+      <span>Password</span>
+      <input type="password" name="password" />
+
+      <button class="button-text">
+        JOIN GAME
+      </button>
+    </div>
+    <!--<div fxLayout="column" class="requirements-itens" fxFlex="45" fxLayoutGap="40px">
       <div fxLayout="row" *ngFor="let condition of conditions" fxLayoutGap="16px" fxLayoutAlign=" center">
         <div class="status" [ngClass]="{'status-ok': condition.status}">
           <i-x *ngIf="!condition.status"></i-x>
@@ -30,7 +40,7 @@
           Get free rinkeby AUC for test
         </button>
       </div>
-    </div>
+    </div>-->
   </div>
   <div *ngIf="transactionUrl" fxLayoutAlign="center center" fxLayout="row" fxLayoutGap="20px">
     <span>Transaction created. Waiting for it to be mined. Check it
