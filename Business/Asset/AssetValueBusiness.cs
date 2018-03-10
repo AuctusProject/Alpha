@@ -23,7 +23,7 @@ namespace Auctus.Business.Asset
 
         internal void UpdateAssetValue(DomainObjects.Asset.Asset asset)
         {
-            var lastUpdatedValue = LastAssetValue(asset.Id)?.Date ?? new DateTime(2017, 8, 17);
+            var lastUpdatedValue = LastAssetValue(asset.Id)?.Date ?? new DateTime(2018, 3, 1);
             if (lastUpdatedValue >= DateTime.UtcNow.Date)
             {
                 return;

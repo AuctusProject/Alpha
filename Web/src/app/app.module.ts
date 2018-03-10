@@ -94,6 +94,10 @@ import { SetHashPopupComponent } from './components/portfolio/set-hash-popup/set
 import { CurrencyMaskModule } from "ng2-currency-mask";
 import { AdvisorPerformanceComponent } from './components/ranking/advisor-performance/advisor-performance.component';
 import { UserBalanceComponent } from './components/user-balance/user-balance.component';
+import { TelegramValidatorComponent } from './components/home/telegram-validator/telegram-validator.component';
+import { UserPerformanceComponent } from './components/ranking/user-performance/user-performance.component';
+import { UserCardComponent } from './components/ranking/user-performance/user-card/user-card.component';
+import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
   declarations: [
@@ -158,7 +162,11 @@ import { UserBalanceComponent } from './components/user-balance/user-balance.com
     MobileNotSupportedComponent,
     SetHashPopupComponent,
     AdvisorPerformanceComponent,
-    UserBalanceComponent
+    UserBalanceComponent,
+    TelegramValidatorComponent,
+    UserPerformanceComponent,
+    UserCardComponent,
+    FilterPipe
   ],
   imports: [
     BrowserAnimationsModule,
@@ -198,7 +206,7 @@ import { UserBalanceComponent } from './components/user-balance/user-balance.com
     MetamaskAccountService,
     LocalStorageService
   ],
-  entryComponents: [PortfolioPurchasePopupComponent, SetHashPopupComponent],
+  entryComponents: [PortfolioPurchasePopupComponent, SetHashPopupComponent, TelegramValidatorComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
