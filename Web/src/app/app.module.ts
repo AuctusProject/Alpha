@@ -161,7 +161,7 @@ import { FilterPipe } from './pipes/filter.pipe';
     MobileNotSupportedComponent,
     SetHashPopupComponent,
     AdvisorPerformanceComponent,
-    TelegramValidatorComponent
+    TelegramValidatorComponent,
     UserPerformanceComponent,
     UserCardComponent,
     FilterPipe
