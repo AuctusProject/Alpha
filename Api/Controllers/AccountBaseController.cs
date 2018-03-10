@@ -279,5 +279,11 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        protected virtual IActionResult GetUserBalance()
+        {
+            UserBalance userBalance = AccountServices.GetUserBalance(GetUser());
+            return Ok(new { balance = userBalance });
+        }
     }
 }

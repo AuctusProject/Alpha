@@ -6,6 +6,7 @@ import { FullRegister } from "../model/account/fullRegister";
 import { Goal } from '../model/account/goal';
 import { SimpleRegister } from '../model/account/simpleRegister';
 import { LoginResult } from '../model/account/loginResult';
+import { UserBalance } from '../model/account/userBalance';
 
 @Injectable()
 export class AccountService {
@@ -23,6 +24,7 @@ export class AccountService {
   private getLastApiKeyUrl = this.httpService.apiUrl("accounts/v1/apikeys/last");
   private revokeApiKeyUrl = this.httpService.apiUrl("accounts/v1/apikeys");
   private validateEmailUrl = this.httpService.apiUrl("accounts/v1/emails");
+  private balanceUrl = this.httpService.apiUrl("accounts/v1/balance");
   private validateUsernameUrl = this.httpService.apiUrl("accounts/v1/usernames");
   private faucetUrl = this.httpService.apiUrl("accounts/v1/faucet");
 
@@ -71,6 +73,10 @@ export class AccountService {
       Email: email
     }
     return this.httpService.post(this.resendConfirmationUrl, resendConfirmationRequest);
+  }
+
+  getUserBalance(): Observable<UserBalance> {
+    return this.httpService.get(this.balanceUrl);
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<any> {

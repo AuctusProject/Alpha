@@ -248,7 +248,7 @@ namespace Auctus.Business.Portfolio
 
             return portfolios
                 .Where(c => c.PortfolioHistory.Any())
-                .Select(c => FillPortfolioModel(c, c.Advisor, user, Enumerable.Empty<Buy>(), new Dictionary<int,int>()))
+                .Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, Enumerable.Empty<Buy>(), new Dictionary<int,int>()))
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
@@ -267,11 +267,11 @@ namespace Auctus.Business.Portfolio
 
             portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
 
-            return portfolios.Select(c => FillPortfolioModel(c, c.Advisor, user, purchases.Result, portfoliosQty.Result))
+            return portfolios.Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, purchases.Result, portfoliosQty.Result))
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
-        public List<Model.Portfolio> ListPurchased(string email)
+        public List<Model.Portfolio> ListPurchasedWithHistory(string email)
         {
             var user = UserBusiness.GetValidUser(email);
             var purchases = BuyBusiness.ListPurchases(user.Id);
@@ -288,6 +288,22 @@ namespace Auctus.Business.Portfolio
             Task.WaitAll(histories.ToArray());
 
             portfolios.Result.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+
+            return portfolios.Result.Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, purchases, portfoliosQty.Result))
+                .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
+        }
+
+        public List<Model.Portfolio> ListPurchased(string email)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var purchases = BuyBusiness.ListPurchases(user.Id);
+            if (purchases.Count == 0)
+                return new List<Model.Portfolio>();
+
+            var portfoliosQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(purchases.Select(c => c.PortfolioId)));
+            var portfolios = Task.Factory.StartNew(() => Data.List(purchases.Select(c => c.PortfolioId)));
+
+            Task.WaitAll(portfolios, portfoliosQty);
 
             return portfolios.Result.Select(c => FillPortfolioModel(c, c.Advisor, user, purchases, portfoliosQty.Result))
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
@@ -329,7 +345,7 @@ namespace Auctus.Business.Portfolio
             Task.WaitAll(history, portfolioQty, distribution, invested);
 
             portfolio.Result.PortfolioHistory = history.Result;
-            var result = FillPortfolioModel(portfolio.Result, portfolio.Result.Advisor, user, 
+            var result = FillPortfolioModelWithHistory(portfolio.Result, portfolio.Result.Advisor, user, 
                 purchase.Result != null ? new Buy[] { purchase.Result } : null, portfolioQty.Result);
 
             result.Purchased = purchased;
@@ -393,9 +409,22 @@ namespace Auctus.Business.Portfolio
             return Data.GetInvestedByUser(portfolioId, userId);
         }
 
+        public Model.Portfolio FillPortfolioModelWithHistory(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
+            IEnumerable<Buy> purchases, Dictionary<int, int> purchasesQty)
+        {
+            var ret = PortfolioBusiness.FillPortfolioModel(portfolio, advisor, user, purchases, purchasesQty);
+            ret.TotalDays = portfolio.PortfolioHistory.Count;
+            ret.LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory);
+            ret.Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory);
+            ret.Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory);
+            ret.AllDays = PortfolioHistoryBusiness.GetHistoryResult(portfolio.PortfolioHistory);
+            return ret;
+        }
+
         public Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
             IEnumerable<Buy> purchases, Dictionary<int, int> purchasesQty)
         {
+            var purchase = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id);
             return new Model.Portfolio()
             {
                 Id = portfolio.Id,
@@ -411,17 +440,14 @@ namespace Auctus.Business.Portfolio
                 OptimisticPercent = portfolio.Projection.OptimisticProjectionValue,
                 PessimisticPercent = portfolio.Projection.PessimisticProjectionValue,
                 Owned = user != null && advisor.UserId == user.Id,
-                Purchased = purchases != null && purchases.Any(x => x.PortfolioId == portfolio.Id),
-                BuyTransactionStatus = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.LastTransaction?.TransactionStatus,
-                BuyTransactionHash = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.LastTransaction?.TransactionHash,
-                BuyTransactionId = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.Id,
+                Purchased = purchase != null,
+                BuyTransactionStatus = purchase?.LastTransaction?.TransactionStatus,
+                BuyTransactionHash = purchase?.LastTransaction?.TransactionHash,
+                BuyTransactionId = purchase?.Id,
+                EffectiveTransactionDate = purchase?.ExpirationDate?.AddDays(-purchase.Days),
+                Invested = purchases?.FirstOrDefault(x => x.PortfolioId == portfolio.Id)?.Invested ?? 0,
                 Enabled = portfolio.Detail.Enabled && advisor.Detail.Enabled,
-                PurchaseQuantity = purchasesQty.ContainsKey(portfolio.Id) ? purchasesQty[portfolio.Id] : 0,
-                TotalDays = portfolio.PortfolioHistory.Count,
-                LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
-                Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory),
-                Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory),
-                AllDays = PortfolioHistoryBusiness.GetHistoryResult(portfolio.PortfolioHistory)
+                PurchaseQuantity = purchasesQty.ContainsKey(portfolio.Id) ? purchasesQty[portfolio.Id] : 0
             };
         }
 

@@ -9,6 +9,7 @@
                 <a routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
                 <a *ngIf="loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
                 <div *ngIf="!loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
+                <user-balance></user-balance>
                 <div class="pull-right">
                     <mat-menu #appMenu="matMenu">
                         <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">

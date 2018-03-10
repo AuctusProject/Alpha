@@ -34,16 +34,13 @@ namespace Auctus.Business.Account
                 throw new ArgumentException("Wallet is invalid.");
             else if (user.Password != Security.Hash(password))
                 throw new ArgumentException("Password is invalid.");
-
-            decimal availableToInvest = GetAvailableToInvest(user.Id);
             
             var result = new Model.Login()
             {
                 Address = user.Wallet.Address,
                 Email = user.Email,
                 Username = user.Username,
-                PendingConfirmation = !user.ConfirmationDate.HasValue,
-                AvailableToInvest = availableToInvest
+                PendingConfirmation = !user.ConfirmationDate.HasValue
             };
             if (!result.PendingConfirmation)
             {
@@ -289,12 +286,42 @@ Auctus Team", Config.WEB_URL, code));
                 throw new ArgumentException("Password cannot have spaces.");
         }
 
-        public decimal GetCurrentInvestedAmount(int userId) {
-            return 0;
+        public decimal GetCurrentInvestedAmountValue(int userId) {
+            var user = Get(userId);
+            List<Model.Portfolio> portfolios = PortfolioBusiness.ListPurchased(user.Email);
+            decimal investedAmount = 0;
+            foreach (Model.Portfolio portfolio in portfolios) {
+                List<DomainObjects.Portfolio.PortfolioHistory> portfolioHistories = PortfolioHistoryBusiness.ListHistory(portfolio.Id);
+                int days = (int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.EffectiveTransactionDate ?? DateTime.UtcNow).TotalDays) - 1;
+                var historyResult = days > 0 ? PortfolioHistoryBusiness.GetHistoryResult(days, portfolioHistories) : null;
+                investedAmount += historyResult != null ? portfolio.Invested * ((decimal)historyResult.Value / 100L + 1) : 0;
+            }
+
+            return investedAmount;
         }
+
+        //public List<User> ListUsersByPerformance() {
+        //    var allUsers = Data.ListAll();
+        //}
 
         public decimal GetAvailableToInvest(int userId) {
             return CashFlowBusiness.GetUserBalance(userId);
         }
+
+        public UserBalance GetUserBalance(string email)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var investedAmountValue = Task.Factory.StartNew(() => UserBusiness.GetCurrentInvestedAmountValue(user.Id));
+            var availableToInvest = Task.Factory.StartNew(() => UserBusiness.GetAvailableToInvest(user.Id));
+
+            Task.WaitAll(investedAmountValue, availableToInvest);
+
+            return new UserBalance()
+            {
+                investedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
+                availableAmount = availableToInvest != null ? availableToInvest.Result : 0
+            };
+        }
+
     }
 }

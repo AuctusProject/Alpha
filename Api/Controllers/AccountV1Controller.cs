@@ -89,6 +89,14 @@ namespace Api.Controllers
             return await base.SendConfirmEmail(sendConfirmEmailRequest);
         }
 
+        [Route("balance")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        public new IActionResult GetUserBalance()
+        {
+            return base.GetUserBalance();
+        }
+
         [Route("password/recovery")]
         [HttpPost]
         [AllowAnonymous]

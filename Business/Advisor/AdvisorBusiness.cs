@@ -98,7 +98,7 @@ namespace Auctus.Business.Advisor
                     var riskFound = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);
                     if (riskFound != null)
                     {
-                        var port = PortfolioBusiness.FillPortfolioModel(riskFound, advisor, user, purchases.Result, portfolioQty.Result);
+                        var port = PortfolioBusiness.FillPortfolioModelWithHistory(riskFound, advisor, user, purchases.Result, portfolioQty.Result);
                         var difference = riskFound.Projection.RiskType.Value - riskType.Value;
                         if (difference == 0)
                             portfolioWithSameRisk.Add(port);
@@ -161,7 +161,7 @@ namespace Auctus.Business.Advisor
                 Owned = owned,
                 Enabled = advisor.Detail.Enabled,
                 PurchaseQuantity = advisorQty.Result.ContainsKey(advisor.Id) ? advisorQty.Result[advisor.Id] : 0,
-                Portfolios = portfolios.Select(c => PortfolioBusiness.FillPortfolioModel(c, advisor, user, purchases?.Result, portfolioQty.Result)).
+                Portfolios = portfolios.Select(c => PortfolioBusiness.FillPortfolioModelWithHistory(c, advisor, user, purchases?.Result, portfolioQty.Result)).
                     OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList()
             };
         }

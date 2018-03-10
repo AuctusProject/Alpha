@@ -10,7 +10,6 @@ namespace Auctus.Model
         public string Email { get; set; }
         public string Address { get; set; }
         public bool HasInvestment { get; set; }
-        public decimal AvailableToInvest { get; set; }
         public int? HumanAdvisorId { get; set; }
         public bool PendingConfirmation { get; set; }
     }
