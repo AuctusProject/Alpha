@@ -285,5 +285,11 @@ namespace Api.Controllers
             UserBalance userBalance = AccountServices.GetUserBalance(GetUser());
             return Ok(new { balance = userBalance });
         }
+
+        protected virtual IActionResult ListUsersByPerformance()
+        {
+            List<User> users = AccountServices.ListUsersByPerformance();
+            return Ok(users);
+        }
     }
 }

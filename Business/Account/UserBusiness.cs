@@ -303,7 +303,7 @@ Auctus Team", Config.WEB_URL, code));
         public List<User> ListUsersByPerformance()
         {
             var allUsers = Data.ListAll();
-            List<int> userIdsOrderedByPerformance = allUsers.Select(u => UserBusiness.GetUserBalance(u.Email))
+            List<int> userIdsOrderedByPerformance = allUsers.Select(u => UserBusiness.GetUserBalance(u))
                                                             .OrderByDescending(ub => ub.InvestedAmount)
                                                             .Select(ub => ub.UserId)
                                                             .ToList();
@@ -315,9 +315,17 @@ Auctus Team", Config.WEB_URL, code));
             return CashFlowBusiness.GetUserBalance(userId);
         }
 
-        public UserBalance GetUserBalance(string email)
+        public User GetByEmail(string email) {
+            return Data.GetByEmail(email);
+        }
+
+        public UserBalance GetUserBalance(string email) {
+            var user = UserBusiness.GetByEmail(email);
+            return GetUserBalance(user);
+        }
+
+        public UserBalance GetUserBalance(User user)
         {
-            var user = UserBusiness.GetValidUser(email);
             var investedAmountValue = Task.Factory.StartNew(() => UserBusiness.GetCurrentInvestedAmountValue(user.Id));
             var availableToInvest = Task.Factory.StartNew(() => UserBusiness.GetAvailableToInvest(user.Id));
 

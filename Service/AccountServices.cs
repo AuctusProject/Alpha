@@ -108,5 +108,10 @@ namespace Auctus.Service
         {
             return UserBusiness.GetUserBalance(email);
         }
+
+        public List<User> ListUsersByPerformance()
+        {
+            return UserBusiness.ListUsersByPerformance();
+        }
     }
 }

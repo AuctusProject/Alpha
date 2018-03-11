@@ -97,6 +97,14 @@ namespace Api.Controllers
             return base.GetUserBalance();
         }
 
+        [Route("performance")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        public new IActionResult ListUsersByPerformance()
+        {
+            return base.ListUsersByPerformance();
+        }
+
         [Route("password/recovery")]
         [HttpPost]
         [AllowAnonymous]
