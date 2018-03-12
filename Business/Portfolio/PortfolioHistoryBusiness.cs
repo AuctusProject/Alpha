@@ -23,7 +23,7 @@ namespace Auctus.Business.Portfolio
             }
 
             var assetsIds = portfolio.Projections.SelectMany(p => p.Distribution.Select(d => d.AssetId)).Distinct();
-            var assetValuesByDate = AssetValueBusiness.GetAssetValuesGroupedByDate(assetsIds, lastUpdatedValue ?? portfolio.CreationDate).OrderBy(v => v.Key).ToList();
+            var assetValuesByDate = AssetValueBusiness.GetAssetValuesGroupedByDate(assetsIds, lastUpdatedValue ?? portfolio.CreationDate.Date).OrderBy(v => v.Key).ToList();
             CreatePortfolioHistoryForEachAssetValueDate(portfolio, assetValuesByDate);
         }
 
