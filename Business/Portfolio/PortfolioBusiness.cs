@@ -244,7 +244,7 @@ namespace Auctus.Business.Portfolio
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
             Task.WaitAll(histories.ToArray());
 
-            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && (!date.HasValue || g.Date >= date.Value. Date.AddDays(1) && g.Date <= date.Value.Date))).ToList());
+            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && (!date.HasValue || g.Date >= date.Value. Date.AddDays(-1) && g.Date <= date.Value.Date))).ToList());
 
             return portfolios
                 .Where(c => c.PortfolioHistory.Any())

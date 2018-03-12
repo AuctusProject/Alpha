@@ -1,6 +1,7 @@
 /deep/ .mat-tab-header {
     padding-left: 136px;
     padding-right: 136px;
+    background: white;
   }
   
 /deep/ .tab-body {
@@ -14,3 +15,4 @@
     color: #4a4a4a;
     margin-bottom: 60px;
 }
+
