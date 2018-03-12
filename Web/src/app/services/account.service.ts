@@ -47,7 +47,7 @@ export class AccountService {
   }
 
   checkTelegram(phoneNumber: string) {
-    return this.httpService.post(this.checkTelegramUrl, phoneNumber);
+    return this.httpService.get(this.checkTelegramUrl + "/" + phoneNumber);
   }
 
   setGoal(goalDTO: Goal): Observable<Goal> {
@@ -122,4 +122,5 @@ export class AccountService {
   validateUsername(username: string): Observable<any> {
     return this.httpService.get(this.validateUsernameUrl + "/" + username);
   }
+
 }

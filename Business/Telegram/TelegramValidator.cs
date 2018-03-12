@@ -2,15 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
-namespace Auctus.Business.WrapTelegram
+namespace Auctus.Business.Telegram
 {
-    public class TelegramValidator
+    internal class TelegramValidator
     {
         public static bool CheckPhoneIsMember(string phoneNumber)
         {
-            Telegram.Bot.TelegramBotClient client = new Telegram.Bot.TelegramBotClient(Config.TELEGRAM_BOT_TOKEN);
+            TelegramBotClient client = new TelegramBotClient(Config.TELEGRAM_BOT_TOKEN);
             var sendContactResult = client.SendContactAsync(Config.TELEGRAM_CHAT_ID, phoneNumber, "NAME").Result;
             var userId = sendContactResult.Contact.UserId;
 

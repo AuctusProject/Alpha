@@ -297,5 +297,19 @@ namespace Api.Controllers
             List<User> users = AccountServices.ListUsersByPerformance();
             return Ok(users);
         }
+
+        protected virtual IActionResult CheckTelegram(string phoneNumber)
+        {
+            bool isValid;
+            try
+            {
+                isValid = AccountServices.CheckTelegramParticipation(phoneNumber);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { isValid = isValid });
+        }
     }
 }

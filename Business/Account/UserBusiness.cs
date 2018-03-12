@@ -110,6 +110,11 @@ namespace Auctus.Business.Account
             };
         }
 
+        public bool CheckTelegramParticipation(string phoneNumber)
+        {
+            return Telegram.TelegramValidator.CheckPhoneIsMember(phoneNumber);
+        }
+
         public bool IsValidEmailToRegister(string email)
         {
             return Email.IsValidEmail(email) && Data.GetByEmail(email) == null;
