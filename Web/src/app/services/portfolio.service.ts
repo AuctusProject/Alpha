@@ -18,6 +18,7 @@ export class PortfolioService {
   private savePortfolioUrl = this.httpService.apiUrl("portfolios/v1/");
   private getPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/");
   private getPortfoliosPerformanceUrl = this.httpService.apiUrl("portfolios/v1/performance/");
+  private getAllPortfoliosPerformanceUrl = this.httpService.apiUrl("portfolios/v1/allperformance/");
   private getRoboPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/robos");
   private getPurchasedPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/purchases");
   
@@ -33,6 +34,10 @@ export class PortfolioService {
 
   getPortfoliosPerformance(date : Date): Observable<Portfolio[]> {
     return this.httpService.get(this.getPortfoliosPerformanceUrl + moment(date).format("YYYY-MM-DD"));
+  }
+
+  getAllPortfoliosPerformance(): Observable<Portfolio[]> {
+    return this.httpService.get(this.getAllPortfoliosPerformanceUrl);
   }
 
   getPurchasedPortfolios(): Observable<Portfolio[]> {

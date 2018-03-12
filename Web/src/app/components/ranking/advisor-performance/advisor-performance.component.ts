@@ -28,12 +28,12 @@ export class AdvisorPerformanceComponent implements OnInit {
   }
 
   private getAllPortfolios() {
-    this.portfolioService.getPortfolios().subscribe(
+    this.portfolioService.getAllPortfoliosPerformance().subscribe(
       portfolios =>
         this.portfolios = portfolios);
   }
 
-  private onRankingDateChange(){
+  onRankingDateChange(){
     this.getPortfoliosByDate();
   }
 

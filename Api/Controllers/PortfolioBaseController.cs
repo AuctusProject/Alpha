@@ -117,7 +117,12 @@ namespace Api.Controllers
             return Ok(portfolios);
         }
 
-        protected virtual IActionResult ListPortfoliosPerformance(DateTime date)
+        protected virtual IActionResult ListAllPortfoliosPerformance()
+        {
+            return ListPortfoliosPerformance(null);
+        }
+
+        protected virtual IActionResult ListPortfoliosPerformance(DateTime? date)
         {
             List<Auctus.Model.Portfolio> portfolios;
             try
