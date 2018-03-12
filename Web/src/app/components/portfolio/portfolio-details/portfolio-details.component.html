@@ -11,9 +11,6 @@
         <span *ngIf="portfolio.purchased">You have already purchased from this advisor</span>
       </p>
     </div>
-    <div *ngIf="this.loginData && portfolio.advisorId == this.loginData.humanAdvisorId" fxFlex fxLayoutAlign="end center">
-      <div class="header-action-button" fxLayoutAlign="space-around center" routerLink="/edit-portfolio/{{portfolio.id}}">EDIT PORTFOLIO</div>
-    </div>
   </div>
 </div>
 <loading-spinner *ngIf="!portfolio"></loading-spinner>

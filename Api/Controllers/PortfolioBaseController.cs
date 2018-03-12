@@ -59,19 +59,21 @@ namespace Api.Controllers
 
         protected virtual IActionResult UpdatePortfolioAndDistribution(int portfolioId, UpdatePortfolioWithDistributionRequest updatePortfolioRequest)
         {
-            if (updatePortfolioRequest == null || updatePortfolioRequest.Distribution == null || updatePortfolioRequest.Distribution.Count == 0)
-                return BadRequest();
+            return Unauthorized();
 
-            try
-            {
-                PortfolioServices.UpdatePortfolioAndDistribution(GetUser(), portfolioId, updatePortfolioRequest.Price, updatePortfolioRequest.Name, 
-                    updatePortfolioRequest.Description, updatePortfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { error = ex.Message });
-            }
-            return Ok();
+            //if (updatePortfolioRequest == null || updatePortfolioRequest.Distribution == null || updatePortfolioRequest.Distribution.Count == 0)
+            //    return BadRequest();
+
+            //try
+            //{
+            //    PortfolioServices.UpdatePortfolioAndDistribution(GetUser(), portfolioId, updatePortfolioRequest.Price, updatePortfolioRequest.Name, 
+            //        updatePortfolioRequest.Description, updatePortfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
+            //}
+            //catch (ArgumentException ex)
+            //{
+            //    return BadRequest(new { error = ex.Message });
+            //}
+            //return Ok();
         }
 
         protected virtual IActionResult DisablePortfolio(int portfolioId)
