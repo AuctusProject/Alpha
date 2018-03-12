@@ -33,7 +33,7 @@ export class AdvisorPerformanceComponent implements OnInit {
         this.portfolios = portfolios);
   }
 
-  private onRankingDateChange(){
+  onRankingDateChange(){
     this.getPortfoliosByDate();
   }
 

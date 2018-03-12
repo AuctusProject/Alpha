@@ -235,7 +235,7 @@ namespace Auctus.Business.Portfolio
             return Data.GetValidByOwner(userId, portfolioId);
         }
 
-        public List<Model.Portfolio> ListPerformance(string email, DateTime date)
+        public List<Model.Portfolio> ListPerformance(string email, DateTime? date)
         {
             var user = UserBusiness.GetValidUser(email);
             var portfolios = Data.ListAllValids();
@@ -244,12 +244,12 @@ namespace Auctus.Business.Portfolio
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
             Task.WaitAll(histories.ToArray());
 
-            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && g.Date >= date.Date.AddDays(1) && g.Date <= date.Date)).ToList());
+            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && (!date.HasValue || g.Date >= date.Value. Date.AddDays(1) && g.Date <= date.Value.Date))).ToList());
 
             return portfolios
                 .Where(c => c.PortfolioHistory.Any())
                 .Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, Enumerable.Empty<Buy>(), new Dictionary<int,int>()))
-                .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
+                .OrderByDescending(c => c.AllDays.Value).ThenByDescending(c => c.CreationDate).ToList();
         }
 
         public List<Model.Portfolio> List(string email)
@@ -428,6 +428,7 @@ namespace Auctus.Business.Portfolio
             return new Model.Portfolio()
             {
                 Id = portfolio.Id,
+                CreationDate = portfolio.CreationDate,
                 Name = portfolio.Detail.Name,
                 Description = portfolio.Detail.Description,
                 Price = portfolio.Detail.Price,

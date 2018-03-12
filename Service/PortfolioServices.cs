@@ -41,7 +41,7 @@ namespace Auctus.Service
             return PortfolioBusiness.List(email);
         }
 
-        public List<Model.Portfolio> ListPortfoliosPerformance(string email, DateTime date)
+        public List<Model.Portfolio> ListPortfoliosPerformance(string email, DateTime? date)
         {
             return PortfolioBusiness.ListPerformance(email, date);
         }
