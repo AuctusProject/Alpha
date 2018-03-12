@@ -1,10 +1,10 @@
-<div fxLayout="column">
-  <div fxLayout="row">
-    <span>Invested: </span>
-    <span>{{investedAmount | number}}</span>
+<div class="ub-component" fxLayout="column">
+  <div class="amount" fxLayout="row">
+    <span class="title">Invested:</span>
+    <span> ${{investedAmount | number:'1.0-2'}}</span>
   </div>
   <div fxLayout="row">
-    <span>Available: </span>
-    <span>${{availableToInvest | number:'1.0-2'}}</span>
+    <span class="title">Available:</span>
+    <span> ${{availableToInvest | number:'1.0-2'}}</span>
   </div>
 </div>

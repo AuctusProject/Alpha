@@ -9,8 +9,8 @@ import { AccountService } from '../../services/account.service';
 })
 export class UserBalanceComponent implements OnInit {
 
-  investedAmount: number = 0.5;
-  availableToInvest: number = 0.5;
+  investedAmount: number;
+  availableToInvest: number;
 
   constructor(private loginService: LoginService, private accountService: AccountService, private changeDetector : ChangeDetectorRef) { }
 
