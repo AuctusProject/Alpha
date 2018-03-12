@@ -8,6 +8,8 @@ import { SimpleRegister } from '../model/account/simpleRegister';
 import { LoginResult } from '../model/account/loginResult';
 import { UserBalance } from '../model/account/userBalance';
 import { User } from '../model/account/user';
+import { UserRank } from '../model/account/userRank';
+import * as moment from 'moment';
 
 @Injectable()
 export class AccountService {
@@ -89,6 +91,11 @@ export class AccountService {
 
   listUsersByPerformance(): Observable<any[]> {
     return this.httpService.get(this.listUsersByPerformanceUrl);
+  }
+
+  listUsersPerformanceByDate(dateTime: Date): Observable<UserRank[]> {
+    let searchDateTime = moment(dateTime).format('YYYY-MM-DD')
+    return this.httpService.get(this.listUsersByPerformanceUrl + '/' + searchDateTime);
   }
 
   changePassword(currentPassword: string, newPassword: string): Observable<any> {

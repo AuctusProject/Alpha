@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { UserRank } from '../../../../model/account/userRank';
 
 @Component({
   selector: 'user-card',
@@ -7,7 +8,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class UserCardComponent implements OnInit {
 
-  @Input() user: any;
+  @Input() user: UserRank;
 
   constructor() { }
 

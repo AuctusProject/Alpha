@@ -1,4 +1,8 @@
+import { AccountService } from './../../../services/account.service';
 import { Component, OnInit } from '@angular/core';
+import { UserBalance } from '../../../model/account/userBalance';
+import { UserRank } from '../../../model/account/userRank';
+import { MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-user-performance',
@@ -7,22 +11,38 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPerformanceComponent implements OnInit {
 
-  public usersList: Array<any>;
+  public dailyList: Array<UserRank>;
+  public allTimeList: Array<UserRank>;
 
   public searchFields = {
     name: null,
-    date: new Date()
+    date: null
   };
 
-  constructor() { }
+  constructor(private accountService: AccountService) { }
 
   ngOnInit() {
-    this.usersList =[
-      {name: 'Renzo', rank: 1, totalValue: 100000, percentageValue: 120},
-      {name: 'Jose', rank: 2, totalValue: 10000, percentageValue: 120},
-      {name: 'Maria', rank: 3, totalValue: 1000, percentageValue: 120},
-      {name: 'TEste', rank: 4, totalValue: 100, percentageValue: 120}
-    ]
+    this.listUsersByPerformance();
+  }
+
+  public listUsersByPerformance() {
+    this.accountService.listUsersByPerformance().subscribe(result => {
+      this.allTimeList = result
+    });
+  };
+
+  public onTabChange(event: MatTabChangeEvent) {
+    if (event.index === 1 && !this.searchFields.date) {
+        this.searchFields.date = new Date();
+        this.listUsersPerformanceByDate();
+    }
+  }
+
+  public listUsersPerformanceByDate() {
+    this.dailyList = null;
+    this.accountService.listUsersPerformanceByDate(this.searchFields.date).subscribe(result => {
+      this.dailyList = result
+    });
   }
 
 }

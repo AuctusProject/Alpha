@@ -75,7 +75,13 @@ namespace Auctus.DataAccess.Advisor
                                                             WHERE b.ExpirationDate IS NOT NULL AND b.ExpirationDate < @ExpirationDate
                                                             AND NOT EXISTS (SELECT 1 FROM EscrowResult e WHERE e.BuyId = b.Id)";
 
-        public List<Buy> ListPurchases(int userId)
+		private const string SELECT_UNTIL_DATE = @"SELECT b.*, t.* FROM 
+												  Buy b 
+												  INNER JOIN BuyTransaction bt ON bt.BuyId = b.Id
+												  INNER JOIN [Transaction] t ON t.Id = bt.TransactionId
+                                                  WHERE b.CreationDate <= @CreationDate";
+
+		public List<Buy> ListPurchases(int userId)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("UserId", userId, DbType.Int32);
@@ -87,7 +93,19 @@ namespace Auctus.DataAccess.Advisor
                             }, "Id", parameters).ToList();
         }
 
-        public Buy Get(int id)
+		public List<Buy> ListPurchasesUntilDate(DateTime untilDateTime)
+		{
+			DynamicParameters parameters = new DynamicParameters();
+			parameters.Add("CreationDate", untilDateTime, DbType.DateTime);
+			return Query<Buy, Transaction, Buy>(SELECT_UNTIL_DATE,
+							(buy, trans) =>
+							{
+								buy.LastTransaction = trans;
+								return buy;
+							}, "Id", parameters).ToList();
+		}
+
+		public Buy Get(int id)
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("Id", id, DbType.Int32);
