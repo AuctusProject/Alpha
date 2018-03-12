@@ -15,6 +15,8 @@ import { SetHashPopupComponent } from "../set-hash-popup/set-hash-popup.componen
 import { Router } from '@angular/router';
 import { Web3Service } from "../../../services/web3.service";
 import { NotificationsService } from "angular2-notifications";
+import { AccountService } from "../../../services/account.service";
+import { EventsService } from "angular-event-service";
 
 @Component({
   selector: "portfolio-purchase",
@@ -27,10 +29,11 @@ export class PortfolioPurchaseComponent implements OnInit {
   @Output() afterSimulatorChange = new EventEmitter();
   @Output() afterPurchaseCompleted = new EventEmitter();
 
+  availableToInvest: number;
   loginData: any;
   startDate: Date;
   endDate: Date;
-  hashInformed:string;
+  hashInformed: string;
   checkTransactionInterval: any;
 
   public simulator = {
@@ -57,8 +60,10 @@ export class PortfolioPurchaseComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private web3Service: Web3Service,
-    private notificationService: NotificationsService
-  ) {}
+    private notificationService: NotificationsService,
+    private accountService: AccountService,
+    private eventsService: EventsService
+  ) { }
 
   ngOnInit() {
     if (this.portfolio.advisorType != 0 && !this.goal && !this.portfolio.purchased && !this.portfolio.owned) {
@@ -75,7 +80,7 @@ export class PortfolioPurchaseComponent implements OnInit {
       .add(totalDays, "days")
       .toDate();
 
-    if(this.goal != null) {
+    if (this.goal != null) {
       this.simulator.monthlyContribution = this.goal.monthlyContribution;
       this.simulator.targetAmount = this.goal.targetAmount;
     }
@@ -93,12 +98,21 @@ export class PortfolioPurchaseComponent implements OnInit {
     }
 
     this.checkTransactionStatus();
+    this.checkAvailableToInvest();
   }
 
-  private checkTransactionStatus(){
-    if (this.portfolio.buyTransactionHash && this.portfolio.buyTransactionStatus == 0){
+  private checkTransactionStatus() {
+    if (this.portfolio.buyTransactionHash && this.portfolio.buyTransactionStatus == 0) {
       this.setCheckTransactionInterval();
     }
+  }
+
+  private checkAvailableToInvest() {
+    this.accountService.getUserBalance().subscribe(balance => {
+      if (balance) {
+        this.availableToInvest = balance.availableAmount;
+      }
+    })
   }
 
   public getStartDate() {
@@ -116,14 +130,14 @@ export class PortfolioPurchaseComponent implements OnInit {
   }
 
   public onTargetAmountChange() {
-    if(this.simulator.targetAmount !== this.goal.targetAmount){
+    if (this.simulator.targetAmount !== this.goal.targetAmount) {
       this.goal.targetAmount = this.simulator.targetAmount;
       this.onSimulatorChange();
     }
   }
 
   public onMontlhyAmountChange() {
-    if(this.simulator.monthlyContribution !== this.goal.monthlyContribution){
+    if (this.simulator.monthlyContribution !== this.goal.monthlyContribution) {
       this.goal.monthlyContribution = this.simulator.monthlyContribution;
       this.onSimulatorChange();
     }
@@ -235,8 +249,8 @@ export class PortfolioPurchaseComponent implements OnInit {
     });
   }
 
-  setCheckTransactionInterval(){
-    if(this.checkTransactionInterval){
+  setCheckTransactionInterval() {
+    if (this.checkTransactionInterval) {
       clearInterval(this.checkTransactionInterval);
     }
     let self = this;
@@ -248,9 +262,10 @@ export class PortfolioPurchaseComponent implements OnInit {
             self.advisorService.checkBuyTransaction(self.portfolio.buyTransactionId).subscribe(
               result => {
                 self.portfolio.buyTransactionStatus = result.status;
-                if(result.distribution){
+                if (result.distribution) {
                   self.portfolio.purchased = true;
                   self.portfolio.assetDistribution = result.distribution;
+                  self.eventsService.broadcast("purchaseSuccessful");
                   self.notificationService.success("Sucess", "Your buy transaction was successfully processed.");
                 }
               }
@@ -282,7 +297,7 @@ export class PortfolioPurchaseComponent implements OnInit {
     dialogConfig.data = {
       hash: ""
     };
-    
+
     let dialogRef = this.dialog.open(SetHashPopupComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(result => {
       this.onSendHashModalClick(result);

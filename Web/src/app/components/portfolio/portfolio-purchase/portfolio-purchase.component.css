@@ -192,3 +192,16 @@ hr{
 /deep/ .amount-field .mat-input-infix{
   width:100%;
 }
+
+.available {
+  margin-top: -10px;
+  font-size: 10px;
+  color: grey;
+  text-align: right;
+  z-index: 1;
+  text-decoration: none;
+}
+
+.available:hover {
+  cursor: pointer !important;
+}

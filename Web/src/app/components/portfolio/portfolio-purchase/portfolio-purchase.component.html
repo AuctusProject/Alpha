@@ -68,11 +68,12 @@
     </div>
   </div>
   <div>
-    <div *ngIf="portfolio.invested == 0" class="invest-box" fxLayout="row">
+    <div *ngIf="portfolio.invested == 0" class="invest-box" fxLayout="column">
       <mat-form-field fxFlex>
         <input matInput placeholder="Amount To Invest" [(ngModel)]="simulator.invested" type="text" currencyMask name="AmountToInvest"
           [options]="{ allowNegative : false }" />
       </mat-form-field>
+      <span *ngIf="availableToInvest" (click)="simulator.invested = availableToInvest" class="available">Available: ${{availableToInvest | number:'1.0-2'}}</span>
     </div>
     <div *ngIf="portfolio.invested > 0" fxLayout="row" fxLayoutAlign="space-between center" class="estimated-total-return ">
       <div fxFlex="70" class="text-left">
