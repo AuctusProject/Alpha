@@ -184,5 +184,14 @@ namespace Api.Controllers
         {
             return base.Faucet(faucetRequest);
         }
+
+        [Route("checkTelegram/{phoneNumber}")]
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult CheckTelegram([FromRoute]string phoneNumber)
+        {
+            return base.CheckTelegram(phoneNumber);
+        }
     }
 }

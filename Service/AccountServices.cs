@@ -113,5 +113,10 @@ namespace Auctus.Service
         {
             return UserBusiness.ListUsersByPerformance();
         }
+
+        public bool CheckTelegramParticipation(string phoneNumber)
+        {
+            return UserBusiness.CheckTelegramParticipation(phoneNumber);
+        }
     }
 }

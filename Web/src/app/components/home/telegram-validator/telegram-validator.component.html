@@ -7,9 +7,13 @@
       <span>Please confirm your phone number to validate you are a member of Auctus Chat</span>
     </div>
     <br />
-    <label for="phone-number">Phone Number</label>
-    <input type="tel" id="phone-number" />
-    <button>Validate</button>
-    <span>This procedure aims to guarantee that users will not create multiple accounts and keep a fair Tournament.</span>
+    <form (ngSubmit)="checkTelegramParticipation()">
+      <mat-form-field fxFlex="70">
+        <input matInput placeholder="PhoneNumber" [(ngModel)]="phoneNumber" type="text" name="phoneNumber"/>
+      </mat-form-field>
+      <button type="submit" class="primary-blue-button bold" [promiseBtn]="checkPromise">Validate</button>
+    </form>
+    <br />
+    <span>This procedure aims to reduce chances of participants creating multiple accounts and keep a fair Tournament.</span>
   </div>
 </div>
