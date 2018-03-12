@@ -280,6 +280,12 @@ namespace Api.Controllers
             }
         }
 
+        protected virtual IActionResult GetUserBalanceFromCache()
+        {
+            UserBalance userBalance = AccountServices.GetUserBalanceFromCache(GetUser());
+            return Ok(userBalance);
+        }
+
         protected virtual IActionResult GetUserBalance()
         {
             UserBalance userBalance = AccountServices.GetUserBalance(GetUser());

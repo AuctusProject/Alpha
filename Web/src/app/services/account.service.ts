@@ -26,6 +26,7 @@ export class AccountService {
   private getLastApiKeyUrl = this.httpService.apiUrl("accounts/v1/apikeys/last");
   private revokeApiKeyUrl = this.httpService.apiUrl("accounts/v1/apikeys");
   private validateEmailUrl = this.httpService.apiUrl("accounts/v1/emails");
+  private balanceFromCacheUrl = this.httpService.apiUrl("accounts/v1/balanceFromCache");
   private balanceUrl = this.httpService.apiUrl("accounts/v1/balance");
   private listUsersByPerformanceUrl = this.httpService.apiUrl("accounts/v1/performance");
   private validateUsernameUrl = this.httpService.apiUrl("accounts/v1/usernames");

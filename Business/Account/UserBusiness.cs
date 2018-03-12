@@ -305,7 +305,7 @@ Auctus Team", Config.WEB_URL, code));
             var allUsers = Data.ListAll();
             List<Task<UserBalance>> userBalanceList = new List<Task<UserBalance>>();
             foreach (User user in allUsers) {
-                userBalanceList.Add(Task.Factory.StartNew(() => UserBusiness.GetUserBalance(user)));
+                userBalanceList.Add(Task.Factory.StartNew(() => UserBusiness.GetUserBalanceFromCache(user)));
             }
             Task.WaitAll(userBalanceList.ToArray());
 
@@ -326,12 +326,32 @@ Auctus Team", Config.WEB_URL, code));
             return Data.GetByEmail(email);
         }
 
-        public UserBalance GetUserBalance(string email) {
+        public UserBalance GetUserBalanceFromCache(string email) {
+            var user = UserBusiness.GetByEmail(email);
+            return GetUserBalanceFromCache(user);
+        }
+
+        public UserBalance GetUserBalance(string email)
+        {
             var user = UserBusiness.GetByEmail(email);
             return GetUserBalance(user);
         }
 
-        public UserBalance GetUserBalance(User user)
+        public UserBalance GetUserBalance(User user) {
+            var investedAmountValue = Task.Factory.StartNew(() => UserBusiness.GetCurrentInvestedAmountValue(user.Id));
+            var availableToInvest = Task.Factory.StartNew(() => UserBusiness.GetAvailableToInvest(user.Id));
+
+            Task.WaitAll(investedAmountValue, availableToInvest);
+
+            return new UserBalance()
+            {
+                UserId = user.Id,
+                InvestedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
+                AvailableAmount = availableToInvest != null ? availableToInvest.Result : 0
+            };
+        }
+
+        public UserBalance GetUserBalanceFromCache(User user)
         {
             string cacheKey = string.Format("UserBalance{0}", user.Id);
             var userBalance = MemoryCache.Get<UserBalance>(cacheKey);
@@ -339,18 +359,7 @@ Auctus Team", Config.WEB_URL, code));
                 return userBalance;
             }
 
-            var investedAmountValue = Task.Factory.StartNew(() => UserBusiness.GetCurrentInvestedAmountValue(user.Id));
-            var availableToInvest = Task.Factory.StartNew(() => UserBusiness.GetAvailableToInvest(user.Id));
-
-            Task.WaitAll(investedAmountValue, availableToInvest);
-
-            userBalance = new UserBalance()
-            {
-                UserId = user.Id,
-                InvestedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
-                AvailableAmount = availableToInvest != null ? availableToInvest.Result : 0
-            };
-
+            userBalance = GetUserBalance(user);
             MemoryCache.Set<UserBalance>(cacheKey, userBalance);
 
             return userBalance;

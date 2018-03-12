@@ -89,6 +89,14 @@ namespace Api.Controllers
             return await base.SendConfirmEmail(sendConfirmEmailRequest);
         }
 
+        [Route("balanceFromCache")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        public new IActionResult GetUserBalanceFromCache()
+        {
+            return base.GetUserBalanceFromCache();
+        }
+
         [Route("balance")]
         [HttpGet]
         [Authorize("Bearer")]

@@ -104,6 +104,11 @@ namespace Auctus.Service
             return WalletBusiness.Faucet(address);
         }
 
+        public UserBalance GetUserBalanceFromCache(string email)
+        {
+            return UserBusiness.GetUserBalanceFromCache(email);
+        }
+
         public UserBalance GetUserBalance(string email)
         {
             return UserBusiness.GetUserBalance(email);
