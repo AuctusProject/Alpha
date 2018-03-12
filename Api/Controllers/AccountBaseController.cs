@@ -280,16 +280,36 @@ namespace Api.Controllers
             }
         }
 
+        protected virtual IActionResult GetUserBalanceFromCache()
+        {
+            UserBalance userBalance = AccountServices.GetUserBalanceFromCache(GetUser());
+            return Ok(userBalance);
+        }
+
         protected virtual IActionResult GetUserBalance()
         {
             UserBalance userBalance = AccountServices.GetUserBalance(GetUser());
-            return Ok(new { balance = userBalance });
+            return Ok(userBalance);
         }
 
         protected virtual IActionResult ListUsersByPerformance()
         {
             List<User> users = AccountServices.ListUsersByPerformance();
             return Ok(users);
+        }
+
+        protected virtual IActionResult CheckTelegram(string phoneNumber)
+        {
+            bool isValid;
+            try
+            {
+                isValid = AccountServices.CheckTelegramParticipation(phoneNumber);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { isValid = isValid });
         }
     }
 }

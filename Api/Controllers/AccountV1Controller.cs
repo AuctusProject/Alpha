@@ -89,6 +89,14 @@ namespace Api.Controllers
             return await base.SendConfirmEmail(sendConfirmEmailRequest);
         }
 
+        [Route("balanceFromCache")]
+        [HttpGet]
+        [Authorize("Bearer")]
+        public new IActionResult GetUserBalanceFromCache()
+        {
+            return base.GetUserBalanceFromCache();
+        }
+
         [Route("balance")]
         [HttpGet]
         [Authorize("Bearer")]
@@ -183,6 +191,15 @@ namespace Api.Controllers
         public new IActionResult Faucet([FromBody]FaucetRequest faucetRequest)
         {
             return base.Faucet(faucetRequest);
+        }
+
+        [Route("checkTelegram/{phoneNumber}")]
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult CheckTelegram([FromRoute]string phoneNumber)
+        {
+            return base.CheckTelegram(phoneNumber);
         }
     }
 }

@@ -1,3 +1,15 @@
+.ub-component{
+    margin-top: 8px;
+}
+
 span{
     font-size: 12px;
+}
+
+.title {
+    padding-right: 3px;
+}
+
+.amount {
+    line-height: 10px;
 }

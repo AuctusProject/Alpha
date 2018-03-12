@@ -110,6 +110,11 @@ namespace Auctus.Business.Account
             };
         }
 
+        public bool CheckTelegramParticipation(string phoneNumber)
+        {
+            return Telegram.TelegramValidator.CheckPhoneIsMember(phoneNumber);
+        }
+
         public bool IsValidEmailToRegister(string email)
         {
             return Email.IsValidEmail(email) && Data.GetByEmail(email) == null;
@@ -303,10 +308,17 @@ Auctus Team", Config.WEB_URL, code));
         public List<User> ListUsersByPerformance()
         {
             var allUsers = Data.ListAll();
-            List<int> userIdsOrderedByPerformance = allUsers.Select(u => UserBusiness.GetUserBalance(u))
-                                                            .OrderByDescending(ub => ub.InvestedAmount)
-                                                            .Select(ub => ub.UserId)
-                                                            .ToList();
+            List<Task<UserBalance>> userBalanceList = new List<Task<UserBalance>>();
+            foreach (User user in allUsers) {
+                userBalanceList.Add(Task.Factory.StartNew(() => UserBusiness.GetUserBalanceFromCache(user)));
+            }
+            Task.WaitAll(userBalanceList.ToArray());
+
+            List<int> userIdsOrderedByPerformance = userBalanceList.Select(ubt => ubt.Result)
+                            .OrderByDescending(ub => ub.InvestedAmount)
+                            .Select(ub => ub.UserId)
+                            .ToList();
+
             List<User> usersByPerformance = allUsers.OrderBy(u => userIdsOrderedByPerformance.IndexOf(u.Id)).ToList();
             return usersByPerformance;
         }
@@ -319,13 +331,18 @@ Auctus Team", Config.WEB_URL, code));
             return Data.GetByEmail(email);
         }
 
-        public UserBalance GetUserBalance(string email) {
+        public UserBalance GetUserBalanceFromCache(string email) {
+            var user = UserBusiness.GetByEmail(email);
+            return GetUserBalanceFromCache(user);
+        }
+
+        public UserBalance GetUserBalance(string email)
+        {
             var user = UserBusiness.GetByEmail(email);
             return GetUserBalance(user);
         }
 
-        public UserBalance GetUserBalance(User user)
-        {
+        public UserBalance GetUserBalance(User user) {
             var investedAmountValue = Task.Factory.StartNew(() => UserBusiness.GetCurrentInvestedAmountValue(user.Id));
             var availableToInvest = Task.Factory.StartNew(() => UserBusiness.GetAvailableToInvest(user.Id));
 
@@ -337,6 +354,20 @@ Auctus Team", Config.WEB_URL, code));
                 InvestedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
                 AvailableAmount = availableToInvest != null ? availableToInvest.Result : 0
             };
+        }
+
+        public UserBalance GetUserBalanceFromCache(User user)
+        {
+            string cacheKey = string.Format("UserBalance{0}", user.Id);
+            var userBalance = MemoryCache.Get<UserBalance>(cacheKey);
+            if (userBalance != null) {
+                return userBalance;
+            }
+
+            userBalance = GetUserBalance(user);
+            MemoryCache.Set<UserBalance>(cacheKey, userBalance);
+
+            return userBalance;
         }
 
     }
