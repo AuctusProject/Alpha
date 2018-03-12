@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { LoginService } from '../../services/login.service';
 import { AccountService } from '../../services/account.service';
 import { LocalStorageService } from '../../services/local-storage.service';
@@ -26,6 +26,12 @@ export class UserBalanceComponent implements OnInit {
     if (loggedIn) {
       this.updateBalance();
     }
+  }
+
+  ngOnDestroy() {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.eventsService.destroyListener("purchaseSuccessful", this.onPurchaseSuccessful);
   }
 
   private updateBalance() {
