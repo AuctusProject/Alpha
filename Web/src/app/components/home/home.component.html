@@ -51,7 +51,8 @@
               </mat-form-field>
             </div>
             <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
-              <button type="submit" class="primary-blue-button bold" [disabled]="simpleRegisterForm.invalid" [promiseBtn]="createPromise">CREATE ACCOUNT</button>
+              <loading-spinner class="home-loading" *ngIf="showLoading"></loading-spinner>
+              <button *ngIf="!showLoading" type="submit" class="primary-blue-button bold" [disabled]="simpleRegisterForm.invalid" [promiseBtn]="createPromise">CREATE ACCOUNT</button>
             </div>
           </div>
         </form>

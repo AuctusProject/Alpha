@@ -7,13 +7,26 @@
       <span>Please confirm your phone number to validate you are a member of Auctus Chat</span>
     </div>
     <br />
-    <form (ngSubmit)="checkTelegramParticipation()">
-      <mat-form-field fxFlex="70">
-        <input matInput placeholder="PhoneNumber" [(ngModel)]="phoneNumber" type="text" name="phoneNumber"/>
-      </mat-form-field>
-      <button type="submit" class="primary-blue-button bold" [promiseBtn]="checkPromise">Validate</button>
+
+    <form (ngSubmit)="checkTelegramParticipation()" fxLayoutAlign="center center">
+      <div fxLayout="column" fxFlex="240px" >
+        <mat-form-field [floatLabel]="'always'">
+          <mat-select [(value)]="selectedCountry">
+            <mat-option *ngFor="let country of sortedCountriesPrefixes" [value]="country">{{country.countryName}} +{{country.code}}</mat-option>
+          </mat-select>
+          <mat-placeholder>Country</mat-placeholder>
+        </mat-form-field>
+        <mat-form-field [floatLabel]="'always'">
+          <mat-label>Phone Number</mat-label>
+          <input [placeholder]="getPlaceholder()" matInput [(ngModel)]="phoneNumber" type="text" name="phoneNumber" />
+        </mat-form-field>
+        <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
+          <button type="submit" class="primary-blue-button bold" [promiseBtn]="checkPromise">Validate</button>
+        </div>
+      </div>
     </form>
     <br />
     <span>This procedure aims to reduce chances of participants creating multiple accounts and keep a fair Tournament.</span>
+
   </div>
 </div>

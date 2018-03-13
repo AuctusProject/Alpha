@@ -39,9 +39,14 @@ namespace Auctus.Service
             await UserBusiness.ResendEmailConfirmation(email);
         }
 
-        public async Task<Login> SimpleRegister(string address, string username, string email, string password)
+        public async Task<Login> SimpleRegister(string address, string username, string email, string password, string phoneNumber)
         {
-            return await UserBusiness.SimpleRegister(address, username, email, password);
+            return await UserBusiness.SimpleRegister(address, username, email, password, phoneNumber);
+        }
+
+        public void ValidateRegister(string address, string username, string email, string password)
+        {
+            UserBusiness.ValidateRegister(address, username, email, password);
         }
 
         //public async Task<User> FullRegister(string email, string password, int goalOptionId, int? timeframe, int risk, double? targetAmount, double? startingAmount, double? monthlyContribution)

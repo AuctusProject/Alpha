@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { Subscription } from 'rxjs/Subscription';
 import { NotificationsService } from 'angular2-notifications';
 import { AccountService } from '../../../services/account.service';
@@ -9,26 +10,281 @@ import { AccountService } from '../../../services/account.service';
   styleUrls: ['./telegram-validator.component.css']
 })
 export class TelegramValidatorComponent implements OnInit {
-
+  selectedCountry;
+  selectedObj: any;
   public phoneNumber: string;
   checkPromise: Subscription;
 
-
   constructor(private accountService: AccountService,
-    private notificationService: NotificationsService) {
-    
+    private notificationService: NotificationsService,
+    public dialogRef: MatDialogRef<TelegramValidatorComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.sortCountries();
   }
 
   ngOnInit() {
   }
 
   private checkTelegramParticipation() {
-    this.checkPromise = this.accountService.checkTelegram(this.phoneNumber).subscribe(result => {
+    this.checkPromise = this.accountService.checkTelegram(this.getFormattedPhoneNumber()).subscribe(result => {
       if (result) {
-        this.notificationService.info("Info", result.isValid);
+        this.checkPromise = this.data.onSuccess(this.data.homeComponent, this.getFormattedPhoneNumber());
       }
     }, response => {
       this.notificationService.info("Error", response.error);
     });
   }
+
+  getFormattedPhoneNumber(){
+    return this.selectedCountry.code + this.phoneNumber;
+  }
+
+  sortedCountriesPrefixes;
+  sortCountries(){
+    if(!this.sortedCountriesPrefixes){
+      this.sortedCountriesPrefixes = this.countries.concat([]);
+      this.sortedCountriesPrefixes.sort(function(a, b) {
+        var an = a.countryName.toLowerCase(), bn = b.countryName.toLowerCase();
+        return an < bn ? -1 : (an > bn ? 1 : 0);
+      });
+    }
+  }
+
+  getPlaceholder(){
+    if(this.selectedCountry && this.selectedCountry.phoneFormat)
+      return this.selectedCountry.phoneFormat;
+    return "";
+  }
+
+  countries = [{code:'1876',countryCode:'JM',countryName:'Jamaica',phoneFormat:'XXX XXXX'},
+  {code:'1869',countryCode:'KN',countryName:'Saint Kitts & Nevis',phoneFormat:'XXX XXXX'},
+  {code:'1868',countryCode:'TT',countryName:'Trinidad & Tobago',phoneFormat:'XXX XXXX'},
+  {code:'1784',countryCode:'VC',countryName:'Saint Vincent & the Grenadines',phoneFormat:'XXX XXXX'},
+  {code:'1767',countryCode:'DM',countryName:'Dominica',phoneFormat:'XXX XXXX'},
+  {code:'1758',countryCode:'LC',countryName:'Saint Lucia',phoneFormat:'XXX XXXX'},
+  {code:'1721',countryCode:'SX',countryName:'Sint Maarten',phoneFormat:'XXX XXXX'},
+  {code:'1684',countryCode:'AS',countryName:'American Samoa',phoneFormat:'XXX XXXX'},
+  {code:'1671',countryCode:'GU',countryName:'Guam',phoneFormat:'XXX XXXX'},
+  {code:'1670',countryCode:'MP',countryName:'Northern Mariana Islands',phoneFormat:'XXX XXXX'},
+  {code:'1664',countryCode:'MS',countryName:'Montserrat',phoneFormat:'XXX XXXX'},
+  {code:'1649',countryCode:'TC',countryName:'Turks & Caicos Islands',phoneFormat:'XXX XXXX'},
+  {code:'1473',countryCode:'GD',countryName:'Grenada',phoneFormat:'XXX XXXX'},
+  {code:'1441',countryCode:'BM',countryName:'Bermuda',phoneFormat:'XXX XXXX'},
+  {code:'1345',countryCode:'KY',countryName:'Cayman Islands',phoneFormat:'XXX XXXX'},
+  {code:'1340',countryCode:'VI',countryName:'US Virgin Islands',phoneFormat:'XXX XXXX'},
+  {code:'1284',countryCode:'VG',countryName:'British Virgin Islands',phoneFormat:'XXX XXXX'},
+  {code:'1268',countryCode:'AG',countryName:'Antigua & Barbuda',phoneFormat:'XXX XXXX'},
+  {code:'1264',countryCode:'AI',countryName:'Anguilla',phoneFormat:'XXX XXXX'},
+  {code:'1246',countryCode:'BB',countryName:'Barbados',phoneFormat:'XXX XXXX'},
+  {code:'1242',countryCode:'BS',countryName:'Bahamas',phoneFormat:'XXX XXXX'},
+  {code:'998',countryCode:'UZ',countryName:'Uzbekistan',phoneFormat:'XX XXXXXXX'},
+  {code:'996',countryCode:'KG',countryName:'Kyrgyzstan'},
+  {code:'995',countryCode:'GE',countryName:'Georgia'},
+  {code:'994',countryCode:'AZ',countryName:'Azerbaijan',phoneFormat:'XX XXX XX XX'},
+  {code:'993',countryCode:'TM',countryName:'Turkmenistan',phoneFormat:'XX XXXXXX'},
+  {code:'992',countryCode:'TJ',countryName:'Tajikistan'},
+  {code:'977',countryCode:'NP',countryName:'Nepal'},
+  {code:'976',countryCode:'MN',countryName:'Mongolia'},
+  {code:'975',countryCode:'BT',countryName:'Bhutan'},
+  {code:'974',countryCode:'QA',countryName:'Qatar'},
+  {code:'973',countryCode:'BH',countryName:'Bahrain',phoneFormat:'XXXX XXXX'},
+  {code:'972',countryCode:'IL',countryName:'Israel',phoneFormat:'XX XXX XXXX'},
+  {code:'971',countryCode:'AE',countryName:'United Arab Emirates',phoneFormat:'XX XXX XXXX'},
+  {code:'970',countryCode:'PS',countryName:'Palestine',phoneFormat:'XXX XX XXXX'},
+  {code:'968',countryCode:'OM',countryName:'Oman',phoneFormat:'XXXX XXXX'},
+  {code:'967',countryCode:'YE',countryName:'Yemen',phoneFormat:'XXX XXX XXX'},
+  {code:'966',countryCode:'SA',countryName:'Saudi Arabia'},
+  {code:'965',countryCode:'KW',countryName:'Kuwait',phoneFormat:'XXXX XXXX'},
+  {code:'964',countryCode:'IQ',countryName:'Iraq',phoneFormat:'XXX XXX XXXX'},
+  {code:'963',countryCode:'SY',countryName:'Syria'},
+  {code:'962',countryCode:'JO',countryName:'Jordan',phoneFormat:'X XXXX XXXX'},
+  {code:'961',countryCode:'LB',countryName:'Lebanon'},
+  {code:'960',countryCode:'MV',countryName:'Maldives'},
+  {code:'886',countryCode:'TW',countryName:'Taiwan'},
+  {code:'880',countryCode:'BD',countryName:'Bangladesh'},
+  {code:'856',countryCode:'LA',countryName:'Laos'},
+  {code:'855',countryCode:'KH',countryName:'Cambodia'},
+  {code:'853',countryCode:'MO',countryName:'Macau'},
+  {code:'852',countryCode:'HK',countryName:'Hong Kong'},
+  {code:'850',countryCode:'KP',countryName:'North Korea'},
+  {code:'692',countryCode:'MH',countryName:'Marshall Islands'},
+  {code:'691',countryCode:'FM',countryName:'Micronesia'},
+  {code:'690',countryCode:'TK',countryName:'Tokelau'},
+  {code:'689',countryCode:'PF',countryName:'French Polynesia'},
+  {code:'688',countryCode:'TV',countryName:'Tuvalu'},
+  {code:'687',countryCode:'NC',countryName:'New Caledonia'},
+  {code:'686',countryCode:'KI',countryName:'Kiribati'},
+  {code:'685',countryCode:'WS',countryName:'Samoa'},
+  {code:'683',countryCode:'NU',countryName:'Niue'},
+  {code:'682',countryCode:'CK',countryName:'Cook Islands'},
+  {code:'681',countryCode:'WF',countryName:'Wallis & Futuna'},
+  {code:'680',countryCode:'PW',countryName:'Palau'},
+  {code:'679',countryCode:'FJ',countryName:'Fiji'},
+  {code:'678',countryCode:'VU',countryName:'Vanuatu'},
+  {code:'677',countryCode:'SB',countryName:'Solomon Islands'},
+  {code:'676',countryCode:'TO',countryName:'Tonga'},
+  {code:'675',countryCode:'PG',countryName:'Papua New Guinea'},
+  {code:'674',countryCode:'NR',countryName:'Nauru'},
+  {code:'673',countryCode:'BN',countryName:'Brunei Darussalam',phoneFormat:'XXX XXXX'},
+  {code:'672',countryCode:'NF',countryName:'Norfolk Island'},
+  {code:'670',countryCode:'TL',countryName:'Timor-Leste'},
+  {code:'599',countryCode:'BQ',countryName:'Bonaire, Sint Eustatius & Saba'},
+  {code:'599',countryCode:'CW',countryName:'Curaçao'},
+  {code:'598',countryCode:'UY',countryName:'Uruguay',phoneFormat:'XXXX XXXX'},
+  {code:'597',countryCode:'SR',countryName:'Suriname',phoneFormat:'XXX XXXX'},
+  {code:'596',countryCode:'MQ',countryName:'Martinique'},
+  {code:'595',countryCode:'PY',countryName:'Paraguay',phoneFormat:'XXX XXX XXX'},
+  {code:'594',countryCode:'GF',countryName:'French Guiana'},
+  {code:'593',countryCode:'EC',countryName:'Ecuador'},
+  {code:'592',countryCode:'GY',countryName:'Guyana'},
+  {code:'591',countryCode:'BO',countryName:'Bolivia',phoneFormat:'X XXX XXXX'},
+  {code:'590',countryCode:'GP',countryName:'Guadeloupe'},
+  {code:'509',countryCode:'HT',countryName:'Haiti'},
+  {code:'508',countryCode:'PM',countryName:'Saint Pierre & Miquelon'},
+  {code:'507',countryCode:'PA',countryName:'Panama',phoneFormat:'XXXX XXXX'},
+  {code:'506',countryCode:'CR',countryName:'Costa Rica'},
+  {code:'505',countryCode:'NI',countryName:'Nicaragua',phoneFormat:'XXXX XXXX'},
+  {code:'504',countryCode:'HN',countryName:'Honduras',phoneFormat:'XXXX XXXX'},
+  {code:'503',countryCode:'SV',countryName:'El Salvador',phoneFormat:'XXXX XXXX'},
+  {code:'502',countryCode:'GT',countryName:'Guatemala',phoneFormat:'X XXX XXXX'},
+  {code:'501',countryCode:'BZ',countryName:'Belize'},
+  {code:'500',countryCode:'FK',countryName:'Falkland Islands'},
+  {code:'423',countryCode:'LI',countryName:'Liechtenstein'},
+  {code:'421',countryCode:'SK',countryName:'Slovakia'},
+  {code:'420',countryCode:'CZ',countryName:'Czech Republic'},
+  {code:'389',countryCode:'MK',countryName:'Macedonia'},
+  {code:'387',countryCode:'BA',countryName:'Bosnia & Herzegovina'},
+  {code:'386',countryCode:'SI',countryName:'Slovenia'},
+  {code:'385',countryCode:'HR',countryName:'Croatia'},
+  {code:'382',countryCode:'ME',countryName:'Montenegro'},
+  {code:'381',countryCode:'RS',countryName:'Serbia',phoneFormat:'XX XXX XXXX'},
+  {code:'380',countryCode:'UA',countryName:'Ukraine',phoneFormat:'XX XXX XX XX'},
+  {code:'378',countryCode:'SM',countryName:'San Marino',phoneFormat:'XXX XXX XXXX'},
+  {code:'377',countryCode:'MC',countryName:'Monaco',phoneFormat:'XXXX XXXX'},
+  {code:'376',countryCode:'AD',countryName:'Andorra',phoneFormat:'XX XX XX'},
+  {code:'375',countryCode:'BY',countryName:'Belarus',phoneFormat:'XX XXX XXXX'},
+  {code:'374',countryCode:'AM',countryName:'Armenia',phoneFormat:'XX XXX XXX'},
+  {code:'373',countryCode:'MD',countryName:'Moldova',phoneFormat:'XX XXX XXX'},
+  {code:'372',countryCode:'EE',countryName:'Estonia'},
+  {code:'371',countryCode:'LV',countryName:'Latvia',phoneFormat:'XXX XXXXX'},
+  {code:'370',countryCode:'LT',countryName:'Lithuania',phoneFormat:'XXX XXXXX'},
+  {code:'359',countryCode:'BG',countryName:'Bulgaria'},
+  {code:'358',countryCode:'FI',countryName:'Finland'},
+  {code:'357',countryCode:'CY',countryName:'Cyprus',phoneFormat:'XXXX XXXX'},
+  {code:'356',countryCode:'MT',countryName:'Malta',phoneFormat:'XX XX XX XX'},
+  {code:'355',countryCode:'AL',countryName:'Albania',phoneFormat:'XX XXX XXXX'},
+  {code:'354',countryCode:'IS',countryName:'Iceland',phoneFormat:'XXX XXXX'},
+  {code:'353',countryCode:'IE',countryName:'Ireland',phoneFormat:'XX XXX XXXX'},
+  {code:'352',countryCode:'LU',countryName:'Luxembourg'},
+  {code:'351',countryCode:'PT',countryName:'Portugal',phoneFormat:'X XXXX XXXX'},
+  {code:'350',countryCode:'GI',countryName:'Gibraltar',phoneFormat:'XXXX XXXX'},
+  {code:'299',countryCode:'GL',countryName:'Greenland',phoneFormat:'XXX XXX'},
+  {code:'298',countryCode:'FO',countryName:'Faroe Islands',phoneFormat:'XXX XXX'},
+  {code:'297',countryCode:'AW',countryName:'Aruba',phoneFormat:'XXX XXXX'},
+  {code:'291',countryCode:'ER',countryName:'Eritrea',phoneFormat:'X XXX XXX'},
+  {code:'290',countryCode:'SH',countryName:'Saint Helena',phoneFormat:'XX XXX'},
+  {code:'269',countryCode:'KM',countryName:'Comoros',phoneFormat:'XXX XXXX'},
+  {code:'268',countryCode:'SZ',countryName:'Swaziland',phoneFormat:'XXXX XXXX'},
+  {code:'267',countryCode:'BW',countryName:'Botswana',phoneFormat:'XX XXX XXX'},
+  {code:'266',countryCode:'LS',countryName:'Lesotho',phoneFormat:'XX XXX XXX'},
+  {code:'265',countryCode:'MW',countryName:'Malawi'},
+  {code:'264',countryCode:'NA',countryName:'Namibia',phoneFormat:'XX XXX XXXX'},
+  {code:'263',countryCode:'ZW',countryName:'Zimbabwe',phoneFormat:'XX XXX XXXX'},
+  {code:'262',countryCode:'RE',countryName:'Réunion',phoneFormat:'XXX XXX XXX'},
+  {code:'261',countryCode:'MG',countryName:'Madagascar',phoneFormat:'XX XX XXX XX'},
+  {code:'260',countryCode:'ZM',countryName:'Zambia',phoneFormat:'XX XXX XXXX'},
+  {code:'258',countryCode:'MZ',countryName:'Mozambique',phoneFormat:'XX XXX XXXX'},
+  {code:'257',countryCode:'BI',countryName:'Burundi',phoneFormat:'XX XX XXXX'},
+  {code:'256',countryCode:'UG',countryName:'Uganda',phoneFormat:'XX XXX XXXX'},
+  {code:'255',countryCode:'TZ',countryName:'Tanzania',phoneFormat:'XX XXX XXXX'},
+  {code:'254',countryCode:'KE',countryName:'Kenya',phoneFormat:'XXX XXX XXX'},
+  {code:'253',countryCode:'DJ',countryName:'Djibouti',phoneFormat:'XX XX XX XX'},
+  {code:'252',countryCode:'SO',countryName:'Somalia',phoneFormat:'XX XXX XXX'},
+  {code:'251',countryCode:'ET',countryName:'Ethiopia',phoneFormat:'XX XXX XXXX'},
+  {code:'250',countryCode:'RW',countryName:'Rwanda',phoneFormat:'XXX XXX XXX'},
+  {code:'249',countryCode:'SD',countryName:'Sudan',phoneFormat:'XX XXX XXXX'},
+  {code:'248',countryCode:'SC',countryName:'Seychelles',phoneFormat:'X XX XX XX'},
+  {code:'247',countryCode:'SH',countryName:'Saint Helena',phoneFormat:'XXXX'},
+  {code:'246',countryCode:'IO',countryName:'Diego Garcia',phoneFormat:'XXX XXXX'},
+  {code:'245',countryCode:'GW',countryName:'Guinea-Bissau',phoneFormat:'XXX XXXX'},
+  {code:'244',countryCode:'AO',countryName:'Angola',phoneFormat:'XXX XXX XXX'},
+  {code:'243',countryCode:'CD',countryName:'Congo (Dem. Rep.)',phoneFormat:'XX XXX XXXX'},
+  {code:'242',countryCode:'CG',countryName:'Congo (Rep.)',phoneFormat:'XX XXX XXXX'},
+  {code:'241',countryCode:'GA',countryName:'Gabon',phoneFormat:'X XX XX XX'},
+  {code:'240',countryCode:'GQ',countryName:'Equatorial Guinea',phoneFormat:'XXX XXX XXX'},
+  {code:'239',countryCode:'ST',countryName:'São Tomé & Príncipe',phoneFormat:'XX XXXXX'},
+  {code:'238',countryCode:'CV',countryName:'Cape Verde',phoneFormat:'XXX XXXX'},
+  {code:'237',countryCode:'CM',countryName:'Cameroon',phoneFormat:'XXXX XXXX'},
+  {code:'236',countryCode:'CF',countryName:'Central African Rep.',phoneFormat:'XX XX XX XX'},
+  {code:'235',countryCode:'TD',countryName:'Chad',phoneFormat:'XX XX XX XX'},
+  {code:'234',countryCode:'NG',countryName:'Nigeria'},
+  {code:'233',countryCode:'GH',countryName:'Ghana'},
+  {code:'232',countryCode:'SL',countryName:'Sierra Leone',phoneFormat:'XX XXX XXX'},
+  {code:'231',countryCode:'LR',countryName:'Liberia'},
+  {code:'230',countryCode:'MU',countryName:'Mauritius'},
+  {code:'229',countryCode:'BJ',countryName:'Benin',phoneFormat:'XX XXX XXX'},
+  {code:'228',countryCode:'TG',countryName:'Togo',phoneFormat:'XX XXX XXX'},
+  {code:'227',countryCode:'NE',countryName:'Niger',phoneFormat:'XX XX XX XX'},
+  {code:'226',countryCode:'BF',countryName:'Burkina Faso',phoneFormat:'XX XX XX XX'},
+  {code:'225',countryCode:'CI',countryName:'Côte d`Ivoire',phoneFormat:'XX XXX XXX'},
+  {code:'224',countryCode:'GN',countryName:'Guinea',phoneFormat:'XXX XXX XXX'},
+  {code:'223',countryCode:'ML',countryName:'Mali',phoneFormat:'XXXX XXXX'},
+  {code:'222',countryCode:'MR',countryName:'Mauritania',phoneFormat:'XXXX XXXX'},
+  {code:'221',countryCode:'SN',countryName:'Senegal',phoneFormat:'XX XXX XXXX'},
+  {code:'220',countryCode:'GM',countryName:'Gambia',phoneFormat:'XXX XXXX'},
+  {code:'218',countryCode:'LY',countryName:'Libya',phoneFormat:'XX XXX XXXX'},
+  {code:'216',countryCode:'TN',countryName:'Tunisia',phoneFormat:'XX XXX XXX'},
+  {code:'213',countryCode:'DZ',countryName:'Algeria',phoneFormat:'XXX XX XX XX'},
+  {code:'212',countryCode:'MA',countryName:'Morocco',phoneFormat:'XX XXX XXXX'},
+  {code:'211',countryCode:'SS',countryName:'South Sudan',phoneFormat:'XX XXX XXXX'},
+  {code:'98',countryCode:'IR',countryName:'Iran',phoneFormat:'XXX XXX XXXX'},
+  {code:'95',countryCode:'MM',countryName:'Myanmar'},
+  {code:'94',countryCode:'LK',countryName:'Sri Lanka',phoneFormat:'XX XXX XXXX'},
+  {code:'93',countryCode:'AF',countryName:'Afghanistan',phoneFormat:'XXX XXX XXX'},
+  {code:'92',countryCode:'PK',countryName:'Pakistan',phoneFormat:'XXX XXX XXXX'},
+  {code:'91',countryCode:'IN',countryName:'India',phoneFormat:'XXXXX XXXXX'},
+  {code:'90',countryCode:'TR',countryName:'Turkey',phoneFormat:'XXX XXX XXXX'},
+  {code:'86',countryCode:'CN',countryName:'China',phoneFormat:'XXX XXXX XXXX'},
+  {code:'84',countryCode:'VN',countryName:'Vietnam'},
+  {code:'82',countryCode:'KR',countryName:'South Korea'},
+  {code:'81',countryCode:'JP',countryName:'Japan',phoneFormat:'XX XXXX XXXX'},
+  {code:'66',countryCode:'TH',countryName:'Thailand',phoneFormat:'X XXXX XXXX'},
+  {code:'65',countryCode:'SG',countryName:'Singapore',phoneFormat:'XXXX XXXX'},
+  {code:'64',countryCode:'NZ',countryName:'New Zealand'},
+  {code:'63',countryCode:'PH',countryName:'Philippines',phoneFormat:'XXX XXX XXXX'},
+  {code:'62',countryCode:'ID',countryName:'Indonesia'},
+  {code:'61',countryCode:'AU',countryName:'Australia',phoneFormat:'XXX XXX XXX'},
+  {code:'60',countryCode:'MY',countryName:'Malaysia'},
+  {code:'58',countryCode:'VE',countryName:'Venezuela',phoneFormat:'XXX XXX XXXX'},
+  {code:'57',countryCode:'CO',countryName:'Colombia',phoneFormat:'XXX XXX XXXX'},
+  {code:'56',countryCode:'CL',countryName:'Chile',phoneFormat:'X XXXX XXXX'},
+  {code:'55',countryCode:'BR',countryName:'Brazil',phoneFormat:'XX XXXXX XXXX'},
+  {code:'54',countryCode:'AR',countryName:'Argentina'},
+  {code:'53',countryCode:'CU',countryName:'Cuba',phoneFormat:'XXXX XXXX'},
+  {code:'52',countryCode:'MX',countryName:'Mexico'},
+  {code:'51',countryCode:'PE',countryName:'Peru',phoneFormat:'XXX XXX XXX'},
+  {code:'49',countryCode:'DE',countryName:'Germany',phoneFormat:'XXX XXXXXXXX'},
+  {code:'48',countryCode:'PL',countryName:'Poland',phoneFormat:'XX XXX XXXX'},
+  {code:'47',countryCode:'NO',countryName:'Norway',phoneFormat:'XXXX XXXX'},
+  {code:'46',countryCode:'SE',countryName:'Sweden',phoneFormat:'XX XXX XXXX'},
+  {code:'45',countryCode:'DK',countryName:'Denmark',phoneFormat:'XXXX XXXX'},
+  {code:'44',countryCode:'GB',countryName:'United Kingdom',phoneFormat:'XXXX XXXXXX'},
+  {code:'43',countryCode:'AT',countryName:'Austria'},
+  {code:'41',countryCode:'CH',countryName:'Switzerland',phoneFormat:'XX XXX XXXX'},
+  {code:'40',countryCode:'RO',countryName:'Romania',phoneFormat:'XXX XXX XXX'},
+  {code:'39',countryCode:'IT',countryName:'Italy',phoneFormat:'XXX XXX XXXX'},
+  {code:'36',countryCode:'HU',countryName:'Hungary',phoneFormat:'XX XXX XXXX'},
+  {code:'34',countryCode:'ES',countryName:'Spain',phoneFormat:'XXX XXX XXX'},
+  {code:'33',countryCode:'FR',countryName:'France',phoneFormat:'X XX XX XX XX'},
+  {code:'32',countryCode:'BE',countryName:'Belgium',phoneFormat:'XXX XX XX XX'},
+  {code:'31',countryCode:'NL',countryName:'Netherlands',phoneFormat:'X XX XX XX XX'},
+  {code:'30',countryCode:'GR',countryName:'Greece',phoneFormat:'XX XXXX XXXX'},
+  {code:'27',countryCode:'ZA',countryName:'South Africa',phoneFormat:'XX XXX XXXX'},
+  {code:'20',countryCode:'EG',countryName:'Egypt',phoneFormat:'XX XXX XXXX'},
+  {code:'7',countryCode:'RU',countryName:'Russian Federation',phoneFormat:'XXX XXX XX XX'},
+  {code:'7',countryCode:'KZ',countryName:'Kazakhstan',phoneFormat:'XXX XXX XX XX'},
+  {code:'1',countryCode:'US',countryName:'USA',phoneFormat:'XXX XXX XXXX'},
+  {code:'1',countryCode:'PR',countryName:'Puerto Rico',phoneFormat:'XXX XXX XXXX'},
+  {code:'1',countryCode:'DO',countryName:'Dominican Rep.',phoneFormat:'XXX XXX XXXX'},
+  {code:'1',countryCode:'CA',countryName:'Canada',phoneFormat:'XXX XXX XXXX'}]; 
 }

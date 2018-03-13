@@ -102,6 +102,19 @@ namespace Api.Controllers
             return Ok();
         }
 
+        protected virtual IActionResult ListRankByAuc(int advisorId)
+        {
+            try
+            {
+                var advisor = AdvisorServices.ListRankByAUC();
+                return Ok(advisor);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         protected virtual IActionResult CheckBuyTransaction(int buyId)
         {
             try
