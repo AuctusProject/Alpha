@@ -102,7 +102,7 @@ namespace Api.Controllers
             return Ok();
         }
 
-        protected virtual IActionResult ListRankByAuc(int advisorId)
+        protected virtual IActionResult ListRankByAuc()
         {
             try
             {

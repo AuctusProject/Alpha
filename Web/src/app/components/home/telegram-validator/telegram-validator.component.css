@@ -1,4 +1,34 @@
 .telegram-popup {
   text-align: center;
   max-width: 500px;
+  position:relative;
+}
+
+h2 {
+  color: #4a90e2;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+a{
+  text-decoration:none;
+}
+a:focus{
+  outline:none;
+}
+
+.join-telegram {
+  width: 200px;
+  margin: 20px auto;
+}
+
+.disclaimer{
+  font-size:12px;
+}
+
+.telegram {
+  position: absolute;
+  right: 0;
+  top: 0px;
+  height: 40px;
 }
