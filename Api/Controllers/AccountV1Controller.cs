@@ -43,7 +43,16 @@ namespace Api.Controllers
         {
             return await base.SimpleRegister(registerRequest);
         }
-        
+
+        [Route("registration/validation")]
+        [HttpPost]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ValidateRegister([FromBody]SimpleRegisterRequest registerRequest)
+        {
+            return base.ValidateRegister(registerRequest);
+        }
+
         [Route("password/forgotten")]
         [HttpPost]
         [AllowAnonymous]

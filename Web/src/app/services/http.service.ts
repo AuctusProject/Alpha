@@ -142,8 +142,7 @@ export class HttpService {
           this.notificationService.error("Error", "An unexpected error happened.");
         }
       }
-
-      return of(result as T);
+      return Observable.throw("Error");
     };
   }
 

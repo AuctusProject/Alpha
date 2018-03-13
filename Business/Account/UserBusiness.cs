@@ -57,12 +57,12 @@ namespace Auctus.Business.Account
             return result;
         }
 
-        public async Task<Login> SimpleRegister(string address, string username, string email, string password)
+        public async Task<Login> SimpleRegister(string address, string username, string email, string password, string phoneNumber)
         {
             User user;
             using (var transaction = new TransactionalDapperCommand())
             {
-                user = SetBaseUserCreation(username, email, password);
+                user = SetBaseUserCreation(username, email, password, phoneNumber);
                 transaction.Insert(user);
                 var wallet = SetWalletCreation(user.Id, address);
                 user.Wallet = wallet;
@@ -81,6 +81,12 @@ namespace Auctus.Business.Account
                 Username = user.Username,
                 PendingConfirmation = true
             };
+        }
+
+        public void ValidateRegister(string address, string username, string email, string password)
+        {
+            ValidateUsernameAndEmail(username, email, password);
+            ValidateWalletCreation(address);
         }
 
         public async Task ResendEmailConfirmation(string email)
@@ -112,6 +118,7 @@ namespace Auctus.Business.Account
 
         public bool CheckTelegramParticipation(string phoneNumber)
         {
+            ValidatePhoneNumber(ref phoneNumber);
             return Telegram.TelegramValidator.CheckPhoneIsMember(phoneNumber);
         }
 
@@ -218,12 +225,37 @@ Thanks,
 Auctus Team", Config.WEB_URL, code));
         }
 
-        private User SetBaseUserCreation(string username, string email, string password)
+        private User SetBaseUserCreation(string username, string email, string password, string phoneNumber)
+        {
+            ValidateUsernameAndEmail(username, email, password);
+            ValidatePhoneNumber(ref phoneNumber);
+
+            User user = new User();
+            user.Email = email.ToLower().Trim();
+            user.Username = username.Trim();
+            user.CreationDate = DateTime.UtcNow;
+            user.Password = Security.Hash(password);
+            user.ConfirmationCode = Guid.NewGuid().ToString();
+            user.PhoneNumber = phoneNumber;
+            return user;
+        }
+
+        private void ValidatePhoneNumber(ref string phoneNumber)
+        {
+            phoneNumber = new String(phoneNumber.Where(Char.IsDigit).ToArray());
+            BasePhoneValidation(phoneNumber);
+
+            User user = Data.GetByPhone(phoneNumber);
+            if (user != null)
+                throw new ArgumentException("Phone already registered.");
+        }
+
+        private void ValidateUsernameAndEmail(string username, string email, string password)
         {
             BaseEmailValidation(email);
             EmailValidation(email);
             BasePasswordValidation(password);
-            PasswordValidation(password);
+            PasswordValidation(password);            
 
             User user = Data.Get(email);
             if (user != null)
@@ -232,28 +264,26 @@ Auctus Team", Config.WEB_URL, code));
             user = Data.GetByUsername(username);
             if (user != null)
                 throw new ArgumentException("Username already registered.");
-
-            user = new User();
-            user.Email = email.ToLower().Trim();
-            user.Username = username.Trim();
-            user.CreationDate = DateTime.UtcNow;
-            user.Password = Security.Hash(password);
-            user.ConfirmationCode = Guid.NewGuid().ToString();
-            return user;
         }
 
         private Wallet SetWalletCreation(int userId, string address)
+        {
+            address = ValidateWalletCreation(address);
+
+            Wallet wallet = new Wallet();
+            wallet.UserId = userId;
+            wallet.Address = address;
+            return wallet;
+        }
+
+        private string ValidateWalletCreation(string address)
         {
             address = WalletBusiness.GetAddressFormatted(address);
 
             User user = Data.GetByWalletAddress(address);
             if (user != null)
                 throw new ArgumentException("Address already registered.");
-
-            Wallet wallet = new Wallet();
-            wallet.UserId = userId;
-            wallet.Address = address;
-            return wallet;
+            return address;
         }
 
         private void BaseEmailOrUsernameValidation(string emailOrUsername)
@@ -279,6 +309,12 @@ Auctus Team", Config.WEB_URL, code));
         {
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("Password must be filled.");
+        }
+
+        private void BasePhoneValidation(string phoneNumber)
+        {
+            if (string.IsNullOrEmpty(phoneNumber))
+                throw new ArgumentException("Phone number must be filled.");
         }
 
         private void PasswordValidation(string password)

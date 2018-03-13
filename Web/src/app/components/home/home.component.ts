@@ -23,6 +23,8 @@ export class HomeComponent implements OnInit {
   public simpleRegisterForm: FormGroup;
   public simpleRegister: SimpleRegister;
   createPromise: Subscription;
+  telegramDialog;
+  showLoading: boolean = false;
 
   constructor(
     private eventsService: EventsService,
@@ -59,23 +61,40 @@ export class HomeComponent implements OnInit {
   }
 
   public onSubmit() {
-    
+    this.createPromise = this.accountService.validateRegister(this.simpleRegister).subscribe(result => {
+      this.openTelegramDialog()
+    });
+  }
+
+  public openTelegramDialog(){
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.autoFocus = true;
 
     dialogConfig.data = {
+      phoneNumber: '',
+      homeComponent: this,
+      onSuccess: this.onTelegramValidated
     };
    
-    this.dialog.open(TelegramValidatorComponent, dialogConfig);
-    // this.createAccount();
+    this.telegramDialog = this.dialog.open(TelegramValidatorComponent, dialogConfig);
+  }
+
+  private onTelegramValidated(homeComponent, result){
+    homeComponent.simpleRegister.phoneNumber = result;
+    this.createPromise = homeComponent.createAccount();
+    this.telegramDialog.close();
+    return this.createPromise;
   }
 
   private createAccount() {
-    this.createPromise = this.accountService.simpleRegister(this.simpleRegister).subscribe(result => {
+    this.showLoading = true;
+    return this.accountService.simpleRegister(this.simpleRegister).subscribe(result => {
         this.loginService.setLoginData(result.data);
         this.router.navigateByUrl('login');
+        
       }, response => {
+        this.showLoading = false;
         this.notificationService.info("Info", response.error);
       });
   }

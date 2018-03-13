@@ -621,6 +621,10 @@ input[type=number]::-webkit-outer-spin-button {
   background: unset !important;
 }
 
+.home-loading .body-loading{
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
 
 .body-loading {
   margin-top: 60px;

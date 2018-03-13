@@ -47,7 +47,7 @@ namespace Api.Controllers
             Login login;
             try
             {
-                login = await AccountServices.SimpleRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password);
+                login = await AccountServices.SimpleRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password, registerRequest.PhoneNumber);
             }
             catch (ArgumentException ex)
             {
@@ -55,7 +55,23 @@ namespace Api.Controllers
             }
             return Ok(new { jwt = GenerateToken(registerRequest.Email.ToLower().Trim()), data = login });
         }
-        
+
+        protected virtual IActionResult ValidateRegister(SimpleRegisterRequest registerRequest)
+        {
+            if (registerRequest == null)
+                return BadRequest();
+
+            try
+            {
+                AccountServices.ValidateRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
+        }
+
         protected virtual async Task<IActionResult> ForgotPassword(EmailRequest forgotPasswordRequest)
         {
             if (forgotPasswordRequest == null || forgotPasswordRequest.Email == null)

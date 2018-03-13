@@ -68,6 +68,13 @@ namespace Auctus.DataAccess.Account
             return SelectByParameters<User>(parameters).SingleOrDefault();
         }
 
+        public User GetByPhone(string phone)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("PhoneNumber", phone.ToLower().Trim(), DbType.AnsiString);
+            return SelectByParameters<User>(parameters).SingleOrDefault();
+        }
+
         public User GetByWalletAddress(string address)
         {
             DynamicParameters parameters = new DynamicParameters();

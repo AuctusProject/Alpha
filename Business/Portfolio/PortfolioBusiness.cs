@@ -237,7 +237,14 @@ namespace Auctus.Business.Portfolio
 
         public List<Model.Portfolio> ListPerformance(string email, DateTime? date)
         {
-            var user = UserBusiness.GetValidUser(email);
+            string portfoliosKey = String.Format("PortfolioPerformanceKey_{0}", date);
+            var cachedPortfolios = MemoryCache.Get<List<Model.Portfolio>>(portfoliosKey);
+            if (cachedPortfolios != null)
+            {
+                return cachedPortfolios;
+            }
+
+            var user = UserBusiness.GetByEmail(email);
             var portfolios = Data.ListAllValids();
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
@@ -246,10 +253,12 @@ namespace Auctus.Business.Portfolio
 
             portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && (!date.HasValue || g.Date >= date.Value. Date.AddDays(-1) && g.Date <= date.Value.Date))).ToList());
 
-            return portfolios
+            var returnPortfolios = portfolios
                 .Where(c => c.PortfolioHistory.Any())
                 .Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, Enumerable.Empty<Buy>(), new Dictionary<int,int>()))
                 .OrderByDescending(c => c.AllDays.Value).ThenByDescending(c => c.CreationDate).ToList();
+            MemoryCache.Set<List<Model.Portfolio>>(portfoliosKey, returnPortfolios);
+            return returnPortfolios;
         }
 
         public List<Model.Portfolio> List(string email)
