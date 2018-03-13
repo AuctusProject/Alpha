@@ -357,7 +357,8 @@ namespace Auctus.Business.Portfolio
             
             var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(new int[] { portfolioId }));
             var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolioId));
-            var invested = Task.Factory.StartNew(() => PortfolioBusiness.GetInvestedByUser(portfolioId, user.Id));
+		    var invested = Task.Factory.StartNew(() => user != null ? PortfolioBusiness.GetInvestedByUser(portfolioId, user.Id) : null);
+
             Task<List<Distribution>> distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
 
             Task<List<EscrowResult>> escrowResult = null;
@@ -370,7 +371,9 @@ namespace Auctus.Business.Portfolio
                 Task.WaitAll(history, portfolioQty, distribution, escrowResult, purchaseAmount, invested);
             }
             else
-            Task.WaitAll(history, portfolioQty, distribution, invested);
+			{
+				Task.WaitAll(history, portfolioQty, distribution, invested);
+			}
 
             portfolio.Result.PortfolioHistory = history.Result;
             var result = FillPortfolioModelWithHistory(portfolio.Result, portfolio.Result.Advisor, user, 

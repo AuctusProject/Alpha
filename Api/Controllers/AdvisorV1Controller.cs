@@ -95,9 +95,9 @@ namespace Api.Controllers
         [Route("rank")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult ListRankByAuc([FromRoute]int advisorId)
+        public new IActionResult ListRankByAuc()
         {
-            return base.ListRankByAuc(advisorId);
+            return base.ListRankByAuc();
         }
     }
 }

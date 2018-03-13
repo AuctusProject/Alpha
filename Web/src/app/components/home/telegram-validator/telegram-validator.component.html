@@ -1,17 +1,19 @@
 <div class="telegram-popup">
-  <h2>One more step!</h2>
-  <span> To proceed you need to be a Member of Auctus Telegram Chat</span>
-  <div>JOIN TELEGRAM CHAT</div>
+  <img class="telegram" src="./assets/icons/telegram.png">
+  <h2>ONE MORE STEP!</h2>
+  <span>To proceed you need to be a Member of Auctus Telegram Chat</span>
+  <a href="https://t.me/joinchat/CACbG1MYHSz7_93D2nxZyg">
+    <div class="join-telegram primary-blue-button"><span>JOIN TELEGRAM CHAT</span></div>
+  </a>
   <div>
     <div>
-      <span>Please confirm your phone number to validate you are a member of Auctus Chat</span>
+      <span>Please confirm your phone number to validate<br />you are a member of Auctus Chat:</span>
     </div>
     <br />
-
     <form (ngSubmit)="checkTelegramParticipation()" fxLayoutAlign="center center">
       <div fxLayout="column" fxFlex="240px" >
         <mat-form-field [floatLabel]="'always'">
-          <mat-select [(value)]="selectedCountry">
+          <mat-select [(value)]="selectedCountry" [inputFocus]="true">
             <mat-option *ngFor="let country of sortedCountriesPrefixes" [value]="country">{{country.countryName}} +{{country.code}}</mat-option>
           </mat-select>
           <mat-placeholder>Country</mat-placeholder>
@@ -21,12 +23,12 @@
           <input [placeholder]="getPlaceholder()" matInput [(ngModel)]="phoneNumber" type="text" name="phoneNumber" />
         </mat-form-field>
         <div class="create-account-button" fxLayout="row" fxLayoutMargin fxLayoutAlign="space-evenly center">
-          <button type="submit" class="primary-blue-button bold" [promiseBtn]="checkPromise">Validate</button>
+          <button type="submit" class="primary-blue-button bold" [promiseBtn]="checkPromise">VALIDATE</button>
         </div>
       </div>
     </form>
     <br />
-    <span>This procedure aims to reduce chances of participants creating multiple accounts and keep a fair Tournament.</span>
+    <span class="disclaimer">This procedure aims to reduce chances of participants<br />creating multiple accounts and keep a fair Tournament.</span>
 
   </div>
 </div>

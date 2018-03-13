@@ -129,11 +129,7 @@
   <hr>
   <div fxLayout="column" fxLayoutGap="8px" class="buy-box-content" *ngIf="!loginData || portfolio.advisorId != loginData.humanAdvisorId">
     <div class="need-email-confirmation" *ngIf="isTransactionPendingConfirmation()">
-<<<<<<< HEAD
       Your transaction is being processed. Click
-=======
-      Your transaction is being processed and need to be confirmed to you be able to check the portfolio distribution. Click
->>>>>>> access_without_login
       <a [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
     </div>
     <div class="need-email-confirmation" *ngIf="isTransactionPendingToSend()">

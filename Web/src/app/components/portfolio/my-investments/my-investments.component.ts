@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PortfolioService } from "../../../services/portfolio.service";
 import { Portfolio } from "../../../model/portfolio/portfolio";
+import { LoginService } from '../../../services/login.service';
 
 @Component({
   selector: 'app-my-investments',
@@ -11,10 +12,13 @@ export class MyInvestmentsComponent implements OnInit {
 
   portfolios: Portfolio[];
 
-  constructor(private portfolioService: PortfolioService) { }
+  constructor(private portfolioService: PortfolioService, private loginService: LoginService) { }
 
   ngOnInit() {
-    this.getPurchasedPortfolios();
+    let logged = this.loginService.isLoggedIn();
+    if (logged) {
+      this.getPurchasedPortfolios();
+    }
   }
 
   private getPurchasedPortfolios() {

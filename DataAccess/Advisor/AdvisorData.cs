@@ -27,7 +27,7 @@ namespace Auctus.DataAccess.Advisor
                                                                      d.Enabled = 1 AND d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) ";
 
         private const string LIST_ADVISORS_RANK_BY_AUC = @"SELECT 
-                                                                adv.Id, advd.Name,  sum(buy.Price) as  [AccumulatedAUC] 
+                                                                adv.Id, advd.Id, advd.Name,  sum(buy.Price) as  [AllocatedAUC] 
                                                             FROM 
                                                                 advisor adv INNER JOIN 
 	                                                            advisorDetail advd on advd.advisorId = adv.id INNER JOIN
@@ -37,9 +37,9 @@ namespace Auctus.DataAccess.Advisor
                                                             WHERE 
                                                                 advd.enabled = 1 and ptfd.enabled = 1
                                                             GROUP BY 
-                                                                adv.id, advd.Name
+                                                                adv.id, advd.Id, advd.Name
                                                             ORDER BY
-                                                                [AccumulatedAUC] desc";
+                                                                [AllocatedAUC] desc";
 
         public DomainObjects.Advisor.Advisor GetWithOwner(int id, string email)
         {

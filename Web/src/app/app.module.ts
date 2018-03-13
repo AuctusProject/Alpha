@@ -97,6 +97,7 @@ import { UserBalanceComponent } from './components/user-balance/user-balance.com
 import { TelegramValidatorComponent } from './components/home/telegram-validator/telegram-validator.component';
 import { UserPerformanceComponent } from './components/ranking/user-performance/user-performance.component';
 import { UserCardComponent } from './components/ranking/user-performance/user-card/user-card.component';
+import { AdvisorCardComponent } from './components/ranking/advisor-performance/advisor-card/advisor-card.component';
 import { FilterPipe } from './pipes/filter.pipe';
 
 @NgModule({
@@ -166,6 +167,7 @@ import { FilterPipe } from './pipes/filter.pipe';
     TelegramValidatorComponent,
     UserPerformanceComponent,
     UserCardComponent,
+    AdvisorCardComponent,
     FilterPipe
   ],
   imports: [
