@@ -16,7 +16,7 @@ export class MetamaskAccountService {
   public hasMetamask: boolean;
   private account: string;
   private network: number;
-  private aucBalance: number;
+  private aucBalance: number = 0;
   private loggedSuccessfully: boolean;
 
   constructor(private router: Router, private eventsService: EventsService, private web3Service: Web3Service) {

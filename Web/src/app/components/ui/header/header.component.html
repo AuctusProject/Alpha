@@ -7,12 +7,18 @@
             <a *ngIf="loginData" routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
             <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
             <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
-            <user-balance *ngIf="loginData"></user-balance>
             <div *ngIf="loginData" class="pull-right">
                 <mat-menu #appMenu="matMenu">
                     <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
-                        <mat-icon>account_circle</mat-icon>
-                        <div>{{this.loginData.username}}</div>
+                        <div fxLayout="column">
+                            <div fxLayout="row">
+                                <mat-icon>account_circle</mat-icon>
+                                <div>{{this.loginData.username}}</div>
+                            </div>
+                            <div fxLayout="row">
+                                <user-balance *ngIf="loginData"></user-balance>
+                            </div>
+                        </div>
                     </div>
                     <button mat-menu-item routerLink="/change-password"> Change password </button>
                     <!-- <button mat-menu-item routerLink="/manage-api"> Manage API </button> -->
