@@ -24,7 +24,7 @@ export class AdvisorService {
     return this.httpService.get(this.baseGetAdvisorsUrl + "/" + id);
   }
 
-  getAdvisorsRank(): Observable<AdvisorRank> {
+  getAdvisorsRank(): Observable<AdvisorRank[]> {
     return this.httpService.get(this.getAdvisorsRankUrl);
   }
   

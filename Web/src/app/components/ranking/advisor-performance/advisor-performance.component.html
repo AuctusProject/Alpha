@@ -46,11 +46,11 @@
                 ESCROWED AUC
               </div>
             </ng-template>
-            <!--<div class="portfolio-list">
+            <div class="portfolio-list">
               <loading-spinner *ngIf="!portfolios"></loading-spinner>
-              <div *ngIf="portfolios && portfolios.length == 0" class="no-portfolios">Ranking information is not available.</div>
-              <advisor-card *ngFor="let advisor of advisors; let i = index" [portfolio]="portfolio" [position]="i+1"></advisor-card>
-            </div>-->
+              <div *ngIf="advisors && advisors.length == 0" class="no-portfolios">Ranking information is not available.</div>
+              <advisor-card *ngFor="let advisor of advisors; let i = index" [advisor]="advisor" [position]="i+1"></advisor-card>
+            </div>
           </mat-tab>
         </mat-tab-group>
       </div>
