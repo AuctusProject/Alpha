@@ -12,7 +12,7 @@ namespace Auctus.Business.Telegram
         public static bool CheckPhoneIsMember(string phoneNumber)
         {
             TelegramBotClient client = new TelegramBotClient(Config.TELEGRAM_BOT_TOKEN);
-            var sendContactResult = client.SendContactAsync(Config.TELEGRAM_CHAT_ID, phoneNumber, "NAME").Result;
+            var sendContactResult = client.SendContactAsync(Config.TELEGRAM_CHAT_ID_FOR_CHECK_PHONE_ID, phoneNumber, "NAME").Result;
             var userId = sendContactResult.Contact.UserId;
 
             if (userId == 0)
@@ -20,7 +20,7 @@ namespace Auctus.Business.Telegram
                 throw new ArgumentException("Phone number not linked to a Telegram account.");
             }
 
-            var getChatMemberResult = client.GetChatMemberAsync(Config.TELEGRAM_CHAT_ID, userId).Result;
+            var getChatMemberResult = client.GetChatMemberAsync(Config.TELEGRAM_AUCTUS_CHAT_ID, userId).Result;
             
             if (!getChatMemberResult.Status.Equals(ChatMemberStatus.Member) &&
                 !getChatMemberResult.Status.Equals(ChatMemberStatus.Creator) &&
