@@ -114,12 +114,17 @@ namespace Auctus.Service
             return UserBusiness.GetUserBalance(email);
         }
 
-        public List<User> ListUsersByPerformance()
+        public List<UserRank> ListUsersByPerformance()
         {
             return UserBusiness.ListUsersByPerformance();
         }
 
-        public bool CheckTelegramParticipation(string phoneNumber)
+		public List<UserRank> ListUsersPerformanceByDate(DateTime searchDateTime)
+		{
+			return UserBusiness.ListUsersPerformanceByDate(searchDateTime);
+		}
+
+		public bool CheckTelegramParticipation(string phoneNumber)
         {
             return UserBusiness.CheckTelegramParticipation(phoneNumber);
         }
