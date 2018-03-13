@@ -41,7 +41,7 @@ export class AdvisorPerformanceComponent implements OnInit {
   }
 
   private getAdvisorsRank() {
-    this.advisorService.getAdvisor.getAllPortfoliosPerformance().subscribe(
+    this.advisorService.getAdvisorsRank().subscribe(
       portfolios =>
         this.portfolios = portfolios);
   }
