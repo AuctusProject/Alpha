@@ -57,7 +57,7 @@ namespace Api
                     //IssuerSigningKey = new X509SecurityKey(new X509Certificate2(Path.Combine(env.ContentRootPath, "auctus.pfx"), "")),
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config.AUTH_SECRET)),
                     ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero,
+                    //ClockSkew = TimeSpan.Zero,
                     RequireExpirationTime = true,
 
                 };
