@@ -184,9 +184,15 @@ export class PortfolioPurchaseComponent implements OnInit {
     }
   }
 
-  public onBuyClick() {
+  private satisfyAllMetamaskConditions () : boolean{
+    return this.metamaskAccount.isLoggedSuccessfully();
+  }
 
-    if (!this.loginData) {
+  public onBuyClick() {
+    if (!this.satisfyAllMetamaskConditions()){
+      this.router.navigate(['required']);
+    }
+    else if (!this.loginData) {
 
       if(this.goal) {
         this.localStorageService.setLocalStorage("currentGoal", JSON.stringify(this.goal));
@@ -217,6 +223,8 @@ export class PortfolioPurchaseComponent implements OnInit {
             } else {
               observer.complete();
             }
+          }, error => {
+            observer.complete();
           });
       }).subscribe();
     }
@@ -242,6 +250,8 @@ export class PortfolioPurchaseComponent implements OnInit {
           if (observer) observer.complete();
         });
       }
+    }, error =>{
+      console.log("error on purchase metamask");
     });
   }
 

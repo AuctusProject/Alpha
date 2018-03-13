@@ -40,7 +40,7 @@ const routes: Routes = [
     { path: 'portfolio/:id', component: PortfolioDetailsComponent },
     { path: 'investments', component: MyInvestmentsComponent },
     { path: 'add-portfolio', component: AddPortfolioComponent },
-    { path: 'edit-portfolio/:id', component: AddPortfolioComponent },
+    { path: 'edit-portfolio/:id', component: AddPortfolioComponent }
 ];
 
 @NgModule({
