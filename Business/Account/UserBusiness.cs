@@ -392,7 +392,7 @@ Auctus Team", Config.WEB_URL, code));
 					if (history != null)
 					{
 						investedAmount += groupItem.Invested;
-						totalAmount += groupItem.Invested * (decimal)history.RealValue;
+						totalAmount += groupItem.Invested * (((decimal)history.RealValue) / 100M + 1);
 					}
 				}
 
