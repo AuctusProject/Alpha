@@ -67,15 +67,13 @@ namespace Auctus.Business.Account
                 transaction.Insert(deposit);
                 transaction.Commit();
             }
-
-			await SendEmailConfirmation(user.Email, user.ConfirmationCode);
-
+            
 			return new Model.Login()
 			{
 				Address = user.Wallet.Address,
 				Email = user.Email,
 				Username = user.Username,
-				PendingConfirmation = true
+				PendingConfirmation = false
 			};
 		}
 
@@ -232,6 +230,7 @@ Auctus Team", Config.WEB_URL, code));
             user.CreationDate = DateTime.UtcNow;
             user.Password = Security.Hash(password);
             user.ConfirmationCode = Guid.NewGuid().ToString();
+            user.ConfirmationDate = DateTime.UtcNow;
             user.PhoneNumber = phoneNumber;
             return user;
         }

@@ -32,10 +32,6 @@ namespace Api.Controllers
             {
                 return BadRequest(new { logged = false, error = "Credentials are invalid." });
             }
-            if (login.PendingConfirmation)
-            {
-                return Ok(new { logged = false, error = "Pending email confirmation.", data = login });
-            }
             return Ok(new { logged = true, jwt = GenerateToken(login.Email.ToLower().Trim()), data = login });
         }
 
