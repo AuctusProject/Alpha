@@ -36,7 +36,7 @@ export class UserPerformanceComponent implements OnInit {
   };
 
   public onTabChange(event: MatTabChangeEvent) {
-    if (event.index === 0) {
+    if (event.index === 1) {
         this.listUsersByPerformance();
     }
   }
