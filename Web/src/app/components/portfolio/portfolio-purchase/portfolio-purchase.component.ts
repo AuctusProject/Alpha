@@ -110,11 +110,13 @@ export class PortfolioPurchaseComponent implements OnInit {
   }
 
   private checkAvailableToInvest() {
-    this.accountService.getUserBalance().subscribe(balance => {
-      if (balance) {
-        this.availableToInvest = balance.availableAmount;
-      }
-    })
+    if (this.loginData != null) {
+      this.accountService.getUserBalance().subscribe(balance => {
+        if (balance) {
+          this.availableToInvest = balance.availableAmount;
+        }
+      })
+    }
   }
 
   public getStartDate() {
