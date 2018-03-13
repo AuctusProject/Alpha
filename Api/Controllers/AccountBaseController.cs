@@ -310,11 +310,17 @@ namespace Api.Controllers
 
         protected virtual IActionResult ListUsersByPerformance()
         {
-            List<User> users = AccountServices.ListUsersByPerformance();
+            List<UserRank> users = AccountServices.ListUsersByPerformance();
             return Ok(users);
         }
 
-        protected virtual IActionResult CheckTelegram(string phoneNumber)
+		protected virtual IActionResult ListUsersPerformanceByDate(DateTime searchDateTime)
+		{
+			List<UserRank> users = AccountServices.ListUsersPerformanceByDate(searchDateTime);
+			return Ok(users);
+		}
+
+		protected virtual IActionResult CheckTelegram(string phoneNumber)
         {
             bool isValid;
             try

@@ -1,4 +1,4 @@
-<div [ngClass]="{'positive-percentage': percentage > 0,'negative-percentage': percentage < 0}" fxLayout="row" fxLayoutGap="4px">
+<div [ngClass]="{'positive-percentage': percentage > 0,'negative-percentage': percentage < 0}" fxLayout="row" fxLayoutGap="4px" fxLayoutAlign="center center">
   <i-arrow-down *ngIf="percentage < 0"></i-arrow-down>
   <i-arrow-up *ngIf="percentage > 0"></i-arrow-up>
   <span>{{absolutPercentage() | number:'1.0-2'}}%</span>

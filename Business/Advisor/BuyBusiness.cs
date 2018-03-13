@@ -8,11 +8,10 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Auctus.Business.Advisor
 {
-    public class BuyBusiness : BaseBusiness<Buy, BuyData>
+	public class BuyBusiness : BaseBusiness<Buy, BuyData>
     {
         public BuyBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
@@ -144,5 +143,11 @@ namespace Auctus.Business.Advisor
                  (!purchase.ExpirationDate.HasValue && purchase.LastTransaction.TransactionStatus != TransactionStatus.Cancel.Value
                     && purchase.LastTransaction.TransactionStatus != TransactionStatus.Fraud.Value));
         }
-    }
+
+		internal List<Buy> ListUntilDate(DateTime untilDateTime)
+		{
+			var purchasesList = Data.ListPurchasesUntilDate(untilDateTime);
+			return ListValidPurchases(purchasesList);
+		}
+	}
 }

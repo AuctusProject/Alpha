@@ -26,6 +26,21 @@ namespace Auctus.DataAccess.Advisor
                                                                      WHERE a.Type = 1 AND
                                                                      d.Enabled = 1 AND d.Date = (SELECT max(d2.Date) FROM AdvisorDetail d2 WHERE d2.AdvisorId = a.Id) ";
 
+        private const string LIST_ADVISORS_RANK_BY_AUC = @"SELECT 
+                                                                adv.Id, advd.Name,  sum(buy.Price) as  [AccumulatedAUC] 
+                                                            FROM 
+                                                                advisor adv INNER JOIN 
+	                                                            advisorDetail advd on advd.advisorId = adv.id INNER JOIN
+	                                                            portfolio ptf on ptf.AdvisorId = adv.Id INNER JOIN
+	                                                            portfolioDetail ptfd on ptfd.PortfolioId = ptf.id INNER JOIN
+	                                                            buy buy on buy.portfolioId = ptf.Id
+                                                            WHERE 
+                                                                advd.enabled = 1 and ptfd.enabled = 1
+                                                            GROUP BY 
+                                                                adv.id, advd.Name
+                                                            ORDER BY
+                                                                [AccumulatedAUC] desc";
+
         public DomainObjects.Advisor.Advisor GetWithOwner(int id, string email)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -56,6 +71,16 @@ namespace Auctus.DataAccess.Advisor
         public IEnumerable<DomainObjects.Advisor.Advisor> ListRobosAvailable()
         {
             return Query<DomainObjects.Advisor.Advisor, AdvisorDetail, DomainObjects.Advisor.Advisor>(LIST_ALL_ROBO_AVAILABLE_WITH_DETAIL,
+                    (ad, de) =>
+                    {
+                        ad.Detail = de;
+                        return ad;
+                    }, "Id");
+        }
+
+        public IEnumerable<DomainObjects.Advisor.Advisor> ListAdvisorsRankByAUC()
+        {
+            return Query<DomainObjects.Advisor.Advisor, AdvisorDetail, DomainObjects.Advisor.Advisor>(LIST_ADVISORS_RANK_BY_AUC,
                     (ad, de) =>
                     {
                         ad.Detail = de;

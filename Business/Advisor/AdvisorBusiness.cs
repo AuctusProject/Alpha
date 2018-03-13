@@ -70,7 +70,7 @@ namespace Auctus.Business.Advisor
             var riskPriority = RiskType.GetRiskPriority(riskType);
             var advisors = Data.ListRobosAvailable();
             var portfolios = Task.Factory.StartNew(() => PortfolioBusiness.List(advisors.Select(c => c.Id)));
-            
+
             Task.WaitAll(portfolios);
 
             var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(portfolios.Result.SelectMany(c => c.Value.Select(x => x.Id))));
@@ -93,7 +93,7 @@ namespace Auctus.Business.Advisor
             {
                 var advisor = advisors.Single(c => c.Id == advisorPortfolios.Key);
                 advisorPortfolios.Value.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
-                foreach(var r in riskPriority)
+                foreach (var r in riskPriority)
                 {
                     var riskFound = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);
                     if (riskFound != null)
@@ -128,7 +128,7 @@ namespace Auctus.Business.Advisor
 
             return new KeyValuePair<int, IEnumerable<Model.Portfolio>>(riskType.Value, result);
         }
-        
+
         public Model.Advisor ListDetails(string email, int advisorId)
         {
             User user = null;
@@ -152,7 +152,7 @@ namespace Auctus.Business.Advisor
                 Task.WaitAll(purchases, advisorQty, portfolioQty);
             else
                 Task.WaitAll(advisorQty, portfolioQty);
-            
+
             return new Model.Advisor()
             {
                 Id = advisor.Id,
@@ -164,6 +164,11 @@ namespace Auctus.Business.Advisor
                 Portfolios = portfolios.Select(c => PortfolioBusiness.FillPortfolioModelWithHistory(c, advisor, user, purchases?.Result, portfolioQty.Result)).
                     OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList()
             };
+        }
+
+        public IEnumerable<DomainObjects.Advisor.Advisor> ListRankByAUC()
+        {
+            return Data.ListAdvisorsRankByAUC();
         }
     }
 }

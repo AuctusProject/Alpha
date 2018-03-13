@@ -85,5 +85,13 @@ namespace Api.Controllers
         {
             return base.ListAdvisorDetails(advisorId);
         }
+
+        [Route("rank")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult ListRankByAuc([FromRoute]int advisorId)
+        {
+            return base.ListRankByAuc(advisorId);
+        }
     }
 }

@@ -69,7 +69,7 @@ export class HomeComponent implements OnInit {
   public openTelegramDialog(){
     const dialogConfig = new MatDialogConfig();
 
-    dialogConfig.autoFocus = true;
+    //dialogConfig.autoFocus = true;
 
     dialogConfig.data = {
       phoneNumber: '',

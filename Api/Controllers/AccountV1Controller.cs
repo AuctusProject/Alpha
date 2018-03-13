@@ -122,7 +122,15 @@ namespace Api.Controllers
             return base.ListUsersByPerformance();
         }
 
-        [Route("password/recovery")]
+		[Route("performance/{searchDateTime}")]
+		[HttpGet]
+		[Authorize("Bearer")]
+		public new IActionResult ListUsersPerformanceByDate(DateTime searchDateTime)
+		{
+			return base.ListUsersPerformanceByDate(searchDateTime);
+		}
+
+		[Route("password/recovery")]
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
