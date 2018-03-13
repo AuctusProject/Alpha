@@ -25,7 +25,7 @@ export class TelegramValidatorComponent implements OnInit {
   ngOnInit() {
   }
 
-  private checkTelegramParticipation() {
+  public checkTelegramParticipation() {
     this.checkPromise = this.accountService.checkTelegram(this.getFormattedPhoneNumber()).subscribe(result => {
       if (result) {
         this.checkPromise = this.data.onSuccess(this.data.homeComponent, this.getFormattedPhoneNumber());
