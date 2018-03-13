@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserBalance } from '../../../model/account/userBalance';
 import { UserRank } from '../../../model/account/userRank';
 import { MatTabChangeEvent } from '@angular/material';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-user-performance',
@@ -14,6 +15,8 @@ export class UserPerformanceComponent implements OnInit {
   public dailyList: Array<UserRank>;
   public allTimeList: Array<UserRank>;
 
+  public maxDate = moment().add(-1, 'days').toDate();
+
   public searchFields = {
     name: null,
     date: null
@@ -22,7 +25,8 @@ export class UserPerformanceComponent implements OnInit {
   constructor(private accountService: AccountService) { }
 
   ngOnInit() {
-    this.listUsersByPerformance();
+    this.searchFields.date = this.maxDate;
+    this.listUsersPerformanceByDate();
   }
 
   public listUsersByPerformance() {
@@ -32,9 +36,8 @@ export class UserPerformanceComponent implements OnInit {
   };
 
   public onTabChange(event: MatTabChangeEvent) {
-    if (event.index === 1 && !this.searchFields.date) {
-        this.searchFields.date = new Date();
-        this.listUsersPerformanceByDate();
+    if (event.index === 0) {
+        this.listUsersByPerformance();
     }
   }
 
