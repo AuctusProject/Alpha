@@ -9,7 +9,7 @@ namespace Auctus.DataAccess.Exchanges
 {
     public abstract class ExchangeApi
     {
-        public static IEnumerable<ExchangeApi> GetApisByCode(string coinSymbol)
+        public static IEnumerable<ExchangeApi> GetApisByCode()
         {
             return new List<ExchangeApi> { new BinanceApi()/*, new BitfinexApi() */ };
         }
@@ -22,6 +22,7 @@ namespace Auctus.DataAccess.Exchanges
 
         protected abstract string API_BASE_ENDPOINT { get; }
         protected abstract string API_ENDPOINT { get; }
+        protected abstract string API_CURRENT_PRICE_ENDPOINT { get; }
 
         protected abstract string BTC_SYMBOL { get; }
         protected abstract string USD_SYMBOL { get; }
@@ -43,6 +44,11 @@ namespace Auctus.DataAccess.Exchanges
                       returnDictionary.Add(queryDate, value.Value);
               });
             return returnDictionary;
+        }
+
+        protected virtual Dictionary<string, double> GetCurrentValues(List<string> symbols)
+        {
+            return CallCurrentValuesApi();
         }
 
         private double? GetValueByDate(string symbol, DateTime queryDate, bool hasUSD = false)
@@ -95,18 +101,62 @@ namespace Auctus.DataAccess.Exchanges
             }
         }
 
+        private Dictionary<string, double> CallCurrentValuesApi()
+        {
+            using (var client = new HttpClient())
+            {
+                ApiError apiError;
+
+                client.BaseAddress = new Uri(API_BASE_ENDPOINT);
+                var response = client.GetAsync(API_CURRENT_PRICE_ENDPOINT).Result;
+
+                if (response.IsSuccessStatusCode)
+                    return GetCurrentPriceValue(response);
+                else
+                    apiError = GetErrorCode(response);
+
+                switch (apiError)
+                {
+                    case ApiError.InvalidSymbol:
+                        return null;
+                    case ApiError.UnknownError:
+                    default:
+                        throw new InvalidOperationException();
+                }
+            }
+        }
+
         protected abstract string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate);
         protected abstract double? GetCoinValue(HttpResponseMessage response);
+        protected abstract Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response);
         protected abstract ApiError GetErrorCode(HttpResponseMessage response);
 
         public static Dictionary<DateTime, double> GetCloseCryptoValue(string code, DateTime startDate)
         {
-            var apis = GetApisByCode(code);
+            var apis = GetApisByCode();
             Dictionary<DateTime, List<double>> exchangesPrices = new Dictionary<DateTime, List<double>>();
             foreach (var api in apis)
             {
                 var exchangeValues = api.GetCloseAdjustedValues(startDate, code);
                 foreach(var exchangeValue in exchangeValues)
+                {
+                    if (!exchangesPrices.ContainsKey(exchangeValue.Key))
+                        exchangesPrices.Add(exchangeValue.Key, new List<double>());
+
+                    exchangesPrices[exchangeValue.Key].Add(exchangeValue.Value);
+                }
+            }
+            return exchangesPrices.ToDictionary(v => v.Key, v => v.Value.Average());
+        }
+
+        public static Dictionary<string, double> GetCurrentCryptoValues(List<string> codes)
+        {
+            var apis = GetApisByCode();
+            Dictionary<string, List<double>> exchangesPrices = new Dictionary<string, List<double>>();
+            foreach (var api in apis)
+            {
+                var exchangeValues = api.GetCurrentValues(codes);
+                foreach (var exchangeValue in exchangeValues)
                 {
                     if (!exchangesPrices.ContainsKey(exchangeValue.Key))
                         exchangesPrices.Add(exchangeValue.Key, new List<double>());

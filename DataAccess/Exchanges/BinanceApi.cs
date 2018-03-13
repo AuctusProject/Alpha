@@ -15,6 +15,14 @@ namespace Auctus.DataAccess.Exchanges
             public double Price { get; set; }
         }
 
+        private class BinanceCurrentPriceApiResult
+        {
+            [JsonProperty("symbol")]
+            public string Symbol { get; set; }
+            [JsonProperty("p")]
+            public double Price { get; set; }
+        }
+
         private class BinanceApiError
         {
             [JsonProperty("code")]
@@ -25,6 +33,7 @@ namespace Auctus.DataAccess.Exchanges
 
         protected override string API_BASE_ENDPOINT { get => @"https://api.binance.com/"; }
         protected override string API_ENDPOINT { get => @"api/v1/aggTrades?symbol={0}{1}&endTime={2}&startTime={3}"; }
+        protected override string API_CURRENT_PRICE_ENDPOINT { get => @"api/v3/ticker/price"; }        
         protected override string BTC_SYMBOL { get => "BTC"; }
         protected override string USD_SYMBOL { get => "USDT"; }
 
@@ -41,6 +50,12 @@ namespace Auctus.DataAccess.Exchanges
             return result?.Price;            
         }
 
+        protected override Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response)
+        {
+            var result = JsonConvert.DeserializeObject<BinanceCurrentPriceApiResult[]>(response.Content.ReadAsStringAsync().Result);
+            return result.ToDictionary(r => r.Symbol, r=>r.Price);
+        }
+
         protected override ApiError GetErrorCode(HttpResponseMessage response)
         {
             var result = JsonConvert.DeserializeObject<BinanceApiError>(response.Content.ReadAsStringAsync().Result);
@@ -52,7 +67,6 @@ namespace Auctus.DataAccess.Exchanges
                 default:
                     return ApiError.UnknownError;
             }
-
         }
     }
 }
