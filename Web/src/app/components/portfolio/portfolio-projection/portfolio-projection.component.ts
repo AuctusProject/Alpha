@@ -19,10 +19,13 @@ export class PortfolioProjectionComponent implements OnInit {
   @ViewChild(PortfolioPurchaseComponent) portfolioPurchaseComponent;
   @Output() afterPurchaseCompleted = new EventEmitter();
 
+  public amountToInvest: number;
+
   constructor() {
   }
 
   ngOnInit() {
+    this.amountToInvest = 100;
   }
 
   ngAfterViewInit() {
@@ -103,7 +106,10 @@ export class PortfolioProjectionComponent implements OnInit {
   };
   public chartType: string = 'line';
 
-  public onSimulatorChange() {
+  public onSimulatorChange(amountToInvest) {
+
+    this.amountToInvest  =  amountToInvest ? amountToInvest : 100;
+
     this.chartData = [];
     this.buildChart();
     this.baseChart.refresh();
@@ -211,7 +217,7 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   private getStartingAmount() {
-    return this.goal && this.goal.startingAmount > 0 ? this.goal.startingAmount : 100;
+    return this.goal && this.goal.startingAmount > 0 ? this.goal.startingAmount : this.amountToInvest;
   }
 
   private getEstimatedDays() {

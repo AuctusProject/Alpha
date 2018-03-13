@@ -27,7 +27,8 @@ import { LocalStorageService } from "../../../services/local-storage.service";
 export class PortfolioPurchaseComponent implements OnInit {
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
-  @Output() afterSimulatorChange = new EventEmitter();
+  @Input() amountToInvest: number;
+  @Output() afterSimulatorChange = new EventEmitter<number>();
   @Output() afterPurchaseCompleted = new EventEmitter();
 
   availableToInvest: number;
@@ -91,6 +92,7 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.simulator.estimatedReturn = this.portfolio.projectionPercent;
     this.simulator.startDate = this.startDate;
     this.simulator.endDate = this.endDate;
+    this.simulator.invested = this.amountToInvest;
 
     this.updateSimulator();
 
@@ -145,6 +147,13 @@ export class PortfolioPurchaseComponent implements OnInit {
     }
   }
 
+  public onAmountToInvestChange() {
+    if (this.amountToInvest !== this.simulator.invested) {
+      this.amountToInvest = this.simulator.invested;
+      this.onSimulatorChange();
+    }
+  }
+
   public onSimulatorChange() {
     this.updateSimulator();
     this.onSimulatorChangeCompleted();
@@ -152,7 +161,7 @@ export class PortfolioPurchaseComponent implements OnInit {
 
   private onSimulatorChangeCompleted() {
     if (this.afterSimulatorChange) {
-      this.afterSimulatorChange.emit(this.simulator.endDate);
+      this.afterSimulatorChange.emit(this.amountToInvest);
     }
   }
 
@@ -199,12 +208,12 @@ export class PortfolioPurchaseComponent implements OnInit {
     }
   }
 
-  private satisfyAllMetamaskConditions () : boolean{
+  private satisfyAllMetamaskConditions(): boolean {
     return this.metamaskAccount.isLoggedSuccessfully();
   }
 
   public onBuyClick() {
-    if (!this.satisfyAllMetamaskConditions()){
+    if (!this.satisfyAllMetamaskConditions()) {
       this.router.navigate(['required']);
     }
     else if (!this.loginData) {
@@ -267,7 +276,7 @@ export class PortfolioPurchaseComponent implements OnInit {
           if (observer) observer.complete();
         });
       }
-    }, error =>{
+    }, error => {
       console.log("error on purchase metamask");
     });
   }
