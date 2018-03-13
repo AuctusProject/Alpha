@@ -86,9 +86,9 @@ export class HomeComponent implements OnInit {
 
   private onTelegramValidated(homeComponent, result){
     homeComponent.simpleRegister.phoneNumber = result;
-    this.createPromise = homeComponent.createAccount();
-    this.telegramDialog.close();
-    return this.createPromise;
+    homeComponent.createPromise = homeComponent.createAccount();
+    homeComponent.telegramDialog.close();
+    return homeComponent.createPromise;
   }
 
   private createAccount() {
@@ -103,6 +103,7 @@ export class HomeComponent implements OnInit {
     }, response => {
       this.notificationService.info("Info", response.error);
     });
+    return this.createPromise;
   }
 
   public getErrorMessage(formField: any) {
