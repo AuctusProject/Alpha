@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { AdvisorRank } from '../../../../model/account/AdvisorRank';
+import { AdvisorRank } from '../../../../model/advisor/advisorRank';
 
 @Component({
   selector: 'advisor-card',
