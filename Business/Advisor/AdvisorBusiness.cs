@@ -3,6 +3,7 @@ using Auctus.DataAccess.Core;
 using Auctus.DomainObjects.Account;
 using Auctus.DomainObjects.Advisor;
 using Auctus.DomainObjects.Portfolio;
+using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
@@ -175,9 +176,9 @@ namespace Auctus.Business.Advisor
             };
         }
 
-        public IEnumerable<DomainObjects.Advisor.Advisor> ListRankByAUC()
+        public IEnumerable<AdvisorRank> ListRankByAUC()
         {
-            return Data.ListAdvisorsRankByAUC();
+            return Data.ListAdvisorsRankByAUC().Select(advisor => new AdvisorRank() { Id = advisor.Id, Name = advisor.Detail.Name, AllocatedAUC = advisor.Detail.AllocatedAUC });
         }
     }
 }
