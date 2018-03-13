@@ -20,5 +20,6 @@ namespace Auctus.DomainObjects.Advisor
         public string Description { get; set; }
         [DapperType(System.Data.DbType.Boolean)]
         public bool Enabled { get; set; }
+        public decimal AllocatedAUC { get; set; }
     }
 }

@@ -60,15 +60,15 @@ export class HomeComponent implements OnInit {
 
   public onSubmit() {
     
-    const dialogConfig = new MatDialogConfig();
+    //const dialogConfig = new MatDialogConfig();
 
-    dialogConfig.autoFocus = true;
+    //dialogConfig.autoFocus = true;
 
-    dialogConfig.data = {
-    };
+    //dialogConfig.data = {
+    //};
    
-    this.dialog.open(TelegramValidatorComponent, dialogConfig);
-    // this.createAccount();
+    //this.dialog.open(TelegramValidatorComponent, dialogConfig);
+     this.createAccount();
   }
 
   private createAccount() {

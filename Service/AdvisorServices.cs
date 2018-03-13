@@ -79,5 +79,10 @@ namespace Auctus.Service
         {
             await EscrowResultTransactionBusiness.CheckTransactionsAsync();
         }
+
+        public IEnumerable<DomainObjects.Advisor.Advisor> ListRankByAUC()
+        {
+            return AdvisorBusiness.ListRankByAUC();
+        }
     }
 }
