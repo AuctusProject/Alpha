@@ -262,20 +262,30 @@ namespace Auctus.Business.Portfolio
 
         public List<Model.Portfolio> List(string email)
         {
-            var user = UserBusiness.GetValidUser(email);
-            var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+            User user = null;
+            if (!string.IsNullOrEmpty(email))
+                user = UserBusiness.GetValidUser(email);
+
+            Task<List<Buy>> purchases = null;
+            if (user != null)
+                purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+            
             var portfolios = Data.ListAllValids();
             var portfoliosQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(portfolios.Select(c => c.Id)));
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
             
-            Task.WaitAll(purchases, portfoliosQty);
+            if (user != null)
+                Task.WaitAll(purchases, portfoliosQty);
+            else
+                Task.WaitAll(portfoliosQty);
+
             Task.WaitAll(histories.ToArray());
 
             portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
 
-            return portfolios.Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, purchases.Result, portfoliosQty.Result))
+            return portfolios.Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, purchases?.Result, portfoliosQty.Result))
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
@@ -324,13 +334,23 @@ namespace Auctus.Business.Portfolio
 
         public Model.Portfolio Get(string email, int portfolioId)
         {
-            var user = UserBusiness.GetValidUser(email);
-            var purchase = Task.Factory.StartNew(() => BuyBusiness.Get(user.Id, portfolioId));
-            var portfolio = Task.Factory.StartNew(() => Get(portfolioId));
-            Task.WaitAll(portfolio, purchase);
+            User user = null;
+            if (!string.IsNullOrEmpty(email))
+                user = UserBusiness.GetValidUser(email);
 
-            var owned = user.Id == portfolio.Result.Advisor.UserId;
-            var purchased = purchase.Result != null && BuyBusiness.IsValidPurchase(purchase.Result);
+            Task<Buy> purchase = null;
+            if (user != null)
+                purchase = Task.Factory.StartNew(() => BuyBusiness.Get(user.Id, portfolioId));
+
+            var portfolio = Task.Factory.StartNew(() => Get(portfolioId));
+
+            if (user != null)
+                Task.WaitAll(portfolio, purchase);
+            else
+                Task.WaitAll(portfolio);
+
+            var owned = user != null && user.Id == portfolio.Result.Advisor.UserId;
+            var purchased = purchase?.Result != null && BuyBusiness.IsValidPurchase(purchase.Result);
 
             if (portfolio.Result == null || (!owned && !purchased && (!portfolio.Result.Detail.Enabled || !portfolio.Result.Advisor.Detail.Enabled)))
                 throw new ArgumentException("Invalid portfolio.");
@@ -354,7 +374,7 @@ namespace Auctus.Business.Portfolio
 
             portfolio.Result.PortfolioHistory = history.Result;
             var result = FillPortfolioModelWithHistory(portfolio.Result, portfolio.Result.Advisor, user, 
-                purchase.Result != null ? new Buy[] { purchase.Result } : null, portfolioQty.Result);
+                purchase?.Result != null ? new Buy[] { purchase.Result } : null, portfolioQty.Result);
 
             result.Purchased = purchased;
             result.Histogram = PortfolioHistoryBusiness.GetHistogram(history.Result);

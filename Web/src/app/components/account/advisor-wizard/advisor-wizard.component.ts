@@ -20,14 +20,20 @@ export class AdvisorWizardComponent implements OnInit {
   public portfolioList: Array<PortfolioRequest>;
   public wizardSteps = AdvisorWizardStep;
 
-  constructor(private router: Router, private loginService:LoginService) {
+  constructor(private router: Router, private loginService: LoginService) {
     this.portfolioList = new Array<PortfolioRequest>();
     this.advisorModel = new Advisor();
     this.editedAdvisorModel = new Advisor();
   }
 
   ngOnInit() {
-    this.currentStep = this.wizardSteps.Start.Id;
+    if (!this.loginService.isLoggedIn()) {
+      this.loginService.setLoginRedirectUrl(this.router.url);
+      this.router.navigate(['home']);
+
+    } else {
+      this.currentStep = this.wizardSteps.Start.Id;
+    }
   }
 
   public changeStep(stepToChange) {
@@ -62,16 +68,16 @@ export class AdvisorWizardComponent implements OnInit {
     }
   }
 
- public hasSavedPortfolio() {
-   return this.getSavedPortfolioCount() > 0;
- }
+  public hasSavedPortfolio() {
+    return this.getSavedPortfolioCount() > 0;
+  }
 
   public getSavedPortfolioCount() {
-     return this.portfolioList.filter(item => item.id > 0 ).length;
+    return this.portfolioList.filter(item => item.id > 0).length;
   }
 
   public getPortfoliosName() {
-    let names = this.portfolioList.filter(item => item.id > 0 ).map(item => item.name);
+    let names = this.portfolioList.filter(item => item.id > 0).map(item => item.name);
     return names.join(", ");
   }
 
@@ -80,6 +86,6 @@ export class AdvisorWizardComponent implements OnInit {
   }
 
   public onMyPortfoliosClick() {
-    this.router.navigateByUrl('advisor/'+this.loginService.getLoginData().humanAdvisorId);
+    this.router.navigateByUrl('advisor/' + this.loginService.getLoginData().humanAdvisorId);
   }
 }

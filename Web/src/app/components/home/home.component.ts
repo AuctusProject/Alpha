@@ -42,7 +42,11 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    if(this.metamaskAccountService.getAccount()) {
+      this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    } else {
+      this.metamaskAccountService.broadcastLoginConditionsFail();
+    }
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {
@@ -88,15 +92,17 @@ export class HomeComponent implements OnInit {
   }
 
   private createAccount() {
-    this.showLoading = true;
-    return this.accountService.simpleRegister(this.simpleRegister).subscribe(result => {
-        this.loginService.setLoginData(result.data);
-        this.router.navigateByUrl('login');
-        
-      }, response => {
-        this.showLoading = false;
-        this.notificationService.info("Info", response.error);
-      });
+    this.createPromise = this.accountService.simpleRegister(this.simpleRegister).subscribe(result => {
+      this.loginService.setLoginData(result.data);
+      let afterCreateUrl = this.loginService.getLoginRedirectUrl();
+      if (!afterCreateUrl) {
+        afterCreateUrl = 'login';
+      }
+      this.loginService.setLoginRedirectUrl('');
+      this.router.navigateByUrl(afterCreateUrl);
+    }, response => {
+      this.notificationService.info("Info", response.error);
+    });
   }
 
   public getErrorMessage(formField: any) {

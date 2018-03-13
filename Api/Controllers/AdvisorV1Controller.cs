@@ -16,13 +16,13 @@ namespace Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/advisors/v1/")]
-    [Authorize("Bearer")]
     [EnableCors("Default")]
     public class AdvisorV1Controller : AdvisorBaseController
     {
         public AdvisorV1Controller(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }
 
         [HttpPost]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult Advisor([FromBody]AdvisorRequest advisorRequest)
         {
@@ -31,6 +31,7 @@ namespace Api.Controllers
 
         [Route("{advisorId}")]
         [HttpPatch]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult AdvisorUpdate([FromRoute]int advisorId, [FromBody]AdvisorDetailRequest advisorDetailRequest)
         {
@@ -39,6 +40,7 @@ namespace Api.Controllers
 
         [Route("{advisorId}")]
         [HttpDelete]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult AdvisorDisable([FromRoute]int advisorId)
         {
@@ -47,6 +49,7 @@ namespace Api.Controllers
 
         [Route("purchases")]
         [HttpPost]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult Buy([FromBody]BuyRequest buyRequest)
         {
@@ -55,6 +58,7 @@ namespace Api.Controllers
 
         [Route("purchases/{buyId}/transaction")]
         [HttpPost]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult SetBuyTransaction([FromRoute]int buyId, [FromBody]BuyTransactionRequest buyTransactionRequest)
         {
@@ -63,6 +67,7 @@ namespace Api.Controllers
 
         [Route("purchases/{buyId}")]
         [HttpDelete]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult CancelBuyTransaction([FromRoute]int buyId)
         {
@@ -71,15 +76,16 @@ namespace Api.Controllers
 
         [Route("purchases/{buyId}/check")]
         [HttpPost]
+        [Authorize("Bearer")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult CheckBuyTransaction([FromRoute]int buyId)
         {
             return base.CheckBuyTransaction(buyId);
         }
 
-        [AllowAnonymous]
         [Route("{advisorId}")]
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult ListAdvisorDetails([FromRoute]int advisorId)
         {

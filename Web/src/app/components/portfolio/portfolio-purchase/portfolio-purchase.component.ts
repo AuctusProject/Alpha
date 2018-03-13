@@ -17,6 +17,7 @@ import { Web3Service } from "../../../services/web3.service";
 import { NotificationsService } from "angular2-notifications";
 import { AccountService } from "../../../services/account.service";
 import { EventsService } from "angular-event-service";
+import { LocalStorageService } from "../../../services/local-storage.service";
 
 @Component({
   selector: "portfolio-purchase",
@@ -39,7 +40,7 @@ export class PortfolioPurchaseComponent implements OnInit {
   public simulator = {
     price: null,
     estimatedReturn: null,
-    targetAmount: 0,
+    startingAmount: 0,
     monthlyContribution: 0,
     startDate: null,
     endDate: null,
@@ -62,7 +63,8 @@ export class PortfolioPurchaseComponent implements OnInit {
     private web3Service: Web3Service,
     private notificationService: NotificationsService,
     private accountService: AccountService,
-    private eventsService: EventsService
+    private eventsService: EventsService,
+    private localStorageService: LocalStorageService
   ) { }
 
   ngOnInit() {
@@ -82,7 +84,7 @@ export class PortfolioPurchaseComponent implements OnInit {
 
     if (this.goal != null) {
       this.simulator.monthlyContribution = this.goal.monthlyContribution;
-      this.simulator.targetAmount = this.goal.targetAmount;
+      this.simulator.startingAmount = this.goal.startingAmount;
     }
 
     this.simulator.price = this.portfolio.price;
@@ -129,9 +131,9 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.calculateSimulator();
   }
 
-  public onTargetAmountChange() {
-    if (this.simulator.targetAmount !== this.goal.targetAmount) {
-      this.goal.targetAmount = this.simulator.targetAmount;
+  public onStartingAmountChange() {
+    if (this.simulator.startingAmount !== this.goal.startingAmount) {
+      this.goal.startingAmount = this.simulator.startingAmount;
       this.onSimulatorChange();
     }
   }
@@ -198,31 +200,42 @@ export class PortfolioPurchaseComponent implements OnInit {
   }
 
   public onBuyClick() {
-    var self = this;
-    var days = DateUtil.DiffDays(
-      this.simulator.startDate,
-      this.simulator.endDate
-    );
-    this.purchasePromise = new Observable(observer => {
-      this.advisorService
-        .buy(
-          new BuyRequest(
-            this.portfolio.id,
-            days,
-            this.metamaskAccount.getAccount(),
-            this.simulator.invested,
-            this.goal
+
+    if (!this.loginData) {
+
+      if (this.goal) {
+        this.localStorageService.setLocalStorage("currentGoal", JSON.stringify(this.goal));
+      }
+      this.loginService.setLoginRedirectUrl(this.router.url);
+      this.router.navigate(['home']);
+
+    } else if (!this.loginData.pendingConfirmation) {
+      var self = this;
+      var days = DateUtil.DiffDays(
+        this.simulator.startDate,
+        this.simulator.endDate
+      );
+      this.purchasePromise = new Observable(observer => {
+        this.advisorService
+          .buy(
+            new BuyRequest(
+              this.portfolio.id,
+              days,
+              this.metamaskAccount.getAccount(),
+              this.simulator.invested,
+              this.goal
+            )
           )
-        )
-        .subscribe(result => {
-          if (result) {
-            var id = result.id;
-            this.generateMetamaskTransaction(id, observer);
-          } else {
-            observer.complete();
-          }
-        });
-    }).subscribe();
+          .subscribe(result => {
+            if (result) {
+              var id = result.id;
+              this.generateMetamaskTransaction(id, observer);
+            } else {
+              observer.complete();
+            }
+          });
+      }).subscribe();
+    }
   }
 
   generateMetamaskTransaction(id: number, observer?: any) {

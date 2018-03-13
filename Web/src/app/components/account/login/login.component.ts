@@ -8,6 +8,7 @@ import { Web3Service } from '../../../services/web3.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { EventsService } from "angular-event-service";
+import { MetamaskAccountService } from './../../../services/metamask-account.service';
 
 @Component({
   selector: 'app-login',
@@ -24,25 +25,29 @@ export class LoginComponent implements OnInit {
   constructor(
     private eventsService: EventsService,
     private formBuilder: FormBuilder,
-    private loginService: LoginService, 
-    private notificationService: NotificationsService, 
+    private loginService: LoginService,
+    private notificationService: NotificationsService,
     private router: Router,
-    private web3Service: Web3Service) { 
-      this.buildForm();
-    }
+    private web3Service: Web3Service,
+    private metamaskAccountService: MetamaskAccountService) {
+    this.buildForm();
+  }
 
-    private buildForm() {
-      this.loginForm = this.formBuilder.group({
-        emailOrUsername: ['', Validators.compose([Validators.required])],
-        password: ['', Validators.compose([Validators.required])],
-        address: ['']
-      });
-    }
+  private buildForm() {
+    this.loginForm = this.formBuilder.group({
+      emailOrUsername: ['', Validators.compose([Validators.required])],
+      password: ['', Validators.compose([Validators.required])],
+      address: ['']
+    });
+  }
 
   ngOnInit() {
-    this.pendingConfirmation = false;
-    this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
-    
+    if(this.metamaskAccountService.getAccount()) {
+      this.pendingConfirmation = false;
+      this.eventsService.on("loginConditionsSuccess", this.onLoginConditionsSuccess);
+    } else {
+      this.metamaskAccountService.broadcastLoginConditionsFail();
+    }
   }
 
   private onLoginConditionsSuccess: Function = (payload: any) => {
@@ -52,7 +57,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onLoginClick() {
-    if(this.loginForm.valid){
+    if (this.loginForm.valid) {
       this.doLogin();
     }
   }
@@ -60,10 +65,15 @@ export class LoginComponent implements OnInit {
   doLogin() {
     this.loginPromise = this.loginService.login(this.login)
       .subscribe(response => {
-        if (response){
+        if (response) {
           if (response.logged) {
             this.loginService.setLoginData(response.data);
-            this.router.navigateByUrl('');
+            let afterLoginUrl = this.loginService.getLoginRedirectUrl();
+            if (!afterLoginUrl) {
+              afterLoginUrl = 'home';
+            }
+            this.loginService.setLoginRedirectUrl('');
+            this.router.navigateByUrl(afterLoginUrl);
           }
           else {
             this.pendingConfirmation = true;

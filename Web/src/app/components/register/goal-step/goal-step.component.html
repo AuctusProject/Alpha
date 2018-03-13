@@ -1,9 +1,8 @@
 <form #goalForm="ngForm" (ngSubmit)="onSubmit()">
-    <div fxLayout="column" fxLayoutGap="20px" (window:resize)="onResize($event)">
+    <div fxLayout="column" fxLayoutGap="20px">
         <div fxLayout="row">
             <h2 class="bold" fxFlex fxLayoutAlign="center center">What are you saving for?</h2>
         </div>
-
         <div fxLayout="column" fxLayoutGap="20px" fxLayoutAlign="center center">
             <mat-grid-list *ngIf="options" [style.width]="width" [style.margin]="'0 auto'" [cols]="cols" rowHeight="106px" gutterSize="10px">
                 <mat-grid-tile *ngFor="let option of options" [colspan]="1" [rowspan]="1" [style.width]="107">

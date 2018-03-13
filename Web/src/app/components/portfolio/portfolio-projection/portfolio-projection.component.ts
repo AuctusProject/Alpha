@@ -123,7 +123,7 @@ export class PortfolioProjectionComponent implements OnInit {
 
     let chartData = [];
 
-    if (this.goal != null && this.goal.monthlyContribution > 0) {
+    if (this.goal && this.goal.monthlyContribution > 0) {
       let estimatedDays = this.getEstimatedDays();
 
       var projectionValue = [];
@@ -173,7 +173,7 @@ export class PortfolioProjectionComponent implements OnInit {
     };
     annotationsList.push(timeTargetAnnotation);
 
-    if (this.goal != null) {
+    if (this.goal && this.goal.targetAmount) {
       let targetAmount = this.goal.targetAmount;
       let targetAmountAnnotation = {
         id: 'hline',
@@ -211,7 +211,7 @@ export class PortfolioProjectionComponent implements OnInit {
   }
 
   private getStartingAmount() {
-    return this.goal != null && this.goal.startingAmount > 0 ? this.goal.startingAmount : 100;
+    return this.goal && this.goal.startingAmount > 0 ? this.goal.startingAmount : 100;
   }
 
   private getEstimatedDays() {
@@ -263,7 +263,7 @@ export class PortfolioProjectionComponent implements OnInit {
         let beforeValue = beforeValues[day - 1];
         let currencyValue = beforeValue + (beforeValue * dailyPercent / 100);
 
-        if (this.goal != null && day % 30 == 0) {
+        if (this.goal && day % 30 == 0) {
           currencyValue += this.goal.monthlyContribution;
         }
 

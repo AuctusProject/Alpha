@@ -20,13 +20,18 @@
     </div>
   </div>
   <div *ngIf="goal != null">
-    <hr>
-    <div fxLayout="row" fxLayoutAlign="space-between center">
-      <div class="amount-field" fxflex>
-        <mat-form-field>
-          <input matInput placeholder="Target amount" (blur)="onTargetAmountChange()" [(ngModel)]="simulator.targetAmount" type="text"
-            currencyMask name="TargetAmount" [options]="{ allowNegative : false }" />
-        </mat-form-field>
+      <hr>
+      <div fxLayout="row" fxLayoutAlign="space-between center" >
+        <div class="amount-field" fxflex>
+          <mat-form-field>
+            <input matInput placeholder="Starting amount" (blur)="onStartingAmountChange()" [(ngModel)]="simulator.startingAmount" type="text" currencyMask name="StartingAmount" [options]="{ allowNegative : false }"/>
+          </mat-form-field>
+        </div>
+        <div class="amount-field" fxflex>
+          <mat-form-field>
+            <input matInput placeholder="Monthly contribution" (blur)="onMontlhyAmountChange()" [(ngModel)]="simulator.monthlyContribution" type="text" currencyMask name="MonthlyContribution" [options]="{ allowNegative : false }"/>
+          </mat-form-field>
+        </div> 
       </div>
       <div class="amount-field" fxflex>
         <mat-form-field>
@@ -34,7 +39,6 @@
             type="text" currencyMask name="MonthlyContribution" [options]="{ allowNegative : false }" />
         </mat-form-field>
       </div>
-    </div>
   </div>
   <hr>
   <div class="date-and-month" fxLayout="row" fxLayoutAlign="space-between center">
@@ -123,9 +127,13 @@
     </div>
   </div>
   <hr>
-  <div fxLayout="column" fxLayoutGap="8px" class="buy-box-content" *ngIf="portfolio.advisorId != loginData.humanAdvisorId">
+  <div fxLayout="column" fxLayoutGap="8px" class="buy-box-content" *ngIf="!loginData || portfolio.advisorId != loginData.humanAdvisorId">
     <div class="need-email-confirmation" *ngIf="isTransactionPendingConfirmation()">
+<<<<<<< HEAD
       Your transaction is being processed. Click
+=======
+      Your transaction is being processed and need to be confirmed to you be able to check the portfolio distribution. Click
+>>>>>>> access_without_login
       <a [attr.href]="getTransactionUrl()" target="_blank">here</a> to check it.
     </div>
     <div class="need-email-confirmation" *ngIf="isTransactionPendingToSend()">
@@ -133,7 +141,7 @@
       transaction below. If you already sent, please inform the transaction hash.
     </div>
     <button *ngIf="!portfolio.purchased" type="button" [promiseBtn]="purchasePromise" class="action-button text-center" style="width:100%"
-      (click)="!loginData.pendingConfirmation && onBuyClick()" [class.disabled]="loginData.pendingConfirmation">
+      (click)="onBuyClick()" [class.disabled]="loginData && loginData.pendingConfirmation">
       BUY
     </button>
     <button *ngIf="showSendTransactionButton()" type="button" [promiseBtn]="purchasePromise" class="action-button text-center"
@@ -148,7 +156,7 @@
       (click)="onSetHashClick()">
       SET TRANSACTION HASH
     </button>
-    <div fxLayout="row" class="need-email-confirmation" *ngIf="loginData.pendingConfirmation">
+    <div fxLayout="row" class="need-email-confirmation" *ngIf="loginData && loginData.pendingConfirmation">
       You need to confirm your email to be able to buy portfolios.
     </div>
   </div>

@@ -2,42 +2,33 @@
     <mat-toolbar-row class="internal-header">
         <img src="./assets/logo.png" routerLink="" class="landing-logo">
         <span class="spacer"></span>
-        <div *ngIf="loginData">
-            <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
-                <!-- <a routerLink="/robo-advisors" routerLinkActive="active">ROBO ADVISORS</a> -->
-                <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
-                <a routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
-                <a *ngIf="loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
-                <div *ngIf="!loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
-                <user-balance></user-balance>
-                <div class="pull-right">
-                    <mat-menu #appMenu="matMenu">
-                        <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
-                            <mat-icon>account_circle</mat-icon>
-                            <div>{{this.loginData.username}}</div>
-                        </div>
-                        <button mat-menu-item routerLink="/change-password"> Change password </button>
-                        <!-- <button mat-menu-item routerLink="/manage-api"> Manage API </button> -->
-                        <button mat-menu-item (click)="logout()"> Logout </button>
-                    </mat-menu>
-                    <div class="user-menu" [matMenuTriggerFor]="appMenu" fxLayout="row" fxLayoutAlign="space-around center">
-                        <div class="user-menu-item" >
-                            {{getUsernameFirstLetter()}}
-                        </div>
-                        <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
+        <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
+            <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
+            <a *ngIf="loginData" routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
+            <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
+            <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
+            <user-balance *ngIf="loginData"></user-balance>
+            <div *ngIf="loginData" class="pull-right">
+                <mat-menu #appMenu="matMenu">
+                    <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
+                        <mat-icon>account_circle</mat-icon>
+                        <div>{{this.loginData.username}}</div>
                     </div>
+                    <button mat-menu-item routerLink="/change-password"> Change password </button>
+                    <!-- <button mat-menu-item routerLink="/manage-api"> Manage API </button> -->
+                    <button mat-menu-item (click)="logout()"> Logout </button>
+                </mat-menu>
+                <div class="user-menu" [matMenuTriggerFor]="appMenu" fxLayout="row" fxLayoutAlign="space-around center">
+                    <div class="user-menu-item">
+                        {{getUsernameFirstLetter()}}
+                    </div>
+                    <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
                 </div>
-              
             </div>
+            <a *ngIf="!loginData && !hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
+            <a *ngIf="!loginData" routerLink="/home" routerLinkActive="active">REGISTER</a>
         </div>
-        <div *ngIf="!loginData">
-            <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
-                <a href="https://auctus.org" target="_blank">WHAT IS AUCTUS?</a>
-                <a href="mailto:contact@auctus.org">CONTACT US</a>
-                <a *ngIf="!hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
-            </div>
-        </div>
-        <a href="https://t.me/AuctusProject"  target="_blank" title="Give us feedback on Telegram">
+        <a href="https://t.me/AuctusProject" target="_blank" title="Give us feedback on Telegram">
             <img src="./assets/icons/telegram.png" class="telegram">
         </a>
     </mat-toolbar-row>

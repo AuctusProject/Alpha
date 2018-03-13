@@ -25,7 +25,7 @@ import { AdvisorPerformanceComponent } from './components/ranking/advisor-perfor
 import { UserPerformanceComponent } from './components/ranking/user-performance/user-performance.component';
 
 const routes: Routes = [
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+    { path: '', component: HumanAdvisorsComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'required', component: ProviderRequiredComponent },
     { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
