@@ -17,6 +17,7 @@ export class MetamaskAccountService {
   private account: string;
   private network: number;
   private aucBalance: number;
+  private loggedSuccessfully: boolean;
 
   constructor(private router: Router, private eventsService: EventsService, private web3Service: Web3Service) {
     this.runChecks();
@@ -26,11 +27,11 @@ export class MetamaskAccountService {
   private monitoreAccount() {
     let self = this;
     var accountInterval = setInterval(function () {
+      if (!self.getNetwork()){
+        return;
+      }
       self.web3Service.getAccount().subscribe(
         account => {
-          if (!self.getNetwork()){
-            return;
-          }
           if (!self.isRinkeby()){
             self.broadcastLoginConditionsFail();
             return;
@@ -75,7 +76,7 @@ export class MetamaskAccountService {
     let self = this;
     return new Observable(
       observer => {
-        Observable.combineLatest(this.web3Service.getNetwork(), this.web3Service.getAccount())
+        Observable.concat(this.web3Service.getNetwork(), this.web3Service.getAccount())
           .subscribe(function handleValues(values) {
             self.network = values[0];
             self.account = values[1];
@@ -123,10 +124,12 @@ export class MetamaskAccountService {
   }
 
   public broadcastLoginConditionsFail() {
+    this.loggedSuccessfully = false;
     this.eventsService.broadcast("loginConditionsFail");
   }
 
   private broadcastLoginConditionsSuccess() {
+    this.loggedSuccessfully = true;
     this.eventsService.broadcast("loginConditionsSuccess");
   }
 
@@ -144,6 +147,10 @@ export class MetamaskAccountService {
 
   public getNetwork(): number {
     return this.network;
+  }
+
+  public isLoggedSuccessfully(){
+    return this.loggedSuccessfully;
   }
 
 }

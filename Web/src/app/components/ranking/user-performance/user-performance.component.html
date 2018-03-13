@@ -10,6 +10,35 @@
   <mat-tab>
     <ng-template mat-tab-label>
       <div class="tab-title">
+        DAILY
+      </div>
+    </ng-template>
+    <div class="card-list">
+      <div fxLayout="column">
+        <div fxLayout="row">
+          <div fxFlex="33">
+            <mat-form-field>
+              <input matInput [matDatepicker]="picker" [max]="maxDate" placeholder="Choose a date" [(ngModel)]="searchFields.date" (ngModelChange)="listUsersPerformanceByDate()">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div fxFlex>
+            <mat-form-field fxFlex="100">
+              <input placeholder="User" matInput [(ngModel)]="searchFields.name">
+              <mat-icon matSuffix>search</mat-icon>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+      <loading-spinner *ngIf="!dailyList"></loading-spinner>
+      <user-card *ngFor="let user of dailyList | filter: 'username': searchFields.name" [user]="user"></user-card>
+       <div *ngIf="dailyList && dailyList.length == 0" class="no-ranking">Ranking information is not available.</div>
+    </div> 
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="tab-title">
         ALL TIME
       </div>
     </ng-template>
@@ -26,34 +55,7 @@
       </div>
       <loading-spinner *ngIf="!allTimeList"></loading-spinner>
       <user-card *ngFor="let user of allTimeList | filter: 'name': searchFields.name" [user]="user"></user-card>
-    </div>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      <div class="tab-title">
-        DAILY
-      </div>
-    </ng-template>
-    <div class="card-list">
-      <div fxLayout="column">
-        <div fxLayout="row">
-          <div fxFlex="33">
-            <mat-form-field>
-              <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="searchFields.date" (ngModelChange)="listUsersPerformanceByDate()">
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
-          </div>
-          <div fxFlex>
-            <mat-form-field fxFlex="100">
-              <input placeholder="User" matInput [(ngModel)]="searchFields.name">
-              <mat-icon matSuffix>search</mat-icon>
-            </mat-form-field>
-          </div>
-        </div>
-      </div>
-      <loading-spinner *ngIf="!dailyList"></loading-spinner>
-      <user-card *ngFor="let user of dailyList | filter: 'username': searchFields.name" [user]="user"></user-card>
+      <div *ngIf="allTimeList && allTimeList.length == 0" class="no-ranking">Ranking information is not available.</div>
     </div>
   </mat-tab>
 </mat-tab-group>

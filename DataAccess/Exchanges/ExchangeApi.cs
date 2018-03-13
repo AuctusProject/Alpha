@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
 using Auctus.Util;
+using System.Threading.Tasks;
 
 namespace Auctus.DataAccess.Exchanges
 {
@@ -34,13 +35,13 @@ namespace Auctus.DataAccess.Exchanges
 
             bool hasUSD = CallApi(symbol, USD_SYMBOL, utcNow).HasValue;
 
-            for (var i = daysToQuery; i > 0; i--)
-            {
-                var queryDate = utcNow.AddDays(-i);
-                var value = GetValueByDate(symbol, queryDate, hasUSD);
-                if (value != null && !returnDictionary.ContainsKey(queryDate))
-                    returnDictionary.Add(queryDate, value.Value);
-            }
+            Parallel.For(1, (int)(daysToQuery + 1), i =>
+              {
+                  var queryDate = utcNow.AddDays(-i);
+                  var value = GetValueByDate(symbol, queryDate, hasUSD);
+                  if (value != null && !returnDictionary.ContainsKey(queryDate))
+                      returnDictionary.Add(queryDate, value.Value);
+              });
             return returnDictionary;
         }
 
