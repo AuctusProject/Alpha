@@ -27,10 +27,12 @@ export class AdvisorWizardComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (!this.loginService.isLoggedIn()) {
+    let loginData = this.loginService.getLoginData();
+    if (!loginData) {
       this.loginService.setLoginRedirectUrl(this.router.url);
       this.router.navigate(['home']);
-
+    } else if(loginData.humanAdvisorId) {
+      this.router.navigateByUrl('advisor/' + loginData.humanAdvisorId);
     } else {
       this.currentStep = this.wizardSteps.Start.Id;
     }
