@@ -23,6 +23,7 @@ namespace Auctus.DataAccess.Exchanges
 
         protected override string API_BASE_ENDPOINT { get => @"https://api.bitfinex.com/"; }
         protected override string API_ENDPOINT { get => @"v1/trades/{0}{1}?timestamp={2}&limit_trades=1"; }
+        protected override string API_CURRENT_PRICE_ENDPOINT { get => @"api/v3/ticker/price"; }
         protected override string BTC_SYMBOL { get => "BTC"; }
         protected override string USD_SYMBOL { get => "USD"; }
 
@@ -35,6 +36,11 @@ namespace Auctus.DataAccess.Exchanges
         {
             var result = JsonConvert.DeserializeObject<BitfinexApiResult[]>(response.Content.ReadAsStringAsync().Result).FirstOrDefault();
             return result?.Price;            
+        }
+
+        protected override Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response)
+        {
+            throw new NotImplementedException();
         }
 
         protected override ApiError GetErrorCode(HttpResponseMessage response)
