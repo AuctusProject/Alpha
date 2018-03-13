@@ -1,6 +1,9 @@
+
 import { Component, OnInit } from '@angular/core';
+import { AdvisorRank } from '../../../model/advisor/advisorRank';
 import { Portfolio } from '../../../model/portfolio/portfolio';
 import { PortfolioService } from '../../../services/portfolio.service';
+import { AdvisorService } from '../../../services/advisor.service'
 
 @Component({
   selector: 'app-advisor-performance',
@@ -9,15 +12,19 @@ import { PortfolioService } from '../../../services/portfolio.service';
 })
 export class AdvisorPerformanceComponent implements OnInit {
   portfolios: Portfolio[];
+  advisors: AdvisorRank[];
   dailyPortfolios: Portfolio[];
   rankingDate: Date;
-  constructor(private portfolioService: PortfolioService) { }
+  constructor(private portfolioService: PortfolioService,
+    private advisorService: AdvisorService) {
+  }
 
   ngOnInit() {
     this.rankingDate = new Date();
     this.rankingDate.setDate(this.rankingDate.getDate() - 1);
     this.getPortfoliosByDate();
     this.getAllPortfolios();
+    this.getAdvisorsRank();
   }
 
   private getPortfoliosByDate() {
@@ -29,6 +36,12 @@ export class AdvisorPerformanceComponent implements OnInit {
 
   private getAllPortfolios() {
     this.portfolioService.getAllPortfoliosPerformance().subscribe(
+      portfolios =>
+        this.portfolios = portfolios);
+  }
+
+  private getAdvisorsRank() {
+    this.advisorService.getAdvisor.getAllPortfoliosPerformance().subscribe(
       portfolios =>
         this.portfolios = portfolios);
   }
