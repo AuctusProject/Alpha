@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Auctus.Business.Asset
 {
@@ -30,10 +31,10 @@ namespace Auctus.Business.Asset
         {
             var assets = ListAssets();
 
-            foreach (var asset in assets)
-            {
-                AssetValueBusiness.UpdateAssetValue(asset);
-            }
+            Parallel.ForEach(assets, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, asset =>
+             {
+                 AssetValueBusiness.UpdateAssetValue(asset);
+             });
         }
     }
 }

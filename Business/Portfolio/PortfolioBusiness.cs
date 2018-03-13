@@ -516,10 +516,10 @@ namespace Auctus.Business.Portfolio
         public void UpdateAllPortfoliosHistory()
         {
             var portfolios = Data.ListAll();
-            foreach(var portfolio in portfolios)
+            Parallel.ForEach(portfolios, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, portfolio =>
             {
                 PortfolioHistoryBusiness.UpdatePortfolioHistory(portfolio);
-            }
+            });
         }
     }
 }
