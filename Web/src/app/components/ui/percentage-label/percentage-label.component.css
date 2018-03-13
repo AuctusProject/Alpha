@@ -6,6 +6,10 @@
     color:#f85843;
 }
 
+/deep/ .performance-value{
+    min-width: 80px
+}
+
 /deep/ .performance-value svg.feather{
     height: 12px;
     width: 12px

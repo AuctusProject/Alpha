@@ -1,21 +1,20 @@
 ﻿using Auctus.DataAccess.Core;
 using Auctus.DataAccess.Portfolio;
 using Auctus.DomainObjects.Account;
-using Auctus.DomainObjects.Portfolio;
+using Auctus.DomainObjects.Advisor;
 using Auctus.DomainObjects.Asset;
+using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Auctus.DomainObjects.Advisor;
 
 namespace Auctus.Business.Portfolio
 {
-    public class PortfolioBusiness : BaseBusiness<DomainObjects.Portfolio.Portfolio, PortfolioData>
+	public class PortfolioBusiness : BaseBusiness<DomainObjects.Portfolio.Portfolio, PortfolioData>
     {
         public PortfolioBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
@@ -271,7 +270,7 @@ namespace Auctus.Business.Portfolio
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
-        public List<Model.Portfolio> ListPurchasedWithHistory(string email)
+		public List<Model.Portfolio> ListPurchasedWithHistory(string email)
         {
             var user = UserBusiness.GetValidUser(email);
             var purchases = BuyBusiness.ListPurchases(user.Id);

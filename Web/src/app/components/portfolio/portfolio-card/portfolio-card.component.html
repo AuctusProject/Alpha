@@ -1,4 +1,4 @@
-<div class="portfolio-card" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="40px">
+<div class="portfolio-card" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
   <div fxLayout="column" fxFlex>
     <div class="portfolio-name">
       <span *ngIf="position">{{position}}. </span>{{portfolio.name}}
@@ -8,7 +8,7 @@
     </div>
     <risk-indicator [risk]="portfolio.risk"></risk-indicator>
   </div>
-  <div fxLayout="row" *ngIf="portfolio.allDays" fxFlex="280px" fxLayoutGap="40px">
+  <div fxLayout="row" *ngIf="portfolio.allDays" fxFlex="280px" fxLayoutGap="15px">
     <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value expected-value">
         <percentage-label [percentage]="portfolio.allDays.expectedValue"></percentage-label>

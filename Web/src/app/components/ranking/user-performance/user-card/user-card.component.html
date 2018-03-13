@@ -4,24 +4,26 @@
       {{user.rank}}
     </div>
     <div class="user-name">
-      {{user.name}}
+      {{user.username}}
     </div>
   </div>
-  <div fxFlex="348px" fxLayout="row" fxLayoutGap="50px" fxLayoutAlign="end center">
+  <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="25px">
     <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value expected-value">
-        <percentage-label [percentage]="user.percentageValue"></percentage-label>
+        <percentage-label [percentage]="user.returnPercentage"></percentage-label>
       </div>
       <div class="performance-labels">
-        Percentual Gains
+        Return
       </div>
     </div>
-    <div class="price-box">
-      {{user.totalValue | currency}}
-      <br/>
-      <span style="font-size:8px">
-        Total
-      </span>
+    <div fxLayout="column" fxLayoutGap="4px">
+      <div class="price-box">
+        {{user.totalAmount | currency}}
+        <br/>
+        <span style="font-size:8px">
+          Total
+        </span>
+      </div>
     </div>
   </div>
 </div>
