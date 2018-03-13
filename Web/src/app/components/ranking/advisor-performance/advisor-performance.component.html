@@ -40,6 +40,13 @@
                 <portfolio-card *ngFor="let portfolio of portfolios; let i = index" [portfolio]="portfolio" [position]="i+1"></portfolio-card>
             </div>
           </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="tab-title">
+                ESCROWED AUC
+              </div>
+            </ng-template>
+          </mat-tab>
         </mat-tab-group>
       </div>
     </div>

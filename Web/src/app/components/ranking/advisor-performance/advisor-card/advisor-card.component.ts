@@ -6,7 +6,7 @@ import { AdvisorRank } from '../../../../model/account/AdvisorRank';
   templateUrl: './advisor-card.component.html',
   styleUrls: ['./advisor-card.component.css']
 })
-export class UserCardComponent implements OnInit {
+export class AdvisorCardComponent implements OnInit {
 
   @Input() user: AdvisorRank;
 
