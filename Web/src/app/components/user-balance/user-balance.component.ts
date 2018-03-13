@@ -11,7 +11,7 @@ import { EventsService } from 'angular-event-service';
 })
 export class UserBalanceComponent implements OnInit {
 
-  investedAmount: number;
+  netValue: number;
   availableToInvest: number;
 
   constructor(private loginService: LoginService, private accountService: AccountService,
@@ -37,7 +37,7 @@ export class UserBalanceComponent implements OnInit {
   private updateBalance() {
     this.accountService.getUserBalance().subscribe(balance => {
       if (balance) {
-        this.investedAmount = balance.investedAmount;
+        this.netValue = balance.totalAmount;
         this.availableToInvest = balance.availableAmount;
         this.changeDetector.detectChanges();
       }

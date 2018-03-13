@@ -1,7 +1,7 @@
-<div class="ub-component" fxLayout="column" *ngIf="investedAmount || availableToInvest">
+<div class="ub-component" fxLayout="column" *ngIf="netValue || availableToInvest">
   <div class="amount" fxLayout="row">
     <span class="title">Net value:</span>
-    <span> ${{investedAmount | number:'1.2-2'}}</span>
+    <span> ${{netValue | number:'1.2-2'}}</span>
   </div>
   <div fxLayout="row">
     <span class="title">Available:</span>
