@@ -1,24 +1,16 @@
 <div class="advisor-card" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="40px">
   <div fxLayout="row" fxFlex fxLayoutGap="25px">
     <div class="advisor-rank">
-      {{advisor.rank}}
+      {{position}}
     </div>
     <div class="advisor-name">
-      {{advisor.username}}
+      {{advisor.name}}
     </div>
   </div>
   <div fxFlex fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="25px">
     <div fxLayout="column" fxLayoutGap="4px">
-      <div class="performance-value expected-value">
-        <percentage-label [percentage]="advisor.returnPercentage"></percentage-label>
-      </div>
-      <div class="performance-labels">
-        Return
-      </div>
-    </div>
-    <div fxLayout="column" fxLayoutGap="4px">
       <div class="price-box">
-        {{advisor.totalAmount | currency}}
+        {{advisor.allocatedAUC + " AUC"}}
         <br/>
         <span style="font-size:8px">
           Total

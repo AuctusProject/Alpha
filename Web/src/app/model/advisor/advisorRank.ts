@@ -1,5 +1,5 @@
 export class AdvisorRank{
   id: number;
-  allocatedAUCs: number;
+  allocatedAUC: number;
   name: string;
 }

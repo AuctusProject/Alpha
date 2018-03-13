@@ -8,7 +8,8 @@ import { AdvisorRank } from '../../../../model/advisor/advisorRank';
 })
 export class AdvisorCardComponent implements OnInit {
 
-  @Input() user: AdvisorRank;
+  @Input() advisor: AdvisorRank;
+  @Input() position: number;
 
   constructor() { }
 
