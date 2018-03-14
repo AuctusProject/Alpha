@@ -92,20 +92,9 @@ export class MetamaskAccountService {
   }
 
   private checkAUCBalance(account) {
-    let self = this;
-    this.web3Service.getTokenBalance(environment.aucTokenContract.address, account).subscribe(
-      balance => {
-        if (self.aucBalance != balance) {
-          self.broadcastBalanceChanged(balance);
-        }
-        if (balance < constants.minimumAUCNecessary) {
-          self.broadcastLoginConditionsFail();
-        }
-        else {
-          self.broadcastLoginConditionsSuccess();
-        }
-        self.aucBalance = balance;
-      });
+    if (account) { 
+      this.broadcastLoginConditionsSuccess();
+    }
   }
 
   public sendAUC(value: number) : Observable<string> {

@@ -39,9 +39,9 @@ namespace Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new async Task<IActionResult> SimpleRegister([FromBody]SimpleRegisterRequest registerRequest)
+        public new IActionResult SimpleRegister([FromBody]SimpleRegisterRequest registerRequest)
         {
-            return await base.SimpleRegister(registerRequest);
+            return base.SimpleRegister(registerRequest);
         }
 
         [Route("registration/validation")]

@@ -39,9 +39,9 @@ namespace Auctus.Service
             await UserBusiness.ResendEmailConfirmation(email);
         }
 
-        public async Task<Login> SimpleRegister(string address, string username, string email, string password, string phoneNumber)
+        public Login SimpleRegister(string address, string username, string email, string password, string phoneNumber)
         {
-            return await UserBusiness.SimpleRegister(address, username, email, password, phoneNumber);
+            return UserBusiness.SimpleRegister(address, username, email, password, phoneNumber);
         }
 
         public void ValidateRegister(string address, string username, string email, string password)

@@ -26,11 +26,6 @@
           <br>
         </div>
       </div>
-      <div class="faucet-button-wrapper">
-        <button *ngIf="onlyAucConditionPending() && !transactionUrl" (click)="callFaucet()" class="action-button" [promiseBtn]="promise">
-          Get free rinkeby AUC for test
-        </button>
-      </div>
     </div>
   </div>
   <div *ngIf="transactionUrl" fxLayoutAlign="center center" fxLayout="row" fxLayoutGap="20px">

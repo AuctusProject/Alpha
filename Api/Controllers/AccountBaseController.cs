@@ -35,7 +35,7 @@ namespace Api.Controllers
             return Ok(new { logged = true, jwt = GenerateToken(login.Email.ToLower().Trim()), data = login });
         }
 
-        protected virtual async Task<IActionResult> SimpleRegister(SimpleRegisterRequest registerRequest)
+        protected virtual IActionResult SimpleRegister(SimpleRegisterRequest registerRequest)
         {
             if (registerRequest == null)
                 return BadRequest();
@@ -43,7 +43,7 @@ namespace Api.Controllers
             Login login;
             try
             {
-                login = await AccountServices.SimpleRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password, registerRequest.PhoneNumber);
+                login = AccountServices.SimpleRegister(registerRequest.Address, registerRequest.Username, registerRequest.Email, registerRequest.Password, registerRequest.PhoneNumber);
             }
             catch (ArgumentException ex)
             {

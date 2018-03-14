@@ -31,8 +31,7 @@ export class ProviderRequiredComponent implements OnInit {
   conditions: Array<MetamaskCondition> = [
     new MetamaskCondition("Install metamask", true),
     new MetamaskCondition("Select rinkeby network", true),
-    new MetamaskCondition("Unlock account", true),
-    new MetamaskCondition("Minimum " + constants.minimumAUCNecessary + " AUC necessary", true)
+    new MetamaskCondition("Unlock account", true)
   ];
 
   constructor(
@@ -41,19 +40,16 @@ export class ProviderRequiredComponent implements OnInit {
     private accountService: AccountService) {
     this.eventsService.on("loginConditionsFail", this.onLoginConditionsFail);
     this.eventsService.on("accountChanged", this.onAccountChanged);
-    this.eventsService.on("balanceChanged", this.onBalanceChanged);
   }
 
   ngOnInit() {
     this.checkNetwork();
     this.checkAccount();
-    this.checkAUCBalance();
   }
 
   ngOnDestroy() {
     this.eventsService.destroyListener("loginConditionsFail", this.onLoginConditionsFail);
     this.eventsService.destroyListener("accountChanged", this.onAccountChanged);
-    this.eventsService.destroyListener("balanceChanged", this.onBalanceChanged);
   }
 
   private onAccountChanged: Function = (account: any) => {
@@ -65,29 +61,10 @@ export class ProviderRequiredComponent implements OnInit {
     }
   }
 
-  private onBalanceChanged: Function = (balance: any) => {
-    this.conditions[3].status = balance > constants.minimumAUCNecessary;
-    this.changeDetector.detectChanges();
-
-    if (this.satisfyAllConditions()) {
-      this.router.navigate(['home']);
-    }
-  }
-
   private onLoginConditionsFail: Function = (payload: any) => {
     this.checkNetwork();
     this.checkAccount();
-    this.checkAUCBalance();
   }
-
-  private checkAUCBalance: Function = (payload: any) => {
-    this.conditions[3].status = this.metamaskAccount.getAUCBalance() > constants.minimumAUCNecessary;
-    this.changeDetector.detectChanges();
-
-    if (this.satisfyAllConditions()) {
-      this.router.navigate(['home']);
-    }
-  };
 
   private checkNetwork: Function = (payload: any) => {
     this.conditions[0].status = this.metamaskAccount.hasMetamask;
@@ -111,25 +88,6 @@ export class ProviderRequiredComponent implements OnInit {
   private satisfyAllConditions(): boolean {
     return this.metamaskAccount.hasMetamask &&
       this.metamaskAccount.isRinkeby() &&
-      this.metamaskAccount.getAccount() != null &&
-      this.metamaskAccount.getAUCBalance() > constants.minimumAUCNecessary;
-  }
-
-  onlyAucConditionPending(): boolean {
-    return this.conditions[0].status &&
-      this.conditions[1].status &&
-      this.conditions[2].status &&
-      !this.conditions[3].status;
-  }
-
-  private callFaucet(): void {
-    this.promise = this.accountService.faucet(this.metamaskAccount.getAccount()).subscribe(
-      result => {
-        if (result) {
-          this.transactionUrl = environment.etherscanUrl + "/tx/" + result.transaction;
-        }
-      }
-    )
-    this.changeDetector.detectChanges();
+      this.metamaskAccount.getAccount() != null
   }
 }
