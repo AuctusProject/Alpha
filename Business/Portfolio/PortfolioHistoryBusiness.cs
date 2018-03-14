@@ -131,7 +131,7 @@ namespace Auctus.Business.Portfolio
                 return historyResult;
             var lastHistory = portfolioHistory.OrderByDescending(p => p.Date).FirstOrDefault();
             var currentVariation = PortfolioBusiness.GetCurrentDayPercentageVariation(lastHistory.Date, projectionId);
-            historyResult.Value = historyResult.Value * ((double)currentVariation / 100L + 1);
+            historyResult.Value = ((1 + historyResult.Value/100L) * ((double)currentVariation / 100L + 1) - 1)* 100;
             return historyResult;
         }
 

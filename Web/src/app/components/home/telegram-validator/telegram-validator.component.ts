@@ -30,8 +30,6 @@ export class TelegramValidatorComponent implements OnInit {
       if (result) {
         this.checkPromise = this.data.onSuccess(this.data.homeComponent, this.getFormattedPhoneNumber());
       }
-    }, response => {
-      this.notificationService.info("Error", response.error);
     });
   }
 
