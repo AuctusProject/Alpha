@@ -36,7 +36,8 @@ namespace Auctus.Business.Account
 				Address = user.Wallet.Address,
 				Email = user.Email,
 				Username = user.Username,
-				PendingConfirmation = !user.ConfirmationDate.HasValue
+				PendingConfirmation = !user.ConfirmationDate.HasValue,
+                AUCTransactionHash = user.AUCTransactionHash
 			};
 			if (!result.PendingConfirmation)
 			{
@@ -53,12 +54,14 @@ namespace Auctus.Business.Account
 			return result;
 		}
 
-        public async Task<Login> SimpleRegister(string address, string username, string email, string password, string phoneNumber)
+        public Login SimpleRegister(string address, string username, string email, string password, string phoneNumber)
         {
             User user;
+            var transactionHash = WalletBusiness.Faucet(address);
+
             using (var transaction = new TransactionalDapperCommand())
             {
-                user = SetBaseUserCreation(username, email, password, phoneNumber);
+                user = SetBaseUserCreation(username, email, password, phoneNumber, transactionHash);
                 transaction.Insert(user);
                 var wallet = SetWalletCreation(user.Id, address);
                 user.Wallet = wallet;
@@ -67,13 +70,14 @@ namespace Auctus.Business.Account
                 transaction.Insert(deposit);
                 transaction.Commit();
             }
-            
-			return new Model.Login()
+
+            return new Model.Login()
 			{
 				Address = user.Wallet.Address,
 				Email = user.Email,
 				Username = user.Username,
-				PendingConfirmation = false
+				PendingConfirmation = false,
+                AUCTransactionHash = transactionHash
 			};
 		}
 
@@ -106,7 +110,8 @@ namespace Auctus.Business.Account
 				Address = user.Wallet.Address,
 				Email = user.Email,
 				Username = user.Username,
-				PendingConfirmation = !user.ConfirmationDate.HasValue
+				PendingConfirmation = !user.ConfirmationDate.HasValue,
+                AUCTransactionHash = user.AUCTransactionHash
 			};
 		}
 
@@ -219,7 +224,7 @@ Thanks,
 Auctus Team", Config.WEB_URL, code));
 		}
 
-        private User SetBaseUserCreation(string username, string email, string password, string phoneNumber)
+        private User SetBaseUserCreation(string username, string email, string password, string phoneNumber, string aucFaucetHash)
         {
             ValidateUsernameAndEmail(username, email, password);
             ValidatePhoneNumber(ref phoneNumber);
@@ -232,6 +237,7 @@ Auctus Team", Config.WEB_URL, code));
             user.ConfirmationCode = Guid.NewGuid().ToString();
             user.ConfirmationDate = DateTime.UtcNow;
             user.PhoneNumber = phoneNumber;
+            user.AUCTransactionHash = aucFaucetHash;
             return user;
         }
 

@@ -201,15 +201,6 @@ namespace Api.Controllers
             return base.IsValidAddressToRegister(address);
         }
 
-        [Route("faucet")]
-        [HttpPost]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult Faucet([FromBody]FaucetRequest faucetRequest)
-        {
-            return base.Faucet(faucetRequest);
-        }
-
         [Route("checkTelegram/{phoneNumber}")]
         [HttpGet]
         [AllowAnonymous]

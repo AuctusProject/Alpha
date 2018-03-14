@@ -24,6 +24,8 @@ namespace Auctus.DomainObjects.Account
         public string ConfirmationCode { get; set; }
         [DapperType(System.Data.DbType.AnsiString)]
         public string PhoneNumber { get; set; }
+        [DapperType(System.Data.DbType.AnsiString)]
+        public string AUCTransactionHash { get; set; }
 
 
         public Wallet Wallet { get; set; }

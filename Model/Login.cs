@@ -12,5 +12,6 @@ namespace Auctus.Model
         public bool HasInvestment { get; set; }
         public int? HumanAdvisorId { get; set; }
         public bool PendingConfirmation { get; set; }
+        public string AUCTransactionHash { get; set; }
     }
 }
