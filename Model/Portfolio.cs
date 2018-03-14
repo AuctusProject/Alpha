@@ -22,6 +22,7 @@ namespace Auctus.Model
         public string AdvisorDescription { get; set; }
         public int AdvisorType { get; set; }
         public int Risk { get; set; }
+        public int? ProjectionId { get; set; }
         public double ProjectionPercent { get; set; }
         public double? OptimisticPercent { get; set; }
         public double? PessimisticPercent { get; set; }

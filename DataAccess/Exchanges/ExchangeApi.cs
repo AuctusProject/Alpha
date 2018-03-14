@@ -46,9 +46,9 @@ namespace Auctus.DataAccess.Exchanges
             return returnDictionary;
         }
 
-        protected virtual Dictionary<string, double> GetCurrentValues(List<string> symbols)
+        protected virtual Dictionary<string, double> GetCurrentValues(IEnumerable<string> symbols)
         {
-            return CallCurrentValuesApi();
+            return CallCurrentValuesApi(symbols);
         }
 
         private double? GetValueByDate(string symbol, DateTime queryDate, bool hasUSD = false)
@@ -101,7 +101,7 @@ namespace Auctus.DataAccess.Exchanges
             }
         }
 
-        private Dictionary<string, double> CallCurrentValuesApi()
+        private Dictionary<string, double> CallCurrentValuesApi(IEnumerable<string> symbols)
         {
             using (var client = new HttpClient())
             {
@@ -111,7 +111,7 @@ namespace Auctus.DataAccess.Exchanges
                 var response = client.GetAsync(API_CURRENT_PRICE_ENDPOINT).Result;
 
                 if (response.IsSuccessStatusCode)
-                    return GetCurrentPriceValue(response);
+                    return GetCurrentPriceValue(response, symbols);
                 else
                     apiError = GetErrorCode(response);
 
@@ -128,7 +128,7 @@ namespace Auctus.DataAccess.Exchanges
 
         protected abstract string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate);
         protected abstract double? GetCoinValue(HttpResponseMessage response);
-        protected abstract Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response);
+        protected abstract Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response, IEnumerable<string> symbols);
         protected abstract ApiError GetErrorCode(HttpResponseMessage response);
 
         public static Dictionary<DateTime, double> GetCloseCryptoValue(string code, DateTime startDate)
@@ -149,7 +149,7 @@ namespace Auctus.DataAccess.Exchanges
             return exchangesPrices.ToDictionary(v => v.Key, v => v.Value.Average());
         }
 
-        public static Dictionary<string, double> GetCurrentCryptoValues(List<string> codes)
+        public static Dictionary<string, double> GetCurrentCryptoValues(IEnumerable<string> codes)
         {
             var apis = GetApisByCode();
             Dictionary<string, List<double>> exchangesPrices = new Dictionary<string, List<double>>();

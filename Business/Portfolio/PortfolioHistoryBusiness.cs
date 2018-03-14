@@ -102,11 +102,11 @@ namespace Auctus.Business.Portfolio
             return portfolioHistory;
         }
 
-        public Model.Portfolio.HistoryResult GetHistoryResult(IEnumerable<PortfolioHistory> portfolioHistory)
+        public Model.Portfolio.HistoryResult GetHistoryResult(IEnumerable<PortfolioHistory> portfolioHistory, int? projectionId)
         {
             int days = (portfolioHistory != null && portfolioHistory.Any()) ? 
                 (int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolioHistory.Min(x => x.Date)).TotalDays) + 1 : 1;
-            return GetHistoryResult(days, portfolioHistory);
+            return GetHistoryResultUtilNow(days, portfolioHistory, projectionId);
         }
 
         public Model.Portfolio.HistoryResult GetHistoryResult(int days, IEnumerable<PortfolioHistory> portfolioHistory)
@@ -122,6 +122,15 @@ namespace Auctus.Business.Portfolio
                                         (history.Select(c => 1 + (Util.Util.ConvertMonthlyToDailyRate(c.PessimisticProjectionValue.Value))).Aggregate((mult, c) => c * mult) - 1) * 100,
                 HitPercentage = (double)history.Count(c => (c.RealValue / 100.0) >= Util.Util.ConvertMonthlyToDailyRate(c.ProjectionValue)) / (double)history.Count() * 100
             };
+        }
+
+        public Model.Portfolio.HistoryResult GetHistoryResultUtilNow(int days, IEnumerable<PortfolioHistory> portfolioHistory, int? projectionId)
+        {
+            var historyResult = GetHistoryResult(days, portfolioHistory);
+            var lastHistory = portfolioHistory.OrderByDescending(p => p.Date).FirstOrDefault();
+            var currentVariation = PortfolioBusiness.GetCurrentDayPercentageVariation(lastHistory.Date, projectionId);
+            historyResult.Value = historyResult.Value * ((double)currentVariation / 100L + 1);
+            return historyResult;
         }
 
         public List<Model.Portfolio.HistogramDistribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)

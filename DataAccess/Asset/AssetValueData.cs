@@ -17,6 +17,11 @@ namespace Auctus.DataAccess.Asset
                                                 where AssetId = @AssetId
                                                 ORDER BY Date desc";
 
+        private readonly string SQL_LIST_ASSET_FROM_DATE = @"SELECT av.* 
+                                                FROM 
+                                                AssetValue av
+                                                where Date = @Date";
+
         private readonly string SQL_LIST_BY_ASSETS_IDS = @"SELECT av.* 
                                                 FROM 
                                                 AssetValue av
@@ -29,6 +34,13 @@ namespace Auctus.DataAccess.Asset
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("AssetId", assetId, DbType.Int32);
             return Query<AssetValue>(SQL_LIST_BY_ASSET_ID, parameters).FirstOrDefault();   
+        }
+
+        public IEnumerable<AssetValue> GetAssetValuesFromDate(DateTime date)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Date", date, DbType.DateTime);
+            return Query<AssetValue>(SQL_LIST_ASSET_FROM_DATE, parameters);
         }
 
         public IEnumerable<AssetValue> List(IEnumerable<int> assetsIds, DateTime startDate)

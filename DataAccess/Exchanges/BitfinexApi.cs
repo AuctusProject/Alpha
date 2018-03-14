@@ -38,7 +38,7 @@ namespace Auctus.DataAccess.Exchanges
             return result?.Price;            
         }
 
-        protected override Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response)
+        protected override Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response, IEnumerable<string> symbols)
         {
             throw new NotImplementedException();
         }

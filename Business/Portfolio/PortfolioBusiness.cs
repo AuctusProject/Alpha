@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Auctus.Model;
 
 namespace Auctus.Business.Portfolio
 {
@@ -260,6 +261,25 @@ namespace Auctus.Business.Portfolio
             return returnPortfolios;
         }
 
+        internal double GetCurrentDayPercentageVariation(DateTime lastDay, int? projectionId)
+        {
+            if (!projectionId.HasValue)
+            {
+                return 0;
+            }
+            var distribution = DistributionBusiness.ListByProjection(projectionId.Value);
+            var yesterdayValues = AssetValueBusiness.ListAssetsValueFromDate(lastDay).ToDictionary(c => c.AssetId, c => c.Value);
+            var currentValues = AssetCurrentValueBusiness.ListAll().ToDictionary(c => c.AssetId, c => c.Value);
+            var percentageDifference = 0.0;
+            foreach (var assetPercentage in distribution)
+            {
+                var yesterdayValue = yesterdayValues[assetPercentage.Id];
+                var currentValue = currentValues[assetPercentage.Id];
+                percentageDifference += ((currentValue - yesterdayValue) / yesterdayValue) * assetPercentage.Percentage;
+            }
+            return percentageDifference;
+        }
+
         public List<Model.Portfolio> List(string email)
         {
             User user = null;
@@ -448,7 +468,7 @@ namespace Auctus.Business.Portfolio
             ret.LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory);
             ret.Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory);
             ret.Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory);
-            ret.AllDays = PortfolioHistoryBusiness.GetHistoryResult(portfolio.PortfolioHistory);
+            ret.AllDays = PortfolioHistoryBusiness.GetHistoryResult(portfolio.PortfolioHistory, portfolio.ProjectionId);
             return ret;
         }
 
@@ -468,6 +488,7 @@ namespace Auctus.Business.Portfolio
                 AdvisorName = advisor.Detail.Name,
                 AdvisorType = (int)advisor.Type,
                 Risk = portfolio.Projection.Risk,
+                ProjectionId = portfolio.ProjectionId,
                 ProjectionPercent = portfolio.Projection.ProjectionValue,
                 OptimisticPercent = portfolio.Projection.OptimisticProjectionValue,
                 PessimisticPercent = portfolio.Projection.PessimisticProjectionValue,

@@ -21,7 +21,7 @@ namespace Api.Controllers
 {
     [Produces("application/json")]
     [Route("api/jobs/v1/")]
-    //[Authorize("Bearer")]
+    [Authorize("Bearer")]
     [EnableCors("Default")]
     public class JobV1Controller : JobBaseController
     {
@@ -32,6 +32,13 @@ namespace Api.Controllers
         public new IActionResult UpdateAssetsValues()
         {
             return base.UpdateAssetsValues();
+        }
+
+        [Route("assets/current")]
+        [HttpPost]
+        public new IActionResult UpdateAssetsCurrentValues()
+        {
+            return base.UpdateAssetsCurrentValues();
         }
 
         [Route("portfolios/history")]

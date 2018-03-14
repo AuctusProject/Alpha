@@ -19,7 +19,7 @@ namespace Auctus.DataAccess.Exchanges
         {
             [JsonProperty("symbol")]
             public string Symbol { get; set; }
-            [JsonProperty("p")]
+            [JsonProperty("price")]
             public double Price { get; set; }
         }
 
@@ -50,10 +50,24 @@ namespace Auctus.DataAccess.Exchanges
             return result?.Price;            
         }
 
-        protected override Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response)
+        protected override Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response, IEnumerable<string> symbols)
         {
             var result = JsonConvert.DeserializeObject<BinanceCurrentPriceApiResult[]>(response.Content.ReadAsStringAsync().Result);
-            return result.ToDictionary(r => r.Symbol, r=>r.Price);
+            var currentPriceDictionary = result.ToDictionary(r => r.Symbol, r=>r.Price);
+            var returnDictionary = new Dictionary<string, double>();
+            var btcCurrentPrice = currentPriceDictionary[BTC_SYMBOL + USD_SYMBOL];
+            foreach (var symbol in symbols)
+            {
+                if(currentPriceDictionary.ContainsKey(symbol + USD_SYMBOL))
+                {
+                    returnDictionary.Add(symbol, currentPriceDictionary[symbol + USD_SYMBOL]);
+                }
+                else if(currentPriceDictionary.ContainsKey(symbol + BTC_SYMBOL))
+                {
+                    returnDictionary.Add(symbol, currentPriceDictionary[symbol + BTC_SYMBOL] * btcCurrentPrice);
+                }
+            }
+            return returnDictionary;
         }
 
         protected override ApiError GetErrorCode(HttpResponseMessage response)

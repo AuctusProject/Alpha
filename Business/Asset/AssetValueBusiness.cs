@@ -21,6 +21,19 @@ namespace Auctus.Business.Asset
             return Data.GetLastValue(assetId);
         }
 
+        internal IEnumerable<AssetValue> ListAssetsValueFromDate(DateTime date)
+        {
+            string cacheKey = String.Format("AssetsFromDate{0}", date);
+            var assets = MemoryCache.Get<IEnumerable<Auctus.DomainObjects.Asset.AssetValue>>(cacheKey);
+            if (assets == null)
+            {
+                assets = Data.GetAssetValuesFromDate(date);
+                if (assets != null)
+                    MemoryCache.Set<IEnumerable<Auctus.DomainObjects.Asset.AssetValue>>(cacheKey, assets, 1440);
+            }
+            return assets;
+        }
+
         internal void UpdateAssetValue(DomainObjects.Asset.Asset asset)
         {
             var lastUpdatedValue = LastAssetValue(asset.Id)?.Date ?? new DateTime(2018, 1, 1);

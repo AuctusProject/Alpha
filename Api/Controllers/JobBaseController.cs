@@ -20,6 +20,12 @@ namespace Api.Controllers
             return Ok();
         }
 
+        protected virtual IActionResult UpdateAssetsCurrentValues()
+        {
+            RunJobSync(AssetServices.UpdateAllAssetsCurrentValues);
+            return Ok();
+        }
+
         protected virtual IActionResult UpdatePortfoliosHistory()
         {
             RunJobAsync(PortfolioServices.UpdatePortfoliosHistory);
@@ -56,15 +62,20 @@ namespace Api.Controllers
             {
                 try
                 {
-                    Logger.LogInformation($"Job {action.Method.Name} started.");
-                    action();
-                    Logger.LogTrace($"Job {action.Method.Name} ended.");
+                    RunJobSync(action);
                 }
                 catch (Exception e)
                 {
                     Logger.LogCritical(e, $"Exception on {action.Method.Name} job");
-                }
+                }                
             });
+        }
+
+        private void RunJobSync(Action action)
+        {
+            Logger.LogInformation($"Job {action.Method.Name} started.");
+            action();
+            Logger.LogTrace($"Job {action.Method.Name} ended.");
         }
     }
 }

@@ -19,6 +19,11 @@ namespace Auctus.Service
             AssetBusiness.UpdateAllAssetsValues();
         }
 
+        public void UpdateAllAssetsCurrentValues()
+        {
+            AssetCurrentValueBusiness.UpdateAssetsCurrentValues();
+        }
+
         public List<Asset> ListAssets()
         {
             return AssetBusiness.ListAssets();

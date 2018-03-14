@@ -331,9 +331,10 @@ Auctus Team", Config.WEB_URL, code));
 			{
 				List<DomainObjects.Portfolio.PortfolioHistory> portfolioHistories = PortfolioHistoryBusiness.ListHistory(portfolio.Id);
 				int days = (int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.EffectiveTransactionDate ?? DateTime.UtcNow).TotalDays) - 1;
-				var historyResult = days > 0 ? PortfolioHistoryBusiness.GetHistoryResult(days, portfolioHistories) : null;
+				var historyResult = days > 0 ? PortfolioHistoryBusiness.GetHistoryResultUtilNow(days, portfolioHistories, portfolio.ProjectionId) : null;
+
 				totalAmountValue += historyResult != null ? portfolio.Invested * ((decimal)historyResult.Value / 100L + 1) : portfolio.Invested;
-			}
+            }
 
 			return totalAmountValue;
 		}
