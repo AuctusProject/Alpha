@@ -23,13 +23,14 @@
 .advisor-rank {
   font-size: 16px;
   font-weight: bold;
-  color: #4a90e2;
+  color: #4a4a4a;
 }
 
 .advisor-name {
   font-size: 16px;
   font-weight: bold;
-  color: #4a4a4a;
+  color: #4a90e2;
+  cursor:pointer;
 }
 
 .performance-value {
