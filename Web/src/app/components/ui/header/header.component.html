@@ -3,37 +3,46 @@
         <img src="./assets/logo.png" routerLink="" class="landing-logo">
         <span class="spacer"></span>
         <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
-            <a routerLink="/ranking/user" routerLinkActive="active">LEADERBOARD</a>
-            <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
-            <a *ngIf="loginData" routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
-            <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
-            <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
-            <div *ngIf="loginData" class="pull-right">
-                <mat-menu #appMenu="matMenu">
-                    <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
-                        <div fxLayout="column">
-                            <div fxLayout="row">
-                                <mat-icon>account_circle</mat-icon>
-                                <div>{{this.loginData.username}}</div>
-                            </div>
-                            <div fxLayout="row">
-                                <user-balance *ngIf="loginData"></user-balance>
-                            </div>
-                        </div>
-                    </div>
-                    <button mat-menu-item routerLink="/change-password"> Change password </button>
-                    <!-- <button mat-menu-item routerLink="/manage-api"> Manage API </button> -->
-                    <button mat-menu-item (click)="logout()"> Logout </button>
-                </mat-menu>
-                <div class="user-menu" [matMenuTriggerFor]="appMenu" fxLayout="row" fxLayoutAlign="space-around center">
-                    <div class="user-menu-item">
-                        {{getUsernameFirstLetter()}}
-                    </div>
-                    <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
-                </div>
+          <div>
+            <mat-menu #leaderboardMenu="matMenu">
+              <button mat-menu-item routerLink="/ranking/user"> Users </button>
+              <button mat-menu-item routerLink="/ranking/advisor"> Advisors </button>
+            </mat-menu>
+            <div class="user-menu" [matMenuTriggerFor]="leaderboardMenu" fxLayout="row" fxLayoutAlign="space-around center">
+              <a routerLinkActive="active">LEADERBOARDS</a>
+              <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
             </div>
-            <a *ngIf="!loginData && !hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
-            <a *ngIf="!loginData" routerLink="/home" routerLinkActive="active">REGISTER</a>
+          </div>
+          <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
+          <a *ngIf="loginData" routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
+          <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
+          <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
+          <div *ngIf="loginData" class="pull-right">
+              <mat-menu #appMenu="matMenu">
+                  <div class="username-menu-item" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="2px">
+                      <div fxLayout="column">
+                          <div fxLayout="row">
+                              <mat-icon>account_circle</mat-icon>
+                              <div>{{this.loginData.username}}</div>
+                          </div>
+                          <div fxLayout="row">
+                              <user-balance *ngIf="loginData"></user-balance>
+                          </div>
+                      </div>
+                  </div>
+                  <button mat-menu-item routerLink="/change-password"> Change password </button>
+                  <!-- <button mat-menu-item routerLink="/manage-api"> Manage API </button> -->
+                  <button mat-menu-item (click)="logout()"> Logout </button>
+              </mat-menu>
+              <div class="user-menu" [matMenuTriggerFor]="appMenu" fxLayout="row" fxLayoutAlign="space-around center">
+                  <div class="user-menu-item">
+                      {{getUsernameFirstLetter()}}
+                  </div>
+                  <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
+              </div>
+          </div>
+          <a *ngIf="!loginData && !hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
+          <a *ngIf="!loginData" routerLink="/home" routerLinkActive="active">REGISTER</a>
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
