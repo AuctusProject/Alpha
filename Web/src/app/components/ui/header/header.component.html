@@ -3,6 +3,7 @@
         <img src="./assets/logo.png" routerLink="" class="landing-logo">
         <span class="spacer"></span>
         <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
+            <a routerLink="/ranking/user" routerLinkActive="active">LEADERBOARD</a>
             <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
             <a *ngIf="loginData" routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
             <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
@@ -34,8 +35,5 @@
             <a *ngIf="!loginData && !hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
             <a *ngIf="!loginData" routerLink="/home" routerLinkActive="active">REGISTER</a>
         </div>
-        <a href="https://t.me/AuctusProject" target="_blank" title="Give us feedback on Telegram">
-            <img src="./assets/icons/telegram.png" class="telegram">
-        </a>
     </mat-toolbar-row>
 </mat-toolbar>

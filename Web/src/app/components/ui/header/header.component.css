@@ -27,11 +27,7 @@
   .header a.active{
     color:  #4a90e2;
   }
-  
-  .header .menu{
-      padding-right: 50px;
-  }
-  
+   
   .landing-logo {
       height: 40px;
       cursor:pointer;

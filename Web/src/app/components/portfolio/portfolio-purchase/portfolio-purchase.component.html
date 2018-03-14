@@ -75,7 +75,7 @@
     <div *ngIf="portfolio.invested == 0" class="invest-box" fxLayout="column">
       <mat-form-field fxFlex>
         <input matInput placeholder="Amount To Invest" [(ngModel)]="simulator.invested" type="text" currencyMask name="AmountToInvest"
-          [options]="{ allowNegative : false }" />
+          [options]="{ allowNegative : false }" (blur)="onAmountToInvestChange()" />
       </mat-form-field>
       <span *ngIf="availableToInvest" (click)="simulator.invested = availableToInvest" class="available">Available: ${{availableToInvest | number:'1.0-2'}}</span>
     </div>
