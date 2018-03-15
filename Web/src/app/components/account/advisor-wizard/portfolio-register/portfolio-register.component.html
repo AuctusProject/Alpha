@@ -6,7 +6,7 @@
           <div fxLayout="column" fxFlex="90">
             <span class="risk-description bold" *ngIf="!model.isEditing">{{model.name}}</span>
             <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px" *ngIf="model.isEditing">
-              <input type="text" placeholder="Portfolio Name" matInput name="Name" [(ngModel)]="model.name" required>
+              <input type="text" [inputFocus]="true" placeholder="Portfolio Name" matInput name="Name" [(ngModel)]="model.name" required>
             </mat-form-field>
           </div>
         </div>
@@ -18,18 +18,6 @@
             <span *ngIf="assetsDistributionRows.length != 1">assets</span>
           </span>
         </span>
-      </div>
-      <div class="button" fxFlex>
-        <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="!model.id || this.model.isEditing"
-                class="step-save-button rectangle-blue-button" fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
-          <i-save></i-save>
-          <span class="button-text bold"> SAVE</span>
-        </button>
-        <div *ngIf="model.id && !this.model.isEditing" class="step-edit-button rectangle-white-button" (click)="editPortfolio()"
-             fxLayout="row" fxLayoutAlign="none center" [promiseBtn]="savePromise">
-          <i-edit></i-edit>
-          <span class="button-text bold"> EDIT</span>
-        </div>
       </div>
     </div>
     <div [hidden]="model.id && !this.model.isEditing" class="portfolio-edition">

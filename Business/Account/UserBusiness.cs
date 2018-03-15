@@ -363,11 +363,11 @@ Auctus Team", Config.WEB_URL, code));
 			Task.WaitAll(userBalanceList.ToArray());
 
 			List<UserRank> userRankList = userBalanceList.Select(item => item.Result)
-							.OrderByDescending(ub => ub.TotalAmount)
+							.OrderByDescending(ub => ub.ReturnPercentage)
 							.Select((item, index) => new UserRank
 							{
 								InvestedAmount = item.InvestedAmount,
-								ReturnPercentage = item.InvestedAmount > 0 ? (item.TotalAmount / item.InvestedAmount - 1) * 100 : 0,
+								ReturnPercentage = item.ReturnPercentage,
 								Rank = index + 1,
 								Username = item.Username,
 								TotalAmount = item.TotalAmount
@@ -451,10 +451,10 @@ Auctus Team", Config.WEB_URL, code));
 			{
 				UserId = user.Id,
 				Username = user.Username,
-				TotalAmount = totalAmountValue != null ? totalAmountValue.Result : 0,
+				TotalAmount = (totalAmountValue != null ? totalAmountValue.Result : 0) + (availableToInvest != null ? availableToInvest.Result : 0),
 				InvestedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
 				AvailableAmount = availableToInvest != null ? availableToInvest.Result : 0
-			};
+            };
 		}
 
 		public UserBalance GetUserBalanceFromCache(User user)

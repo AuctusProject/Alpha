@@ -5,7 +5,7 @@
         <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
           <div>
             <mat-menu #leaderboardMenu="matMenu">
-              <button mat-menu-item routerLink="/ranking/user"> Users </button>
+              <button mat-menu-item routerLink="/ranking/user"> Investors </button>
               <button mat-menu-item routerLink="/ranking/advisor"> Advisors </button>
             </mat-menu>
             <div class="user-menu" [matMenuTriggerFor]="leaderboardMenu" fxLayout="row" fxLayoutAlign="space-around center">
@@ -13,7 +13,7 @@
               <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
             </div>
           </div>
-          <a routerLink="/human-advisors" routerLinkActive="active">HUMAN ADVISORS</a>
+          <a routerLink="/human-advisors" routerLinkActive="active">INVEST</a>
           <a *ngIf="loginData" routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
           <a *ngIf="loginData && loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
           <div *ngIf="!loginData || !loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
