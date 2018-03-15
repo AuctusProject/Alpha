@@ -39,6 +39,7 @@ namespace Auctus.DataAccess.Exchanges
 
         protected override string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate)
         {
+            queryDate = queryDate.AddDays(1);
             var queryStart = Util.Util.DatetimeToUnixMilliseconds(queryDate.AddHours(-1));
             var queryEnd = Util.Util.DatetimeToUnixMilliseconds(queryDate);
             return String.Format(API_ENDPOINT, fromSymbol, toSymbol, queryEnd, queryStart);

@@ -1,26 +1,28 @@
-import { AdvisorWizardStep } from './advisor-wizard-step.enum';
-import { Advisor } from './../../../model/advisor/advisor';
-import { PortfolioRequest } from './../../../model/portfolio/portfolioRequest';
-import { LoginService } from './../../../services/login.service';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-
+import { AdvisorWizardStep } from "./advisor-wizard-step.enum";
+import { Advisor } from "./../../../model/advisor/advisor";
+import { PortfolioRequest } from "./../../../model/portfolio/portfolioRequest";
+import { LoginService } from "./../../../services/login.service";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { AdvisorService } from "../../../services/advisor.service";
 
 @Component({
-  selector: 'app-advisor-wizard',
-  templateUrl: './advisor-wizard.component.html',
-  styleUrls: ['./advisor-wizard.component.css']
+  selector: "app-advisor-wizard",
+  templateUrl: "./advisor-wizard.component.html",
+  styleUrls: ["./advisor-wizard.component.css"]
 })
-
 export class AdvisorWizardComponent implements OnInit {
-
   public currentStep;
   public advisorModel: Advisor;
   public editedAdvisorModel: Advisor;
   public portfolioList: Array<PortfolioRequest>;
   public wizardSteps = AdvisorWizardStep;
 
-  constructor(private router: Router, private loginService: LoginService) {
+  constructor(
+    private router: Router,
+    private loginService: LoginService,
+    private advisorService: AdvisorService
+  ) {
     this.portfolioList = new Array<PortfolioRequest>();
     this.advisorModel = new Advisor();
     this.editedAdvisorModel = new Advisor();
@@ -30,12 +32,23 @@ export class AdvisorWizardComponent implements OnInit {
     let loginData = this.loginService.getLoginData();
     if (!loginData) {
       this.loginService.setLoginRedirectUrl(this.router.url);
-      this.router.navigate(['home']);
-    } else if(loginData.humanAdvisorId) {
-      this.router.navigateByUrl('advisor/' + loginData.humanAdvisorId);
+      this.router.navigate(["home"]);
+    } else if (loginData.humanAdvisorId) {
+      this.router.navigateByUrl("advisor/" + loginData.humanAdvisorId);
     } else {
-      this.currentStep = this.wizardSteps.Start.Id;
+      this.advisorModel.name = loginData.username;
+      this.advisorService
+        .createAdvisor(this.advisorModel)
+        .subscribe(advisor => this.afterSave(advisor));
     }
+  }
+
+  afterSave(advisor) {
+    let loginData = this.loginService.getLoginData();
+    loginData.humanAdvisorId = advisor.id;
+    this.loginService.setLoginData(loginData);
+    this.advisorModel.id = advisor.id;
+    this.router.navigateByUrl("advisor/" + loginData.humanAdvisorId);
   }
 
   public changeStep(stepToChange) {
@@ -54,7 +67,6 @@ export class AdvisorWizardComponent implements OnInit {
   }
 
   public nextStep() {
-
     switch (this.currentStep) {
       case this.wizardSteps.Start.Id:
         this.currentStep = this.wizardSteps.Advisor.Id;
@@ -65,7 +77,9 @@ export class AdvisorWizardComponent implements OnInit {
         this.advisorModel = JSON.parse(JSON.stringify(this.editedAdvisorModel));
         break;
       case this.wizardSteps.Portfolio.Id:
-        this.router.navigate(['advisor/' + this.loginService.getLoginData().humanAdvisorId]);
+        this.router.navigate([
+          "advisor/" + this.loginService.getLoginData().humanAdvisorId
+        ]);
         break;
     }
   }
@@ -79,15 +93,21 @@ export class AdvisorWizardComponent implements OnInit {
   }
 
   public getPortfoliosName() {
-    let names = this.portfolioList.filter(item => item.id > 0).map(item => item.name);
+    let names = this.portfolioList
+      .filter(item => item.id > 0)
+      .map(item => item.name);
     return names.join(", ");
   }
 
   public showMyPortoliosButton() {
-    return this.currentStep === this.wizardSteps.Start.Id && this.hasSavedPortfolio();
+    return (
+      this.currentStep === this.wizardSteps.Start.Id && this.hasSavedPortfolio()
+    );
   }
 
   public onMyPortfoliosClick() {
-    this.router.navigateByUrl('advisor/' + this.loginService.getLoginData().humanAdvisorId);
+    this.router.navigateByUrl(
+      "advisor/" + this.loginService.getLoginData().humanAdvisorId
+    );
   }
 }

@@ -402,7 +402,7 @@ Auctus Team", Config.WEB_URL, code));
 					}
 				}
 
-				var userData = Data.GetOwner(user.First().Id);
+				var userData = Data.Get(user.Key);
 				userBalanceList.Add(new UserBalance { InvestedAmount = investedAmount, TotalAmount = totalAmount, UserId = userData.Id, Username = userData.Username });
 			}
 

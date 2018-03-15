@@ -34,7 +34,7 @@ namespace Auctus.DataAccess.Exchanges
             var daysToQuery = Math.Ceiling(difference.TotalDays);
             var returnDictionary = new Dictionary<DateTime, double>();
 
-            bool hasUSD = CallApi(symbol, USD_SYMBOL, utcNow).HasValue;
+            bool hasUSD = CallApi(symbol, USD_SYMBOL, utcNow.AddDays(-1)).HasValue;
 
             Parallel.For(1, (int)(daysToQuery + 1), i =>
               {

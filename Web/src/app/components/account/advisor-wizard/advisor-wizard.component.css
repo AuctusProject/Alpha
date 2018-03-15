@@ -1,5 +1,11 @@
 .advisor-steps-main-content {
   padding: 70px;
+  min-height: 500px;
+}
+
+.loading-advisor{
+  margin-top: 17px;
+  margin-left: 5px;
 }
 
 h1, h3{

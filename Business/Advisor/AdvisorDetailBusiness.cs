@@ -59,9 +59,7 @@ namespace Auctus.Business.Advisor
                 throw new ArgumentException("Name cannot be empty.");
             if (name.Length > 200)
                 throw new ArgumentException("Name is too long.");
-            if (string.IsNullOrWhiteSpace(description))
-                throw new ArgumentException("Description cannot be empty.");
-            if (description.Length > 4000)
+            if (description != null && description.Length > 4000)
                 throw new ArgumentException("Description is too long.");
         }
         

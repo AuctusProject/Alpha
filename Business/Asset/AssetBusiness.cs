@@ -30,7 +30,6 @@ namespace Auctus.Business.Asset
         public void UpdateAllAssetsValues()
         {
             var assets = ListAssets();
-
             Parallel.ForEach(assets, new ParallelOptions() { MaxDegreeOfParallelism = 4 }, asset =>
              {
                  AssetValueBusiness.UpdateAssetValue(asset);

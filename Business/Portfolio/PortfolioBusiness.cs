@@ -273,9 +273,12 @@ namespace Auctus.Business.Portfolio
             var percentageDifference = 0.0;
             foreach (var assetPercentage in distribution)
             {
-                var yesterdayValue = yesterdayValues[assetPercentage.Id];
-                var currentValue = currentValues[assetPercentage.Id];
-                percentageDifference += ((currentValue - yesterdayValue) / yesterdayValue) * assetPercentage.Percentage;
+                if (yesterdayValues.ContainsKey(assetPercentage.Id) && yesterdayValues.ContainsKey(assetPercentage.Id))
+                {
+                    var yesterdayValue = yesterdayValues[assetPercentage.Id];
+                    var currentValue = currentValues[assetPercentage.Id];
+                    percentageDifference += ((currentValue - yesterdayValue) / yesterdayValue) * assetPercentage.Percentage;
+                }
             }
             return percentageDifference;
         }

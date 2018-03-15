@@ -1,62 +1,17 @@
 <header></header>
-<div fxLayout="column" class="advisor-steps-main-content" *ngIf="currentStep == wizardSteps.Start.Id">
+<div fxLayout="column" class="advisor-steps-main-content">
   <div fxLayout="row" fxLayoutGap="20px" fxLayoutMargin>
     <div fxLayout="column" fxFlex>
       <div fxLayout="column">
         <h1 class="bold">So, do you want to be an investment advisor?</h1>
-        <h3>
-          Get AUC tokens for recommending investment portfolios
-        </h3>
-      </div>
-      <div fxLayout="row" fxLayoutGap="20px">
-        <div fxLayout="column" class="steps">
-          <div class="step-number">STEP 1</div>
-          <div class="step-title">
-            <span *ngIf="!advisorModel.name">Tell us a little about you</span>
-            <span *ngIf="advisorModel.name">{{advisorModel.name}}</span>
-          </div>
-          <div class="step-description">
-            <span *ngIf="!advisorModel.description">Title, description, fee and pay frequency</span>
-            <span *ngIf="advisorModel.description">{{advisorModel.description}}</span>
-          </div>
-          <div class="step-next-button primary-blue-button bold" *ngIf="!advisorModel.id"  (click)="nextStep()">Continue</div>
-        </div>
-        <div  fxLayout="row" fxLayoutAlign="space-evenly center">
-          <a (click)="nextStep()" *ngIf="advisorModel.id" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
-            <i-check-circle class="blue-confirm"></i-check-circle>
-            <span class="edit-label bold">EDIT</span>
-          </a>
-        </div>
-      </div>
-      <div fxLayout="row" fxLayoutGap="20px">
-        <div fxLayout="column" class="steps" *ngIf="!hasSavedPortfolio()" [class.disabled]="!advisorModel.id">
-          <div class="step-number">STEP 2</div>
-          <div class="step-title">Set your financial portfólio</div>
-          <div class="step-description">Products, percental, risk and projection</div>
-          <div class="step-next-button primary-blue-button bold" (click)="changeStep(wizardSteps.Portfolio.Id)">Continue</div>
-        </div>
-        <div fxLayout="column" class="steps" *ngIf="hasSavedPortfolio()">
-          <div class="step-number">STEP 2</div>
-          <div class="step-title">{{getSavedPortfolioCount()}} portfolio(s) registred</div>
-          <div class="step-description">{{getPortfoliosName()}}</div>
-        </div>
-        <div  fxLayout="row" fxLayoutAlign="space-evenly center">
-          <a (click)="changeStep(wizardSteps.Portfolio.Id)" *ngIf="hasSavedPortfolio()" fxLayout="row" fxLayoutGap="16px" fxLayourAlign="center center">
-            <i-check-circle class="blue-confirm"></i-check-circle>
-            <span class="edit-label bold">EDIT</span>
-          </a>
+        <div fxLayout="row">
+          <h3>
+            Your advisor account is being created
+          </h3>
+          <mat-spinner class="loading-advisor" [mode]="indeterminate" [diameter]="40" [color]="primary"></mat-spinner>
         </div>
       </div>
     </div>
     <eth-machine fxFlex fxHide.lt-md></eth-machine>
   </div>
 </div>
-
-<div fxLayout="row" fxLayoutGap="100px"  fxLayoutAlign="center center"class="my-portfolio-button" (click)="onMyPortfoliosClick()" *ngIf="showMyPortoliosButton()">
-  <button class="primary-blue-button bold ">
-    Go to my portfolios
-  </button>
-</div>
-
-<advisor-step [hidden]="currentStep !== wizardSteps.Advisor.Id" [advisorModel]="editedAdvisorModel" (onBackStep)="backStep()" (onNextStep)="nextStep()"></advisor-step>
-<portfolio-step [hidden]="currentStep !== wizardSteps.Portfolio.Id" [advisorModel]="advisorModel" [portfolioList]="portfolioList" (onBackStep)="backStep()" (onNextStep)="nextStep()"></portfolio-step>
