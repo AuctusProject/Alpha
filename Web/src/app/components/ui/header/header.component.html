@@ -41,6 +41,7 @@
                   <i-chevron-down fxLayoutAlign="center center"></i-chevron-down>
               </div>
           </div>
+          <user-balance *ngIf="loginData"></user-balance>
           <a *ngIf="!loginData && !hideLoginMenu()" routerLink="/login" routerLinkActive="active">LOGIN</a>
           <a *ngIf="!loginData" routerLink="/home" routerLinkActive="active">REGISTER</a>
         </div>

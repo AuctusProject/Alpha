@@ -14,6 +14,8 @@ namespace Auctus.DomainObjects.Account
         public int UserId { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public decimal Value { get; set; }
+        [DapperType(System.Data.DbType.DateTime)]
+        public DateTime Date { get; set; }
         
         public User User { get; set; }
 

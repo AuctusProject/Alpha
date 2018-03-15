@@ -27,6 +27,9 @@ export class UserBalanceComponent implements OnInit {
   ngOnInit() {
     var loggedIn = this.loginService.isLoggedIn();
     if (loggedIn) {
+      var loginData = this.loginService.getLoginData();
+      this.netValue = loginData.netValue;
+      this.availableToInvest = loginData.availableToInvest;
       this.updateBalance();
     }
   }
@@ -43,6 +46,10 @@ export class UserBalanceComponent implements OnInit {
       if (balance) {
         this.netValue = balance.totalAmount;
         this.availableToInvest = balance.availableAmount;
+        var loginData = this.loginService.getLoginData();
+        loginData.netValue = this.netValue;
+        loginData.availableToInvest = this.availableToInvest;
+        this.loginService.setLoginData(loginData);
         this.changeDetector.detectChanges();
       }
     })

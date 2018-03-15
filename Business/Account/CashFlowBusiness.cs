@@ -20,11 +20,17 @@ namespace Auctus.Business.Account
             var deposit = new CashFlow();
             deposit.UserId = userId;
             deposit.Value = value;
+            deposit.Date = DateTime.UtcNow;
             return deposit;
         }
 
         public decimal GetUserBalance(int userId) {
             return Data.ListByUserId(userId).Sum(d => d.Value);
+        }
+
+        public decimal GetUserAvailableValueOnDate(int userId, DateTime date)
+        {
+            return Data.ListByUserId(userId).Where(c => c.Date < date).Sum(d => d.Value);
         }
     }
 }

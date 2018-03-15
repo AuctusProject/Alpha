@@ -363,7 +363,7 @@ Auctus Team", Config.WEB_URL, code));
 			Task.WaitAll(userBalanceList.ToArray());
 
 			List<UserRank> userRankList = userBalanceList.Select(item => item.Result)
-							.OrderByDescending(ub => ub.ReturnPercentage)
+							.OrderByDescending(ub => ub.TotalAmount)
 							.Select((item, index) => new UserRank
 							{
 								InvestedAmount = item.InvestedAmount,
@@ -380,7 +380,7 @@ Auctus Team", Config.WEB_URL, code));
 
 		public List<UserRank> ListUsersPerformanceByDate(DateTime searchDateTime)
 		{
-			var purchasesList = BuyBusiness.ListUntilDate(searchDateTime);
+			var purchasesList = BuyBusiness.ListUntilDate(searchDateTime).Where(p => p.ExpirationDate.HasValue);
 
 			var purchasesByUser = purchasesList.GroupBy(item => item.UserId);
 
@@ -388,29 +388,59 @@ Auctus Team", Config.WEB_URL, code));
 
 			foreach (var user in purchasesByUser)
 			{
-				decimal totalAmount = 0;
 				decimal investedAmount = 0;
 
-				foreach (var groupItem in user)
+                var notInvestedAmount = GetAvailableToInvest(user.Key, searchDateTime);
+                decimal totalAmount = notInvestedAmount;
+                var previousDayNotInvestedAmount = GetAvailableToInvest(user.Key, searchDateTime.Date.AddSeconds(-1));
+                var previousDayTotalValue = previousDayNotInvestedAmount;
+
+                foreach (var groupItem in user)
 				{
-					var historyList = PortfolioHistoryBusiness.ListHistory(groupItem.PortfolioId);
-					var history = historyList.SingleOrDefault(item => item.Date.Date == searchDateTime.Date);
+                    investedAmount += groupItem.Invested;
+                    var historyList = PortfolioHistoryBusiness.ListHistory(groupItem.PortfolioId);
+                    var boughtDate = groupItem.ExpirationDate.Value.AddDays(-groupItem.Days + 1);
+                    var previousDayValue = groupItem.Invested;
+                    if (boughtDate < searchDateTime.Date)
+                    {
+                        var previousHistory = historyList.Where(item => item.Date.Date < searchDateTime.Date && item.Date.Date >= boughtDate).OrderBy(h => h.Date);
+                        
+                        if (previousHistory.Any())
+                        {
+                            foreach (var previousHistoryItem in previousHistory)
+                            {
+                                previousDayValue = previousDayValue * (((decimal)previousHistoryItem.RealValue) / 100M + 1);
+                            }
+                        }
+                        previousDayTotalValue += previousDayValue;
+                    }
+                    else
+                    {
+                        previousDayTotalValue += previousDayValue;
+                    }
+
+                    var history = historyList.SingleOrDefault(item => item.Date.Date == searchDateTime.Date);
 					if (history != null)
 					{
 						investedAmount += groupItem.Invested;
-						totalAmount += groupItem.Invested * (((decimal)history.RealValue) / 100M + 1);
+						totalAmount += previousDayValue * (((decimal)history.RealValue) / 100M + 1);
 					}
 				}
-
+                
 				var userData = Data.Get(user.Key);
-				userBalanceList.Add(new UserBalance { InvestedAmount = investedAmount, TotalAmount = totalAmount, UserId = userData.Id, Username = userData.Username });
+				userBalanceList.Add(new UserBalance { InvestedAmount = investedAmount,
+                    TotalAmount = totalAmount,
+                    UserId = userData.Id,
+                    Username = userData.Username,
+                    ReturnPercentage = (notInvestedAmount > 0) ? ((totalAmount) / (previousDayTotalValue) - 1 ) * 100L : 0
+                });
 			}
 
-			return userBalanceList.OrderByDescending(item => item.TotalAmount)
+			return userBalanceList.OrderByDescending(item => item.ReturnPercentage)
 								  .Select((item, index) => new UserRank
 								  {
 									  InvestedAmount = item.InvestedAmount,
-									  ReturnPercentage = item.InvestedAmount > 0 ? (item.TotalAmount / item.InvestedAmount - 1) * 100 : 0,
+									  ReturnPercentage = item.ReturnPercentage,
 									  Rank = index + 1,
 									  Username = item.Username,
 									  TotalAmount = item.TotalAmount
@@ -422,7 +452,12 @@ Auctus Team", Config.WEB_URL, code));
 			return CashFlowBusiness.GetUserBalance(userId);
 		}
 
-		public User GetByEmail(string email)
+        public decimal GetAvailableToInvest(int userId, DateTime date)
+        {
+            return CashFlowBusiness.GetUserAvailableValueOnDate(userId, date);
+        }
+
+        public User GetByEmail(string email)
 		{
 			return Data.GetByEmail(email);
 		}
@@ -447,13 +482,17 @@ Auctus Team", Config.WEB_URL, code));
 
 			Task.WaitAll(totalAmountValue, investedAmountValue, availableToInvest);
 
-			return new UserBalance()
+            var netValue = (totalAmountValue != null ? totalAmountValue.Result : 0) + (availableToInvest != null ? availableToInvest.Result : 0);
+            return new UserBalance()
 			{
 				UserId = user.Id,
 				Username = user.Username,
-				TotalAmount = (totalAmountValue != null ? totalAmountValue.Result : 0) + (availableToInvest != null ? availableToInvest.Result : 0),
+				TotalAmount = netValue,
 				InvestedAmount = investedAmountValue != null ? investedAmountValue.Result : 0,
-				AvailableAmount = availableToInvest != null ? availableToInvest.Result : 0
+				AvailableAmount = availableToInvest != null ? availableToInvest.Result : 0,
+                ReturnPercentage = (investedAmountValue != null ? investedAmountValue.Result : 0) > 0 ?
+                    (netValue / 
+                    ((availableToInvest != null ? availableToInvest.Result : 0) + (investedAmountValue != null ? investedAmountValue.Result : 0)) - 1) * 100 : 0
             };
 		}
 

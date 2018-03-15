@@ -11,12 +11,6 @@ namespace Auctus.Model
         public decimal TotalAmount { get; set; }
         public decimal InvestedAmount { get; set; }
         public decimal AvailableAmount { get; set; }
-        public decimal ReturnPercentage
-        {
-            get
-            {
-                return InvestedAmount > 0 ? (TotalAmount / InvestedAmount - 1) * 100 : 0;
-            }
-        }
+        public decimal ReturnPercentage { get; set; }
     }
 }
