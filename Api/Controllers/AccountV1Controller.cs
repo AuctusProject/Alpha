@@ -116,7 +116,7 @@ namespace Api.Controllers
 
         [Route("performance")]
         [HttpGet]
-        [Authorize("Bearer")]
+        [AllowAnonymous]
         public new IActionResult ListUsersByPerformance()
         {
             return base.ListUsersByPerformance();
@@ -124,8 +124,8 @@ namespace Api.Controllers
 
 		[Route("performance/{searchDateTime}")]
 		[HttpGet]
-		[Authorize("Bearer")]
-		public new IActionResult ListUsersPerformanceByDate(DateTime searchDateTime)
+        [AllowAnonymous]
+        public new IActionResult ListUsersPerformanceByDate(DateTime searchDateTime)
 		{
 			return base.ListUsersPerformanceByDate(searchDateTime);
 		}
