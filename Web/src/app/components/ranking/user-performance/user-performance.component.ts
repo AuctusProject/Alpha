@@ -15,14 +15,17 @@ export class UserPerformanceComponent implements OnInit {
   public dailyList: Array<UserRank>;
   public allTimeList: Array<UserRank>;
 
-  public maxDate = moment().add(-1, 'days').toDate();
+  public maxDate: Date;
 
   public searchFields = {
     name: null,
     date: null
   };
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService) { 
+    this.maxDate = new Date();
+    this.maxDate.setDate(this.maxDate.getDate()-1);
+  }
 
   ngOnInit() {
     this.searchFields.date = this.maxDate;

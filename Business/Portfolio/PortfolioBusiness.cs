@@ -243,6 +243,8 @@ namespace Auctus.Business.Portfolio
             {
                 return cachedPortfolios;
             }
+            if (date.HasValue && date >= DateTime.UtcNow.Date)
+                return new List<Model.Portfolio>();
 
             var user = UserBusiness.GetByEmail(email);
             var portfolios = Data.ListAllValids();

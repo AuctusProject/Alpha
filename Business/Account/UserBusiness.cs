@@ -354,7 +354,14 @@ Auctus Team", Config.WEB_URL, code));
 
 		public List<UserRank> ListUsersByPerformance()
 		{
-			var allUsers = Data.ListAll();
+            string userPerformanceKey = "AllUsersPerformanceKey";
+            var cachedUserPerformance = MemoryCache.Get<List<UserRank>>(userPerformanceKey);
+            if (cachedUserPerformance != null)
+            {
+                return cachedUserPerformance;
+            }
+
+            var allUsers = Data.ListAll();
 			List<Task<UserBalance>> userBalanceList = new List<Task<UserBalance>>();
 			foreach (User user in allUsers)
 			{
@@ -373,14 +380,22 @@ Auctus Team", Config.WEB_URL, code));
 								TotalAmount = item.TotalAmount
 							}).ToList();
 
-
-			return userRankList;
-
+            MemoryCache.Set<List<UserRank>>(userPerformanceKey, userRankList, 60);
+            return userRankList;
 		}
 
 		public List<UserRank> ListUsersPerformanceByDate(DateTime searchDateTime)
 		{
-			var purchasesList = BuyBusiness.ListUntilDate(searchDateTime).Where(p => p.ExpirationDate.HasValue);
+            if (searchDateTime >= DateTime.UtcNow.Date)
+                return new List<UserRank>();
+            string userPerformanceKey = String.Format("UserPerformanceKey_{0}", searchDateTime);
+            var cachedUserPerformance = MemoryCache.Get<List<UserRank>>(userPerformanceKey);
+            if (cachedUserPerformance != null)
+            {
+                return cachedUserPerformance;
+            }
+
+            var purchasesList = BuyBusiness.ListUntilDate(searchDateTime).Where(p => p.ExpirationDate.HasValue);
 
 			var purchasesByUser = purchasesList.GroupBy(item => item.UserId);
 
@@ -436,7 +451,7 @@ Auctus Team", Config.WEB_URL, code));
                 });
 			}
 
-			return userBalanceList.OrderByDescending(item => item.ReturnPercentage)
+			var returnPerformance = userBalanceList.OrderByDescending(item => item.ReturnPercentage)
 								  .Select((item, index) => new UserRank
 								  {
 									  InvestedAmount = item.InvestedAmount,
@@ -445,7 +460,10 @@ Auctus Team", Config.WEB_URL, code));
 									  Username = item.Username,
 									  TotalAmount = item.TotalAmount
 								  }).ToList();
-		}
+
+            MemoryCache.Set<List<UserRank>>(userPerformanceKey, returnPerformance);
+            return returnPerformance;
+        }
 
 		public decimal GetAvailableToInvest(int userId)
 		{
