@@ -17,7 +17,7 @@
       <div fxLayout="column">
         <div fxLayout="row">
           <div fxFlex="33">
-            <mat-form-field>
+            <mat-form-field style="max-width:100%">
               <input matInput [matDatepicker]="picker" [max]="maxDate" placeholder="Choose a date" [(ngModel)]="searchFields.date" (ngModelChange)="listUsersPerformanceByDate()">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
