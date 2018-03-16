@@ -58,7 +58,7 @@ namespace Auctus.Util
 
         public static async Task SendErrorEmailAsync(string message, Exception ex = null)
         {
-            await SendAsync(Config.EMAIL_FOR_CRITICAL_ERROR, "Critical error on Auctus Alpha", string.Format("{0}<br/><br/><br/>{1}", message, ex?.ToString()));
+            await SendAsync(Config.EMAIL_FOR_CRITICAL_ERROR, "Critical error on Auctus Tournament", string.Format("{0}<br/><br/><br/>{1}", message, ex?.ToString()));
         }
 
         public static async Task SendAsync(IEnumerable<string> to, string subject, string body, bool bodyIsHtml = true, string from = "noreply@auctus.org", 
@@ -75,7 +75,7 @@ namespace Auctus.Util
             foreach (string t in to)
                 toList.Add(new EmailAddress(t));          
 
-            var mailMessage = MailHelper.CreateSingleEmailToMultipleRecipients(new EmailAddress(from, "Auctus Mail Service"), toList, subject, bodyIsHtml ? null : body, bodyIsHtml ? body : null);
+            var mailMessage = MailHelper.CreateSingleEmailToMultipleRecipients(new EmailAddress(from, "Auctus Tournament"), toList, subject, bodyIsHtml ? null : body, bodyIsHtml ? body : null);
             
             if (attachment != null)
             {
