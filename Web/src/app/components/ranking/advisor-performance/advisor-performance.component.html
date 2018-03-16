@@ -18,7 +18,7 @@
             </ng-template>
             <div class="portfolio-list">
                 <mat-form-field class="end-date">
-                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="rankingDate"
+                    <input matInput [matDatepicker]="picker" [max]="maxDate" placeholder="Choose a date" [(ngModel)]="rankingDate"
                       (ngModelChange)="onRankingDateChange()">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>

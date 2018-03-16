@@ -246,21 +246,33 @@ namespace Auctus.Business.Portfolio
             if (date.HasValue && date >= DateTime.UtcNow.Date)
                 return new List<Model.Portfolio>();
 
-            var user = UserBusiness.GetByEmail(email);
+            User user = null;
+            if (!String.IsNullOrWhiteSpace(email)){
+                user = UserBusiness.GetByEmail(email);
+            }
             var portfolios = Data.ListAllValids();
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
             Task.WaitAll(histories.ToArray());
 
-            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && (!date.HasValue || g.Date >= date.Value. Date.AddDays(-1) && g.Date <= date.Value.Date))).ToList());
+            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id && (!date.HasValue || g.Date == date.Value.Date))).ToList());
 
             var returnPortfolios = portfolios
                 .Where(c => c.PortfolioHistory.Any())
-                .Select(c => FillPortfolioModelWithHistory(c, c.Advisor, user, Enumerable.Empty<Buy>(), new Dictionary<int,int>()))
+                .Select(c => FillPortfolioModelWithHistoryAndOverrideAllDaysForRanking(c, c.Advisor, user))
                 .OrderByDescending(c => c.AllDays.Value).ThenByDescending(c => c.CreationDate).ToList();
             MemoryCache.Set<List<Model.Portfolio>>(portfoliosKey, returnPortfolios);
             return returnPortfolios;
+        }
+
+        private Model.Portfolio FillPortfolioModelWithHistoryAndOverrideAllDaysForRanking(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user)
+        {
+            var portfolioModel = FillPortfolioModelWithHistory(portfolio, portfolio.Advisor, user, Enumerable.Empty<Buy>(), new Dictionary<int, int>());
+            int days = (portfolio.PortfolioHistory != null && portfolio.PortfolioHistory.Any()) ?
+                (int)Math.Ceiling(DateTime.UtcNow.Subtract(portfolio.PortfolioHistory.Min(x => x.Date)).TotalDays) + 1 : 1;
+            portfolioModel.AllDays = PortfolioHistoryBusiness.GetHistoryResult(days, portfolio.PortfolioHistory);
+            return portfolioModel;
         }
 
         internal double GetCurrentDayPercentageVariation(DateTime lastDay, int? projectionId)

@@ -15,8 +15,12 @@ export class AdvisorPerformanceComponent implements OnInit {
   advisors: AdvisorRank[];
   dailyPortfolios: Portfolio[];
   rankingDate: Date;
+  public maxDate: Date;
+
   constructor(private portfolioService: PortfolioService,
     private advisorService: AdvisorService) {
+    this.maxDate = new Date();
+    this.maxDate.setDate(this.maxDate.getDate()-1);
   }
 
   ngOnInit() {
