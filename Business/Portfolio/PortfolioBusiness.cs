@@ -351,8 +351,8 @@ namespace Auctus.Business.Portfolio
         public List<Model.Portfolio> ListPurchased(string email)
         {
             var user = UserBusiness.GetValidUser(email);
-            var purchases = BuyBusiness.ListPurchases(user.Id);
-            if (purchases.Count == 0)
+            var purchases = BuyBusiness.ListPurchases(user.Id).Where(p => p.ExpirationDate.HasValue);
+            if (!purchases.Any())
                 return new List<Model.Portfolio>();
 
             var portfoliosQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(purchases.Select(c => c.PortfolioId)));
