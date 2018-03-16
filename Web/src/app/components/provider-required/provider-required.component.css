@@ -1,41 +1,61 @@
 .main-content {
-    padding: 70px;
+  padding: 70px;
 }
 
 .requirements-itens {
-    min-width:300px;
+  min-width: 300px;
 }
 
-h1{
-    color:#4a90e2;
+h1 {
+  color: #4a90e2;
 }
 
-
-.status{
-    width: 48px;
-    height: 48px;
-    border-radius: 100px;
-    border: 1px solid rgba(0, 0, 0, 0.57);
-    color: rgba(0, 0, 0, 0.57);
-    text-align: center;
+.status {
+  width: 48px;
+  height: 48px;
+  border-radius: 100px;
+  border: 1px solid rgba(0, 0, 0, 0.57);
+  color: rgba(0, 0, 0, 0.57);
+  text-align: center;
 }
 
-.status-ok{
-    background: #4a90e2;
-    background: -webkit-linear-gradient(90deg, #4a90e2, #0884cd);
-    background: -o-linear-gradient(90deg, #4a90e2, #0884cd);
-    background: -moz-linear-gradient(90deg, #4a90e2, #0884cd);
-    background: linear-gradient(90deg, #4a90e2, #0884cd);
-    color:white;
-    border: 1px solid #4a90e2;
+.status-ok {
+  background: #4a90e2;
+  background: -webkit-linear-gradient(90deg, #4a90e2, #0884cd);
+  background: -o-linear-gradient(90deg, #4a90e2, #0884cd);
+  background: -moz-linear-gradient(90deg, #4a90e2, #0884cd);
+  background: linear-gradient(90deg, #4a90e2, #0884cd);
+  color: white;
+  border: 1px solid #4a90e2;
 }
 
-/deep/ .requirements-itens svg.feather
-{
-    margin-top:12px;
-    margin-bottom:12px;
+/deep/ .requirements-itens svg.feather {
+  margin-top: 12px;
+  margin-bottom: 12px;
 }
 
-.faucet-button-wrapper{
-    text-align: center;
+.faucet-button-wrapper {
+  text-align: center;
+}
+
+.game-information-table {
+  width: 100%;
+  border-spacing: 0px;
+  color: #55606e;
+}
+.game-information-table td,
+.game-information-table th {
+  padding: 8px !important;
+}
+
+.game-information-table table,
+.game-information-table tr,
+.game-information-table td {
+  border-bottom: 1px solid #d0d0d0;
+  vertical-align: top;
+}
+
+.rules-informations {
+  padding-top: 12px;
+  color: #55606e;
 }

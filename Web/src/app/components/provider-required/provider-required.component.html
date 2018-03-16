@@ -1,18 +1,114 @@
 <header></header>
 <div fxLayout="column" class="main-content">
   <div fxLayout="row" fxLayout.sm="column" fxLayout.xs="column" fxLayoutGap="80px" fxLayoutMargin fxLayoutGap.sm="20px" fxLayoutGap.xs="20px"
-       fxFlex="55">
+    fxFlex="55">
     <div fxLayout="row" fxLayoutGap="100px">
       <div fxLayout="column">
-        <h1 class="bold">Welcome to Auctus Alpha Platform</h1>
-        <h3>
-          The first release of our platform, Auctus Alpha, focuses on limited use cases: Robo and Human advisor portfolio recommendations.
-          <br />
-          <br />
-          It enables you to get a personalized portfolio based on your goals from our robo-advisor.
-          And also to find and follow the best performing portfolios with traditional and cryptocurrency assets made by
-          financial experts.
-        </h3>
+        <div fxFlex>
+          <h1 class="bold">Welcome to Auctus Tournament</h1>
+          <h3>
+            Auctus Tournament is a blockchain-based simulated investment challenge. It is designed to serve as a fun and interactive
+            experience to educate users about how AUC token will work.
+            <br/>
+            <br/> By registering an account and joining our telegram, everyone receives 100 TestAUC and $1000 virtual cash (We're
+            talking virtual cash, not real money. This is strictly a simulation.)
+            <br/>
+            <br/> There are two different players categories: Advisors and Investors. Advisors can earn AUC by recommending portfolios
+            with a expected return associated to it. Investors can invest in portfolios recommended by advisors using AUC.
+            <br/>
+            <br/> The AUC advisory fee is only paid if the portfolio performance is above the expected return.
+          </h3>
+        </div>
+        <mat-tab-group>
+          <mat-tab label="Prizes">
+            <table class="game-information-table">
+              <tr>
+                <th></th>
+                <th colspan="2">Advisors</th>
+                <th colspan="2">Investors</th>
+              </tr>
+              <tr>
+                <td></td>
+                <td>Daily Portfolio Return</td>
+                <td>Top AUC Earned</td>
+                <td>Daily Return</td>
+                <td>Top Virtual Net Worth</td>
+              </tr>
+              <tr>
+                <td>1</td>
+                <td>100 AUC</td>
+                <td>2000 AUC</td>
+                <td>100 AUC</td>
+                <td>2000 AUC</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>60 AUC</td>
+                <td>1000 AUC</td>
+                <td>60 AUC</td>
+                <td>1000 AUC</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>30 AUC</td>
+                <td>500 AUC</td>
+                <td>30 AUC</td>
+                <td>500 AUC</td>
+              </tr>
+              <tr>
+                <td>4-10</td>
+                <td>10 AUC</td>
+                <td>100 AUC</td>
+                <td>10 AUC</td>
+                <td>100 AUC</td>
+              </tr>
+            </table>
+          </mat-tab>
+          <mat-tab label="Rules">
+            <div class="rules-informations">
+              <p>Starts: 16th March 2018
+                <br/>Ends: 3rd April 2018</p>
+              <ul>
+                <li> The portfolio is processed once a day, you start participating on Auctus Tournament at the next midnight
+                  (GMT)</li>
+                <li> Portfolio will be daily rebalanced based on midnight (GMT)prices.</li>
+                <li> All prices are returned from the Binance ticker public API.</li>
+              </ul>
+              <table class="game-information-table">
+                <tr>
+                  <th></th>
+                  <th>Advisors</th>
+                  <th>Investors</th>
+                </tr>
+                <tr>
+                  <td>Goal</td>
+                  <td>Earn TestAUC by providing portfolio recommendation to investors.</td>
+                  <td>Invest virtual cash in portfolios</td>
+                </tr>
+                <tr>
+                  <td>Prizes Categories</td>
+                  <td>Best performing portfolios (daily)
+                    <br/>
+                    <br/> Top Auc accumulated (Overall)</td>
+                  <td>Top Virtual Net Worth (Daily/Overall)</td>
+                </tr>
+                <tr>
+                  <td>Tips</td>
+                  <td>Show your skills
+                    <br/>
+                    <br/> Build your portfolio, invite friends or coworkers to invest in your portfolio, and earn AUC if your
+                    portfolio return is better than your promised return
+                  </td>
+                  <td>Follow Top Advisors
+                    <br/>
+                    <br/> Invest virtual cash in portfolio recommendations of Top advisors and only pay AUC if the return is above
+                    the promised.
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
       </div>
     </div>
     <div fxLayout="column" class="requirements-itens" fxFlex="45" fxLayoutGap="40px">

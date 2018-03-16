@@ -3,14 +3,35 @@
 }
 
 .buttons {
-    margin-top: 40px;
+  margin-top: 40px;
 }
 
-.create-account-button{
-  padding-top:40px;
+.create-account-button {
+  padding-top: 40px;
 }
 
-h1{
-  color:#4a90e2;
+h1 {
+  color: #4a90e2;
 }
 
+.game-information-table {
+  width: 100%;
+  border-spacing: 0px;
+  color: #55606e;
+}
+.game-information-table td,
+.game-information-table th {
+  padding: 8px !important;
+}
+
+.game-information-table table,
+.game-information-table tr,
+.game-information-table td {
+  border-bottom: 1px solid #d0d0d0;
+  vertical-align: top;
+}
+
+.rules-informations {
+  padding-top: 12px;
+  color: #55606e;
+}
