@@ -99,10 +99,10 @@ export class PortfolioPurchaseComponent implements OnInit {
     let logged = this.loginService.isLoggedIn();
     if (logged) {
       this.loginData = this.loginService.getLoginData();
+      this.checkAvailableToInvest();
     }
 
     this.checkTransactionStatus();
-    this.checkAvailableToInvest();
   }
 
   private checkTransactionStatus() {
