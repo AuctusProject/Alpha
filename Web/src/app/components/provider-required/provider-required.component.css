@@ -42,15 +42,18 @@ h1 {
   width: 100%;
   border-spacing: 0px;
   color: #55606e;
+  margin-top: 24px;
 }
 .game-information-table td,
 .game-information-table th {
   padding: 8px !important;
+  min-width: 38px;
 }
 
 .game-information-table table,
 .game-information-table tr,
-.game-information-table td {
+.game-information-table td,
+.game-information-table th {
   border-bottom: 1px solid #d0d0d0;
   vertical-align: top;
 }

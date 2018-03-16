@@ -118,6 +118,7 @@ export class HomeComponent implements OnInit {
 
   private onTelegramValidated(homeComponent, result) {
     homeComponent.simpleRegister.phoneNumber = result;
+    homeComponent.showLoading = true;
     homeComponent.createPromise = homeComponent.createAccount();
     homeComponent.telegramDialog.close();
     return homeComponent.createPromise;
@@ -128,6 +129,7 @@ export class HomeComponent implements OnInit {
       .simpleRegister(this.simpleRegister)
       .subscribe(
         result => {
+          this.showLoading = false;
           this.loginService.setLoginData(result.data);
           let afterCreateUrl = this.loginService.getLoginRedirectUrl();
           if (!afterCreateUrl) {
@@ -137,6 +139,7 @@ export class HomeComponent implements OnInit {
           this.router.navigateByUrl(afterCreateUrl);
         },
         response => {
+          this.showLoading = false;
           this.notificationService.info("Info", response.error);
         }
       );

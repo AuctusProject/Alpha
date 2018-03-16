@@ -25,7 +25,7 @@ import { AdvisorPerformanceComponent } from './components/ranking/advisor-perfor
 import { UserPerformanceComponent } from './components/ranking/user-performance/user-performance.component';
 
 const routes: Routes = [
-    { path: '', component: HumanAdvisorsComponent, canActivate: [UserProfileAuthGuard] },
+    { path: '', redirectTo: 'required', pathMatch:'full' },
     { path: 'home', component: HomeComponent, canActivate: [UserProfileAuthGuard] },
     { path: 'required', component: ProviderRequiredComponent },
     { path: 'login', component: LoginComponent, canActivate: [UserProfileAuthGuard] },
@@ -43,7 +43,8 @@ const routes: Routes = [
     { path: 'add-portfolio', component: AddPortfolioComponent },
     { path: 'edit-portfolio/:id', component: AddPortfolioComponent },
     { path: 'ranking/advisor', component: AdvisorPerformanceComponent },
-    { path: 'ranking/user', component: UserPerformanceComponent }
+    { path: 'ranking/user', component: UserPerformanceComponent },
+    {path: '**', redirectTo: 'required'}
 ];
 
 @NgModule({
