@@ -32,7 +32,7 @@ const routes: Routes = [
     { path: 'forgot-password-email', component: ForgotPasswordEmailComponent },
     { path: 'forgot-password-reset', component: ForgotPasswordResetComponent },
     { path: 'confirm', component: ConfirmEmailComponent },
-    { path: 'advisor/:id', component: AdvisorDetailsComponent, canActivate: [CanActivateViaAuthGuard] },
+    { path: 'advisor/:id', component: AdvisorDetailsComponent },
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'manage-api', component: ManageApiComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'become-advisor', component: AdvisorWizardComponent },
