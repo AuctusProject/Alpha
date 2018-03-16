@@ -39,19 +39,18 @@ namespace Auctus.Business.Account
 				PendingConfirmation = !user.ConfirmationDate.HasValue,
                 AUCTransactionHash = user.AUCTransactionHash
 			};
-			if (!result.PendingConfirmation)
-			{
-				MemoryCache.Set<User>(user.Email, user);
-				var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
-				var advisor = Task.Factory.StartNew(() => AdvisorBusiness.SimpleGetByOwner(user.Id));
+			
+			var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+			var advisor = Task.Factory.StartNew(() => AdvisorBusiness.SimpleGetByOwner(user.Id));
 
-				Task.WaitAll(purchases, advisor);
+			Task.WaitAll(purchases, advisor);
 
-				result.HumanAdvisorId = advisor.Result?.Id;
-				result.HasInvestment = purchases.Result.Count > 0;
-			}
+			result.HumanAdvisorId = advisor.Result?.Id;
+			result.HasInvestment = purchases.Result.Count > 0;
 
-			return result;
+            MemoryCache.Set<User>(user.Email, user);
+
+            return result;
 		}
 
         public Login SimpleRegister(string address, string username, string email, string password, string phoneNumber)
