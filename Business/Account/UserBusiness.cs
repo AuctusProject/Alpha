@@ -466,7 +466,10 @@ Auctus Team", Config.WEB_URL, code));
 
 		public decimal GetAvailableToInvest(int userId)
 		{
-			return CashFlowBusiness.GetUserBalance(userId);
+			var initialDeposit = CashFlowBusiness.GetUserInitialDeposit(userId);
+			var totalInvested = GetCurrentInvestedAmountValue(userId);
+
+			return initialDeposit - totalInvested;
 		}
 
         public decimal GetAvailableToInvest(int userId, DateTime date)

@@ -32,5 +32,13 @@ namespace Auctus.Business.Account
         {
             return Data.ListByUserId(userId).Where(c => c.Date < date).Sum(d => d.Value);
         }
-    }
+
+		public decimal GetUserInitialDeposit(int userId)
+		{
+			var cashFlowList = Data.ListByUserId(userId);
+
+			return cashFlowList.Where(item => item.Value > 0)
+							   .Sum(item => item.Value);
+		}
+	}
 }
