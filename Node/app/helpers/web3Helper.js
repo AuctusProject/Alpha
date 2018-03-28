@@ -124,6 +124,10 @@ class Web3Helper {
     });
   }
 
+  setWhitelistChain() {
+    this._web3 = new Web3(new Web3.providers.HttpProvider(config.get("WHITELIST_INFURA")));
+  }
+
   getContractMethodData(abi, contractAddress, method, params) {
     var contractInstance = this._web3.eth.contract(JSON.parse(abi)).at(contractAddress);
     var data = contractInstance[method].getData.apply(null, params);
