@@ -133,7 +133,7 @@ namespace Auctus.DataAccess.Advisor
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("ExpirationDate", DateTime.UtcNow, DbType.DateTime);
-            return SelectByParameters<Buy>(parameters).ToList();
+            return Query<Buy>(SELECT_PENDING_ESCROWRESULT, parameters).ToList();
         }
 
         public Buy GetSimple(int id)
