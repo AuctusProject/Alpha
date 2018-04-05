@@ -40,9 +40,13 @@ namespace Auctus.Business.Advisor
                     var dailyEstimatedPercentage = Util.Util.ConvertMonthlyToDailyRate(projection.ProjectionValue);
                     var estimatedPercentage = Math.Pow(1.0 + dailyEstimatedPercentage, purchase.Days) - 1.0;
 
-                    var startValue = history.Where(c => c.Date == purchase.ExpirationDate.Value.AddDays(-purchase.Days)).Single().RealValue;
-                    var endValue = history.Where(c => c.Date == purchase.ExpirationDate.Value).Single().RealValue;
-                    var performedPercentage = (endValue / startValue) - 1.0;
+                    var startDate = purchase.ExpirationDate.Value.AddDays(-purchase.Days);
+                    if (startDate < history.Min(c => c.Date))
+                        startDate = history.Min(c => c.Date);
+
+                    var historyOfPeriod = history.Where(c => c.Date >= startDate && c.Date <= purchase.ExpirationDate.Value);
+                    var historyResult = PortfolioHistoryBusiness.GetHistoryResult(historyOfPeriod);
+                    var performedPercentage = historyResult.Value/100.0;
 
                     decimal buyerTokenAmount = 0, ownerTokenAmount = 0;
                     if (estimatedPercentage > performedPercentage)
