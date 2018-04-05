@@ -168,5 +168,15 @@ namespace Api.Controllers
         {
             return base.Faucet(faucetRequest);
         }
+
+
+        [Route("balances")]
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Balances()
+        {
+            var balances = AccountServices.Balances();
+            return Ok(balances);
+        }
     }
 }

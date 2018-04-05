@@ -1,5 +1,6 @@
 ﻿using Auctus.DataAccess.Account;
 using Auctus.DataAccess.Core;
+using Auctus.DataAccess.Exchanges;
 using Auctus.DomainObjects.Account;
 using Auctus.Model;
 using Auctus.Util;
@@ -106,6 +107,11 @@ namespace Auctus.Business.Account
                 Username = user.Username,
                 PendingConfirmation = !user.ConfirmationDate.HasValue
             };
+        }
+
+        public string Balances()
+        {
+            return BitfinexApi.GetBalances();
         }
 
         public bool IsValidEmailToRegister(string email)

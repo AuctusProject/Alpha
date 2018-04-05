@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
 using Auctus.Util;
+using SimpleJson;
+using System.Security.Cryptography;
+using System.Text;
+using System.Net;
 
 namespace Auctus.DataAccess.Exchanges
 {
@@ -19,6 +23,27 @@ namespace Auctus.DataAccess.Exchanges
         {
             [JsonProperty("message")]
             public string message { get; set; }
+        }
+
+        public class BitfinexPostBase
+        {
+            [JsonProperty("request")]
+            public string Request { get; set; }
+
+            [JsonProperty("nonce")]
+            public string Nonce { get; set; }
+        }
+
+        public class BitfinexBalance
+        {
+            [JsonProperty("type")]
+            public string Type { get; set; }
+            [JsonProperty("currency")]
+            public string Currency { get; set; }
+            [JsonProperty("amount")]
+            public double Amount { get; set; }
+            [JsonProperty("available")]
+            public double Available { get; set; }
         }
 
         protected override string API_BASE_ENDPOINT { get => @"https://api.bitfinex.com/"; }
@@ -48,6 +73,44 @@ namespace Auctus.DataAccess.Exchanges
                 default:
                     return ApiError.UnknownError;
             }
+        }
+
+        protected static string GetHMAC384(string message, string apiSecret)
+        {
+            var hmac = new HMACSHA384(Encoding.ASCII.GetBytes(apiSecret));
+            byte[] hashmessage = hmac.ComputeHash(Encoding.ASCII.GetBytes(message));
+            var sign = BitConverter.ToString(hashmessage).Replace("-", "").ToLower();
+            return sign;
+        }
+
+        public static string GetBalances()
+        {
+            var apiKey = "";
+            var apiSecret = "";
+            var requestPath = "/v1/balances";
+            string urlBase = "https://api.ethfinex.com";
+            string urlCompleta = urlBase + requestPath;
+            BitfinexPostBase bodyPost = new BitfinexPostBase();
+            bodyPost.Request = requestPath;
+            bodyPost.Nonce = DateTime.UtcNow.Ticks.ToString();
+            var jsonObj = JsonConvert.SerializeObject(bodyPost);
+            var payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonObj));
+            string result;
+            using (var client = new WebClient())
+            {
+                client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                client.Headers["X-BFX-APIKEY"] = apiKey;
+                client.Headers["X-BFX-PAYLOAD"] = payload;
+                client.Headers["X-BFX-SIGNATURE"] = GetHMAC384(payload, apiSecret);
+                result = client.UploadString(urlCompleta, "POST", jsonObj);
+            }
+            var balances = JsonConvert.DeserializeObject<BitfinexBalance[]>(result);
+            var positiveBalances = balances.Where(b => b.Amount > 0.0).GroupBy(g => g.Currency).Select(c => new BitfinexBalance()
+            {
+                Currency = c.Key,
+                Amount=c.Sum(s => s.Amount)
+            }).ToList();
+            return "";
         }
     }
 }
