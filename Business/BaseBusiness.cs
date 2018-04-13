@@ -35,6 +35,7 @@ namespace Auctus.Business
         private AssetBusiness _assetBusiness;
         private AssetValueBusiness _assetValueBusiness;
         private ApiAccessBusiness _apiAccessBusiness;
+        private ExchangeApiAccessBusiness _exchangeApiAccessBusiness;
         private WalletBusiness _walletBusiness;
         private TransactionBusiness _transactionBusiness;
         private BuyTransactionBusiness _buyTransactionBusiness;
@@ -217,6 +218,16 @@ namespace Auctus.Business
                 if (_apiAccessBusiness == null)
                     _apiAccessBusiness = new ApiAccessBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _apiAccessBusiness;
+            }
+        }
+
+        protected ExchangeApiAccessBusiness ExchangeApiAccessBusiness
+        {
+            get
+            {
+                if (_exchangeApiAccessBusiness == null)
+                    _exchangeApiAccessBusiness = new ExchangeApiAccessBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _exchangeApiAccessBusiness;
             }
         }
 

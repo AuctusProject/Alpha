@@ -75,6 +75,14 @@ namespace Api.Controllers
             return base.ListPurchasedPortfolios();
         }
 
+        [Route("investments")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetInvestments()
+        {
+            return base.GetInvestments();
+        }
+
         [Route("robos")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -97,6 +105,14 @@ namespace Api.Controllers
         public new IActionResult GetDistribution([FromRoute]int portfolioId)
         {
             return base.GetDistribution(portfolioId);
+        }
+
+        [Route("exchange/{exchangeId}")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetExchangePortfolio([FromRoute]int exchangeId)
+        {
+            return base.GetExchangePortfolio(exchangeId);
         }
     }
 }

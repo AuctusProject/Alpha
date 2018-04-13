@@ -8,6 +8,7 @@ import { Projections } from "../model/portfolio/projections";
 import { PortfolioHistory } from "../model/portfolio/portfolioHistory";
 import { PortfolioDistribution } from "../model/portfolio/portfolioDistribution";
 import { ListRoboAdvisorsResponse } from "../model/portfolio/listRoboAdvisorsResponse";
+import { Investments } from '../model/portfolio/investments';
 
 @Injectable()
 export class PortfolioService {
@@ -19,6 +20,7 @@ export class PortfolioService {
   private getPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/");
   private getRoboPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/robos");
   private getPurchasedPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/purchases");
+  private getInvestmentsUrl = this.httpService.apiUrl("portfolios/v1/investments");
   
   constructor(private httpService: HttpService) { }
 
@@ -36,6 +38,10 @@ export class PortfolioService {
 
   getPurchasedPortfolios(): Observable<Portfolio[]> {
     return this.httpService.get(this.getPurchasedPortfoliosUrl);
+  }
+
+  getInvestments(): Observable<Investments> {
+    return this.httpService.get(this.getInvestmentsUrl);
   }
 
   getPortfoliosHistory(): Observable<PortfolioHistory[]> {

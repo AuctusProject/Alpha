@@ -109,11 +109,6 @@ namespace Auctus.Business.Account
             };
         }
 
-        public string Balances()
-        {
-            return BitfinexApi.GetBalances();
-        }
-
         public bool IsValidEmailToRegister(string email)
         {
             return Email.IsValidEmail(email) && Data.GetByEmail(email) == null;

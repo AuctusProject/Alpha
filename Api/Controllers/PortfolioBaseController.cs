@@ -40,7 +40,7 @@ namespace Api.Controllers
         {
             if (updatePortfolioRequest == null)
                 return BadRequest();
-            
+
             try
             {
                 PortfolioServices.UpdatePortfolio(GetUser(), portfolioId, updatePortfolioRequest.Price,
@@ -60,7 +60,7 @@ namespace Api.Controllers
 
             try
             {
-                PortfolioServices.UpdatePortfolioAndDistribution(GetUser(), portfolioId, updatePortfolioRequest.Price, updatePortfolioRequest.Name, 
+                PortfolioServices.UpdatePortfolioAndDistribution(GetUser(), portfolioId, updatePortfolioRequest.Price, updatePortfolioRequest.Name,
                     updatePortfolioRequest.Description, updatePortfolioRequest.Distribution.ToDictionary(c => c.AssetId, c => c.Percentage));
             }
             catch (ArgumentException ex)
@@ -127,6 +127,20 @@ namespace Api.Controllers
             return Ok(portfolios);
         }
 
+        protected virtual IActionResult GetInvestments()
+        {
+            try
+            {
+                Investments investments = PortfolioServices.GetInvestments(GetUser());
+                return Ok(investments);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+
+        }
+
         protected virtual IActionResult ListRoboAdvisors([FromQuery]int? goalOption, [FromQuery]int? risk)
         {
             if (!goalOption.HasValue || !risk.HasValue)
@@ -142,7 +156,7 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
-        
+
         protected virtual IActionResult GetPortfolio(int portfolioId)
         {
             try
@@ -162,6 +176,19 @@ namespace Api.Controllers
             {
                 var distribution = PortfolioServices.ListPortfolioDistribution(GetUser(), portfolioId);
                 return Ok(distribution);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        protected virtual IActionResult GetExchangePortfolio(int exchangeId)
+        {
+            try
+            {
+                var portfolio = PortfolioServices.GetExchangePortfolio(GetUser(), exchangeId);
+                return Ok(portfolio);
             }
             catch (ArgumentException ex)
             {

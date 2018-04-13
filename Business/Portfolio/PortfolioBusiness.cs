@@ -245,6 +245,32 @@ namespace Auctus.Business.Portfolio
                 .OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
         }
 
+        public List<Model.Investments.ExchangePortfolio> ListExchangePortfolios(string email)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var exchangeApis = ExchangeApiAccessBusiness.List(email);
+            var result = new List<Model.Investments.ExchangePortfolio>();
+            foreach(var exchangeApi in exchangeApis)
+            {
+                result.Add(
+                    new Model.Investments.ExchangePortfolio()
+                    {
+                        ExchangeId = exchangeApi.ExchangeId,
+                        Name = $"My {Exchange.GetName(exchangeApi.ExchangeId)} portfolio"
+                    }
+                );
+            }
+            return result;
+        }
+
+        public Model.Investments GetInvestments(string email)
+        {
+            var investments = new Model.Investments();
+            investments.PurchasedPortfolios = ListPurchased(email);
+            investments.ExchangePortfolios = ListExchangePortfolios(email);
+            return investments;
+        }
+
         public List<Model.Portfolio> ListPurchased(string email)
         {
             var user = UserBusiness.GetValidUser(email);
@@ -436,6 +462,22 @@ namespace Auctus.Business.Portfolio
             {
                 PortfolioHistoryBusiness.UpdatePortfolioHistory(portfolio);
             }
+        }
+
+        public Model.Portfolio GetExchangePortfolio(string email, int exchangeId)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var exchangeApiAccess = ExchangeApiAccessBusiness.Get(user.Id, exchangeId);
+
+            var exchangeApi = DataAccess.Exchanges.ExchangeApi.GetById(exchangeApiAccess.ExchangeId, exchangeApiAccess.ApiKey, exchangeApiAccess.ApiSecretKey);
+            var exchangeBalances = exchangeApi.GetBalances();
+            var assetDistribution = ExchangeApiAccessBusiness.ConvertExchangeBalancesToAssetDistribution(exchangeBalances);
+
+            return new Model.Portfolio()
+            {
+                Name = $"My {Exchange.GetName(exchangeId)} portfolio.",
+                AssetDistribution = assetDistribution
+            };
         }
     }
 }

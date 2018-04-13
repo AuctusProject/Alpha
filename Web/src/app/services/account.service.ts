@@ -6,6 +6,7 @@ import { FullRegister } from "../model/account/fullRegister";
 import { Goal } from '../model/account/goal';
 import { SimpleRegister } from '../model/account/simpleRegister';
 import { LoginResult } from '../model/account/loginResult';
+import { ExchangeApiAccessRequest } from '../model/account/exchangeApiAccessRequest';
 
 @Injectable()
 export class AccountService {
@@ -25,6 +26,7 @@ export class AccountService {
   private validateEmailUrl = this.httpService.apiUrl("accounts/v1/emails");
   private validateUsernameUrl = this.httpService.apiUrl("accounts/v1/usernames");
   private faucetUrl = this.httpService.apiUrl("accounts/v1/faucet");
+  private saveExchangeApiAccessUrl = this.httpService.apiUrl("accounts/v1/exchangeApi");
 
   constructor(private httpService: HttpService) { }
 
@@ -103,5 +105,9 @@ export class AccountService {
 
   validateUsername(username: string): Observable<any> {
     return this.httpService.get(this.validateUsernameUrl + "/" + username);
+  }
+
+  saveExchangeApiAccess(request: ExchangeApiAccessRequest): Observable<any> {
+    return this.httpService.post(this.saveExchangeApiAccessUrl, request);
   }
 }

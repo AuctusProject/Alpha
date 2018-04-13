@@ -169,14 +169,13 @@ namespace Api.Controllers
             return base.Faucet(faucetRequest);
         }
 
-
-        [Route("balances")]
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Balances()
+        [Route("exchangeApi")]
+        [HttpPost]
+        [Authorize("Bearer")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult SaveExchangeApiAccess([FromBody]ExchangeApiAccessRequest exchangeApiAccessRequest)
         {
-            var balances = AccountServices.Balances();
-            return Ok(balances);
+            return base.SaveExchangeApiAccess(exchangeApiAccessRequest);
         }
     }
 }

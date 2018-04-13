@@ -279,5 +279,21 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        protected virtual IActionResult SaveExchangeApiAccess([FromBody]ExchangeApiAccessRequest exchangeApiAccessRequest)
+        {
+            if (exchangeApiAccessRequest == null)
+                return BadRequest();
+           
+            try
+            {
+                var transactionHash = AccountServices.SaveExchangeApiAccess(GetUser(),exchangeApiAccessRequest.ExchangeId, exchangeApiAccessRequest.ApiKey, exchangeApiAccessRequest.ApiSecretKey);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

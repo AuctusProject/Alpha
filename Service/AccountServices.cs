@@ -104,9 +104,9 @@ namespace Auctus.Service
             return WalletBusiness.Faucet(address);
         }
 
-        public string Balances()
+        public ExchangeApiAccess SaveExchangeApiAccess(string email, int exchangeId, string apiKey, string apiKeySecret)
         {
-            return UserBusiness.Balances();
+            return ExchangeApiAccessBusiness.Create(email, exchangeId, apiKey, apiKeySecret);
         }
     }
 }

@@ -1,0 +1,41 @@
+<div class="my-investments">
+  <div class="portfolio-list-header">
+    <header></header>
+    <div class="header-text-container" fxLayout="row">
+      <div fxFlex>
+        <h1>Sync Your Exchange Portfolio</h1>
+      </div>
+    </div>
+  </div>
+  <div class="portfolio-list">
+    <form>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <div class="name-step blue-box" fxLayout="column" fxLayoutGap="12px">
+          <div fxLayout="row">
+            <mat-form-field fxFlex>
+              <mat-select placeholder="Exchange" [inputFocus]="true" name="Exchange" [(value)]="model.exchangeId">
+                <mat-option value="1">Bitfinex</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row">
+            <mat-form-field fxFlex>
+              <input matInput placeholder="API Key" [inputFocus]="true" name="API Key" [(ngModel)]="model.apiKey">
+            </mat-form-field>
+          </div>
+          <div fxLayout="row">
+            <mat-form-field fxFlex>
+              <input matInput placeholder="API Secret Key" [inputFocus]="true" name="API Secret Key" [(ngModel)]="model.apiSecretKey">
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center center">
+            <button type="submit" class="primary-button bold save" [promiseBtn]="syncPromise" (click)="saveClick()">
+              SAVE
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>

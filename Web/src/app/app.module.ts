@@ -93,6 +93,9 @@ import { LoadingSpinnerComponent } from './components/ui/loading-spinner/loading
 import { MobileNotSupportedComponent } from './components/ui/mobile-not-supported/mobile-not-supported.component';
 import { SetHashPopupComponent } from './components/portfolio/set-hash-popup/set-hash-popup.component';
 import { CurrencyMaskModule } from "ng2-currency-mask";
+import { SyncExchangeComponent } from './components/portfolio/sync-exchange/sync-exchange.component';
+import { ExchangePortfolioCardComponent } from './components/portfolio/exchange-portfolio-card/exchange-portfolio-card.component';
+import { ExchangePortfolioDetailsComponent } from './components/portfolio/exchange-portfolio-details/exchange-portfolio-details.component';
 
 @NgModule({
   declarations: [
@@ -156,7 +159,10 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
     PortfolioProjectionChartComponent,
     LoadingSpinnerComponent,
     MobileNotSupportedComponent,
-    SetHashPopupComponent
+    SetHashPopupComponent,
+    SyncExchangeComponent,
+    ExchangePortfolioCardComponent,
+    ExchangePortfolioDetailsComponent
   ],
   imports: [
     BrowserAnimationsModule,

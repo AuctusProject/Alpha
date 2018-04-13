@@ -45,6 +45,11 @@ namespace Auctus.Service
             return PortfolioBusiness.ListPurchased(email);
         }
 
+        public Model.Investments GetInvestments(string email)
+        {
+            return PortfolioBusiness.GetInvestments(email);
+        }
+
         public void DisablePortfolio(string email, int portfolioId)
         {
             PortfolioBusiness.Disable(email, portfolioId);
@@ -64,6 +69,11 @@ namespace Auctus.Service
         public Model.Portfolio GetPortfolio(string email, int portfolioId)
         {
             return PortfolioBusiness.Get(email, portfolioId);
+        }
+
+        public Model.Portfolio GetExchangePortfolio(string email, int exchangeId)
+        {
+            return PortfolioBusiness.GetExchangePortfolio(email, exchangeId);
         }
 
         public List<Model.Portfolio.Distribution> ListPortfolioDistribution(string email, int portfolioId)

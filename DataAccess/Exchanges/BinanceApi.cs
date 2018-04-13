@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
 using Auctus.Util;
+using Auctus.DomainObjects.Portfolio;
 
 namespace Auctus.DataAccess.Exchanges
 {
@@ -53,6 +54,11 @@ namespace Auctus.DataAccess.Exchanges
                     return ApiError.UnknownError;
             }
 
+        }
+
+        public override List<ExchangeBalance> GetBalances()
+        {
+            throw new NotImplementedException();
         }
     }
 }

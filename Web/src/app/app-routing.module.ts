@@ -22,6 +22,8 @@ import { UserProfileAuthGuard } from './providers/user-profile-auth-guard.provid
 import { PortfolioDetailsComponent } from "./components/portfolio/portfolio-details/portfolio-details.component";
 import { MyInvestmentsComponent } from "./components/portfolio/my-investments/my-investments.component";
 import { AddPortfolioComponent } from "./components/portfolio/add-portfolio/add-portfolio.component";
+import { SyncExchangeComponent } from './components/portfolio/sync-exchange/sync-exchange.component';
+import { ExchangePortfolioDetailsComponent } from './components/portfolio/exchange-portfolio-details/exchange-portfolio-details.component';
 
 const routes: Routes = [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -41,6 +43,8 @@ const routes: Routes = [
     { path: 'investments', component: MyInvestmentsComponent },
     { path: 'add-portfolio', component: AddPortfolioComponent },
     { path: 'edit-portfolio/:id', component: AddPortfolioComponent },
+    { path: 'sync-exchange', component: SyncExchangeComponent },
+    { path: 'exchange-portfolio/:id', component: ExchangePortfolioDetailsComponent },
 ];
 
 @NgModule({

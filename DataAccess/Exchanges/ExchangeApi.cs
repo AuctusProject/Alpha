@@ -3,11 +3,25 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
 using Auctus.Util;
+using Auctus.DomainObjects.Portfolio;
 
 namespace Auctus.DataAccess.Exchanges
 {
     public abstract class ExchangeApi
     {
+        public static ExchangeApi GetById(int exchangeId, string apiKey, string apiSecretKey)
+        {
+            switch (exchangeId)
+            {
+                case 1:
+                    return new BitfinexApi(apiKey, apiSecretKey);
+                case 2:
+                    return new BinanceApi();
+                default:
+                    throw new ArgumentException("Invalid exchange.");
+            }
+        }
+
         public static IEnumerable<ExchangeApi> GetApisByCode(string coinSymbol)
         {
             return new List<ExchangeApi> { new BinanceApi()/*, new BitfinexApi() */ };
@@ -94,10 +108,6 @@ namespace Auctus.DataAccess.Exchanges
             }
         }
 
-        protected abstract string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate);
-        protected abstract double? GetCoinValue(HttpResponseMessage response);
-        protected abstract ApiError GetErrorCode(HttpResponseMessage response);
-
         public static Dictionary<DateTime, double> GetCloseCryptoValue(string code, DateTime startDate)
         {
             var apis = GetApisByCode(code);
@@ -105,7 +115,7 @@ namespace Auctus.DataAccess.Exchanges
             foreach (var api in apis)
             {
                 var exchangeValues = api.GetCloseAdjustedValues(startDate, code);
-                foreach(var exchangeValue in exchangeValues)
+                foreach (var exchangeValue in exchangeValues)
                 {
                     if (!exchangesPrices.ContainsKey(exchangeValue.Key))
                         exchangesPrices.Add(exchangeValue.Key, new List<double>());
@@ -115,6 +125,11 @@ namespace Auctus.DataAccess.Exchanges
             }
             return exchangesPrices.ToDictionary(v => v.Key, v => v.Value.Average());
         }
+
+        protected abstract string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate);
+        protected abstract double? GetCoinValue(HttpResponseMessage response);
+        protected abstract ApiError GetErrorCode(HttpResponseMessage response);
+        public abstract List<ExchangeBalance> GetBalances();
     }
 }
 

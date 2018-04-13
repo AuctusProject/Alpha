@@ -8,11 +8,21 @@ using SimpleJson;
 using System.Security.Cryptography;
 using System.Text;
 using System.Net;
+using Auctus.DomainObjects.Portfolio;
 
 namespace Auctus.DataAccess.Exchanges
 {
     public class BitfinexApi : ExchangeApi
     {
+        private string apiKey;
+        private string apiSecretKey;
+
+        public BitfinexApi(string apiKey, string apiSecretKey)
+        {
+            this.apiKey = apiKey;
+            this.apiSecretKey = apiSecretKey;
+        }
+
         private class BitfinexApiResult
         {
             [JsonProperty("price")]
@@ -83,10 +93,8 @@ namespace Auctus.DataAccess.Exchanges
             return sign;
         }
 
-        public static string GetBalances()
+        public override List<ExchangeBalance> GetBalances()
         {
-            var apiKey = "";
-            var apiSecret = "";
             var requestPath = "/v1/balances";
             string urlBase = "https://api.ethfinex.com";
             string urlCompleta = urlBase + requestPath;
@@ -101,16 +109,16 @@ namespace Auctus.DataAccess.Exchanges
                 client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                 client.Headers["X-BFX-APIKEY"] = apiKey;
                 client.Headers["X-BFX-PAYLOAD"] = payload;
-                client.Headers["X-BFX-SIGNATURE"] = GetHMAC384(payload, apiSecret);
+                client.Headers["X-BFX-SIGNATURE"] = GetHMAC384(payload, apiSecretKey);
                 result = client.UploadString(urlCompleta, "POST", jsonObj);
             }
             var balances = JsonConvert.DeserializeObject<BitfinexBalance[]>(result);
-            var positiveBalances = balances.Where(b => b.Amount > 0.0).GroupBy(g => g.Currency).Select(c => new BitfinexBalance()
+            var positiveBalances = balances.Where(b => b.Amount > 0.0).GroupBy(g => g.Currency).Select(c => new ExchangeBalance()
             {
-                Currency = c.Key,
+                CurrencyCode = c.Key,
                 Amount=c.Sum(s => s.Amount)
             }).ToList();
-            return "";
+            return positiveBalances;
         }
     }
 }
