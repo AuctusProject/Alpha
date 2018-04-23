@@ -21,6 +21,7 @@ export class PortfolioService {
   private getRoboPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/robos");
   private getPurchasedPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/purchases");
   private getInvestmentsUrl = this.httpService.apiUrl("portfolios/v1/investments");
+  private getExchangePortfolioUrl = this.httpService.apiUrl("portfolios/v1/exchange/");
   
   constructor(private httpService: HttpService) { }
 
@@ -62,5 +63,9 @@ export class PortfolioService {
 
   getRoboPortfolios(goalOption: number, risk: number): Observable<ListRoboAdvisorsResponse> {
     return this.httpService.get(this.getRoboPortfoliosUrl + "?goalOption=" + goalOption + "&risk=" + risk);
+  }
+
+  getExchangePortfolio(exchangeId: number): Observable<Portfolio> {
+    return this.httpService.get(this.getExchangePortfolioUrl + exchangeId);
   }
 }

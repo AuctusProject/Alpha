@@ -130,6 +130,7 @@ namespace Auctus.DataAccess.Exchanges
         protected abstract double? GetCoinValue(HttpResponseMessage response);
         protected abstract ApiError GetErrorCode(HttpResponseMessage response);
         public abstract List<ExchangeBalance> GetBalances();
+        public abstract void ValidateAccessPermissions();
     }
 }
 

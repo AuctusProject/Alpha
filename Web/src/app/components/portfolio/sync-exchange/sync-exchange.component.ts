@@ -3,6 +3,7 @@ import { ExchangeApiAccessRequest } from '../../../model/account/exchangeApiAcce
 import { AccountService } from '../../../services/account.service';
 import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sync-exchange',
@@ -12,13 +13,15 @@ import { FormGroup } from '@angular/forms';
 export class SyncExchangeComponent implements OnInit {
   model: ExchangeApiAccessRequest = new ExchangeApiAccessRequest(); 
   syncPromise: Subscription;
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private router : Router) { }
 
   ngOnInit() {
   }
 
   saveClick(){
-    this.syncPromise = this.accountService.saveExchangeApiAccess(this.model).subscribe();
+    this.syncPromise = this.accountService.saveExchangeApiAccess(this.model).subscribe(result => {
+      this.router.navigateByUrl("/exchange-portfolio/" + this.model.exchangeId);
+    });
   }
 
 }

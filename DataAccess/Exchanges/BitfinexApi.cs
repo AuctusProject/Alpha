@@ -56,6 +56,20 @@ namespace Auctus.DataAccess.Exchanges
             public double Available { get; set; }
         }
 
+        public class BitfinexKeyInfo
+        {
+            [JsonProperty("wallets")]
+            public BitfinexReadWritePermission Wallets { get; set; }
+        }
+
+        public class BitfinexReadWritePermission
+        {
+            [JsonProperty("read")]
+            public bool? Read { get; set; }
+            [JsonProperty("write")]
+            public bool? Write{ get; set; }
+        }
+
         protected override string API_BASE_ENDPOINT { get => @"https://api.bitfinex.com/"; }
         protected override string API_ENDPOINT { get => @"v1/trades/{0}{1}?timestamp={2}&limit_trades=1"; }
         protected override string BTC_SYMBOL { get => "BTC"; }
@@ -93,32 +107,60 @@ namespace Auctus.DataAccess.Exchanges
             return sign;
         }
 
-        public override List<ExchangeBalance> GetBalances()
+        private string PostAutenticatedRequest(String path)
         {
-            var requestPath = "/v1/balances";
             string urlBase = "https://api.ethfinex.com";
-            string urlCompleta = urlBase + requestPath;
+            string urlCompleta = urlBase + path;
             BitfinexPostBase bodyPost = new BitfinexPostBase();
-            bodyPost.Request = requestPath;
+            bodyPost.Request = path;
             bodyPost.Nonce = DateTime.UtcNow.Ticks.ToString();
             var jsonObj = JsonConvert.SerializeObject(bodyPost);
             var payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(jsonObj));
-            string result;
-            using (var client = new WebClient())
+
+            try
             {
-                client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                client.Headers["X-BFX-APIKEY"] = apiKey;
-                client.Headers["X-BFX-PAYLOAD"] = payload;
-                client.Headers["X-BFX-SIGNATURE"] = GetHMAC384(payload, apiSecretKey);
-                result = client.UploadString(urlCompleta, "POST", jsonObj);
+                using (var client = new WebClient())
+                {
+                    client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    client.Headers["X-BFX-APIKEY"] = apiKey;
+                    client.Headers["X-BFX-PAYLOAD"] = payload;
+                    client.Headers["X-BFX-SIGNATURE"] = GetHMAC384(payload, apiSecretKey);
+                    return client.UploadString(urlCompleta, "POST", jsonObj);
+                }
             }
+            catch(WebException e)
+            {
+                var response = e.Response as System.Net.HttpWebResponse;
+                if (response?.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new ArgumentException("Invalid authentication keys");
+                }
+                throw;
+            }
+        }
+
+        public override List<ExchangeBalance> GetBalances()
+        {
+            var requestPath = "/v1/balances";
+            string result = PostAutenticatedRequest(requestPath);
             var balances = JsonConvert.DeserializeObject<BitfinexBalance[]>(result);
             var positiveBalances = balances.Where(b => b.Amount > 0.0).GroupBy(g => g.Currency).Select(c => new ExchangeBalance()
             {
                 CurrencyCode = c.Key,
-                Amount=c.Sum(s => s.Amount)
+                Amount = c.Sum(s => s.Amount)
             }).ToList();
             return positiveBalances;
+        }
+
+        public override void ValidateAccessPermissions()
+        {
+            var requestPath = "/v1/key_info";
+            string result = PostAutenticatedRequest(requestPath);
+            var keyInfo = JsonConvert.DeserializeObject<BitfinexKeyInfo>(result);
+            if (keyInfo?.Wallets?.Read != true)
+            {
+                throw new ArgumentException("Invalid authentication keys");
+            }
         }
     }
 }

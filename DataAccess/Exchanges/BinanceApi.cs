@@ -60,5 +60,10 @@ namespace Auctus.DataAccess.Exchanges
         {
             throw new NotImplementedException();
         }
+
+        public override void ValidateAccessPermissions()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
