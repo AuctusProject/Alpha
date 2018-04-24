@@ -11,8 +11,6 @@ import { LocalStorageService } from '../../../services/local-storage.service';
 export class ExchangePortfolioCardComponent implements OnInit {
   @Input() exchangePortfolio: ExchangePortfolio;
 
-  public readonly roboAdvisorType: number = 1;
-
   constructor(private router: Router, private localStorageService: LocalStorageService) { }
 
   ngOnInit() {

@@ -317,7 +317,12 @@ a.action-button{
   .primary-button[disabled]:hover,
   .primary-button:disabled:hover,
   .primary-blue-button[disabled]:hover,
-  .primary-blue-button:disabled:hover {
+  .primary-blue-button:disabled:hover,
+  .header-action-button[disabled],
+  .header-action-button:disabled,
+  .header-action-button[disabled]:hover,
+  .header-action-button:disabled:hover
+  {
     background-color: lightgray !important;
     background: lightgray !important;
     color: gray;
@@ -541,8 +546,8 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 .header-action-button {
-  width: 290px;
-  height: 58px;
+  min-height: 58px;
+  padding: 12px 35px;
   border-radius: 45px;
   background-color: #ffffff;
   font-size: 18px;
@@ -550,6 +555,7 @@ input[type=number]::-webkit-outer-spin-button {
   text-align: center;
   color: #3d84de;
   cursor: pointer;
+  border: 0;
 }
 
 

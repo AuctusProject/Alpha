@@ -5,11 +5,11 @@
       <h1 *ngIf="portfolio.name">{{portfolio.name}}</h1>
     </div>
     <div fxFlex fxLayoutAlign="end center">
-      <div class="header-action-button" fxLayoutAlign="space-around center" (click)="deleteExchangePortfolio">DELETE PORTFOLIO</div>
+      <button class="header-action-button" fxLayoutAlign="space-around center" [promiseBtn]="deletePromise" (click)="deleteExchangePortfolio()">DELETE PORTFOLIO</button>
     </div>
   </div>
 </div>
 <loading-spinner *ngIf="!portfolio"></loading-spinner>
 <ng-container *ngIf="portfolio">
-  <portfolio-details-tabs *ngIf="portfolio" [portfolio]="portfolio"></portfolio-details-tabs>
+    <exchange-portfolio-details-tabs *ngIf="portfolio" [portfolio]="portfolio"></exchange-portfolio-details-tabs>
 </ng-container>

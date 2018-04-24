@@ -19,6 +19,7 @@ namespace Auctus.Business.Account
 
         public ExchangeApiAccess Create(string email, int exchangeId, string apiKey, string apiSecretKey)
         {
+            ValidateCreation(email, exchangeId);
             ValidatePermissions(exchangeId, apiKey, apiSecretKey);
             var apiAccess = BaseCreation(email);
             apiAccess.ExchangeId = exchangeId;
@@ -26,6 +27,14 @@ namespace Auctus.Business.Account
             apiAccess.ApiSecretKey = apiSecretKey;
             Data.Insert(apiAccess);
             return apiAccess;
+        }
+
+        private void ValidateCreation(string email, int exchangeId)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var exchangeApiAccess = ExchangeApiAccessBusiness.Get(user.Id, exchangeId);
+            if(exchangeApiAccess!=null)
+                throw new ArgumentException("Exchange API access is already saved");
         }
 
         private void ValidatePermissions(int exchangeId, string apiKey, string apiSecretKey)
@@ -64,20 +73,28 @@ namespace Auctus.Business.Account
         internal List<Model.Portfolio.Distribution> ConvertExchangeBalancesToAssetDistribution(List<ExchangeBalance> exchangeBalances)
         {
             var allAssets = AssetBusiness.ListAssets();
-            //var totalAmount = exchangeBalances.Sum(c => c.UsdAmount);
             var distribution = new List<Model.Portfolio.Distribution>();
-            foreach(var exchangeBalance in exchangeBalances)
+            var currentValues = AssetCurrentValueBusiness.ListAll();
+
+            foreach (var exchangeBalance in exchangeBalances)
             {
-                var asset = allAssets.FirstOrDefault(c => c.Code.Trim().ToUpper() == exchangeBalance.CurrencyCode.Trim().ToUpper());
-                if (asset != null)
+                exchangeBalance.Asset = allAssets.FirstOrDefault(c => c.Code.Trim().ToUpper() == exchangeBalance.CurrencyCode.Trim().ToUpper());
+                exchangeBalance.CurrentUsdValue = exchangeBalance.Amount * currentValues.FirstOrDefault(c => c.AssetId == exchangeBalance.Asset.Id)?.Value;
+            }
+
+            var totalAmount = exchangeBalances.Sum(c => c.CurrentUsdValue);
+
+            foreach (var exchangeBalance in exchangeBalances)
+            {
+                if (exchangeBalance.Asset != null)
                 {
                     distribution.Add(new Model.Portfolio.Distribution()
                     {
-                        Id = asset.Id,
-                        Code = asset.Code,
-                        Name = asset.Name,
-                        //Percentage = exchangeBalance.Amount / totalAmount,
-                        Type = asset.Type
+                        Code = exchangeBalance.CurrencyCode.Trim().ToUpper(),
+                        Id = exchangeBalance.Asset.Id,
+                        Name = exchangeBalance.Asset.Name,
+                        Percentage = Math.Round(((exchangeBalance.CurrentUsdValue / totalAmount) ?? 0) * 100D, 1),
+                        Type = exchangeBalance.Asset.Type,
                     });
                 }
             }

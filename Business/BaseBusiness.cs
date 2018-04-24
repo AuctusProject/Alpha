@@ -34,6 +34,7 @@ namespace Auctus.Business
         private ProjectionBusiness _projectionBusiness;
         private AssetBusiness _assetBusiness;
         private AssetValueBusiness _assetValueBusiness;
+        private AssetCurrentValueBusiness _assetCurrentValueBusiness;
         private ApiAccessBusiness _apiAccessBusiness;
         private ExchangeApiAccessBusiness _exchangeApiAccessBusiness;
         private WalletBusiness _walletBusiness;
@@ -208,6 +209,15 @@ namespace Auctus.Business
                 if (_assetValueBusiness == null)
                     _assetValueBusiness = new AssetValueBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _assetValueBusiness;
+            }
+        }
+        protected AssetCurrentValueBusiness AssetCurrentValueBusiness
+        {
+            get
+            {
+                if (_assetCurrentValueBusiness == null)
+                    _assetCurrentValueBusiness = new AssetCurrentValueBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _assetCurrentValueBusiness;
             }
         }
 

@@ -9,6 +9,7 @@ import { PortfolioHistory } from "../model/portfolio/portfolioHistory";
 import { PortfolioDistribution } from "../model/portfolio/portfolioDistribution";
 import { ListRoboAdvisorsResponse } from "../model/portfolio/listRoboAdvisorsResponse";
 import { Investments } from '../model/portfolio/investments';
+import { ExchangePortfolio } from '../model/portfolio/exchangePortfolio';
 
 @Injectable()
 export class PortfolioService {
@@ -22,6 +23,7 @@ export class PortfolioService {
   private getPurchasedPortfoliosUrl = this.httpService.apiUrl("portfolios/v1/purchases");
   private getInvestmentsUrl = this.httpService.apiUrl("portfolios/v1/investments");
   private getExchangePortfolioUrl = this.httpService.apiUrl("portfolios/v1/exchange/");
+  private deleteExchangePortfolioUrl = this.httpService.apiUrl("portfolios/v1/exchange/");
   
   constructor(private httpService: HttpService) { }
 
@@ -65,7 +67,11 @@ export class PortfolioService {
     return this.httpService.get(this.getRoboPortfoliosUrl + "?goalOption=" + goalOption + "&risk=" + risk);
   }
 
-  getExchangePortfolio(exchangeId: number): Observable<Portfolio> {
+  getExchangePortfolio(exchangeId: number): Observable<ExchangePortfolio> {
     return this.httpService.get(this.getExchangePortfolioUrl + exchangeId);
+  }
+
+  deleteExchangePortfolio(exchangeId: number): Observable<void> {
+    return this.httpService.delete(this.getExchangePortfolioUrl + exchangeId);
   }
 }

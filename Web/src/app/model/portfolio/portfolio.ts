@@ -4,10 +4,10 @@ import { HistoryResult } from "../advisor/historyResult";
 import { AssetDistribution } from "../asset/assetDistribution";
 import { HistoryValues } from "../advisor/historyValues";
 import { HistogramInfo } from "../advisor/histogramInfo";
+import { BasePortfolio } from "./basePortfolio";
 
-export class Portfolio {
+export class Portfolio extends BasePortfolio {
   id: number;
-  name: string;
   description: string;
   price: number;
   purchased: boolean;
@@ -30,17 +30,12 @@ export class Portfolio {
   last7Days: HistoryResult;
   last30Days: HistoryResult;
   allDays: HistoryResult;
-  assetDistribution: AssetDistribution[];
-  historyData: HistoryValues[];
-  histogram: HistogramInfo[];
 
   constructor(){
+    super();
     this.lastDay = new HistoryResult();
     this.last7Days = new HistoryResult();
     this.last30Days = new HistoryResult();
     this.allDays = new HistoryResult();
-    this.assetDistribution = [];
-    this.historyData = [];
-    this.histogram = [];
   }
 }

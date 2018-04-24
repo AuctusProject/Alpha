@@ -12,7 +12,7 @@
 }
 
 
-/deep/ .tab-body {
+/deep/ .mat-tab-body {
   background: linear-gradient( #ECECEC, #FFFFFF00, #FFFFFF00,#FFFFFF00,#FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00, #FFFFFF00);
   padding: 56px 136px;
 }

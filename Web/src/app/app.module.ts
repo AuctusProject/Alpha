@@ -96,6 +96,7 @@ import { CurrencyMaskModule } from "ng2-currency-mask";
 import { SyncExchangeComponent } from './components/portfolio/sync-exchange/sync-exchange.component';
 import { ExchangePortfolioCardComponent } from './components/portfolio/exchange-portfolio-card/exchange-portfolio-card.component';
 import { ExchangePortfolioDetailsComponent } from './components/portfolio/exchange-portfolio-details/exchange-portfolio-details.component';
+import { ExchangePortfolioDetailsTabsComponent } from './components/portfolio/exchange-portfolio-details-tabs/exchange-portfolio-details-tabs.component';
 
 @NgModule({
   declarations: [
@@ -162,7 +163,8 @@ import { ExchangePortfolioDetailsComponent } from './components/portfolio/exchan
     SetHashPopupComponent,
     SyncExchangeComponent,
     ExchangePortfolioCardComponent,
-    ExchangePortfolioDetailsComponent
+    ExchangePortfolioDetailsComponent,
+    ExchangePortfolioDetailsTabsComponent
   ],
   imports: [
     BrowserAnimationsModule,

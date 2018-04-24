@@ -1,7 +1,9 @@
-export class ExchangePortfolio {
+import { BasePortfolio } from "./basePortfolio";
+
+export class ExchangePortfolio extends BasePortfolio {
   exchangeId: number;
-  name: string;
 
   constructor(){
+    super();
   }
 }

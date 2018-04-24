@@ -26,6 +26,19 @@ namespace Auctus.Business.Asset
             return assets;
         }
 
+        public List<Auctus.DomainObjects.Asset.Asset> ListAssetsIncludingUsd()
+        {
+            var assets = ListAssets();
+            assets.Add(new DomainObjects.Asset.Asset()
+            {
+                Code = "USD",
+                Id = 0,
+                Name = "Dolar",
+                Type = DomainObjects.Asset.AssetType.Traditional.Value
+            });
+            return assets;
+        }
+
         public void UpdateAllAssetsValues()
         {
             var assets = ListAssets();

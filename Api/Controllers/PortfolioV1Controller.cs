@@ -114,5 +114,13 @@ namespace Api.Controllers
         {
             return base.GetExchangePortfolio(exchangeId);
         }
+
+        [Route("exchange/{exchangeId}")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult DeleteExchangePortfolio([FromRoute]int exchangeId)
+        {
+            return base.DeleteExchangePortfolio(exchangeId);
+        }
     }
 }

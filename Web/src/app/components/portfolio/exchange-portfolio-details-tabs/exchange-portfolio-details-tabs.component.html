@@ -1,0 +1,22 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+    <div fxFlex>
+      <mat-tab-group [selectedIndex]="selectedIndex" mat-stretch-tabs>
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <div class="tab-title">
+              ALLOCATION
+            </div>
+          </ng-template>
+          <portfolio-distribution class="tab-body" [assetDistributions]="portfolio.assetDistribution"></portfolio-distribution>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+              <div class="tab-title">
+                HISTORY
+              </div>
+            </ng-template>
+            <!-- <portfolio-history [portfolio]="portfolio"></portfolio-history> -->
+          </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>

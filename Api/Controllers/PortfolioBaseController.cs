@@ -195,5 +195,18 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        protected virtual IActionResult DeleteExchangePortfolio(int exchangeId)
+        {
+            try
+            {
+                PortfolioServices.DeleteExchangePortfolio(GetUser(), exchangeId);
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

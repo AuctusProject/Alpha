@@ -71,9 +71,14 @@ namespace Auctus.Service
             return PortfolioBusiness.Get(email, portfolioId);
         }
 
-        public Model.Portfolio GetExchangePortfolio(string email, int exchangeId)
+        public Model.ExchangePortfolio GetExchangePortfolio(string email, int exchangeId)
         {
             return PortfolioBusiness.GetExchangePortfolio(email, exchangeId);
+        }
+
+        public void DeleteExchangePortfolio(string email, int exchangeId)
+        {
+            PortfolioBusiness.DeleteExchangePortfolio(email, exchangeId);
         }
 
         public List<Model.Portfolio.Distribution> ListPortfolioDistribution(string email, int portfolioId)

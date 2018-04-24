@@ -464,7 +464,7 @@ namespace Auctus.Business.Portfolio
             }
         }
 
-        public Model.Portfolio GetExchangePortfolio(string email, int exchangeId)
+        public Model.ExchangePortfolio GetExchangePortfolio(string email, int exchangeId)
         {
             var user = UserBusiness.GetValidUser(email);
             var exchangeApiAccess = ExchangeApiAccessBusiness.Get(user.Id, exchangeId);
@@ -473,11 +473,19 @@ namespace Auctus.Business.Portfolio
             var exchangeBalances = exchangeApi.GetBalances();
             var assetDistribution = ExchangeApiAccessBusiness.ConvertExchangeBalancesToAssetDistribution(exchangeBalances);
 
-            return new Model.Portfolio()
+            return new Model.ExchangePortfolio()
             {
-                Name = $"My {Exchange.GetName(exchangeId)} portfolio.",
+                ExchangeId = exchangeId,
+                Name = $"My {Exchange.GetName(exchangeId)} portfolio",                
                 AssetDistribution = assetDistribution
             };
+        }
+
+        public void DeleteExchangePortfolio(string email, int exchangeId)
+        {
+            var user = UserBusiness.GetValidUser(email);
+            var exchangeApiAccess = ExchangeApiAccessBusiness.Get(user.Id, exchangeId);
+            ExchangeApiAccessBusiness.Delete(exchangeApiAccess);
         }
     }
 }
