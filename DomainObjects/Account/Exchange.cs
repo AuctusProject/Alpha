@@ -40,10 +40,6 @@ namespace Auctus.DomainObjects.Account
                     return "Bitfinex";
                 case 2:
                     return "Binance";
-                case 3:
-                    return "Bittrex";
-                case 4:
-                    return "Poloniex";
                 default:
                     throw new ArgumentException("Invalid exchange.");
             }
