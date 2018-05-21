@@ -31,6 +31,7 @@ namespace Auctus.Service
         protected AdvisorBusiness AdvisorBusiness { get { return new AdvisorBusiness(Logger, MemoryCache, NodeServices); } }
         protected AdvisorDetailBusiness AdvisorDetailBusiness { get { return new AdvisorDetailBusiness(Logger, MemoryCache, NodeServices); } }
         protected BuyBusiness BuyBusiness { get { return new BuyBusiness(Logger, MemoryCache, NodeServices); } }
+        protected FollowBusiness FollowBusiness { get { return new FollowBusiness(Logger, MemoryCache, NodeServices); } }
         protected DistributionBusiness DistributionBusiness { get { return new DistributionBusiness(Logger, MemoryCache, NodeServices); } }
         protected PortfolioBusiness PortfolioBusiness { get { return new PortfolioBusiness(Logger, MemoryCache, NodeServices); } }
         protected PortfolioHistoryBusiness PortfolioHistoryBusiness { get { return new PortfolioHistoryBusiness(Logger, MemoryCache, NodeServices); } }

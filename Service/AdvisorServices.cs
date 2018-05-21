@@ -1,4 +1,5 @@
 ﻿using Auctus.DomainObjects.Advisor;
+using Auctus.DomainObjects.Portfolio;
 using Auctus.Model;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
@@ -38,6 +39,16 @@ namespace Auctus.Service
             int? risk, double? targetAmount, double? startingAmount, double? monthlyContribution)
         {
             return BuyBusiness.Create(email, address, portfolioId, days, goalOptionId, timeframe, risk, targetAmount, startingAmount, monthlyContribution);
+        }
+
+        public Follow Follow(string email, string address, int portfolioId)
+        {
+            return FollowBusiness.Create(email, address, portfolioId);
+        }
+
+        public void Unfollow(string email, string address, int portfolioId)
+        {
+            FollowBusiness.Delete(email, address, portfolioId);
         }
 
         public void SetBuyTransaction(string email, int buyId, string transactionHash)

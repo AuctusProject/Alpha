@@ -46,13 +46,13 @@ namespace Auctus.Business.Account
             if (!result.PendingConfirmation)
             {
                 MemoryCache.Set<User>(user.Email, user);
-                var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+                var following = Task.Factory.StartNew(() => FollowBusiness.ListFollowing(user.Id));
                 var advisor = Task.Factory.StartNew(() => AdvisorBusiness.SimpleGetByOwner(user.Id));
 
-                Task.WaitAll(purchases, advisor);
+                Task.WaitAll(following, advisor);
 
                 result.HumanAdvisorId = advisor.Result?.Id;
-                result.HasInvestment = purchases.Result.Count > 0;
+                result.HasInvestment = following.Result.Count > 0;
             }
 
             return result;

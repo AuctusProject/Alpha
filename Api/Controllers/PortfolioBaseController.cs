@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
+using Api.Model.Advisor;
 
 namespace Api.Controllers
 {
@@ -113,12 +114,12 @@ namespace Api.Controllers
             return Ok(portfolios);
         }
 
-        protected virtual IActionResult ListPurchasedPortfolios()
+        protected virtual IActionResult ListFollowingPortfolios()
         {
             List<Auctus.Model.Portfolio> portfolios;
             try
             {
-                portfolios = PortfolioServices.ListPurchasedPortfolios(GetUser());
+                portfolios = PortfolioServices.ListFollowingPortfolios(GetUser());
             }
             catch (ArgumentException ex)
             {
@@ -207,6 +208,39 @@ namespace Api.Controllers
             {
                 return BadRequest(new { error = ex.Message });
             }
+        }
+
+        protected virtual IActionResult Follow(FollowRequest followRequest)
+        {
+            if (followRequest == null)
+                return BadRequest();
+
+            Follow follow;
+            try
+            {
+                follow = AdvisorServices.Follow(GetUser(), followRequest.Address, followRequest.PortfolioId);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok(new { id = follow.Id });
+        }
+
+        protected virtual IActionResult Unfollow(FollowRequest followRequest)
+        {
+            if (followRequest == null)
+                return BadRequest();
+
+            try
+            {
+                AdvisorServices.Unfollow(GetUser(), followRequest.Address, followRequest.PortfolioId);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+            return Ok();
         }
     }
 }

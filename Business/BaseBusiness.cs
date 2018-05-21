@@ -28,6 +28,7 @@ namespace Auctus.Business
         private AdvisorBusiness _advisorBusiness;
         private AdvisorDetailBusiness _advisorDetailBusiness;
         private BuyBusiness _buyBusiness;
+        private FollowBusiness _followBusiness;
         private DistributionBusiness _distributionBusiness;
         private PortfolioBusiness _portfolioBusiness;
         private PortfolioHistoryBusiness _portfolioHistoryBusiness;
@@ -149,6 +150,16 @@ namespace Auctus.Business
                 if (_buyBusiness == null)
                     _buyBusiness = new BuyBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _buyBusiness;
+            }
+        }
+
+        protected FollowBusiness FollowBusiness
+        {
+            get
+            {
+                if (_followBusiness == null)
+                    _followBusiness = new FollowBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _followBusiness;
             }
         }
 

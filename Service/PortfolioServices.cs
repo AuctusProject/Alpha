@@ -40,9 +40,9 @@ namespace Auctus.Service
             return PortfolioBusiness.List(email);
         }
 
-        public List<Model.Portfolio> ListPurchasedPortfolios(string email)
+        public List<Model.Portfolio> ListFollowingPortfolios(string email)
         {
-            return PortfolioBusiness.ListPurchased(email);
+            return PortfolioBusiness.ListFollowing(email);
         }
 
         public Model.Investments GetInvestments(string email)

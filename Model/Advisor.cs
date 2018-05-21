@@ -11,7 +11,7 @@ namespace Auctus.Model
         public string Description { get; set; }
         public bool Owned { get; set; }
         public bool Enabled { get; set; }
-        public int PurchaseQuantity { get; set; }
+        public int FollowersQuantity { get; set; }
         public List<Portfolio> Portfolios { get; set; }
     }
 }

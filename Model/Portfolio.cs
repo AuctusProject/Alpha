@@ -9,10 +9,10 @@ namespace Auctus.Model
         public int Id { get; set; }
         public string Description { get; set; }
         public decimal Price { get; set; }
-        public bool Purchased { get; set; }
+        public bool Following { get; set; }
         public bool Owned { get; set; }
         public bool Enabled { get; set; }
-        public int PurchaseQuantity { get; set; }
+        public int FollowersQuantity { get; set; }
         public int AdvisorId { get; set; }
         public string AdvisorName { get; set; }
         public string AdvisorDescription { get; set; }

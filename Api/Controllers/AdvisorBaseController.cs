@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
+using Auctus.DomainObjects.Portfolio;
 
 namespace Api.Controllers
 {

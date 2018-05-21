@@ -62,7 +62,7 @@ namespace Auctus.Business.Advisor
         public KeyValuePair<int, IEnumerable<Model.Portfolio>> ListRoboAdvisors(string email, int goalOptionId, int risk)
         {
             var user = UserBusiness.GetValidUser(email);
-            var purchases = Task.Factory.StartNew(() => BuyBusiness.ListPurchases(user.Id));
+            var following = Task.Factory.StartNew(() => FollowBusiness.ListFollowing(user.Id));
             var goalOption = GoalOptionsBusiness.Get(goalOptionId);
             var riskType = RiskType.Get(risk, goalOption.Risk);
             var riskPriority = RiskType.GetRiskPriority(riskType);
@@ -71,13 +71,13 @@ namespace Auctus.Business.Advisor
             
             Task.WaitAll(portfolios);
 
-            var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(portfolios.Result.SelectMany(c => c.Value.Select(x => x.Id))));
+            var portfolioQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(portfolios.Result.SelectMany(c => c.Value.Select(x => x.Id))));
 
             List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
             foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios.Result.SelectMany(c => c.Value))
                 histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
 
-            Task.WaitAll(purchases, portfolioQty);
+            Task.WaitAll(following, portfolioQty);
             Task.WaitAll(histories.ToArray());
 
             List<Model.Portfolio> portfolioWithSameRisk = new List<Model.Portfolio>();
@@ -96,7 +96,7 @@ namespace Auctus.Business.Advisor
                     var riskFound = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);
                     if (riskFound != null)
                     {
-                        var port = PortfolioBusiness.FillPortfolioModel(riskFound, advisor, user, purchases.Result, portfolioQty.Result);
+                        var port = PortfolioBusiness.FillPortfolioModel(riskFound, advisor, user, following.Result, portfolioQty.Result);
                         var difference = riskFound.Projection.RiskType.Value - riskType.Value;
                         if (difference == 0)
                             portfolioWithSameRisk.Add(port);
@@ -116,13 +116,13 @@ namespace Auctus.Business.Advisor
                     }
                 }
             }
-            var result = portfolioWithSameRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
-            result.AddRange(portfolioWithLittleLowerRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
-            result.AddRange(portfolioWithLittleHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
-            result.AddRange(portfolioWithLowerRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
-            result.AddRange(portfolioWithHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
-            result.AddRange(portfolioWithVeryLowerRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
-            result.AddRange(portfolioWithVeryHigherRisk.OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent));
+            var result = portfolioWithSameRisk.OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
+            result.AddRange(portfolioWithLittleLowerRisk.OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent));
+            result.AddRange(portfolioWithLittleHigherRisk.OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent));
+            result.AddRange(portfolioWithLowerRisk.OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent));
+            result.AddRange(portfolioWithHigherRisk.OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent));
+            result.AddRange(portfolioWithVeryLowerRisk.OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent));
+            result.AddRange(portfolioWithVeryHigherRisk.OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent));
 
             return new KeyValuePair<int, IEnumerable<Model.Portfolio>>(riskType.Value, result);
         }
@@ -138,18 +138,18 @@ namespace Auctus.Business.Advisor
             if (advisor.Type == AdvisorType.Robo.Value || (!advisor.Detail.Enabled && !owned))
                 throw new ArgumentException("Invalid advisor.");
 
-            Task<List<Buy>> purchases = null;
+            Task<List<Follow>> follows = null;
             if (user != null)
-                purchases = Task.Factory.StartNew(() => BuyBusiness.ListUserAdvisorPurchases(user.Id, advisorId));
+                follows = Task.Factory.StartNew(() => FollowBusiness.ListUserAdvisorFollows(user.Id, advisorId));
 
-            var advisorQty = Task.Factory.StartNew(() => BuyBusiness.ListAdvisorsPurchases(new int[] { advisorId }));
+            var followersQty = Task.Factory.StartNew(() => FollowBusiness.ListAdvisorsFollowers(new int[] { advisorId }));
             var portfolios = PortfolioBusiness.ListWithHistory(advisorId, !owned);
-            var portfolioQty = Task.Factory.StartNew(() => BuyBusiness.ListPortfoliosPurchases(portfolios.Select(x => x.Id)));
+            var portfolioQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(portfolios.Select(x => x.Id)));
 
             if (user != null)
-                Task.WaitAll(purchases, advisorQty, portfolioQty);
+                Task.WaitAll(follows, followersQty, portfolioQty);
             else
-                Task.WaitAll(advisorQty, portfolioQty);
+                Task.WaitAll(followersQty, portfolioQty);
             
             return new Model.Advisor()
             {
@@ -158,9 +158,9 @@ namespace Auctus.Business.Advisor
                 Description = advisor.Detail.Description,
                 Owned = owned,
                 Enabled = advisor.Detail.Enabled,
-                PurchaseQuantity = advisorQty.Result.ContainsKey(advisor.Id) ? advisorQty.Result[advisor.Id] : 0,
-                Portfolios = portfolios.Select(c => PortfolioBusiness.FillPortfolioModel(c, advisor, user, purchases?.Result, portfolioQty.Result)).
-                    OrderByDescending(c => c.PurchaseQuantity).ThenByDescending(c => c.ProjectionPercent).ToList()
+                FollowersQuantity = followersQty.Result.ContainsKey(advisor.Id) ? followersQty.Result[advisor.Id] : 0,
+                Portfolios = portfolios.Select(c => PortfolioBusiness.FillPortfolioModel(c, advisor, user, follows?.Result, portfolioQty.Result)).
+                    OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent).ToList()
             };
         }
     }

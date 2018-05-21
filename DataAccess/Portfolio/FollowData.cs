@@ -8,7 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 
-namespace Auctus.DataAccess.Advisor
+namespace Auctus.DataAccess.Portfolio
 {
     public class FollowData : BaseData<Follow>
     {

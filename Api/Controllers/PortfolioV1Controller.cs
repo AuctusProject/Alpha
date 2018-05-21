@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
+using Api.Model.Advisor;
 
 namespace Api.Controllers
 {
@@ -67,12 +68,12 @@ namespace Api.Controllers
             return base.ListPortfolios();
         }
 
-        [Route("purchases")]
+        [Route("following")]
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult ListPurchasedPortfolios()
+        public new IActionResult ListFollowingPortfolios()
         {
-            return base.ListPurchasedPortfolios();
+            return base.ListFollowingPortfolios();
         }
 
         [Route("investments")]
@@ -121,6 +122,22 @@ namespace Api.Controllers
         public new IActionResult DeleteExchangePortfolio([FromRoute]int exchangeId)
         {
             return base.DeleteExchangePortfolio(exchangeId);
+        }
+
+        [Route("followers")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult Follow([FromBody]FollowRequest followRequest)
+        {
+            return base.Follow(followRequest);
+        }
+
+        [Route("followers")]
+        [HttpDelete]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult Unfollow([FromBody]FollowRequest followRequest)
+        {
+            return base.Follow(followRequest);
         }
     }
 }

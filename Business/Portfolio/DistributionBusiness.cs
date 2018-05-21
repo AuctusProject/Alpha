@@ -69,11 +69,11 @@ namespace Auctus.Business.Portfolio
         public List<Model.Portfolio.Distribution> ListByUserPortfolio(string email, int portfolioId)
         {
             var user = UserBusiness.GetValidUser(email);
-            var purchase = Task.Factory.StartNew(() => BuyBusiness.Get(user.Id, portfolioId));
+            var followed = Task.Factory.StartNew(() => FollowBusiness.Get(user.Id, portfolioId));
             var portfolio = Task.Factory.StartNew(() => PortfolioBusiness.GetWithDetails(portfolioId));
-            Task.WaitAll(purchase, portfolio);
+            Task.WaitAll(followed, portfolio);
 
-            var purchased = purchase.Result != null && BuyBusiness.IsValidPurchase(purchase.Result) && purchase.Result.LastTransaction.TransactionStatus == TransactionStatus.Success.Value;
+            var purchased = followed.Result != null;
             var owned = portfolio.Result != null && portfolio.Result.Advisor.UserId == user.Id;
             if (!purchased && !owned)
                 throw new ArgumentException("Invalid portfolio distribution.");
