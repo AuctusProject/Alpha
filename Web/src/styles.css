@@ -546,7 +546,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 
 .header-action-button {
-  min-height: 58px;
+  min-width: 140px;
   padding: 12px 35px;
   border-radius: 45px;
   background-color: #ffffff;

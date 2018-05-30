@@ -60,10 +60,6 @@ export class PortfolioPurchaseComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.portfolio.advisorType != 0 && !this.goal && !this.portfolio.purchased && !this.portfolio.owned) {
-      this.router.navigateByUrl('robo-advisors');
-      return;
-    }
     this.startDate = moment()
       .startOf("date")
       .toDate();

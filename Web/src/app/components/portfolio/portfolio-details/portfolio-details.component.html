@@ -2,18 +2,22 @@
   <header></header>
   <div class="header-text-container" fxLayout="row" *ngIf="portfolio">
     <div fxFlex>
-      <h3 *ngIf="portfolio.risk">
-        {{getRiskDescription(portfolio.risk)}}
-      </h3>
       <h1 *ngIf="portfolio.name">{{portfolio.name}}</h1>
       <h2 *ngIf="portfolio.advisorName">{{portfolio.advisorName}}</h2>
       <p>
-        <span *ngIf="portfolio.purchased">You have already purchased from this advisor -</span>
-        {{portfolio.purchaseQuantity | number:'1.0-2'}} sold
+        <span *ngIf="!portfolio.following">Follow this portfolio and receive allocation change notification</span><br>
+        {{portfolio.followersQuantity | number:'1.0-2'}} <span *ngIf="portfolio.followersQuantity == 1">follower</span><span *ngIf="portfolio.followersQuantity != 1">followers</span>
       </p>
     </div>
     <div *ngIf="this.loginData && portfolio.advisorId == this.loginData.humanAdvisorId" fxFlex fxLayoutAlign="end center">
       <div class="header-action-button" fxLayoutAlign="space-around center" routerLink="/edit-portfolio/{{portfolio.id}}">EDIT PORTFOLIO</div>
+    </div>
+    <div *ngIf="this.loginData && portfolio.advisorId != this.loginData.humanAdvisorId && !portfolio.following" fxFlex fxLayoutAlign="end center">
+      <button
+       type="button" [promiseBtn]="followPromise" class="header-action-button" (click)="onFollowClick()">FOLLOW</button>
+    </div>
+    <div *ngIf="this.loginData && portfolio.advisorId != this.loginData.humanAdvisorId && portfolio.following" fxFlex fxLayoutAlign="end center">
+      <button type="button" [promiseBtn]="followPromise" class="header-action-button" (click)="onUnfollowClick()">UNFOLLOW</button>
     </div>
   </div>
 </div>

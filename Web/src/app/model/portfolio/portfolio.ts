@@ -10,13 +10,13 @@ export class Portfolio extends BasePortfolio {
   id: number;
   description: string;
   price: number;
-  purchased: boolean;
+  following: boolean;
   buyTransactionStatus: number;
   buyTransactionHash: string;
   buyTransactionId: number;
   owned: boolean;
   enabled: boolean;
-  purchaseQuantity: number;
+  followersQuantity: number;
   advisorId: number;
   advisorName: string;
   advisorDescription: string;

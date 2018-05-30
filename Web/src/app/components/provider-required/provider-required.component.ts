@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { MetamaskAccountService } from '../../services/metamask-account.service';
 
 import { environment } from '../../../environments/environment';
-import { constants } from '../../util/contants';
+import { constants } from '../../util/constants';
 import { EventsService } from "angular-event-service";
 import { ChangeDetectorRef } from '@angular/core';
 import { AccountService } from "../../services/account.service";

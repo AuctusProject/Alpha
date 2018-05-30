@@ -13,18 +13,13 @@
     <exchange-portfolio-card *ngFor="let portfolio of exchangePortfolios" [exchangePortfolio]="portfolio"></exchange-portfolio-card>
     <div *ngIf="portfolios && portfolios.length == 0 && exchangePortfolios && exchangePortfolios.length == 0" class="no-investments">
       <div class="no-investments-title">You still don't have any investments.</div>
-      <div class="no-investments-subtitle">Select one option below and start now!</div>
+      <div class="no-investments-subtitle">Check the available portfolios at human advisors page!</div>
       <div class="advisor-selection">
         <div class="advisor-selection-option" routerLink="/human-advisors" routerLinkActive="active">
           <span>HUMAN ADVISORS</span>
           <img src="/assets/img/human.svg" />
         </div>
-        <div class="advisor-selection-option" routerLink="/robo-advisors" routerLinkActive="active">
-          <span>ROBO ADVISORS</span>
-          <img src="/assets/img/robo.svg" />
-        </div>
       </div>
     </div>
-    <div class="action-button sync-exchange" routerLink="/sync-exchange" routerLinkActive="active">SYNC EXCHANGE</div>
   </div>
 </div>

@@ -35,19 +35,10 @@ namespace Auctus.Business.Portfolio
             if (following.Any(c => c.PortfolioId == portfolio.Id))
                 throw new ArgumentException("Portfolio already followed.");
 
-            Follow follow;
-            using (var transaction = new TransactionalDapperCommand())
-            {
-                follow = SetNew(portfolio.Id, portfolio.ProjectionId.Value, portfolio.Detail.Id, user.Id);
-                transaction.Insert(follow);
-                var trans = TransactionBusiness.SetNew(user.Id);
-                transaction.Insert(trans);
-                var buyTrans = BuyTransactionBusiness.SetNew(follow.Id, trans.Id);
-                transaction.Insert(buyTrans);
-                follow.Portfolio = portfolio;
-                follow.PortfolioDetail = portfolio.Detail;
-                transaction.Commit();
-            }
+            Follow follow = SetNew(portfolio.Id, portfolio.ProjectionId.Value, portfolio.Detail.Id, user.Id);
+            Data.Insert(follow);
+            follow.Portfolio = portfolio;
+            follow.PortfolioDetail = portfolio.Detail;
             return follow;
         }
         

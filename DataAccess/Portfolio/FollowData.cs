@@ -12,9 +12,9 @@ namespace Auctus.DataAccess.Portfolio
 {
     public class FollowData : BaseData<Follow>
     {
-        public override string TableName => "Buy";
+        public override string TableName => "Follow";
 
-        private const string SELECT_USER_FOLLOWS_BY_ADVISOR = @"SELECT b.*, p.* FROM 
+        private const string SELECT_USER_FOLLOWS_BY_ADVISOR = @"SELECT f.*, p.* FROM 
                                                                 Follow f 
                                                                 INNER JOIN Portfolio p ON p.Id = f.PortfolioId 
                                                                 WHERE f.UserId = @UserId AND p.AdvisorId = @AdvisorId ";

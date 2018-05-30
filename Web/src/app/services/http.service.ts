@@ -143,7 +143,7 @@ export class HttpService {
         }
       }
 
-      return of(result as T);
+      return Observable.throw("error");
     };
   }
 

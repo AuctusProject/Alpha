@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Auctus.DomainObjects.Advisor;
+using static Auctus.Model.Investments;
 
 namespace Auctus.Business.Portfolio
 {
@@ -267,7 +268,7 @@ namespace Auctus.Business.Portfolio
         {
             var investments = new Model.Investments();
             investments.PurchasedPortfolios = ListFollowing(email);
-            investments.ExchangePortfolios = ListExchangePortfolios(email);
+            investments.ExchangePortfolios = Enumerable.Empty<ExchangePortfolio>().ToList(); //ListExchangePortfolios(email);
             return investments;
         }
 
@@ -313,23 +314,17 @@ namespace Auctus.Business.Portfolio
             
             var portfolioQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(new int[] { portfolioId }));
             var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolioId));
-
-            Task<List<Distribution>> distribution = null;
-            Task<List<EscrowResult>> escrowResult = null;
-            Task<decimal?> purchaseAmount = null;
-            if (followed)
+            var distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
+            
+            if (owned)
             {
-                distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
-                Task.WaitAll(history, portfolioQty, distribution);
-            }
-            else if (owned)
-            {
-                distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
-                escrowResult = Task.Factory.StartNew(() => EscrowResultBusiness.ListByPortfolio(portfolio.Result.Id));
-                Task.WaitAll(history, portfolioQty, distribution, escrowResult, purchaseAmount);
+                Task<List<EscrowResult>> escrowResult = Task.Factory.StartNew(() => EscrowResultBusiness.ListByPortfolio(portfolio.Result.Id));
+                Task.WaitAll(history, portfolioQty, distribution, escrowResult);
             }
             else
-                Task.WaitAll(history, portfolioQty);
+            {
+                Task.WaitAll(history, portfolioQty, distribution);
+            }
 
             portfolio.Result.PortfolioHistory = history.Result;
             var result = FillPortfolioModel(portfolio.Result, portfolio.Result.Advisor, user, 

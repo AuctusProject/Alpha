@@ -5,7 +5,7 @@ import { EventsService } from 'angular-event-service';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
-import { constants } from '../util/contants';
+import { constants } from '../util/constants';
 import { Web3Service } from "./web3.service";
 
 declare let window: any;

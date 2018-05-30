@@ -132,12 +132,12 @@ namespace Api.Controllers
             return base.Follow(followRequest);
         }
 
-        [Route("followers")]
-        [HttpDelete]
+        [Route("followers/unfollow")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public new IActionResult Unfollow([FromBody]FollowRequest followRequest)
         {
-            return base.Follow(followRequest);
+            return base.Unfollow(followRequest);
         }
     }
 }
