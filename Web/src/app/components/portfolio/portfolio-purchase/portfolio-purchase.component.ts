@@ -202,7 +202,7 @@ export class PortfolioPurchaseComponent implements OnInit {
       if (hash) {
         this.purchasePromise = this.advisorService.setBuyTransaction(id, hash).subscribe(success => {
           if (success) {
-            this.portfolio.purchased = true;
+            //this.portfolio.purchased = true;
             this.portfolio.buyTransactionId = id;
             this.portfolio.buyTransactionHash = hash;
             this.portfolio.buyTransactionStatus = 0;
@@ -234,7 +234,7 @@ export class PortfolioPurchaseComponent implements OnInit {
               result => {
                 self.portfolio.buyTransactionStatus = result.status;
                 if(result.distribution){
-                  self.portfolio.purchased = true;
+                  //self.portfolio.purchased = true;
                   self.portfolio.assetDistribution = result.distribution;
                   self.notificationService.success("Sucess", "Your buy transaction was successfully processed.");
                   if(self.afterPurchaseCompleted){
@@ -301,7 +301,7 @@ export class PortfolioPurchaseComponent implements OnInit {
     this.purchasePromise = this.advisorService
       .cancelBuyTransaction(this.portfolio.buyTransactionId)
       .subscribe(result => {
-        this.portfolio.purchased = false;
+        //this.portfolio.purchased = false;
         this.portfolio.buyTransactionId = null;
         this.portfolio.buyTransactionHash = null;
         this.portfolio.buyTransactionStatus = null;
@@ -322,7 +322,7 @@ export class PortfolioPurchaseComponent implements OnInit {
 
   isTransactionPendingToSend() {
     return (
-      this.portfolio.purchased &&
+      //this.portfolio.purchased &&
       this.portfolio.buyTransactionStatus == 0 &&
       !this.portfolio.buyTransactionHash
     );
@@ -330,7 +330,7 @@ export class PortfolioPurchaseComponent implements OnInit {
 
   isTransactionPendingConfirmation() {
     return (
-      this.portfolio.purchased &&
+      //this.portfolio.purchased &&
       this.portfolio.buyTransactionStatus == 0 &&
       this.portfolio.buyTransactionHash
     );
