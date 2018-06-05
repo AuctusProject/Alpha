@@ -61,9 +61,21 @@ namespace Auctus.Business.Portfolio
                 return new List<Distribution>();
 
             var distributions = Data.List(projectionIds);
+            FillDistributionsWithAssets(distributions);
+            return distributions;
+        }
+
+        public List<Distribution> ListFromPortfolioId(int portfolioId)
+        {
+            var distributions = Data.ListFromPortfolioWithProjection(portfolioId);
+            FillDistributionsWithAssets(distributions);
+            return distributions;
+        }
+
+        private void FillDistributionsWithAssets(List<Distribution> distributions)
+        {
             var assets = AssetBusiness.ListAssets();
             distributions.ForEach(c => c.Asset = assets.Single(a => a.Id == c.AssetId));
-            return distributions;
         }
 
         public List<Model.Portfolio.Distribution> ListByUserPortfolio(string email, int portfolioId)

@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Auctus.DomainObjects.Advisor;
 using static Auctus.Model.Investments;
+using Auctus.Util.NotShared;
 
 namespace Auctus.Business.Portfolio
 {
@@ -103,6 +104,7 @@ namespace Auctus.Business.Portfolio
                 portfolio.Projection = newProjection;
                 transaction.Commit();
             }
+            NotifyUsersOfPortfolioUpdateSync(portfolio);
             return portfolio;
         }
 
@@ -314,16 +316,17 @@ namespace Auctus.Business.Portfolio
             
             var portfolioQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(new int[] { portfolioId }));
             var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolioId));
-            var distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
-            
+            //var distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
+            var distributionHistory = Task.Factory.StartNew(() => DistributionBusiness.ListFromPortfolioId(portfolio.Result.Id));
+
             if (owned)
             {
                 Task<List<EscrowResult>> escrowResult = Task.Factory.StartNew(() => EscrowResultBusiness.ListByPortfolio(portfolio.Result.Id));
-                Task.WaitAll(history, portfolioQty, distribution, escrowResult);
+                Task.WaitAll(history, portfolioQty, distributionHistory, escrowResult);
             }
             else
             {
-                Task.WaitAll(history, portfolioQty, distribution);
+                Task.WaitAll(history, portfolioQty, distributionHistory);
             }
 
             portfolio.Result.PortfolioHistory = history.Result;
@@ -337,15 +340,28 @@ namespace Auctus.Business.Portfolio
                 Date = c.Date,
                 Value = c.RealValue
             }).ToList();
-            result.AssetDistribution = distribution == null ? null : distribution.Result.Select(c => new Model.Portfolio.Distribution()
-            {
-                Id = c.AssetId,
-                Code = c.Asset.Code,
-                Name = c.Asset.Name,
-                Percentage = c.Percent,
-                Type = (int)c.Asset.Type
-            }).OrderByDescending(c => c.Percentage).ToList();
+            result.AssetDistributionHistory = distributionHistory != null ? ConvertDistributionToModel(distributionHistory.Result) : null;
             return result;
+        }
+
+        private List<Model.BasePortfolio.DistributionHistory> ConvertDistributionToModel(List<Distribution> distributions)
+        {
+            var grouppedDistributions = distributions.GroupBy(dist => dist.ProjectionId);
+
+            return grouppedDistributions.Select(groupped =>
+             new Model.Portfolio.DistributionHistory()
+             {
+                 Date = groupped.FirstOrDefault().Projection.Date,
+                 AssetDistribution = groupped.Select(c => new Model.Portfolio.Distribution()
+                 {
+                     Id = c.AssetId,
+                     Code = c.Asset.Code,
+                     Name = c.Asset.Name,
+                     Percentage = c.Percent,
+                     Type = (int)c.Asset.Type
+                 }).OrderByDescending(c => c.Percentage).ToList()
+             }
+            ).ToList();
         }
 
         public Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
@@ -441,6 +457,47 @@ namespace Auctus.Business.Portfolio
             var user = UserBusiness.GetValidUser(email);
             var exchangeApiAccess = ExchangeApiAccessBusiness.Get(user.Id, exchangeId);
             ExchangeApiAccessBusiness.Delete(exchangeApiAccess);
+        }
+
+
+        public void NotifyUsersOfPortfolioUpdateSync(DomainObjects.Portfolio.Portfolio portfolio)
+        {
+            try
+            {
+                var task = NotifyUsersOfPortfolioUpdate(portfolio);
+                task.Wait();
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "NotifyUsersOfPortfolioUpdateSync error");
+            }
+        }
+
+        public async Task NotifyUsersOfPortfolioUpdate(DomainObjects.Portfolio.Portfolio portfolio)
+        {
+            var users = FollowBusiness.GetUsersFollowersFromPortfolio(portfolio.Id);
+            foreach (var user in users)
+            {
+                await SendPortfolioUpdateNotification(user, portfolio);
+            }
+        }
+
+        private async Task SendPortfolioUpdateNotification(User user, DomainObjects.Portfolio.Portfolio portfolio)
+        {
+            await Email.SendAsync(
+                new string[] { user.Email },
+                "Portfolio update information",
+                string.Format(@"Hello,
+                    <br/><br/>
+                    One portfolio that you follow was updated. .
+                    <br/><br/>
+                    Check the new recommended allocation <a href='{0}/portfolio/{1}' target='_blank'>here</a>.
+                    <br/><br/>
+                    If you didn’t ask to verify this address, you can ignore this email.
+                    <br/><br/>
+                    Thanks,
+                    <br/>
+                    Auctus Team", Config.WEB_URL, portfolio.Id));
         }
     }
 }

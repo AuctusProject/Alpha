@@ -10,7 +10,14 @@ namespace Auctus.Model
         public List<HistogramDistribution> Histogram { get; set; }
         public List<History> HistoryData { get; set; }
         public List<Distribution> AssetDistribution { get; set; }
-        
+        public List<DistributionHistory> AssetDistributionHistory { get; set; }
+
+        public class DistributionHistory
+        {
+            public DateTime Date { get; set; }
+            public List<Distribution> AssetDistribution { get; set; }
+        }
+
         public class Distribution
         {
             public int Id { get; set; }

@@ -36,6 +36,13 @@ namespace Auctus.DataAccess.Portfolio
                                                         INNER JOIN PortfolioDetail d ON d.Id = f.PortfolioDetailId 
                                                         WHERE f.UserId = @UserId AND f.PortfolioId = @PortfolioId ";
 
+        private const string SELECT_FOLLOWERS_FROM_PORTFOLIO = @"SELECT u.* FROM
+                                                        Follow f
+                                                        INNER JOIN Projection p ON p.Id = f.ProjectionId 
+                                                        INNER JOIN PortfolioDetail d ON d.Id = f.PortfolioDetailId 
+                                                        INNER JOIN [User] u ON f.UserId = u.Id
+                                                        WHERE f.PortfolioId = @PortfolioId ";
+
         public List<Follow> ListFollowing(int userId)
         {
             DynamicParameters parameters = new DynamicParameters();
@@ -80,6 +87,13 @@ namespace Auctus.DataAccess.Portfolio
         public Dictionary<int, int> ListPortfoliosFollowers(IEnumerable<int> portfolioIds)
         {
             return ListPurchasesQty(portfolioIds, "PortfolioId", SELECT_PORTFOLIO_FOLLOWERS_QTY);
+        }
+
+        public IEnumerable<User> GetUsersFollowersFromPortfolio(int portfolioId)
+        {
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("PortfolioId", portfolioId, DbType.Int32);
+            return Query<User>(SELECT_FOLLOWERS_FROM_PORTFOLIO, parameters);
         }
 
         public Dictionary<int, int> ListAdvisorsFollowers(IEnumerable<int> advisorIds)

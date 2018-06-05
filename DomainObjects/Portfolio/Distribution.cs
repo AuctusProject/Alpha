@@ -17,5 +17,6 @@ namespace Auctus.DomainObjects.Portfolio
         public double Percent { get; set; }
         
         public Auctus.DomainObjects.Asset.Asset Asset { get; set; }
+        public Projection Projection { get; set; }
     }
 }

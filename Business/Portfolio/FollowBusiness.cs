@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Auctus.DomainObjects.Account;
 
 namespace Auctus.Business.Portfolio
 {
@@ -96,6 +97,11 @@ namespace Auctus.Business.Portfolio
         public Dictionary<int, int> ListPortfoliosFollowers(IEnumerable<int> portfolioIds)
         {
             return Data.ListPortfoliosFollowers(portfolioIds);
+        }
+
+        public IEnumerable<User> GetUsersFollowersFromPortfolio(int portfolioId)
+        {
+            return Data.GetUsersFollowersFromPortfolio(portfolioId);
         }
     }
 }

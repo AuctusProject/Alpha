@@ -26,5 +26,6 @@ namespace Auctus.DomainObjects.Portfolio
         public PortfolioDetail PortfolioDetail { get; set; }
         public Projection Projection { get; set; }
         public DomainObjects.Portfolio.Portfolio Portfolio { get; set; }
+        public DomainObjects.Account.User User { get; set; }
     }
 }
