@@ -8,7 +8,7 @@ namespace Auctus.Model
     {
         public int Id { get; set; }
         public string Description { get; set; }
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public bool Following { get; set; }
         public bool Owned { get; set; }
         public bool Enabled { get; set; }
@@ -17,8 +17,8 @@ namespace Auctus.Model
         public string AdvisorName { get; set; }
         public string AdvisorDescription { get; set; }
         public int AdvisorType { get; set; }
-        public int Risk { get; set; }
-        public double ProjectionPercent { get; set; }
+        public int? Risk { get; set; }
+        public double? ProjectionPercent { get; set; }
         public double? OptimisticPercent { get; set; }
         public double? PessimisticPercent { get; set; }
         public int TotalDays { get; set; }
@@ -62,7 +62,7 @@ namespace Auctus.Model
         public class HistoryResult
         {
             public double Value { get; set; }
-            public double ExpectedValue { get; set; }
+            public double? ExpectedValue { get; set; }
             public double? OptimisticExpectation { get; set; }
             public double? PessimisticExpectation { get; set; }
             public double HitPercentage { get; set; }

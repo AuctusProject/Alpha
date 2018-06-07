@@ -17,7 +17,7 @@ namespace Auctus.DomainObjects.Portfolio
         [DapperType(System.Data.DbType.Decimal)]
         public double RealValue { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public double ProjectionValue { get; set; }
+        public double? ProjectionValue { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double? PessimisticProjectionValue { get; set; }
         [DapperType(System.Data.DbType.Decimal)]

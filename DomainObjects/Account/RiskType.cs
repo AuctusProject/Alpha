@@ -16,8 +16,10 @@ namespace Auctus.DomainObjects.Account
         private RiskType(int risk) : base (risk)
         { }
 
-        public static RiskType Get(int risk)
+        public static RiskType Get(int? risk)
         {
+            if (!risk.HasValue)
+                return null;
             switch (risk)
             {
                 case 1:

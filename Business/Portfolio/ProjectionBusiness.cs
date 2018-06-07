@@ -28,7 +28,7 @@ namespace Auctus.Business.Portfolio
             return Create(portfolio, projectionValue, risk, optimisticProjection, pessimisticProjection, distribution);
         }
 
-        internal Projection Create(DomainObjects.Portfolio.Portfolio portfolio, double projectionValue, RiskType risk, 
+        internal Projection Create(DomainObjects.Portfolio.Portfolio portfolio, double? projectionValue, RiskType risk, 
             double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)
         {
             var projection = SetNew(portfolio.Id, projectionValue, risk, optimisticProjection, pessimisticProjection);
@@ -47,9 +47,9 @@ namespace Auctus.Business.Portfolio
             return projection;
         }
 
-        public Projection SetNew(int portfolioId, double projectionValue, RiskType risk, double? optimisticProjection, double? pessimisticProjection)
+        public Projection SetNew(int portfolioId, double? projectionValue, RiskType risk, double? optimisticProjection, double? pessimisticProjection)
         {
-            if (projectionValue <= 0)
+            if (projectionValue.HasValue && projectionValue <= 0)
                 throw new ArgumentException("Invalid projection value.");
             if (optimisticProjection.HasValue && optimisticProjection.Value < projectionValue)
                 throw new ArgumentException("Invalid optimistic projection value.");
@@ -59,7 +59,7 @@ namespace Auctus.Business.Portfolio
             var projection = new Projection();
             projection.PortfolioId = portfolioId;
             projection.Date = DateTime.UtcNow;
-            projection.Risk = risk.Value;
+            projection.Risk = risk?.Value;
             projection.ProjectionValue = projectionValue;
             projection.OptimisticProjectionValue = optimisticProjection;
             projection.PessimisticProjectionValue = pessimisticProjection;
@@ -86,15 +86,15 @@ namespace Auctus.Business.Portfolio
                     var start = GetStartProjectionValue(goal, projection.ProjectionValue);
                     var monthly = GetMonthlyProjectionValue(goal, projection.ProjectionValue);
                     result.ProjectionValue = start + monthly;
-                    if (goal.TargetAmount > 0)
+                    if (goal.TargetAmount > 0 && monthly.HasValue && start.HasValue)
                     {
                         result.Reached = goal.TargetAmount.Value <= result.ProjectionValue.Value;
                         result.Difference = Math.Abs(goal.TargetAmount.Value - result.ProjectionValue.Value);
-                        result.NewStartingAmount = Math.Abs(goal.TargetAmount.Value - monthly) / GetStartProjectionInterestRate(goal.Timeframe, projection.ProjectionValue);
-                        result.NewMonthlyContribution = Math.Abs(goal.TargetAmount.Value - start) /
+                        result.NewStartingAmount = Math.Abs(goal.TargetAmount.Value - monthly.Value) / GetStartProjectionInterestRate(goal.Timeframe, projection.ProjectionValue.Value);
+                        result.NewMonthlyContribution = Math.Abs(goal.TargetAmount.Value - start.Value) /
                             (goal.StartingAmount > 0 ?
-                            GetMonthlyProjectionExpiredInterestRate(goal.Timeframe, projection.ProjectionValue) :
-                            GetMonthlyProjectionAntecipatedInterestRate(goal.Timeframe, projection.ProjectionValue));
+                            GetMonthlyProjectionExpiredInterestRate(goal.Timeframe, projection.ProjectionValue.Value) :
+                            GetMonthlyProjectionAntecipatedInterestRate(goal.Timeframe, projection.ProjectionValue.Value));
                     }
                 }
             }
@@ -116,16 +116,20 @@ namespace Auctus.Business.Portfolio
             return (Math.Pow((1 + percent / 100), period) - 1) / (percent / 100);
         }
 
-        private double GetStartProjectionValue(Goal goal, double percent)
+        private double? GetStartProjectionValue(Goal goal, double? percent)
         {
-            return goal.StartingAmount * GetStartProjectionInterestRate(goal.Timeframe, percent);
+            if (!percent.HasValue)
+                return null;
+            return goal.StartingAmount * GetStartProjectionInterestRate(goal.Timeframe, percent.Value);
         }
 
-        private double GetMonthlyProjectionValue(Goal goal, double percent)
+        private double? GetMonthlyProjectionValue(Goal goal, double? percent)
         {
+            if (!percent.HasValue)
+                return null;
             return goal.StartingAmount > 0 ?
-                    goal.MonthlyContribution * GetMonthlyProjectionExpiredInterestRate(goal.Timeframe, percent) :
-                    goal.MonthlyContribution * GetMonthlyProjectionAntecipatedInterestRate(goal.Timeframe, percent);
+                    goal.MonthlyContribution * GetMonthlyProjectionExpiredInterestRate(goal.Timeframe, percent.Value) :
+                    goal.MonthlyContribution * GetMonthlyProjectionAntecipatedInterestRate(goal.Timeframe, percent.Value);
         }
     }
 }

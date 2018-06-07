@@ -13,9 +13,9 @@ namespace Auctus.Business.Portfolio
     {
         public PortfolioDetailBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public PortfolioDetail SetNew(int portfolioId, decimal price, string name, string description, bool enabled)
+        public PortfolioDetail SetNew(int portfolioId, decimal? price, string name, string description, bool enabled)
         {
-            if (price < 1)
+            if (price.HasValue && price < 1)
                 throw new ArgumentException("Invalid price.");
 
             var portfolioDetail = new PortfolioDetail();
@@ -28,7 +28,7 @@ namespace Auctus.Business.Portfolio
             return portfolioDetail;
         }
 
-        public PortfolioDetail Create(int portfolioId, decimal price, string name, string description, bool enabled)
+        public PortfolioDetail Create(int portfolioId, decimal? price, string name, string description, bool enabled)
         {
             var portfolioDetail = SetNew(portfolioId, price, name, description, enabled);
             Data.Insert(portfolioDetail);

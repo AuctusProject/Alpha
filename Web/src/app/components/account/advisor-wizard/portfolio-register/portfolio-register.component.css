@@ -187,3 +187,7 @@
 .suffix-disabled {
     color: #9D9EA0;
   }
+
+  .button-bottom-line{
+    margin-top: 12px;
+  }

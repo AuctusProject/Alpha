@@ -19,7 +19,7 @@ namespace Auctus.DomainObjects.Portfolio
         [DapperType(System.Data.DbType.AnsiString)]
         public string Description { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         [DapperType(System.Data.DbType.Boolean)]
         public bool Enabled { get; set; }
     }

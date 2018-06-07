@@ -12,6 +12,7 @@ export class BasePortfolio {
 
   constructor(){
     this.assetDistribution = [];
+    this.assetDistributionHistory = [];
     this.historyData = [];
     this.histogram = [];
   }

@@ -41,14 +41,6 @@
           </mat-form-field>
         </div>
       </div>
-      <div fxLayout="row" fxLayoutGap="32px" class="portfolio-input">
-        <div fxLayout="column" fxFlex="100">
-          <mat-form-field [floatLabel]="'always'" fxFlexOffset="25px">
-            <input matInput type="number" placeholder="Monthly fee" name="Price" required [(ngModel)]="model.price">
-            <span matSuffix>AUC&nbsp;</span>
-          </mat-form-field>
-        </div>
-      </div>
       <div class="portfolio-edition-title">Portfolio allocation</div>
       <div *ngIf="!assets" fxLayout="row" fxLayoutGap="16px">
         <loading-block class="loading-card" *ngIf="!portfolios" width="270" [height]="38"></loading-block>
@@ -62,7 +54,7 @@
                                     (onAddFormControls)="addFormControls(i, $event)" (onRemoveFormControls)="removeFormControls(i)"></portfolio-distribution-row>
         <div class="total-percentage" [class.success]="this.totalDistributionPercentage == 100" [class.error]="this.totalDistributionPercentage != 100"
              fxLayout="row" fxLayoutAlign="none center">
-          <div fxLayout="row" fxFlex="65" fxLayoutAlign="none center">
+          <div fxLayout="row" fxFlex="68" fxLayoutAlign="none center">
             <i-alert-triangle class="icon" *ngIf="this.totalDistributionPercentage != 100"></i-alert-triangle>
             <i-check class="icon" *ngIf="this.totalDistributionPercentage == 100"></i-check>
             <div class="total-label" fxLayout="column">
@@ -79,18 +71,9 @@
           <div fxFlex="16" class="total-percentage-value">{{this.totalDistributionPercentage}}%</div>
         </div>
       </div>
-      <div class="portfolio-edition-title">Monthly Expected Return</div>
-      <div class="portfolio-edition-subtitle">
-        You will only receive fees when your portfolio performance is greater than the expected return. Historically, the monthly
-        return of the S&P 500 has been roughly 0.78%
-      </div>
-      <div fxLayout="row" fxLayoutGap="32px" fxLayoutAlign="space-between center">
+      <div class="button-bottom-line" fxLayout="row" fxLayoutGap="32px" fxLayoutAlign="space-between center">
         <div class="portfolio-input" fxFlex="80">
-          <mat-form-field class="percentage-value" [floatLabel]="'always'">
-            <input type="number" placeholder="Expected Return" matInput class="percentage-input" name="ExpectedReturn" [(ngModel)]="model.projectionValue"
-                   [disabled]="model.id" required>
-            <span matSuffix [ngClass]="{'suffix-disabled': model.id}">%</span>
-          </mat-form-field>
+          
         </div>
         <div class="button" fxFlex>
           <button typeof="submit" [disabled]="!portfolioRegisterForm.form.valid || anyEmptyRow()" *ngIf="!model.id || this.model.isEditing"

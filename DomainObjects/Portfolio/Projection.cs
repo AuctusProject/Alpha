@@ -16,13 +16,13 @@ namespace Auctus.DomainObjects.Portfolio
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime Date { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
-        public double ProjectionValue { get; set; }
+        public double? ProjectionValue { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double? OptimisticProjectionValue { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double? PessimisticProjectionValue { get; set; }
         [DapperType(System.Data.DbType.Int32)]
-        public int Risk { get; set; }
+        public int? Risk { get; set; }
 
         public RiskType RiskType { get { return RiskType.Get(Risk); } }
         public Portfolio Portfolio { get; set; }

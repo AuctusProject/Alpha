@@ -22,7 +22,7 @@ namespace Auctus.Business.Portfolio
         public PortfolioBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
         public DomainObjects.Portfolio.Portfolio Create(string email, int advisorId, decimal price, string name, string description, 
-            double projectionValue, double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)
+            double? projectionValue, double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)
         {
             var advisor = AdvisorBusiness.GetWithOwner(advisorId, email);
             if (advisor == null)
@@ -126,8 +126,11 @@ namespace Auctus.Business.Portfolio
             PortfolioDetailBusiness.Create(portfolioId, portfolio.Detail.Price, portfolio.Detail.Name, portfolio.Detail.Description, false);
         }
 
-        public RiskType GetRisk(double projectionValue, Dictionary<int, double> distribution)
+        public RiskType GetRisk(double? projectionValue, Dictionary<int, double> distribution)
         {
+            if (!projectionValue.HasValue)
+                return null;
+
             IEnumerable<DomainObjects.Asset.Asset> assets = AssetBusiness.ListAssets().Where(c => distribution.ContainsKey(c.Id));
             double cryptoAssetsPercentage = assets.Count(c => c.Type == AssetType.Crypto.Value) / assets.Count() * 100.0;
             if (cryptoAssetsPercentage == 0)
@@ -341,6 +344,7 @@ namespace Auctus.Business.Portfolio
                 Value = c.RealValue
             }).ToList();
             result.AssetDistributionHistory = distributionHistory != null ? ConvertDistributionToModel(distributionHistory.Result) : null;
+            result.AssetDistribution = result?.AssetDistributionHistory?.FirstOrDefault()?.AssetDistribution;
             return result;
         }
 
@@ -361,7 +365,7 @@ namespace Auctus.Business.Portfolio
                      Type = (int)c.Asset.Type
                  }).OrderByDescending(c => c.Percentage).ToList()
              }
-            ).ToList();
+            ).OrderByDescending(c => c.Date).ToList();
         }
 
         public Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
