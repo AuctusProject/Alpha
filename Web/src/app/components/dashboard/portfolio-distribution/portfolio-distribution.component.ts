@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { PortfolioDistribution } from "../../../model/portfolio/portfolioDistribution";
 import { MatTableDataSource } from '@angular/material';
 import { AssetDistribution } from "../../../model/asset/assetDistribution";
@@ -8,7 +8,7 @@ import { AssetDistribution } from "../../../model/asset/assetDistribution";
   templateUrl: './portfolio-distribution.component.html',
   styleUrls: ['./portfolio-distribution.component.css']
 })
-export class PortfolioDistributionComponent implements OnInit {
+export class PortfolioDistributionComponent implements OnInit, OnChanges {
   @Input() assetDistributions: AssetDistribution[];
   portfolioDataSource: MatTableDataSource<AssetDistribution>;
   colors = CHART_COLORS;
@@ -17,6 +17,15 @@ export class PortfolioDistributionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.fillChartInformation();
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+   this.fillChartInformation(); 
+  }
+
+  fillChartInformation()
+  {
     if (this.assetDistributions != undefined) {
       this.pieChartLabels.length = 0;
       this.pieChartData = [];

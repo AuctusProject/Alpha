@@ -6,5 +6,16 @@
       <button class="action-button" (click)="onBuyClick()">BUY</button>
     </div>
   </div>
-  <portfolio-distribution *ngIf="portfolio.assetDistributionHistory[0].assetDistribution" [assetDistributions]="portfolio.assetDistributionHistory[0].assetDistribution"></portfolio-distribution>
+  <div fxLayout="column">
+      <div fxLayout="row">
+    <mat-form-field fxFlex="240px">
+      <mat-select placeholder="Allocation Date" [(value)]="currentAllocation">
+        <mat-option *ngFor="let assetDistribution of portfolio.assetDistributionHistory" [value]="assetDistribution">
+          {{ formatDate(assetDistribution.date) }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+      </div>
+    <portfolio-distribution *ngIf="currentAllocation && currentAllocation.assetDistribution" [assetDistributions]="currentAllocation.assetDistribution"></portfolio-distribution>
+  </div>
 </div>

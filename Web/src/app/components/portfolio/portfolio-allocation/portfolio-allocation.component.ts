@@ -1,8 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 import { Portfolio } from '../../../model/portfolio/portfolio';
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { PortfolioPurchasePopupComponent } from "../portfolio-purchase-popup/portfolio-purchase-popup.component";
 import { Goal } from '../../../model/account/goal';
+import { AssetDistributionHistory } from '../../../model/asset/assetDistributionHistory';
+import * as moment from 'moment';
 
 @Component({
   selector: 'portfolio-allocation',
@@ -10,14 +12,16 @@ import { Goal } from '../../../model/account/goal';
   styleUrls: ['./portfolio-allocation.component.css']
 })
 export class PortfolioAllocationComponent implements OnInit {
-
   @Input() portfolio: Portfolio;
   @Input() goal?: Goal;
+  currentAllocation: AssetDistributionHistory;
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private ref: ChangeDetectorRef, private ref2: ApplicationRef) { }
 
   ngOnInit() {
-
+    if(this.portfolio.assetDistributionHistory && this.portfolio.assetDistributionHistory.length > 0){
+      this.currentAllocation = this.portfolio.assetDistributionHistory[0];
+    }
   }
 
   public onBuyClick() {
@@ -35,4 +39,7 @@ export class PortfolioAllocationComponent implements OnInit {
     this.dialog.open(PortfolioPurchasePopupComponent, dialogConfig);
   }
 
+  public formatDate(date){
+    return moment(date).format('YYYY-MM-DD hh:mm:ss');
+  }
 }
