@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Account
 {
-    public class ExchangeApiAccessData : BaseData<ExchangeApiAccess>
+    public class ExchangeApiAccessData : BaseSQL<ExchangeApiAccess>
     {
         public override string TableName => "ExchangeApiAccess";
 

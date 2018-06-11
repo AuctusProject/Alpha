@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Portfolio
 {
-    public class PortfolioData : BaseData<DomainObjects.Portfolio.Portfolio>
+    public class PortfolioData : BaseSQL<DomainObjects.Portfolio.Portfolio>
     {
         public override string TableName => "Portfolio";
 

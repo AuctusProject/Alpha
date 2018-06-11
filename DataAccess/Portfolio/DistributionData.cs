@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Portfolio
 {
-    public class DistributionData : BaseData<Distribution>
+    public class DistributionData : BaseSQL<Distribution>
     {
         public override string TableName => "Distribution";
 

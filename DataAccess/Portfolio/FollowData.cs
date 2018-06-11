@@ -10,7 +10,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Portfolio
 {
-    public class FollowData : BaseData<Follow>
+    public class FollowData : BaseSQL<Follow>
     {
         public override string TableName => "Follow";
 

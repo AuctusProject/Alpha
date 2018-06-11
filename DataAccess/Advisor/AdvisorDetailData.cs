@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Advisor
 {
-    public class AdvisorDetailData : BaseData<AdvisorDetail>
+    public class AdvisorDetailData : BaseSQL<AdvisorDetail>
     {
         public override string TableName => "AdvisorDetail";
 

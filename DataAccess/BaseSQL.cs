@@ -11,9 +11,9 @@ using Auctus.Util.NotShared;
 
 namespace Auctus.DataAccess
 {
-    public abstract class BaseData<T> : DapperRepositoryBase
+    public abstract class BaseSQL<T> : DapperRepositoryBase, IBaseData<T>
     {
-        protected BaseData() : base(Config.CONNECTION_STRING)
+        protected BaseSQL() : base(Config.CONNECTION_STRING)
         { }
 
         public IEnumerable<T> SelectByObject(T criteria)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Portfolio
 {
-    public class PortfolioDetailData : BaseData<PortfolioDetail>
+    public class PortfolioDetailData : BaseSQL<PortfolioDetail>
     {
         public override string TableName => "PortfolioDetail";
     }

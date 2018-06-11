@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Portfolio
 {
-    public class ProjectionData : BaseData<Projection>
+    public class ProjectionData : BaseSQL<Projection>
     {
         public override string TableName => "Projection";
 

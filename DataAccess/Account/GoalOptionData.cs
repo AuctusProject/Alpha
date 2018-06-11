@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Account
 {
-    public class GoalOptionData : BaseData<GoalOption>
+    public class GoalOptionData : BaseSQL<GoalOption>
     {
         public override string TableName => "GoalOption";
     }

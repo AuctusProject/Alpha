@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Account
 {
-    public class WalletData : BaseData<Wallet>
+    public class WalletData : BaseSQL<Wallet>
     {
         public override string TableName => "Wallet";
 

@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Advisor
 {
-    public class BuyTransactionData : BaseData<BuyTransaction>
+    public class BuyTransactionData : BaseSQL<BuyTransaction>
     {
         public override string TableName => "BuyTransaction";
 

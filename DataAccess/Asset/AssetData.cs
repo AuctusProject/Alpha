@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Auctus.DataAccess.Asset
 {
-    public class AssetData : BaseData<Auctus.DomainObjects.Asset.Asset>
+    public class AssetData : BaseSQL<Auctus.DomainObjects.Asset.Asset>
     {
         public override string TableName => "Asset";
 

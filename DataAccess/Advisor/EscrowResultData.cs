@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Advisor
 {
-    public class EscrowResultData : BaseData<EscrowResult>
+    public class EscrowResultData : BaseSQL<EscrowResult>
     {
         public override string TableName => "EscrowResult";
 

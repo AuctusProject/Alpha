@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Auctus.DataAccess.Portfolio
 {
-    public class PortfolioHistoryData : BaseData<PortfolioHistory>
+    public class PortfolioHistoryData : BaseSQL<PortfolioHistory>
     {
         public override string TableName => "PortfolioHistory";
 

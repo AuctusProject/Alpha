@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Account
 {
-    public class PasswordRecoveryData : BaseData<PasswordRecovery>
+    public class PasswordRecoveryData : BaseSQL<PasswordRecovery>
     {
         public override string TableName => "PasswordRecovery";
 

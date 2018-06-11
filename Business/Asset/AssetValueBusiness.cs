@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Asset;
+using Auctus.DataAccess.Core;
 using Auctus.DataAccess.Exchanges;
 using Auctus.DomainObjects.Asset;
 using Auctus.Util;
@@ -23,7 +24,7 @@ namespace Auctus.Business.Asset
 
         internal void UpdateAssetValue(DomainObjects.Asset.Asset asset)
         {
-            var lastUpdatedValue = LastAssetValue(asset.Id)?.Date ?? new DateTime(2017, 8, 17);
+            var lastUpdatedValue = LastAssetValue(asset.Id)?.Date ?? new DateTime(2018, 6, 1);
             if (lastUpdatedValue >= DateTime.UtcNow.Date)
             {
                 return;
@@ -46,12 +47,13 @@ namespace Auctus.Business.Asset
             var previousDateAndValue = assetDateAndValues?.Where(d => d.Key == lastUpdatedValue).OrderByDescending(v => v.Key).FirstOrDefault();
             if (pendingUpdate != null)
             {
+                List<AssetValue> assetValues = new List<AssetValue>();
                 foreach (var pending in pendingUpdate)
                 {
                     previousDateAndValue = InsertAssetValueForPreviousDaysWithoutMarketValues(asset, previousDateAndValue, pending);
-                    var assetValue = new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = pending.Key, Value = pending.Value };
-                    Data.Insert(assetValue);
+                    assetValues.Add(new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = pending.Key, Value = pending.Value });
                 }
+                Data.InsertManyAsync(Data.CollectionName, assetValues);
             }
         }
 
@@ -60,12 +62,14 @@ namespace Auctus.Business.Asset
             if (previousDateAndValue.HasValue && previousDateAndValue?.Key > DateTime.MinValue)
             {
                 var previousDate = previousDateAndValue?.Key.AddDays(1);
+                List<AssetValue> previousAssetValues = new List<AssetValue>();
+
                 while (previousDate < currentPendingDateAndValue.Key)
                 {
-                    var previousAssetValue = new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = previousDate.Value, Value = previousDateAndValue.Value.Value };
-                    Data.Insert(previousAssetValue);
+                    previousAssetValues.Add(new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = previousDate.Value, Value = previousDateAndValue.Value.Value });
                     previousDate = previousDate.Value.AddDays(1);
                 }
+                Data.InsertManyAsync(Data.CollectionName, previousAssetValues);
             }
             return currentPendingDateAndValue;
         }

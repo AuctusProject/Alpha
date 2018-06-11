@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auctus.DataAccess.Account
 {
-    public class TransactionData : BaseData<Transaction>
+    public class TransactionData : BaseSQL<Transaction>
     {
         public override string TableName => "Transaction";
     }

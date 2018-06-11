@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.NodeServices;
 
 namespace Auctus.Business
 {
-    public abstract class BaseBusiness<T, D> where D : BaseData<T>, new()
+    public abstract class BaseBusiness<T, D> where D : IBaseData<T>, new()
     {
         protected readonly ILoggerFactory LoggerFactory;
         protected readonly ILogger Logger;
