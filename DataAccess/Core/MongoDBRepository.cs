@@ -6,6 +6,7 @@ using Auctus.Util.NotShared;
 using MongoDB.Bson;
 using System.Threading.Tasks;
 using System.Linq;
+using Auctus.DomainObjects;
 
 namespace Auctus.DataAccess.Core
 {
@@ -18,14 +19,14 @@ namespace Auctus.DataAccess.Core
             IMongoDatabase database = client.GetDatabase(DATABASE_NAME);
             return database;
         }
-        public Task InsertOneAsync(string collectionName, object document)
+        protected Task InsertOneAsync(string collectionName, MongoDomainObject document)
         {
             IMongoDatabase database = GetDataBase();
             IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);
             return collection.InsertOneAsync(document.ToBsonDocument());
         }
 
-        public Task InsertManyAsync(string collectionName, IEnumerable<object> documents)
+        protected Task InsertManyAsync(string collectionName, IEnumerable<MongoDomainObject> documents)
         {
             IMongoDatabase database = GetDataBase();
             IMongoCollection<BsonDocument> collection = database.GetCollection<BsonDocument>(collectionName);

@@ -1,5 +1,6 @@
 ﻿using Auctus.DomainObjects.Portfolio;
 using Dapper;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,28 +8,22 @@ using System.Linq;
 
 namespace Auctus.DataAccess.Portfolio
 {
-    public class PortfolioHistoryData : BaseSQL<PortfolioHistory>
+    public class PortfolioHistoryData : BaseMongo<PortfolioHistory>
     {
-        public override string TableName => "PortfolioHistory";
-
-        private readonly string SQL_LIST_BY_ASSET_ID = @"SELECT TOP 1 ph.* 
-                                                FROM 
-                                                PortfolioHistory ph
-                                                where ph.PortfolioId = @PortfolioId
-                                                ORDER BY Date desc";
+        public override string CollectionName => "PortfolioHistory";   
 
         public PortfolioHistory LastHistory(int portfolioId)
         {
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("PortfolioId", portfolioId, DbType.Int32);
-            return Query<PortfolioHistory>(SQL_LIST_BY_ASSET_ID, parameters).FirstOrDefault();
+            var value = Collection.Find(x => x.PortfolioId == portfolioId).SortByDescending(x => x.Date).FirstOrDefault();
+
+            return value;
         }
 
         public List<PortfolioHistory> ListHistory(int portfolioId)
         {
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("PortfolioId", portfolioId, DbType.Int32);
-            return SelectByParameters<PortfolioHistory>(parameters, "Date").ToList();
+            var values = Collection.Find(x => x.PortfolioId == portfolioId).SortByDescending(x => x.Date);
+
+            return values.ToList();
         }
     }
 }

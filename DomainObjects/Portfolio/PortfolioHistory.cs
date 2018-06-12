@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Auctus.DomainObjects.Portfolio
 {
-    public class PortfolioHistory
+    public class PortfolioHistory : MongoDomainObject
     {
         [DapperKey(true)]
         [DapperType(System.Data.DbType.Int32)]
@@ -16,11 +16,11 @@ namespace Auctus.DomainObjects.Portfolio
         public DateTime Date { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double RealValue { get; set; }
-        [DapperType(System.Data.DbType.Decimal)]
-        public double? ProjectionValue { get; set; }
-        [DapperType(System.Data.DbType.Decimal)]
-        public double? PessimisticProjectionValue { get; set; }
-        [DapperType(System.Data.DbType.Decimal)]
-        public double? OptimisticProjectionValue { get; set; }
+        //[DapperType(System.Data.DbType.Decimal)]
+        //public double? ProjectionValue { get; set; }
+        //[DapperType(System.Data.DbType.Decimal)]
+        //public double? PessimisticProjectionValue { get; set; }
+        //[DapperType(System.Data.DbType.Decimal)]
+        //public double? OptimisticProjectionValue { get; set; }
     }
 }

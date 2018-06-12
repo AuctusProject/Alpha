@@ -53,7 +53,7 @@ namespace Auctus.Business.Asset
                     previousDateAndValue = InsertAssetValueForPreviousDaysWithoutMarketValues(asset, previousDateAndValue, pending);
                     assetValues.Add(new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = pending.Key, Value = pending.Value });
                 }
-                Data.InsertManyAsync(Data.CollectionName, assetValues);
+                Data.InsertManyAsync(assetValues);
             }
         }
 
@@ -69,7 +69,7 @@ namespace Auctus.Business.Asset
                     previousAssetValues.Add(new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = previousDate.Value, Value = previousDateAndValue.Value.Value });
                     previousDate = previousDate.Value.AddDays(1);
                 }
-                Data.InsertManyAsync(Data.CollectionName, previousAssetValues);
+                Data.InsertManyAsync(previousAssetValues);
             }
             return currentPendingDateAndValue;
         }
@@ -77,16 +77,9 @@ namespace Auctus.Business.Asset
         private static Dictionary<DateTime, double> GetAssetValuesByDate(DomainObjects.Asset.Asset asset, DateTime startDate)
         {
             Dictionary<DateTime, double> assetDateAndValues;
-            if (asset.Type == DomainObjects.Asset.AssetType.Traditional.Value)
-            {
-                assetDateAndValues = AlphaVantageApi.GetCloseAdjustedValues(asset.Code);
-            }
-            else if (asset.Type == DomainObjects.Asset.AssetType.Crypto.Value)
-            {
-                assetDateAndValues = ExchangeApi.GetCloseCryptoValue(asset.Code, startDate);
-            }
-            else
-                throw new InvalidOperationException();
+
+            assetDateAndValues = ExchangeApi.GetCloseCryptoValue(asset.Code, startDate);
+
             return assetDateAndValues;
         }
     }

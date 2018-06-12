@@ -1,8 +1,12 @@
 ﻿using Auctus.DataAccess.Core;
+using Auctus.DomainObjects;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Auctus.DataAccess
 {
@@ -20,6 +24,17 @@ namespace Auctus.DataAccess
             }
         }
 
+        public Task InsertOneAsync(MongoDomainObject document)
+        {
+            return base.InsertOneAsync(CollectionName, document);
+        }
+
+        public Task InsertManyAsync(IEnumerable<MongoDomainObject> documents)
+        {
+            return base.InsertManyAsync(CollectionName, documents);
+        }
+
+        #region IBaseData implementation
         void IBaseData<T>.Delete(T obj)
         {
             throw new NotImplementedException();
@@ -44,5 +59,6 @@ namespace Auctus.DataAccess
         {
             throw new NotImplementedException();
         }
+        #endregion
     }
 }
