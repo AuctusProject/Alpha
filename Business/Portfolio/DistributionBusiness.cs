@@ -34,7 +34,7 @@ namespace Auctus.Business.Portfolio
                 projection.PessimisticProjectionValue, distribution).Distribution;
         }
 
-        public List<Distribution> SetNew(int projectionId, int portfolioId, Dictionary<int, double> distribution)
+        public List<Distribution> SetNew(int projectionId, int portfolioId, Dictionary<int, double> distribution, DateTime date)
         {
             var distributions = new List<Distribution>();
             foreach(KeyValuePair<int, double> key in distribution)
@@ -45,7 +45,8 @@ namespace Auctus.Business.Portfolio
                         AssetId = key.Key,
                         Percent = key.Value,
                         ProjectionId = projectionId,
-                        PortfolioId = portfolioId
+                        PortfolioId = portfolioId,
+                        Date = date
                     });
             }
             return distributions;

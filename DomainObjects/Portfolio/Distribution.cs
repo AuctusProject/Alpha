@@ -17,10 +17,11 @@ namespace Auctus.DomainObjects.Portfolio
         public int PortfolioId { get; set; }
         [DapperType(System.Data.DbType.Decimal)]
         public double Percent { get; set; }
-
+        public DateTime Date { get; set; }
         [BsonIgnore]
         public Auctus.DomainObjects.Asset.Asset Asset { get; set; }
         [BsonIgnore]
         public Projection Projection { get; set; }
+       
     }
 }

@@ -41,7 +41,7 @@ namespace Auctus.Business.Portfolio
                 transaction.Insert(detail);
                 var projection = ProjectionBusiness.SetNew(portfolio.Id, projectionValue, risk, optimisticProjection, pessimisticProjection);
                 transaction.Insert(projection);
-                var distributions = DistributionBusiness.SetNew(projection.Id, portfolio.Id, distribution);
+                var distributions = DistributionBusiness.SetNew(projection.Id, portfolio.Id, distribution, projection.Date);
                 DistributionBusiness.InsertMany(distributions);
 
                 portfolio.ProjectionId = projection.Id;
@@ -91,7 +91,7 @@ namespace Auctus.Business.Portfolio
                 var newProjection = ProjectionBusiness.SetNew(portfolio.Id, projection.ProjectionValue, risk, projection.OptimisticProjectionValue, projection.PessimisticProjectionValue);
                 transaction.Insert(newProjection);
 
-                var distributions = DistributionBusiness.SetNew(newProjection.Id, portfolio.Id, distribution);
+                var distributions = DistributionBusiness.SetNew(newProjection.Id, portfolio.Id, distribution, newProjection.Date);
                 foreach (Distribution dist in distributions)
                     transaction.Insert(dist);
 
@@ -354,7 +354,7 @@ namespace Auctus.Business.Portfolio
             return grouppedDistributions.Select(groupped =>
              new Model.Portfolio.DistributionHistory()
              {
-                 Date = groupped.FirstOrDefault().Projection.Date,
+                 Date = groupped.FirstOrDefault().Date,
                  AssetDistribution = groupped.Select(c => new Model.Portfolio.Distribution()
                  {
                      Id = c.AssetId,

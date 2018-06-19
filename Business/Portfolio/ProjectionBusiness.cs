@@ -35,10 +35,8 @@ namespace Auctus.Business.Portfolio
             using (var transaction = new TransactionalDapperCommand())
             {
                 transaction.Insert(projection);
-                var distributions = DistributionBusiness.SetNew(projection.Id, portfolio.Id, distribution);
+                var distributions = DistributionBusiness.SetNew(projection.Id, portfolio.Id, distribution, projection.Date);
                 DistributionBusiness.InsertMany(distributions);
-                //foreach (Distribution dist in distributions)
-                //    transaction.Insert(dist);
 
                 portfolio.ProjectionId = projection.Id;
                 transaction.Update(portfolio);
