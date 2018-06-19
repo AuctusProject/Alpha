@@ -15,9 +15,6 @@ namespace Auctus.Business.Portfolio
 
         public PortfolioDetail SetNew(int portfolioId, decimal? price, string name, string description, bool enabled)
         {
-            if (price.HasValue && price < 1)
-                throw new ArgumentException("Invalid price.");
-
             var portfolioDetail = new PortfolioDetail();
             portfolioDetail.PortfolioId = portfolioId;
             portfolioDetail.Date = DateTime.UtcNow;

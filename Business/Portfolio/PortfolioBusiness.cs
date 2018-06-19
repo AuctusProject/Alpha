@@ -41,9 +41,8 @@ namespace Auctus.Business.Portfolio
                 transaction.Insert(detail);
                 var projection = ProjectionBusiness.SetNew(portfolio.Id, projectionValue, risk, optimisticProjection, pessimisticProjection);
                 transaction.Insert(projection);
-                var distributions = DistributionBusiness.SetNew(projection.Id, distribution);
-                foreach (Distribution dist in distributions)
-                    transaction.Insert(dist);
+                var distributions = DistributionBusiness.SetNew(projection.Id, portfolio.Id, distribution);
+                DistributionBusiness.InsertMany(distributions);
 
                 portfolio.ProjectionId = projection.Id;
                 transaction.Update(portfolio);
@@ -92,7 +91,7 @@ namespace Auctus.Business.Portfolio
                 var newProjection = ProjectionBusiness.SetNew(portfolio.Id, projection.ProjectionValue, risk, projection.OptimisticProjectionValue, projection.PessimisticProjectionValue);
                 transaction.Insert(newProjection);
 
-                var distributions = DistributionBusiness.SetNew(newProjection.Id, distribution);
+                var distributions = DistributionBusiness.SetNew(newProjection.Id, portfolio.Id, distribution);
                 foreach (Distribution dist in distributions)
                     transaction.Insert(dist);
 

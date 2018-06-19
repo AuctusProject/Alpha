@@ -7,10 +7,6 @@ namespace Auctus.DomainObjects.Portfolio
 {
     public class PortfolioHistory : MongoDomainObject
     {
-        [DapperKey(true)]
-        [DapperType(System.Data.DbType.Int32)]
-        public int Id { get; set; }
-        [DapperType(System.Data.DbType.Int32)]
         public int PortfolioId { get; set; }
         [DapperType(System.Data.DbType.DateTime)]
         public DateTime Date { get; set; }

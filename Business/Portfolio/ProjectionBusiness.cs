@@ -35,9 +35,10 @@ namespace Auctus.Business.Portfolio
             using (var transaction = new TransactionalDapperCommand())
             {
                 transaction.Insert(projection);
-                var distributions = DistributionBusiness.SetNew(projection.Id, distribution);
-                foreach (Distribution dist in distributions)
-                    transaction.Insert(dist);
+                var distributions = DistributionBusiness.SetNew(projection.Id, portfolio.Id, distribution);
+                DistributionBusiness.InsertMany(distributions);
+                //foreach (Distribution dist in distributions)
+                //    transaction.Insert(dist);
 
                 portfolio.ProjectionId = projection.Id;
                 transaction.Update(portfolio);
@@ -49,13 +50,6 @@ namespace Auctus.Business.Portfolio
 
         public Projection SetNew(int portfolioId, double? projectionValue, RiskType risk, double? optimisticProjection, double? pessimisticProjection)
         {
-            if (projectionValue.HasValue && projectionValue <= 0)
-                throw new ArgumentException("Invalid projection value.");
-            if (optimisticProjection.HasValue && optimisticProjection.Value < projectionValue)
-                throw new ArgumentException("Invalid optimistic projection value.");
-            if (pessimisticProjection.HasValue && (pessimisticProjection.Value < 0 || pessimisticProjection.Value > projectionValue))
-                throw new ArgumentException("Invalid pessimistic projection value.");
-
             var projection = new Projection();
             projection.PortfolioId = portfolioId;
             projection.Date = DateTime.UtcNow;

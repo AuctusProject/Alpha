@@ -34,13 +34,8 @@ namespace Auctus.Business.Portfolio
                 projection.PessimisticProjectionValue, distribution).Distribution;
         }
 
-        public List<Distribution> SetNew(int projectionId, Dictionary<int, double> distribution)
+        public List<Distribution> SetNew(int projectionId, int portfolioId, Dictionary<int, double> distribution)
         {
-            if (distribution.Any(c => c.Value < 0 || c.Value > 100))
-                throw new ArgumentException("Invalid asset distribution value.");
-            if (distribution.Sum(c => c.Value) != 100)
-                throw new ArgumentException("Asset distribution must match 100%.");
-
             var distributions = new List<Distribution>();
             foreach(KeyValuePair<int, double> key in distribution)
             {
@@ -49,7 +44,8 @@ namespace Auctus.Business.Portfolio
                     {
                         AssetId = key.Key,
                         Percent = key.Value,
-                        ProjectionId = projectionId
+                        ProjectionId = projectionId,
+                        PortfolioId = portfolioId
                     });
             }
             return distributions;
@@ -103,6 +99,11 @@ namespace Auctus.Business.Portfolio
                 Percentage = c.Percent,
                 Type = (int)c.Asset.Type
             }).OrderByDescending(c => c.Percentage).ToList();
+        }
+
+        public void InsertMany(List<Auctus.DomainObjects.Portfolio.Distribution> distributions)
+        {
+            Data.InsertManyAsync(distributions);
         }
     }
 }

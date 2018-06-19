@@ -18,7 +18,7 @@ namespace Api.Controllers
     {
         protected PortfolioBaseController(ILoggerFactory loggerFactory, Cache cache, IServiceProvider serviceProvider, INodeServices nodeServices) : base(loggerFactory, cache, serviceProvider, nodeServices) { }
 
-        protected virtual IActionResult Portfolio(PortfolioRequest portfolioRequest)
+        protected virtual IActionResult CreatePortfolio(PortfolioRequest portfolioRequest)
         {
             if (portfolioRequest == null || portfolioRequest.Distribution == null)
                 return BadRequest();

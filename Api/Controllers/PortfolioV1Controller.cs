@@ -24,9 +24,9 @@ namespace Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public new IActionResult Portfolio([FromBody]PortfolioRequest portfolioRequest)
+        public new IActionResult CreatePortfolio([FromBody]PortfolioRequest portfolioRequest)
         {
-            return base.Portfolio(portfolioRequest);
+            return base.CreatePortfolio(portfolioRequest);
         }
 
         [Route("{portfolioId}")]
