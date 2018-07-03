@@ -4,6 +4,10 @@ import { PortfolioRequest } from './../../../model/portfolio/portfolioRequest';
 import { LoginService } from './../../../services/login.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RequestToBeAdvisor } from '../../../model/advisor/requestToBeAdvisor';
+import { AdvisorService } from '../../../services/advisor.service';
+import { Subscription } from 'rxjs/Subscription';
+import { NotificationsService } from 'angular2-notifications';
 
 
 @Component({
@@ -20,14 +24,32 @@ export class AdvisorWizardComponent implements OnInit {
   public portfolioList: Array<PortfolioRequest>;
   public wizardSteps = AdvisorWizardStep;
 
-  constructor(private router: Router, private loginService:LoginService) {
+  public requestModel: RequestToBeAdvisor;
+  public submitPromise: Subscription;
+  public submitBtnDescription: string;
+
+  constructor(private router: Router, 
+    private notificationService: NotificationsService,
+    private advisorService: AdvisorService,
+    private loginService: LoginService) {
     this.portfolioList = new Array<PortfolioRequest>();
     this.advisorModel = new Advisor();
     this.editedAdvisorModel = new Advisor();
+    this.requestModel = new RequestToBeAdvisor();
   }
 
   ngOnInit() {
     this.currentStep = this.wizardSteps.Start.Id;
+
+    this.advisorService.getRequestToBeAdvisor()
+      .subscribe(response => {
+        if (!!response) {
+          this.submitBtnDescription = "UPDATE";
+          this.requestModel = response;
+        } else {
+          this.submitBtnDescription = "SUBMIT";
+        }
+      });
   }
 
   public changeStep(stepToChange) {
@@ -81,5 +103,17 @@ export class AdvisorWizardComponent implements OnInit {
 
   public onMyPortfoliosClick() {
     this.router.navigateByUrl('advisor/'+this.loginService.getLoginData().humanAdvisorId);
+  }
+
+  public isApprovedRequest() {
+    return !!this.requestModel.approved;
+  }
+
+  public submitRequest() {
+    this.submitPromise = this.advisorService.requestToBeAdvisor(this.requestModel)
+      .subscribe(response => {
+        this.submitBtnDescription = "UPDATE";
+        this.notificationService.success("Success", "Request submitted with success");
+      });
   }
 }

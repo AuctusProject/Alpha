@@ -4,17 +4,41 @@
     <div fxLayout="column" fxFlex>
       <div fxLayout="column">
         <h1 class="bold">So, do you want to be an investment advisor?</h1>
-        <h3>
+        <h3 *ngIf="!isApprovedRequest()">
           Tell us a little about filling this form.<br>
           You will receive an email if your submission is approved.
         </h3>
+        <h3 *ngIf="isApprovedRequest()">Congratulations, you were approved as an advisor!</h3>
         <div fxFlex fxHide.lt-md>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+          <div fxLayout="row">
+            <mat-form-field fxFlex>
+              <input matInput maxlength="100" placeholder="Advisor name" [readonly]="isApprovedRequest()" [inputFocus]="true" [(ngModel)]="requestModel.name" required />
+            </mat-form-field>
+          </div>
+          <div fxLayout="row">
+            <mat-form-field fxFlex>
+              <textarea matInput maxlength="4000" placeholder="A short description of yourself" [readonly]="isApprovedRequest()" [(ngModel)]="requestModel.description" required matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="15"></textarea>
+              <mat-hint align="end"><span *ngIf="requestModel.description">{{!!requestModel.description ? requestModel.description.length : 0}}</span><span *ngIf="!requestModel.description">0</span> / 4000</mat-hint>
+            </mat-form-field>
+          </div>
+          <div fxLayout="row">
+            <mat-form-field fxFlex>
+              <textarea matInput maxlength="4000" placeholder="Previous Experience" [readonly]="isApprovedRequest()" [(ngModel)]="requestModel.previousExperience" required matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="15"></textarea>
+              <mat-hint align="end"><span *ngIf="requestModel.previousExperience">{{!!requestModel.previousExperience ? requestModel.previousExperience.length : 0}}</span><span *ngIf="!requestModel.previousExperience">0</span> / 4000</mat-hint>
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-label>Which services do you want to provide?</mat-label>
+            <mat-checkbox [(ngModel)]="requestModel.recommendPortfolios" [disabled]="isApprovedRequest()">Portfolio Recommendations</mat-checkbox>
+            <mat-checkbox [(ngModel)]="requestModel.researchReports" [disabled]="isApprovedRequest()">Research Reports</mat-checkbox>
+            <mat-checkbox [(ngModel)]="requestModel.personalizedAdvice" [disabled]="isApprovedRequest()">Personalized Advice</mat-checkbox>
+            <mat-form-field fxFlex>
+              <input matInput maxlength="150" placeholder="Other Service" [readonly]="isApprovedRequest()" [(ngModel)]="requestModel.otherService" />
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayoutGap="20px">
+            <button type="submit" class="primary-button bold" [disabled]="isApprovedRequest()" [promiseBtn]="submitPromise" (click)="submitRequest()">{{submitBtnDescription}}</button>
+          </div>
         </div>
       </div>
 <!--       

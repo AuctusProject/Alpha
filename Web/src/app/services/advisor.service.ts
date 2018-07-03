@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { HttpService } from './http.service';
 import { Advisor } from "../model/advisor/advisor";
+import { RequestToBeAdvisor } from "../model/advisor/requestToBeAdvisor";
 import { Portfolio } from "../model/portfolio/portfolio";
 import { Goal } from '../model/account/goal';
 import { BuyRequest } from '../model/advisor/buyRequest';
@@ -14,6 +15,7 @@ export class AdvisorService {
   private baseAdvisorsPurchaseUrl = this.httpService.apiUrl("advisors/v1/purchases");
   private setBuyTransactionUrl = this.httpService.apiUrl("advisors/v1/purchases/{0}/transaction");
   private checkBuyTransactionUrl = this.httpService.apiUrl("advisors/v1/purchases/{0}/check");
+  private baseRequestToBeAdvisorUrl = this.httpService.apiUrl("advisors/v1/request");
   
   
   constructor(private httpService : HttpService) { }
@@ -47,5 +49,13 @@ export class AdvisorService {
 
   updateAdvisor(advisor: Advisor): Observable<void> {
     return this.httpService.patch(this.baseGetAdvisorsUrl + "/" + advisor.id, advisor);
+  }
+
+  getRequestToBeAdvisor(): Observable<RequestToBeAdvisor> {
+    return this.httpService.get(this.baseRequestToBeAdvisorUrl);
+  }
+
+  requestToBeAdvisor(requestToBeAdvisor: RequestToBeAdvisor): Observable<number> {
+    return this.httpService.post(this.baseRequestToBeAdvisorUrl, requestToBeAdvisor);
   }
 }
