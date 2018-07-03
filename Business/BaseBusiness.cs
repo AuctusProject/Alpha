@@ -44,6 +44,7 @@ namespace Auctus.Business
         private PortfolioDetailBusiness _portfolioDetailBusiness;
         private EscrowResultTransactionBusiness _escrowResultTransactionBusiness;
         private EscrowResultBusiness _escrowResultBusiness;
+        private RequestToBeAdvisorBusiness _requestToBeAdvisorBusiness;
 
         protected BaseBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices)
         {
@@ -299,6 +300,16 @@ namespace Auctus.Business
                 if (_escrowResultTransactionBusiness == null)
                     _escrowResultTransactionBusiness = new EscrowResultTransactionBusiness(LoggerFactory, MemoryCache, NodeServices);
                 return _escrowResultTransactionBusiness;
+            }
+        }
+
+        protected RequestToBeAdvisorBusiness RequestToBeAdvisorBusiness
+        {
+            get
+            {
+                if (_requestToBeAdvisorBusiness == null)
+                    _requestToBeAdvisorBusiness = new RequestToBeAdvisorBusiness(LoggerFactory, MemoryCache, NodeServices);
+                return _requestToBeAdvisorBusiness;
             }
         }
     }

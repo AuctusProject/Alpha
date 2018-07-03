@@ -90,5 +90,16 @@ namespace Auctus.Service
         {
             await EscrowResultTransactionBusiness.CheckTransactionsAsync();
         }
+
+        public RequestToBeAdvisor GetRequestToBeAdvisor(string email)
+        {
+            return RequestToBeAdvisorBusiness.GetByUser(email);
+        }
+
+        public async Task<int> RequestToBeAdvisor(string email, string name, string description, string previousExperience,
+            bool recommendPortfolios, bool researchReports, bool personalizedAdvice, string otherServiceProvided)
+        {
+            return (await RequestToBeAdvisorBusiness.Create(email, name, description, previousExperience, recommendPortfolios, researchReports, personalizedAdvice, otherServiceProvided)).Id;
+        }
     }
 }

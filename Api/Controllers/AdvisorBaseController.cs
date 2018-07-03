@@ -144,5 +144,33 @@ namespace Api.Controllers
                 return BadRequest(new { error = ex.Message });
             }
         }
+
+        protected virtual async Task<IActionResult> RequestToBeAdvisor(BeAdvisorRequest beAdvisorRequest)
+        {
+            if (beAdvisorRequest == null)
+                return BadRequest();
+
+            try
+            {
+                return Ok(await AdvisorServices.RequestToBeAdvisor(GetUser(), beAdvisorRequest.Name, beAdvisorRequest.Description, beAdvisorRequest.PreviousExperience, 
+                    beAdvisorRequest.RecommendPortfolios, beAdvisorRequest.ResearchReports, beAdvisorRequest.PersonalizedAdvice, beAdvisorRequest.OtherService));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        protected virtual IActionResult GetRequestToBeAdvisor()
+        {
+            try
+            {
+                return Ok(AdvisorServices.GetRequestToBeAdvisor(GetUser()));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
     }
 }

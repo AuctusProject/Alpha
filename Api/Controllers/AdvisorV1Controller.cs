@@ -85,5 +85,21 @@ namespace Api.Controllers
         {
             return base.ListAdvisorDetails(advisorId);
         }
+
+        [Route("request")]
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new async Task<IActionResult> RequestToBeAdvisor([FromBody]BeAdvisorRequest beAdvisorRequest)
+        {
+            return await base.RequestToBeAdvisor(beAdvisorRequest);
+        }
+
+        [Route("request")]
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetRequestToBeAdvisor()
+        {
+            return base.GetRequestToBeAdvisor();
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace Auctus.Business.Advisor
 
             var user = UserBusiness.GetValidUser(email, address);
             if (user?.ConfirmationDate == null)
-                throw new ArgumentException("User didn't confirmed e-mail.");
+                throw new ArgumentException("User didn't confirm e-mail.");
             var portfolio = PortfolioBusiness.GetWithDetails(portfolioId);
 
             if (portfolio == null || !portfolio.Detail.Enabled || !portfolio.Advisor.Detail.Enabled)
