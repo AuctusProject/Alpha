@@ -37,17 +37,18 @@ namespace Auctus.DataAccess.Exchanges
         protected override string API_CURRENT_PRICE_ENDPOINT { get => @"api/v3/ticker/price"; }
         protected override string BTC_SYMBOL { get => "BTC"; }
         protected override string USD_SYMBOL { get => "USDT"; }
+        protected override int DELAY_TO_CALL { get => 3000; }
 
         protected override string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate)
         {
-            var queryStart = Util.Util.DatetimeToUnixMilliseconds(queryDate.AddHours(-1));
+            var queryStart = Util.Util.DatetimeToUnixMilliseconds(queryDate.AddMinutes(-Math.Min(GAP_IN_MINUTES_BETWEEN_VALUES, 60)));
             var queryEnd = Util.Util.DatetimeToUnixMilliseconds(queryDate);
             return String.Format(API_ENDPOINT, fromSymbol, toSymbol, queryEnd, queryStart);
         }
 
         protected override double? GetCoinValue(HttpResponseMessage response)
         {
-            var result = JsonConvert.DeserializeObject<BinanceApiResult[]>(response.Content.ReadAsStringAsync().Result).FirstOrDefault();
+            var result = JsonConvert.DeserializeObject<BinanceApiResult[]>(response.Content.ReadAsStringAsync().Result).LastOrDefault();
             return result?.Price;            
         }
 
@@ -73,16 +74,22 @@ namespace Auctus.DataAccess.Exchanges
 
         protected override ApiError GetErrorCode(HttpResponseMessage response)
         {
-            var result = JsonConvert.DeserializeObject<BinanceApiError>(response.Content.ReadAsStringAsync().Result);
-
-            switch (result.code)
+            try
             {
-                case "-1121":
-                    return ApiError.InvalidSymbol;
-                default:
-                    return ApiError.UnknownError;
-            }
+                var result = JsonConvert.DeserializeObject<BinanceApiError>(response.Content.ReadAsStringAsync().Result);
 
+                switch (result.code)
+                {
+                    case "-1121":
+                        return ApiError.InvalidSymbol;
+                    default:
+                        return ApiError.UnknownError;
+                }
+            }
+            catch
+            {
+                return ApiError.UnknownError;
+            }
         }
 
         public override List<ExchangeBalance> GetBalances()

@@ -4,11 +4,16 @@ using System.Net.Http;
 using System.Linq;
 using Auctus.Util;
 using Auctus.DomainObjects.Portfolio;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace Auctus.DataAccess.Exchanges
 {
     public abstract class ExchangeApi
     {
+        public const int GAP_IN_MINUTES_BETWEEN_VALUES = 30;
+
         public static ExchangeApi GetById(int exchangeId, string apiKey, string apiSecretKey)
         {
             switch (exchangeId)
@@ -24,7 +29,7 @@ namespace Auctus.DataAccess.Exchanges
 
         public static IEnumerable<ExchangeApi> GetApisByCode()
         {
-            return new List<ExchangeApi> { new BinanceApi()/*, new BitfinexApi() */ };
+            return new List<ExchangeApi> { new BinanceApi() /*, new BitfinexApi() */ };
         }
 
         protected enum ApiError
@@ -38,22 +43,27 @@ namespace Auctus.DataAccess.Exchanges
         protected abstract string API_CURRENT_PRICE_ENDPOINT { get; }
         protected abstract string BTC_SYMBOL { get; }
         protected abstract string USD_SYMBOL { get; }
+        protected abstract int DELAY_TO_CALL { get; }
 
-        protected virtual Dictionary<DateTime, double> GetCloseAdjustedValues(DateTime date, string symbol)
+        protected virtual Dictionary<DateTime, double> GetCloseAdjustedValues(DateTime startTime, string symbol)
         {
-            var utcNow = DateTime.UtcNow.Date;
-            var difference = utcNow - date;
-            var daysToQuery = Math.Ceiling(difference.TotalDays);
             var returnDictionary = new Dictionary<DateTime, double>();
+            bool hasUSD = CallApiWithRetry(symbol, USD_SYMBOL, startTime).HasValue;
 
-            bool hasUSD = CallApi(symbol, USD_SYMBOL, utcNow).HasValue;
-
-            for (var i = daysToQuery; i > 0; i--)
+            var utcNow = DateTime.UtcNow;
+            startTime = startTime.AddMinutes(GAP_IN_MINUTES_BETWEEN_VALUES);
+            var calledCount = 0;
+            while (startTime <= utcNow)
             {
-                var queryDate = utcNow.AddDays(-i);
-                var value = GetValueByDate(symbol, queryDate, hasUSD);
-                if (value != null && !returnDictionary.ContainsKey(queryDate))
-                    returnDictionary.Add(queryDate, value.Value);
+                if (calledCount > 0 && calledCount % 10 == 0)
+                    Thread.Sleep(DELAY_TO_CALL);
+
+                var value = GetValueByDate(symbol, startTime, hasUSD);
+                if (value != null && !returnDictionary.ContainsKey(startTime))
+                    returnDictionary.Add(startTime, value.Value);
+
+                startTime = startTime.AddMinutes(GAP_IN_MINUTES_BETWEEN_VALUES);
+                ++calledCount;
             }
             return returnDictionary;
         }
@@ -117,10 +127,14 @@ namespace Auctus.DataAccess.Exchanges
         {
             var apis = GetApisByCode();
             Dictionary<DateTime, List<double>> exchangesPrices = new Dictionary<DateTime, List<double>>();
-            foreach (var api in apis)
+            ConcurrentBag<Dictionary<DateTime, double>> apiResults = new ConcurrentBag<Dictionary<DateTime, double>>();
+            Parallel.ForEach(apis, (api) =>
             {
-                var exchangeValues = api.GetCloseAdjustedValues(startDate, code);
-                foreach (var exchangeValue in exchangeValues)
+                apiResults.Add(api.GetCloseAdjustedValues(startDate, code));
+            });
+            foreach (var result in apiResults)
+            {
+                foreach (var exchangeValue in result)
                 {
                     if (!exchangesPrices.ContainsKey(exchangeValue.Key))
                         exchangesPrices.Add(exchangeValue.Key, new List<double>());

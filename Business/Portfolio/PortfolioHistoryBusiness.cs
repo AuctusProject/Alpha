@@ -17,11 +17,10 @@ namespace Auctus.Business.Portfolio
         public void UpdatePortfolioHistory(DomainObjects.Portfolio.Portfolio portfolio)
         {
             var lastUpdatedValue = LastPortfolioHistoryDate(portfolio.Id);
-            if (lastUpdatedValue >= DateTime.UtcNow.Date)
+            if (lastUpdatedValue?.AddMinutes(DataAccess.Exchanges.ExchangeApi.GAP_IN_MINUTES_BETWEEN_VALUES) > DateTime.UtcNow)
             {
                 return;
             }
-
             var assetsIds = portfolio.Projections.SelectMany(p => p.Distribution.Select(d => d.AssetId)).Distinct();
             var assetValuesByDate = AssetValueBusiness.GetAssetValuesGroupedByDate(assetsIds, lastUpdatedValue ?? portfolio.CreationDate).OrderBy(v => v.Key).ToList();
             CreatePortfolioHistoryForEachAssetValueDate(portfolio, assetValuesByDate);
@@ -55,8 +54,10 @@ namespace Auctus.Business.Portfolio
             var projection = PortfolioBusiness.GetProjectionAtDate(date, portfolio);
             if (projection != null)
             {
-                var assetsIds = projection.Distribution.Select(d => d.AssetId).Distinct();
-                if (assetsIds.Count() == currentAssetValues.Count && assetsIds.Count() == previousAssetValues.Count)
+                var distributionAssetsIds = projection.Distribution.Select(d => d.AssetId).Distinct();
+                var currentAssetsIds = currentAssetValues.Select(c => c.AssetId).Distinct();
+                var previousAssetsIds = previousAssetValues.Select(p => p.AssetId).Distinct();
+                if (isAssetListMatch(distributionAssetsIds, currentAssetsIds) && isAssetListMatch(currentAssetsIds, previousAssetsIds))
                 {
                     var portfolioRealValue = 0.0;
                     foreach (var assetDistribution in projection.Distribution)
@@ -77,6 +78,17 @@ namespace Auctus.Business.Portfolio
                 }
             }
             return null;
+        }
+
+        private bool isAssetListMatch(IEnumerable<int> list1, IEnumerable<int> list2)
+        {
+            if (list1.Count() == list2.Count())
+            {
+                var firstNotSecond = list1.Except(list2);
+                var secondNotFirst = list2.Except(list1);
+                return !firstNotSecond.Any() && !secondNotFirst.Any();
+            }
+            return false;
         }
 
         private DateTime? LastPortfolioHistoryDate(int id)

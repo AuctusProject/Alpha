@@ -17,6 +17,10 @@ namespace Auctus.DataAccess.Exchanges
         private string apiKey;
         private string apiSecretKey;
 
+        public BitfinexApi()
+        {
+        }
+
         public BitfinexApi(string apiKey, string apiSecretKey)
         {
             this.apiKey = apiKey;
@@ -71,20 +75,23 @@ namespace Auctus.DataAccess.Exchanges
         }
 
         protected override string API_BASE_ENDPOINT { get => @"https://api.bitfinex.com/"; }
-        protected override string API_ENDPOINT { get => @"v1/trades/{0}{1}?timestamp={2}&limit_trades=1"; }
+        protected override string API_ENDPOINT { get => @"v2/trades/t{0}{1}/hist?start={2}&end={3}"; }
         protected override string API_CURRENT_PRICE_ENDPOINT { get => @"api/v3/ticker/price"; }
         protected override string BTC_SYMBOL { get => "BTC"; }
         protected override string USD_SYMBOL { get => "USD"; }
+        protected override int DELAY_TO_CALL { get => 59000; }
 
         protected override string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate)
         {
-            return String.Format(API_ENDPOINT, fromSymbol, toSymbol, Util.Util.DatetimeToUnixSeconds(queryDate));
+            var queryStart = Util.Util.DatetimeToUnixMilliseconds(queryDate.AddMinutes(-Math.Min(GAP_IN_MINUTES_BETWEEN_VALUES, 60)));
+            var queryEnd = Util.Util.DatetimeToUnixMilliseconds(queryDate);
+            return String.Format(API_ENDPOINT, fromSymbol, toSymbol, queryStart, queryEnd);
         }
 
         protected override double? GetCoinValue(HttpResponseMessage response)
         {
-            var result = JsonConvert.DeserializeObject<BitfinexApiResult[]>(response.Content.ReadAsStringAsync().Result).FirstOrDefault();
-            return result?.Price;            
+            var result = JsonConvert.DeserializeObject<double[][]>(response.Content.ReadAsStringAsync().Result).FirstOrDefault();
+            return result?[3];            
         }
 
         protected override Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response, IEnumerable<string> symbols)
@@ -94,14 +101,21 @@ namespace Auctus.DataAccess.Exchanges
 
         protected override ApiError GetErrorCode(HttpResponseMessage response)
         {
-            var result = JsonConvert.DeserializeObject<BitfinexApiError>(response.Content.ReadAsStringAsync().Result);
-
-            switch (result.message)
+            try
             {
-                case "Unknown symbol":
-                    return ApiError.InvalidSymbol;
-                default:
-                    return ApiError.UnknownError;
+                var result = JsonConvert.DeserializeObject<BitfinexApiError>(response.Content.ReadAsStringAsync().Result);
+
+                switch (result.message)
+                {
+                    case "Unknown symbol":
+                        return ApiError.InvalidSymbol;
+                    default:
+                        return ApiError.UnknownError;
+                }
+            }
+            catch
+            {
+                return ApiError.UnknownError;
             }
         }
 
