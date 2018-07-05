@@ -17,11 +17,9 @@ namespace Auctus.DataAccess.Exchanges
         private string apiKey;
         private string apiSecretKey;
 
-        public BitfinexApi()
-        {
-        }
+        public BitfinexApi(Cache cache = null) : base(cache) { }
 
-        public BitfinexApi(string apiKey, string apiSecretKey)
+        public BitfinexApi(string apiKey, string apiSecretKey, Cache cache = null) : base(cache)
         {
             this.apiKey = apiKey;
             this.apiSecretKey = apiSecretKey;
@@ -99,23 +97,25 @@ namespace Auctus.DataAccess.Exchanges
             throw new NotImplementedException();
         }
 
-        protected override ApiError GetErrorCode(HttpResponseMessage response)
+        protected override ApiErrorData GetErrorCode(HttpResponseMessage response)
         {
+            string responseString = null;
             try
             {
-                var result = JsonConvert.DeserializeObject<BitfinexApiError>(response.Content.ReadAsStringAsync().Result);
+                responseString = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<BitfinexApiError>(responseString);
 
                 switch (result.message)
                 {
                     case "Unknown symbol":
-                        return ApiError.InvalidSymbol;
+                        return new ApiErrorData(ApiError.InvalidSymbol, result.message);
                     default:
-                        return ApiError.UnknownError;
+                        return new ApiErrorData(ApiError.UnknownError, result.message);
                 }
             }
             catch
             {
-                return ApiError.UnknownError;
+                return new ApiErrorData(ApiError.UnknownError, responseString);
             }
         }
 

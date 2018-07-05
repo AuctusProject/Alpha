@@ -32,12 +32,14 @@ namespace Auctus.DataAccess.Exchanges
             public double Price { get; set; }
         }
 
+        public BinanceApi(Cache cache = null) : base(cache) { }
+
         protected override string API_BASE_ENDPOINT { get => @"https://api.binance.com/"; }
         protected override string API_ENDPOINT { get => @"api/v1/aggTrades?symbol={0}{1}&endTime={2}&startTime={3}"; }
         protected override string API_CURRENT_PRICE_ENDPOINT { get => @"api/v3/ticker/price"; }
         protected override string BTC_SYMBOL { get => "BTC"; }
         protected override string USD_SYMBOL { get => "USDT"; }
-        protected override int DELAY_TO_CALL { get => 3000; }
+        protected override int DELAY_TO_CALL { get => 100; }
 
         protected override string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate)
         {
@@ -72,23 +74,25 @@ namespace Auctus.DataAccess.Exchanges
             return returnDictionary;
         }
 
-        protected override ApiError GetErrorCode(HttpResponseMessage response)
+        protected override ApiErrorData GetErrorCode(HttpResponseMessage response)
         {
+            string responseString = null;
             try
             {
-                var result = JsonConvert.DeserializeObject<BinanceApiError>(response.Content.ReadAsStringAsync().Result);
+                responseString = response.Content.ReadAsStringAsync().Result;
+                var result = JsonConvert.DeserializeObject<BinanceApiError>(responseString);
 
                 switch (result.code)
                 {
                     case "-1121":
-                        return ApiError.InvalidSymbol;
+                        return new ApiErrorData(ApiError.InvalidSymbol, result.msg);
                     default:
-                        return ApiError.UnknownError;
+                        return new ApiErrorData(ApiError.UnknownError, result.msg);
                 }
             }
             catch
             {
-                return ApiError.UnknownError;
+                return new ApiErrorData(ApiError.UnknownError, responseString);
             }
         }
 

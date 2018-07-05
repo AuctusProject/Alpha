@@ -45,7 +45,8 @@ namespace Auctus.Business.Asset
 
             foreach (var asset in assets)
             {
-                AssetValueBusiness.UpdateAssetValue(asset);
+                if (asset.Type == 1)
+                    AssetValueBusiness.UpdateAssetValue(asset);
             }
         }
     }

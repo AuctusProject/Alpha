@@ -13,29 +13,45 @@ namespace Auctus.DataAccess.Exchanges
     public abstract class ExchangeApi
     {
         public const int GAP_IN_MINUTES_BETWEEN_VALUES = 30;
+        protected readonly Cache MemoryCache;
 
-        public static ExchangeApi GetById(int exchangeId, string apiKey, string apiSecretKey)
+        protected ExchangeApi(Cache cache = null)
+        {
+            MemoryCache = cache;
+        }
+
+        public static ExchangeApi GetById(int exchangeId, string apiKey, string apiSecretKey, Cache cache = null)
         {
             switch (exchangeId)
             {
                 case 1:
-                    return new BitfinexApi(apiKey, apiSecretKey);
+                    return new BitfinexApi(apiKey, apiSecretKey, cache);
                 case 2:
-                    return new BinanceApi();
+                    return new BinanceApi(cache);
                 default:
                     throw new ArgumentException("Invalid exchange.");
             }
         }
 
-        public static IEnumerable<ExchangeApi> GetApisByCode()
+        public static IEnumerable<ExchangeApi> GetApisByCode(Cache cache = null)
         {
-            return new List<ExchangeApi> { new BinanceApi() /*, new BitfinexApi() */ };
+            return new List<ExchangeApi> { new BinanceApi(cache) /*, new BitfinexApi(cache) */ };
         }
 
         protected enum ApiError
         {
             InvalidSymbol,
             UnknownError
+        }
+        protected class ApiErrorData
+        {
+            public ApiError apiError { get; set; }
+            public string response { get; set; }
+            public ApiErrorData(ApiError apiError, string response)
+            {
+                this.apiError = apiError;
+                this.response = response;
+            }
         }
 
         protected abstract string API_BASE_ENDPOINT { get; }
@@ -48,7 +64,9 @@ namespace Auctus.DataAccess.Exchanges
         protected virtual Dictionary<DateTime, double> GetCloseAdjustedValues(DateTime startTime, string symbol)
         {
             var returnDictionary = new Dictionary<DateTime, double>();
-            bool hasUSD = CallApiWithRetry(symbol, USD_SYMBOL, startTime).HasValue;
+            bool hasUSD;
+            try { hasUSD = CallApiWithRetry(symbol, USD_SYMBOL, startTime).HasValue; } 
+            catch { return returnDictionary; }
 
             var utcNow = DateTime.UtcNow;
             startTime = startTime.AddMinutes(GAP_IN_MINUTES_BETWEEN_VALUES);
@@ -75,20 +93,26 @@ namespace Auctus.DataAccess.Exchanges
 
         private double? GetValueByDate(string symbol, DateTime queryDate, bool hasUSD = false)
         {
-            double? valueToReturn;
+            double? valueToReturn = null;
 
-            if (hasUSD)
+            try
             {
-                valueToReturn = CallApiWithRetry(symbol, USD_SYMBOL, queryDate);
+                if (hasUSD)
+                {
+                    valueToReturn = CallApiWithRetry(symbol, USD_SYMBOL, queryDate);
+                }
+                else
+                {
+                    double? symbolBtcValue = CallApiWithRetry(symbol, BTC_SYMBOL, queryDate);
+                    double? btcUsdValue = CallApiWithRetry(BTC_SYMBOL, USD_SYMBOL, queryDate);
+
+                    valueToReturn = symbolBtcValue * btcUsdValue;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                double? symbolBtcValue = CallApiWithRetry(symbol, BTC_SYMBOL, queryDate);
-                double? btcUsdValue = CallApiWithRetry(BTC_SYMBOL, USD_SYMBOL, queryDate);
-
-                valueToReturn = symbolBtcValue * btcUsdValue;
+                Email.SendErrorEmailAsync(string.Format("Exception GetValueByDate: symbol {0} ; Query Date: {1}", symbol, queryDate), ex);
             }
-
 
             return valueToReturn;
         }
@@ -100,32 +124,43 @@ namespace Auctus.DataAccess.Exchanges
 
         private double? CallApi(string fromSymbol, string toSymbol, DateTime queryDate)
         {
-            using (var client = new HttpClient())
+            string cacheKey = string.Format("{0}_{1}_{2}_{3}", API_BASE_ENDPOINT, fromSymbol, toSymbol, queryDate.Ticks);
+            double? value = MemoryCache?.Get<double?>(cacheKey);
+            if (value.HasValue)
+                return value;
+            else
             {
-                ApiError apiError;
-
-                client.BaseAddress = new Uri(API_BASE_ENDPOINT);
-                var response = client.GetAsync(FormatRequestEndpoint(fromSymbol, toSymbol, queryDate)).Result;
-
-                if (response.IsSuccessStatusCode)
-                    return GetCoinValue(response);
-                else
-                    apiError = GetErrorCode(response);
-
-                switch (apiError)
+                using (var client = new HttpClient())
                 {
-                    case ApiError.InvalidSymbol:
-                        return null;
-                    case ApiError.UnknownError:
-                    default:
-                        throw new InvalidOperationException();
+                    ApiErrorData apiError;
+
+                    client.BaseAddress = new Uri(API_BASE_ENDPOINT);
+                    var response = client.GetAsync(FormatRequestEndpoint(fromSymbol.Trim().ToUpper(), toSymbol.Trim().ToUpper(), queryDate)).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        value = GetCoinValue(response);
+                        MemoryCache?.Set<double?>(cacheKey, value);
+                        return value;
+                    }
+                    else
+                        apiError = GetErrorCode(response);
+
+                    switch (apiError.apiError)
+                    {
+                        case ApiError.InvalidSymbol:
+                            return null;
+                        case ApiError.UnknownError:
+                        default:
+                            throw new InvalidOperationException(apiError.response);
+                    }
                 }
             }
         }
 
-        public static Dictionary<DateTime, double> GetCloseCryptoValue(string code, DateTime startDate)
+        public static Dictionary<DateTime, double> GetCloseCryptoValue(string code, DateTime startDate, Cache cache = null)
         {
-            var apis = GetApisByCode();
+            var apis = GetApisByCode(cache);
             Dictionary<DateTime, List<double>> exchangesPrices = new Dictionary<DateTime, List<double>>();
             ConcurrentBag<Dictionary<DateTime, double>> apiResults = new ConcurrentBag<Dictionary<DateTime, double>>();
             Parallel.ForEach(apis, (api) =>
@@ -149,7 +184,7 @@ namespace Auctus.DataAccess.Exchanges
         {
             using (var client = new HttpClient())
             {
-                ApiError apiError;
+                ApiErrorData apiError;
 
                 client.BaseAddress = new Uri(API_BASE_ENDPOINT);
                 var response = client.GetAsync(API_CURRENT_PRICE_ENDPOINT).Result;
@@ -159,13 +194,13 @@ namespace Auctus.DataAccess.Exchanges
                 else
                     apiError = GetErrorCode(response);
 
-                switch (apiError)
+                switch (apiError.apiError)
                 {
                     case ApiError.InvalidSymbol:
                         return null;
                     case ApiError.UnknownError:
                     default:
-                        throw new InvalidOperationException();
+                        throw new InvalidOperationException(apiError.response);
                 }
             }
         }
@@ -191,7 +226,7 @@ namespace Auctus.DataAccess.Exchanges
         protected abstract string FormatRequestEndpoint(string fromSymbol, string toSymbol, DateTime queryDate);
         protected abstract double? GetCoinValue(HttpResponseMessage response);
         protected abstract Dictionary<string, double> GetCurrentPriceValue(HttpResponseMessage response, IEnumerable<string> symbols);
-        protected abstract ApiError GetErrorCode(HttpResponseMessage response);
+        protected abstract ApiErrorData GetErrorCode(HttpResponseMessage response);
         public abstract List<ExchangeBalance> GetBalances();
         public abstract void ValidateAccessPermissions();
     }
