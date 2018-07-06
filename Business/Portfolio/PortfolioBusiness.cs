@@ -343,6 +343,11 @@ namespace Auctus.Business.Portfolio
                 Value = c.RealValue
             }).ToList();
             result.AssetDistributionHistory = distributionHistory != null ? ConvertDistributionToModel(distributionHistory.Result) : null;
+            if (result.AssetDistributionHistory != null && result.AssetDistributionHistory.Count > 0)
+            {
+                var assetValues = AssetValueBusiness.GetAssetValuesGroupedByDate(result.AssetDistributionHistory.SelectMany(c => c.AssetDistribution.Select(a => a.Id)), DateTime.UtcNow.AddDays(-1));
+                result.AssetDistributionHistory.ForEach(c => SetCurrentPercentage(c, assetValues));
+            }
             result.AssetDistribution = result?.AssetDistributionHistory?.FirstOrDefault()?.AssetDistribution;
             return result;
         }
@@ -365,6 +370,67 @@ namespace Auctus.Business.Portfolio
                  }).OrderByDescending(c => c.Percentage).ToList()
              }
             ).OrderByDescending(c => c.Date).ToList();
+        }
+
+        private void SetCurrentPercentage(Model.Portfolio.DistributionHistory distribution, Dictionary<DateTime, List<AssetValue>> assetValues)
+        {
+            if (assetValues.Count == 0)
+                return;
+
+            var assetIds = distribution.AssetDistribution.Select(c => c.Id);
+            var currentValues = assetValues[assetValues.Keys.Max()].Where(c => assetIds.Contains(c.AssetId)).OrderBy(c => c.AssetId).ThenByDescending(c => c.Date);
+            var values = new List<AssetValue>();
+            bool invalid = false;
+            foreach (var id in assetIds)
+            {
+                var value = currentValues.FirstOrDefault(v => v.AssetId == id);
+                if (value == null)
+                {
+                    invalid = true;
+                    break;
+                }
+                else
+                {
+                    values.Add(value);
+                }
+            }
+            if (invalid)
+                return;
+
+            var total = values.Sum(c => c.Value);
+            foreach (var value in values)
+            {
+                foreach(var dist in distribution.AssetDistribution)
+                {
+                    if (dist.Id == value.AssetId)
+                    {
+                        dist.CurrentPercentage = 100.0 * value.Value / total;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private List<AssetValue> GetAssetsValuesByDate(DateTime baseDateTime, IEnumerable<int> assetIds, IEnumerable<AssetValue> assetValues)
+        {
+            var minimumDate = baseDateTime.AddDays(-1);
+            var valuesForDate = assetValues.Where(c => c.Date <= baseDateTime && c.Date >= minimumDate).OrderBy(c => c.AssetId).ThenByDescending(c => c.Date);
+            var result = new List<AssetValue>();
+            bool invalid = false;
+            foreach (var id in assetIds)
+            {
+                var value = valuesForDate.FirstOrDefault(v => v.AssetId == id);
+                if (value == null)
+                {
+                    invalid = true;
+                    break;
+                }
+                else
+                {
+                    result.Add(value);
+                }
+            }
+            return invalid ? null : result;
         }
 
         public Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,

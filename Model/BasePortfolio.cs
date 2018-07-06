@@ -25,6 +25,7 @@ namespace Auctus.Model
             public string Name { get; set; }
             public int Type { get; set; }
             public double Percentage { get; set; }
+            public double? CurrentPercentage { get; set; }
         }
         
         public class HistogramDistribution
