@@ -21,13 +21,14 @@ namespace Auctus.DataAccess.Asset
             return value;
         }
 
-        public IEnumerable<AssetValue> List(IEnumerable<int> assetsIds, DateTime startDate)
+        public IEnumerable<AssetValue> List(IEnumerable<int> assetsIds, DateTime? startDate = null)
         {
             var filterBuilder = Builders<AssetValue>.Filter;
-            var filter = filterBuilder.In(x => x.AssetId, assetsIds.ToArray()) & filterBuilder.Gte(x => x.Date, startDate);
-            var value = Collection.Find(filter).ToList();
+            var filter = filterBuilder.In(x => x.AssetId, assetsIds.ToArray());
+            if (startDate.HasValue)
+                filter = filter & filterBuilder.Gte(x => x.Date, startDate.Value);
 
-            return value;
+            return Collection.Find(filter).ToList();
         }
     }
 }

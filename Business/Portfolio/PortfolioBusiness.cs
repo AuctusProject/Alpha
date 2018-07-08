@@ -345,7 +345,7 @@ namespace Auctus.Business.Portfolio
             result.AssetDistributionHistory = distributionHistory != null ? ConvertDistributionToModel(distributionHistory.Result) : null;
             if (result.AssetDistributionHistory != null && result.AssetDistributionHistory.Count > 0)
             {
-                var assetValues = AssetValueBusiness.GetAssetValuesGroupedByDate(result.AssetDistributionHistory.SelectMany(c => c.AssetDistribution.Select(a => a.Id)), DateTime.UtcNow.AddDays(-1));
+                var assetValues = AssetValueBusiness.ListAssetValues(result.AssetDistributionHistory.SelectMany(c => c.AssetDistribution.Select(a => a.Id)));
                 result.AssetDistributionHistory.ForEach(c => SetCurrentPercentage(c, assetValues));
             }
             result.AssetDistribution = result?.AssetDistributionHistory?.FirstOrDefault()?.AssetDistribution;
@@ -372,43 +372,27 @@ namespace Auctus.Business.Portfolio
             ).OrderByDescending(c => c.Date).ToList();
         }
 
-        private void SetCurrentPercentage(Model.Portfolio.DistributionHistory distribution, Dictionary<DateTime, List<AssetValue>> assetValues)
+        private void SetCurrentPercentage(Model.Portfolio.DistributionHistory distribution, IEnumerable<AssetValue> assetValues)
         {
-            if (assetValues.Count == 0)
-                return;
-
             var assetIds = distribution.AssetDistribution.Select(c => c.Id);
-            var currentValues = assetValues[assetValues.Keys.Max()].Where(c => assetIds.Contains(c.AssetId)).OrderBy(c => c.AssetId).ThenByDescending(c => c.Date);
-            var values = new List<AssetValue>();
-            bool invalid = false;
-            foreach (var id in assetIds)
-            {
-                var value = currentValues.FirstOrDefault(v => v.AssetId == id);
-                if (value == null)
-                {
-                    invalid = true;
-                    break;
-                }
-                else
-                {
-                    values.Add(value);
-                }
-            }
-            if (invalid)
+            assetValues = assetValues.Where(c => assetIds.Contains(c.AssetId));
+
+            var creationValues = GetAssetsValuesByDate(distribution.Date, assetIds, assetValues);
+            if (creationValues == null)
                 return;
 
-            var total = values.Sum(c => c.Value);
-            foreach (var value in values)
+            var currentValues = GetAssetsValuesByDate(DateTime.UtcNow, assetIds, assetValues);
+            if (currentValues == null)
+                return;
+
+            Dictionary<int, double> capitalGain = new Dictionary<int, double>();
+            foreach (var value in creationValues)
             {
-                foreach(var dist in distribution.AssetDistribution)
-                {
-                    if (dist.Id == value.AssetId)
-                    {
-                        dist.CurrentPercentage = 100.0 * value.Value / total;
-                        break;
-                    }
-                }
+                capitalGain[value.AssetId] = distribution.AssetDistribution.Single(c => c.Id == value.AssetId).Percentage *
+                    currentValues.Single(c => c.AssetId == value.AssetId).Value / value.Value;
             }
+            var total = capitalGain.Sum(c => c.Value);
+            distribution.AssetDistribution.ForEach(c => c.CurrentPercentage = (100.0 * capitalGain[c.Id] / total));
         }
 
         private List<AssetValue> GetAssetsValuesByDate(DateTime baseDateTime, IEnumerable<int> assetIds, IEnumerable<AssetValue> assetValues)

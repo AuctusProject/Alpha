@@ -39,6 +39,11 @@ namespace Auctus.Business.Asset
             return assetValues.GroupBy(av => av.Date).ToDictionary(av => av.Key, av => av.ToList());
         }
 
+        internal IEnumerable<AssetValue> ListAssetValues(IEnumerable<int> assetsIds)
+        {
+            return Data.List(assetsIds);
+        }
+
         private void CreateAssetValueForPendingDates(DomainObjects.Asset.Asset asset, DateTime lastUpdatedValue, Dictionary<DateTime, double> assetDateAndValues)
         {
             var pendingUpdate = assetDateAndValues?.Where(d => d.Key > lastUpdatedValue).OrderBy(v => v.Key);
