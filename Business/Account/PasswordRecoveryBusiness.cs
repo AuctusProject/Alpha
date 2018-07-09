@@ -47,12 +47,21 @@ namespace Auctus.Business.Account
             
             UserBusiness.UpdatePassword(UserBusiness.Get(recovery.UserId), password);
         }
-        
+
+        public string GetAddress(string code)
+        {
+            var recovery = Data.Get(code);
+            if (recovery == null)
+                throw new ArgumentException("There is no request for recover password.");
+
+            return WalletBusiness.GetByUser(recovery.UserId)?.Address;
+        }
+
         private async Task SendForgottenPassword(string email, string code)
         {
             await Email.SendAsync(
                 new string[] { email },
-                "Reset your password - Auctus Alpha",
+                "Reset your password - Auctus Beta",
                 string.Format(@"Hello,
 <br/><br/>
 You told us you forgot your password. If you really did, <a href='{0}/forgot-password-reset?c={1}' target='_blank'>click here</a> to choose a new one.

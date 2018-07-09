@@ -153,6 +153,21 @@ namespace Api.Controllers
             return Ok();
         }
 
+        protected virtual IActionResult GetAddress(string code)
+        {
+            if (string.IsNullOrWhiteSpace(code))
+                return BadRequest();
+
+            try
+            {
+                return Ok(AccountServices.GetAddress(code));
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
         protected virtual IActionResult GoalOptions()
         {
             var options = AccountServices.ListGoalsOptions();

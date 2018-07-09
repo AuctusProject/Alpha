@@ -200,7 +200,7 @@ namespace Auctus.Business.Account
         {
             await Email.SendAsync(
                 new string[] { email },
-                "Verify your email address - Auctus Alpha",
+                "Verify your email address - Auctus Beta",
                 string.Format(@"Hello,
 <br/><br/>
 To activate your account please verify your email address and complete your registration <a href='{0}/confirm?c={1}' target='_blank'>click here</a>.

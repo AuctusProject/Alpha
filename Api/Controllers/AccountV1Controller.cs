@@ -98,6 +98,15 @@ namespace Api.Controllers
             return base.RecoverPassword(recoverPasswordRequest);
         }
 
+        [Route("password/address/{code}")]
+        [HttpGet]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public new IActionResult GetAddress([FromRoute]string code)
+        {
+            return base.GetAddress(code);
+        }
+
         [Route("goals/options")]
         [HttpGet]
         [AllowAnonymous]

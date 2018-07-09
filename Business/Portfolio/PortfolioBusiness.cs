@@ -528,7 +528,7 @@ namespace Auctus.Business.Portfolio
                 "Portfolio update information",
                 string.Format(@"Hello,
                     <br/><br/>
-                    One portfolio that you follow was updated. .
+                    One portfolio that you follow was updated...
                     <br/><br/>
                     Check the new recommended allocation <a href='{0}/portfolio/{1}' target='_blank'>here</a>.
                     <br/><br/>

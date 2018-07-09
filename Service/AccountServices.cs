@@ -24,6 +24,11 @@ namespace Auctus.Service
             PasswordRecoveryBusiness.RecoverPassword(code, password);
         }
 
+        public string GetAddress(string code)
+        {
+            return PasswordRecoveryBusiness.GetAddress(code);
+        }
+
         public Login ConfirmEmail(string code)
         {
             return UserBusiness.ConfirmEmail(code);
