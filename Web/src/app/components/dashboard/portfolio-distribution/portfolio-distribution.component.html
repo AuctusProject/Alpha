@@ -30,15 +30,23 @@
 
       <!-- Weight Column -->
       <ng-container matColumnDef="percentage">
-        <mat-header-cell *matHeaderCellDef> PERCENTAGE </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef> SUGGESTED PERCENTAGE </mat-header-cell>
         <mat-cell *matCellDef="let element;let i = index;">
           <div class="percentage-value">{{element.percentage}}%</div>
           <div class="percentage-color-bar" [style.width.px]="element.percentage * 2" [style.backgroundColor]="colors[i]"></div>
         </mat-cell>
       </ng-container>
 
-      <mat-header-row *matHeaderRowDef="['color', 'holdings', 'percentage']"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: ['color', 'holdings', 'percentage'];"></mat-row>
+      <ng-container matColumnDef="currentpercentage" *ngIf="showCurrentPercentage()">
+        <mat-header-cell *matHeaderCellDef> CURRENT PROJECTED PERCENTAGE </mat-header-cell>
+        <mat-cell *matCellDef="let element;let i = index;">
+          <div class="percentage-value">{{element.currentPercentage}}%</div>
+          <div class="percentage-color-bar" [style.width.px]="element.currentPercentage * 2" [style.backgroundColor]="colors[i]"></div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="getHeaderRowDef()"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: getHeaderRowDef();"></mat-row>
     </mat-table>
     <p class="disclaimer">
         This website is for testing purposes only and does not constitute an offer to sell, a solicitation to buy, or a recommendation

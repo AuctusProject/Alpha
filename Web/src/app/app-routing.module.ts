@@ -37,7 +37,7 @@ const routes: Routes = [
     { path: 'change-password', component: ChangePasswordComponent },
     { path: 'manage-api', component: ManageApiComponent, canActivate: [CanActivateViaAuthGuard] },
     { path: 'become-advisor', component: AdvisorWizardComponent },
-    { path: 'human-advisors', component: HumanAdvisorsComponent },
+    { path: 'advisors', component: HumanAdvisorsComponent },
     { path: 'portfolio/:id', component: PortfolioDetailsComponent },
     { path: 'investments', component: MyInvestmentsComponent },
     { path: 'add-portfolio', component: AddPortfolioComponent },

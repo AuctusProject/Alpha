@@ -18,6 +18,10 @@ export class PortfolioHistogramComponent implements OnInit {
         barPercentage: 1.0,
         categoryPercentage: 1.0,
         display: true,
+        scaleLabel: {
+          display: true,
+          labelString: 'Daily performance'
+        },
         gridLines: { drawOnChartArea: false },
         ticks: {
           fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10
@@ -25,6 +29,10 @@ export class PortfolioHistogramComponent implements OnInit {
         stacked:true
       }],
       yAxes: [{
+        scaleLabel: {
+          display: true,
+          labelString: 'Days amount'
+        },
         gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
         ticks: {
           fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10
@@ -39,7 +47,7 @@ export class PortfolioHistogramComponent implements OnInit {
 
   ngOnInit() {
     if (this.histogram != undefined) {
-      this.histogramData = [{ data: []},{ data: []}];
+      this.histogramData = [{ data: [] },{ data: [] }];
       this.histogramLabels = [];
       for (let histogramItem of this.histogram) {
         var labelValue = (histogramItem.lesser + histogramItem.greaterOrEqual) / 2.0;

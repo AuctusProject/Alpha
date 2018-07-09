@@ -22,7 +22,7 @@ export class PortfolioHistoryChartComponent implements OnInit {
       for (let value of this.historyValues) {
         acum = acum * (1 + (value.value / 100.0));
         i++;
-        this.historicalChartData[0].data.push(acum.toFixed(2));
+        this.historicalChartData[0].data.push((acum - 100.0).toFixed(2));
         this.historicalChartLabels.push(value.date);
       }
     }
@@ -47,7 +47,7 @@ export class PortfolioHistoryChartComponent implements OnInit {
         gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
         ticks: {
           fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10, callback: function (value, index, values) {
-            return '$' + value.toFixed(2);
+            return value.toFixed(2) + ' %';
           }
         }
       }]
@@ -67,7 +67,6 @@ export class PortfolioHistoryChartComponent implements OnInit {
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     }];
 
-
   public historicalChartColors: Array<any> = [
     {
       backgroundColor: 'rgba(108, 168, 255,0.2)',
@@ -77,5 +76,4 @@ export class PortfolioHistoryChartComponent implements OnInit {
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(108, 168, 255,0.8)'
     }];
-
 }

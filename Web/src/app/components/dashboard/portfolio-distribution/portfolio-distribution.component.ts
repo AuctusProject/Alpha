@@ -13,6 +13,7 @@ export class PortfolioDistributionComponent implements OnInit, OnChanges {
   portfolioDataSource: MatTableDataSource<AssetDistribution>;
   colors = CHART_COLORS;
 
+
   constructor() {
   }
 
@@ -42,6 +43,15 @@ export class PortfolioDistributionComponent implements OnInit, OnChanges {
       this.portfolioDataSource = new MatTableDataSource<AssetDistribution>();
       this.portfolioDataSource.data = this.assetDistributions;
     }
+  }
+
+  showCurrentPercentage() {
+    return this.portfolioDataSource.data.length > 0 && !!this.portfolioDataSource.data[0].currentPercentage;
+  }
+
+  getHeaderRowDef() {
+    return this.showCurrentPercentage() ? ['color', 'holdings', 'percentage', 'currentpercentage']
+      : ['color', 'holdings', 'percentage'];
   }
 
   public totalTraditionalPercentage = 0;
