@@ -70,8 +70,9 @@ namespace Auctus.DataAccess.Advisor
                                                                             INNER JOIN [Transaction] t2 ON t2.Id = bt2.TransactionId
                                                                             WHERE bt2.BuyId = b.Id)";
 
-        private const string SELECT_PENDING_ESCROWRESULT = @"SELECT b.* FROM 
+        private const string SELECT_PENDING_ESCROWRESULT = @"SELECT b.*, p.* FROM 
                                                             Buy b 
+                                                            INNER JOIN Portfolio p ON p.Id = b.PortfolioId
                                                             WHERE b.ExpirationDate IS NOT NULL AND b.ExpirationDate < @ExpirationDate
                                                             AND NOT EXISTS (SELECT 1 FROM EscrowResult e WHERE e.BuyId = b.Id)";
 
@@ -133,7 +134,12 @@ namespace Auctus.DataAccess.Advisor
         {
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("ExpirationDate", DateTime.UtcNow, DbType.DateTime);
-            return Query<Buy>(SELECT_PENDING_ESCROWRESULT, parameters).ToList();
+            return Query<Buy, DomainObjects.Portfolio.Portfolio, Buy>(SELECT_PENDING_ESCROWRESULT,
+                            (buy, port) =>
+                            {
+                                buy.Portfolio = port;
+                                return buy;
+                            }, "Id", parameters).ToList();
         }
 
         public Buy GetSimple(int id)

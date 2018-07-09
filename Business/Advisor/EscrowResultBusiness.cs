@@ -28,11 +28,12 @@ namespace Auctus.Business.Advisor
         public void Evaluate()
         {
             var purchases = BuyBusiness.ListPendingEscrowResult();
+            var histories = PortfolioHistoryBusiness.ListHistory(purchases.ToDictionary(c => c.Portfolio.Id, c => c.Portfolio.CreationDate)); 
             foreach (var purchase in purchases)
             {
                 try
                 {
-                    var history = PortfolioHistoryBusiness.ListHistory(purchase.PortfolioId);
+                    var history = histories.Where(c => c.PortfolioId == purchase.PortfolioId);
                     if (history.Max(c => c.Date) < purchase.ExpirationDate.Value)
                         continue;
 

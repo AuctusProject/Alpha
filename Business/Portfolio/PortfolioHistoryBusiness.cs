@@ -1,4 +1,5 @@
-﻿using Auctus.DataAccess.Portfolio;
+﻿using Auctus.DataAccess.Exchanges;
+using Auctus.DataAccess.Portfolio;
 using Auctus.DomainObjects.Asset;
 using Auctus.DomainObjects.Portfolio;
 using Auctus.Util;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Auctus.Business.Portfolio
 {
@@ -14,17 +16,17 @@ namespace Auctus.Business.Portfolio
     {
         public PortfolioHistoryBusiness(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public void UpdatePortfolioHistory(DomainObjects.Portfolio.Portfolio portfolio)
-        {
-            var lastUpdatedValue = LastPortfolioHistoryDate(portfolio.Id);
-            if (lastUpdatedValue?.AddMinutes(DataAccess.Exchanges.ExchangeApi.GAP_IN_MINUTES_BETWEEN_VALUES) > DateTime.UtcNow)
-            {
-                return;
-            }
-            var assetsIds = portfolio.Projections.SelectMany(p => p.Distribution.Select(d => d.AssetId)).Distinct();
-            var assetValuesByDate = AssetValueBusiness.GetAssetValuesGroupedByDate(assetsIds, lastUpdatedValue ?? portfolio.CreationDate).OrderBy(v => v.Key).ToList();
-            CreatePortfolioHistoryForEachAssetValueDate(portfolio, assetValuesByDate);
-        }
+        //public void UpdatePortfolioHistory(DomainObjects.Portfolio.Portfolio portfolio)
+        //{
+        //    var lastUpdatedValue = LastPortfolioHistoryDate(portfolio.Id);
+        //    if (lastUpdatedValue?.AddMinutes(DataAccess.Exchanges.ExchangeApi.GAP_IN_MINUTES_BETWEEN_VALUES) > DateTime.UtcNow)
+        //    {
+        //        return;
+        //    }
+        //    var assetsIds = portfolio.Projections.SelectMany(p => p.Distribution.Select(d => d.AssetId)).Distinct();
+        //    var assetValuesByDate = AssetValueBusiness.GetAssetValuesGroupedByDate(assetsIds, lastUpdatedValue ?? portfolio.CreationDate).OrderBy(v => v.Key).ToList();
+        //    CreatePortfolioHistoryForEachAssetValueDate(portfolio, assetValuesByDate);
+        //}
 
         private void CreatePortfolioHistoryForEachAssetValueDate(DomainObjects.Portfolio.Portfolio portfolio, IList<KeyValuePair<DateTime, List<AssetValue>>> assetValuesByDate)
         {
@@ -57,7 +59,7 @@ namespace Auctus.Business.Portfolio
                 var distributionAssetsIds = projection.Distribution.Select(d => d.AssetId).Distinct();
                 var currentAssetsIds = currentAssetValues.Select(c => c.AssetId).Distinct();
                 var previousAssetsIds = previousAssetValues.Select(p => p.AssetId).Distinct();
-                if (isAssetListMatch(distributionAssetsIds, currentAssetsIds) && isAssetListMatch(currentAssetsIds, previousAssetsIds))
+                if (IsAssetListMatch(distributionAssetsIds, currentAssetsIds) && IsAssetListMatch(currentAssetsIds, previousAssetsIds))
                 {
                     var portfolioRealValue = 0.0;
                     foreach (var assetDistribution in projection.Distribution)
@@ -80,9 +82,9 @@ namespace Auctus.Business.Portfolio
             return null;
         }
 
-        private bool isAssetListMatch(IEnumerable<int> list1, IEnumerable<int> list2)
+        internal bool IsAssetListMatch(IEnumerable<int> list1, IEnumerable<int> list2)
         {
-            if (list1.Count() == list2.Count())
+            if (list1?.Count() == list2?.Count())
             {
                 var firstNotSecond = list1.Except(list2);
                 var secondNotFirst = list2.Except(list1);
@@ -91,25 +93,117 @@ namespace Auctus.Business.Portfolio
             return false;
         }
 
-        private DateTime? LastPortfolioHistoryDate(int id)
-        {
-            var portfolioHistory = Data.LastHistory(id);
-            return portfolioHistory?.Date;
-        }
+        //private DateTime? LastPortfolioHistoryDate(int id)
+        //{
+        //    var portfolioHistory = Data.LastHistory(id);
+        //    return portfolioHistory?.Date;
+        //}
         
-        public List<PortfolioHistory> ListHistory(int portfolioId)
+        private List<PortfolioHistory> GetByCache(int portfolioId)
         {
-            string cacheKey = string.Format("PortfolioHistory{0}", portfolioId);
-            var portfolioHistory = MemoryCache.Get<List<PortfolioHistory>>(cacheKey);
-            var yesterday = DateTime.UtcNow.Date.AddDays(-1);
-            if (portfolioHistory == null || !portfolioHistory.Any() || portfolioHistory.Last().Date.Date != yesterday)
+            var portfolioHistory = MemoryCache.Get<List<PortfolioHistory>>(GetCacheKey(portfolioId));
+            if (portfolioHistory == null || !portfolioHistory.Any())
+                return null;
+            else
+                return portfolioHistory;
+        }
+
+        private string GetCacheKey(int portfolioId)
+        {
+            return string.Format("PortfolioHistory{0}", portfolioId);
+        }
+
+        private List<PortfolioHistory> GetPortfolioHistoryDataSettingCache(int portfolioId, IOrderedEnumerable<KeyValuePair<DateTime, List<AssetValue>>> assetValues, 
+            IEnumerable<Distribution> distributions)
+        {
+            var portfolioHistory = GetPortfolioHistoryData(assetValues, PortfolioBusiness.ConvertDistributionToModel(distributions)).Select(c => new PortfolioHistory()
             {
-                portfolioHistory = Data.ListHistory(portfolioId);
-                if (portfolioHistory?.LastOrDefault()?.Date.Date == yesterday)
-                    MemoryCache.Set<List<PortfolioHistory>>(cacheKey, portfolioHistory, 720);
-            }
+                Date = c.Date,
+                RealValue = c.Value,
+                PortfolioId = portfolioId
+            }).ToList();
+            if (portfolioHistory.Count > 0 && portfolioHistory.Max(c => c.Date).AddMinutes(ExchangeApi.GAP_IN_MINUTES_BETWEEN_VALUES * 1.5) > DateTime.UtcNow)
+                MemoryCache.Set<List<PortfolioHistory>>(GetCacheKey(portfolioId), portfolioHistory, ExchangeApi.GAP_IN_MINUTES_BETWEEN_VALUES);
             return portfolioHistory;
         }
+
+        public List<PortfolioHistory> ListHistory(Dictionary<int, DateTime> portfolioData, IEnumerable<Distribution> distributions = null,
+            IOrderedEnumerable<KeyValuePair<DateTime, List<AssetValue>>> assetValues = null)
+        {
+            var result = new List<PortfolioHistory>();
+            var pendingPortfolios = new Dictionary<int, DateTime>();
+            foreach (var data in portfolioData)
+            {
+                var portfolioHistory = GetByCache(data.Key);
+                if (portfolioHistory != null)
+                    result.AddRange(portfolioHistory);
+                else
+                    pendingPortfolios[data.Key] = data.Value;
+            }
+            if (pendingPortfolios.Count > 0)
+            {
+                distributions = distributions ?? DistributionBusiness.ListFromPortfolioId(pendingPortfolios.Select(c => c.Key));
+                var portfoliosIds = distributions.Select(c => c.PortfolioId).Distinct();
+                pendingPortfolios = pendingPortfolios.Where(c => portfoliosIds.Contains(c.Key)).ToDictionary(c => c.Key, c => c.Value);
+                if (pendingPortfolios.Count > 0)
+                {
+                    var minDate = pendingPortfolios.Min(c => c.Value);
+                    assetValues = assetValues ?? AssetValueBusiness.GetAssetValuesGroupedByDate(distributions.Select(c => c.AssetId).Distinct(), minDate).OrderBy(c => c.Key);
+                    foreach (var portfolio in pendingPortfolios)
+                    {
+                        var portfolioHistory = GetPortfolioHistoryDataSettingCache(portfolio.Key,
+                            assetValues.Where(c => c.Key > portfolio.Value).OrderBy(c => c.Key),
+                            distributions.Where(c => c.PortfolioId == portfolio.Key));
+                        if (portfolioHistory?.Count > 0)
+                            result.AddRange(portfolioHistory);
+                    }
+                }
+            }
+            return result;
+        }
+
+        //public List<PortfolioHistory> ListHistory(int portfolioId, DateTime? creationDate = null, IEnumerable<Distribution> distributions = null)
+        //{
+        //    var portfolioHistory = GetByCache(portfolioId);
+        //    if (portfolioHistory != null)
+        //        return portfolioHistory;
+
+        //    Task<DomainObjects.Portfolio.Portfolio> portfolio = null;
+        //    Task<List<Distribution>> distributionData = null;
+        //    if (!creationDate.HasValue)
+        //        portfolio = Task.Factory.StartNew(() => PortfolioBusiness.GetSimple(portfolioId));
+        //    if (distributions == null)
+        //        distributionData = Task.Factory.StartNew(() => DistributionBusiness.ListFromPortfolioId(portfolioId));
+
+        //    if (portfolio != null && distributionData != null)
+        //    {
+        //        Task.WaitAll(portfolio, distributionData);
+        //        creationDate = portfolio.Result.CreationDate;
+        //        distributions = distributionData.Result;
+        //    }
+        //    else if (portfolio != null)
+        //    {
+        //        Task.WaitAll(portfolio);
+        //        creationDate = portfolio.Result.CreationDate;
+        //    }
+        //    else if (distributionData != null)
+        //    {
+        //        Task.WaitAll(distributionData);
+        //        distributions = distributionData.Result;
+        //    }
+
+        //    var assetValues = AssetValueBusiness.GetAssetValuesGroupedByDate(distributions.Select(c => c.AssetId).Distinct(), creationDate.Value).OrderBy(c => c.Key);
+        //    portfolioHistory = GetPortfolioHistoryData(assetValues, PortfolioBusiness.ConvertDistributionToModel(distributions)).Select(c => new PortfolioHistory()
+        //    {
+        //        Date = c.Date,
+        //        RealValue = c.Value,
+        //        PortfolioId = portfolioId
+        //    }).ToList();
+        //    if (portfolioHistory.Max(c => c.Date).AddMinutes(ExchangeApi.GAP_IN_MINUTES_BETWEEN_VALUES * 1.5) > DateTime.UtcNow)
+        //        MemoryCache.Set<List<PortfolioHistory>>(GetCacheKey(portfolioId), portfolioHistory, ExchangeApi.GAP_IN_MINUTES_BETWEEN_VALUES);
+
+        //    return portfolioHistory;
+        //}
 
         public Model.Portfolio.HistoryResult GetHistoryResult(IEnumerable<PortfolioHistory> portfolioHistory)
         {
@@ -127,12 +221,29 @@ namespace Auctus.Business.Portfolio
             };
         }
 
-        public List<Model.Portfolio.HistogramDistribution> GetHistogram(IEnumerable<PortfolioHistory> portfolioHistory)
+        internal List<Model.Portfolio.HistogramDistribution> GetHistogram(IOrderedEnumerable<KeyValuePair<DateTime, List<AssetValue>>> assetValues,
+            List<Model.BasePortfolio.DistributionHistory> distribution)
         {
-            if (!portfolioHistory.Any())
-                return new List<Model.Portfolio.HistogramDistribution>();
-
-            var values = portfolioHistory.OrderBy(c => c.RealValue).Select(c => c.RealValue);
+            var portfolioHistory = new List<double>();
+            var setted = new HashSet<DateTime>();
+            for (int i = 0; i < assetValues.Count(); ++i)
+            {
+                var baseDate = assetValues.ElementAt(i).Key.Date;
+                if (!setted.Contains(baseDate))
+                {
+                    setted.Add(baseDate);
+                    var distributionAtDate = distribution.Where(c => c.Date < assetValues.ElementAt(i).Key).OrderByDescending(c => c.Date).FirstOrDefault();
+                    if (distributionAtDate != null)
+                    {
+                        var previous = assetValues.Where(c => c.Key <= baseDate.AddDays(-1)).OrderByDescending(c => c.Key).FirstOrDefault();
+                        var current = assetValues.Where(c => c.Key <= baseDate).OrderByDescending(c => c.Key).FirstOrDefault();
+                        var history = GetPortfolioHistory(distributionAtDate, current, previous);
+                        if (history != null)
+                            portfolioHistory.Add(history.Value);
+                    }
+                }
+            }
+            var values = portfolioHistory.OrderBy(c => c);
             var minValue = values.First();
             var maxValue = values.Last();
             var difference = maxValue - minValue;
@@ -158,10 +269,55 @@ namespace Auctus.Business.Portfolio
                 {
                     GreaterOrEqual = i,
                     Lesser = i + rangeGroup,
-                    Quantity = portfolioHistory.Count(c => c.RealValue >= i && c.RealValue < (i + rangeGroup))
+                    Quantity = portfolioHistory.Count(c => c >= i && c < (i + rangeGroup))
                 });
             }
             return result;
+        }
+
+        internal List<Model.Portfolio.History> GetPortfolioHistoryData(IOrderedEnumerable<KeyValuePair<DateTime, List<AssetValue>>> assetValues, 
+            List<Model.BasePortfolio.DistributionHistory> distribution)
+        {
+            var result = new List<Model.BasePortfolio.History>();
+            for (int i = 1; i < assetValues.Count(); ++i)
+            {
+                var distributionAtDate = distribution.Where(c => c.Date < assetValues.ElementAt(i).Key).OrderByDescending(c => c.Date).FirstOrDefault();
+                if (distributionAtDate != null)
+                {
+                    var previous = assetValues.ElementAt(i - 1);
+                    var current = assetValues.ElementAt(i);
+                    var history = GetPortfolioHistory(distributionAtDate, current, previous);
+                    if (history != null)
+                        result.Add(history);
+                }
+            }
+            return result;
+        }
+
+        private Model.Portfolio.History GetPortfolioHistory(Model.BasePortfolio.DistributionHistory distribution, KeyValuePair<DateTime, List<AssetValue>> current,
+            KeyValuePair<DateTime, List<AssetValue>> previous)
+        {
+            var distributionAssetsIds = distribution.AssetDistribution.Select(c => c.Id).Distinct();
+            var currentAssetsIds = current.Value?.Where(c => distributionAssetsIds.Contains(c.AssetId)).Select(c => c.AssetId).Distinct();
+            var previousAssetsIds = previous.Value?.Where(c => distributionAssetsIds.Contains(c.AssetId)).Select(c => c.AssetId).Distinct();
+            if (PortfolioHistoryBusiness.IsAssetListMatch(distributionAssetsIds, currentAssetsIds) &&
+                PortfolioHistoryBusiness.IsAssetListMatch(currentAssetsIds, previousAssetsIds))
+            {
+                var portfolioRealValue = 0.0;
+                foreach (var assetDistribution in distribution.AssetDistribution)
+                {
+                    var currentAssetValue = current.Value.First(a => a.AssetId == assetDistribution.Id);
+                    var previousAssetValue = previous.Value.First(a => a.AssetId == assetDistribution.Id);
+
+                    portfolioRealValue += currentAssetValue.Value / previousAssetValue.Value * assetDistribution.Percentage;
+                }
+                return new Model.Portfolio.History()
+                {
+                    Date = current.Key,
+                    Value = portfolioRealValue - 100.0
+                };
+            }
+            return null;
         }
     }
 }

@@ -237,14 +237,11 @@ namespace Auctus.Business.Portfolio
             var following = Task.Factory.StartNew(() => FollowBusiness.ListFollowing(user.Id));
             var portfolios = Data.ListAllValids();
             var portfoliosQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(portfolios.Select(c => c.Id)));
-            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
-            foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
-                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
-            
-            Task.WaitAll(following, portfoliosQty);
-            Task.WaitAll(histories.ToArray());
+            var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolios.ToDictionary(c => c.Id, c => c.CreationDate)));
 
-            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+            Task.WaitAll(history, following, portfoliosQty);
+
+            portfolios.ForEach(c => c.PortfolioHistory = history.Result.Where(g => g.PortfolioId == c.Id).ToList());
 
             return portfolios.Select(c => FillPortfolioModel(c, c.Advisor, user, following.Result, portfoliosQty.Result))
                 .OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
@@ -285,14 +282,11 @@ namespace Auctus.Business.Portfolio
 
             var portfoliosQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(following.Select(c => c.PortfolioId)));
             var portfolios = Task.Factory.StartNew(() => Data.List(following.Select(c => c.PortfolioId)));
-            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
-            foreach (var follow in following)
-                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(follow.PortfolioId)));
-
             Task.WaitAll(portfolios, portfoliosQty);
-            Task.WaitAll(histories.ToArray());
 
-            portfolios.Result.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+            var history = PortfolioHistoryBusiness.ListHistory(portfolios.Result.ToDictionary(c => c.Id, c => c.CreationDate));
+
+            portfolios.Result.ForEach(c => c.PortfolioHistory = history.Where(g => g.PortfolioId == c.Id).ToList());
 
             return portfolios.Result.Select(c => FillPortfolioModel(c, c.Advisor, user, following, portfoliosQty.Result))
                 .OrderByDescending(c => c.FollowersQuantity).ThenByDescending(c => c.ProjectionPercent).ToList();
@@ -317,42 +311,56 @@ namespace Auctus.Business.Portfolio
                 throw new ArgumentException("Invalid portfolio.");
             
             var portfolioQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(new int[] { portfolioId }));
-            var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolioId));
+            //var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolioId));
             //var distribution = Task.Factory.StartNew(() => DistributionBusiness.List(new int[] { portfolio.Result.ProjectionId.Value }));
             var distributionHistory = Task.Factory.StartNew(() => DistributionBusiness.ListFromPortfolioId(portfolio.Result.Id));
 
             if (owned)
             {
                 Task<List<EscrowResult>> escrowResult = Task.Factory.StartNew(() => EscrowResultBusiness.ListByPortfolio(portfolio.Result.Id));
-                Task.WaitAll(history, portfolioQty, distributionHistory, escrowResult);
+                Task.WaitAll(portfolioQty, distributionHistory, escrowResult);
             }
             else
             {
-                Task.WaitAll(history, portfolioQty, distributionHistory);
+                Task.WaitAll(portfolioQty, distributionHistory);
             }
 
-            portfolio.Result.PortfolioHistory = history.Result;
+            var assetDistributionHistory = distributionHistory != null ? ConvertDistributionToModel(distributionHistory.Result) : null;
+            var histogram = new List<Model.BasePortfolio.HistogramDistribution>();
+            if (assetDistributionHistory != null && assetDistributionHistory.Count > 0)
+            {
+                var assetValues = AssetValueBusiness.GetAssetValuesGroupedByDate(assetDistributionHistory.SelectMany(c => c.AssetDistribution.Select(a => a.Id)),
+                    portfolio.Result.CreationDate).OrderBy(c => c.Key);
+
+                var portfolioData = new Dictionary<int, DateTime>();
+                portfolioData[portfolio.Result.Id] = portfolio.Result.CreationDate;
+                portfolio.Result.PortfolioHistory = PortfolioHistoryBusiness.ListHistory(portfolioData, distributionHistory.Result, assetValues);
+                assetDistributionHistory.ForEach(c => SetCurrentPercentage(c, assetValues));
+                histogram = PortfolioHistoryBusiness.GetHistogram(assetValues, assetDistributionHistory);
+            }
+
             var result = FillPortfolioModel(portfolio.Result, portfolio.Result.Advisor, user, 
                 follow.Result != null ? new Follow[] { follow.Result } : null, portfolioQty.Result);
 
             result.Following = followed;
-            result.Histogram = PortfolioHistoryBusiness.GetHistogram(history.Result);
-            result.HistoryData = history.Result.Select(c => new Model.Portfolio.History()
-            {
-                Date = c.Date,
-                Value = c.RealValue
-            }).ToList();
-            result.AssetDistributionHistory = distributionHistory != null ? ConvertDistributionToModel(distributionHistory.Result) : null;
+            result.AssetDistributionHistory = assetDistributionHistory;
+            result.AssetDistribution = result?.AssetDistributionHistory?.FirstOrDefault()?.AssetDistribution;
+            result.Histogram = histogram;
             if (result.AssetDistributionHistory != null && result.AssetDistributionHistory.Count > 0)
             {
-                var assetValues = AssetValueBusiness.ListAssetValues(result.AssetDistributionHistory.SelectMany(c => c.AssetDistribution.Select(a => a.Id)));
-                result.AssetDistributionHistory.ForEach(c => SetCurrentPercentage(c, assetValues));
+                result.HistoryData = portfolio.Result.PortfolioHistory.Select(c => new Model.BasePortfolio.History()
+                {
+                    Date = c.Date,
+                    Value = c.RealValue
+                }).ToList();
             }
-            result.AssetDistribution = result?.AssetDistributionHistory?.FirstOrDefault()?.AssetDistribution;
+            else
+                result.HistoryData = new List<Model.Portfolio.History>();
+            
             return result;
         }
 
-        private List<Model.BasePortfolio.DistributionHistory> ConvertDistributionToModel(List<Distribution> distributions)
+        internal List<Model.BasePortfolio.DistributionHistory> ConvertDistributionToModel(IEnumerable<Distribution> distributions)
         {
             var grouppedDistributions = distributions.GroupBy(dist => dist.ProjectionId);
 
@@ -372,49 +380,31 @@ namespace Auctus.Business.Portfolio
             ).OrderByDescending(c => c.Date).ToList();
         }
 
-        private void SetCurrentPercentage(Model.Portfolio.DistributionHistory distribution, IEnumerable<AssetValue> assetValues)
+        private void SetCurrentPercentage(Model.Portfolio.DistributionHistory distribution, IOrderedEnumerable<KeyValuePair<DateTime, List<AssetValue>>> assetValues)
         {
-            var assetIds = distribution.AssetDistribution.Select(c => c.Id);
-            assetValues = assetValues.Where(c => assetIds.Contains(c.AssetId));
-
-            var creationValues = GetAssetsValuesByDate(distribution.Date, assetIds, assetValues);
-            if (creationValues == null)
+            var creationValues = assetValues.Where(c => c.Key < distribution.Date).OrderByDescending(c => c.Key).FirstOrDefault();
+            if (creationValues.Equals(default(KeyValuePair<DateTime, List<AssetValue>>)))
                 return;
 
-            var currentValues = GetAssetsValuesByDate(DateTime.UtcNow, assetIds, assetValues);
-            if (currentValues == null)
+            var currentValues = assetValues.Where(c => c.Key < DateTime.UtcNow).OrderByDescending(c => c.Key).FirstOrDefault();
+            if (currentValues.Equals(default(KeyValuePair<DateTime, List<AssetValue>>)))
                 return;
 
-            Dictionary<int, double> capitalGain = new Dictionary<int, double>();
-            foreach (var value in creationValues)
+            var distributionAssetsIds = distribution.AssetDistribution.Select(c => c.Id).Distinct();
+            var currentAssetsIds = currentValues.Value.Where(c => distributionAssetsIds.Contains(c.AssetId)).Select(c => c.AssetId).Distinct();
+            var creationAssetsIds = creationValues.Value.Where(c => distributionAssetsIds.Contains(c.AssetId)).Select(c => c.AssetId).Distinct();
+            if (PortfolioHistoryBusiness.IsAssetListMatch(distributionAssetsIds, currentAssetsIds) &&
+                PortfolioHistoryBusiness.IsAssetListMatch(currentAssetsIds, creationAssetsIds))
             {
-                capitalGain[value.AssetId] = distribution.AssetDistribution.Single(c => c.Id == value.AssetId).Percentage *
-                    currentValues.Single(c => c.AssetId == value.AssetId).Value / value.Value;
-            }
-            var total = capitalGain.Sum(c => c.Value);
-            distribution.AssetDistribution.ForEach(c => c.CurrentPercentage = (100.0 * capitalGain[c.Id] / total));
-        }
-
-        private List<AssetValue> GetAssetsValuesByDate(DateTime baseDateTime, IEnumerable<int> assetIds, IEnumerable<AssetValue> assetValues)
-        {
-            var minimumDate = baseDateTime.AddDays(-1);
-            var valuesForDate = assetValues.Where(c => c.Date <= baseDateTime && c.Date >= minimumDate).OrderBy(c => c.AssetId).ThenByDescending(c => c.Date);
-            var result = new List<AssetValue>();
-            bool invalid = false;
-            foreach (var id in assetIds)
-            {
-                var value = valuesForDate.FirstOrDefault(v => v.AssetId == id);
-                if (value == null)
+                Dictionary<int, double> capitalGain = new Dictionary<int, double>();
+                foreach (var value in creationValues.Value)
                 {
-                    invalid = true;
-                    break;
+                    capitalGain[value.AssetId] = distribution.AssetDistribution.Single(c => c.Id == value.AssetId).Percentage *
+                        currentValues.Value.Single(c => c.AssetId == value.AssetId).Value / value.Value;
                 }
-                else
-                {
-                    result.Add(value);
-                }
+                var total = capitalGain.Sum(c => c.Value);
+                distribution.AssetDistribution.ForEach(c => c.CurrentPercentage = Math.Round(100.0 * capitalGain[c.Id] / total, 1));
             }
-            return invalid ? null : result;
         }
 
         public Model.Portfolio FillPortfolioModel(DomainObjects.Portfolio.Portfolio portfolio, DomainObjects.Advisor.Advisor advisor, User user,
@@ -456,13 +446,9 @@ namespace Auctus.Business.Portfolio
         public List<DomainObjects.Portfolio.Portfolio> ListWithHistory(int advisorId, bool onlyEnabled = true)
         {
             var portfolios = List(advisorId, onlyEnabled);
-            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
-            foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios)
-                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
-            
-            Task.WaitAll(histories.ToArray());
+            var history = PortfolioHistoryBusiness.ListHistory(portfolios.ToDictionary(c => c.Id, c => c.CreationDate));
 
-            portfolios.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+            portfolios.ForEach(c => c.PortfolioHistory = history.Where(g => g.PortfolioId == c.Id).ToList());
             return portfolios;
         }
 
@@ -479,14 +465,14 @@ namespace Auctus.Business.Portfolio
             return portfolio;
         }
 
-        public void UpdateAllPortfoliosHistory()
-        {
-            var portfolios = Data.ListAll();
-            foreach(var portfolio in portfolios)
-            {
-                PortfolioHistoryBusiness.UpdatePortfolioHistory(portfolio);
-            }
-        }
+        //public void UpdateAllPortfoliosHistory()
+        //{
+        //    var portfolios = Data.ListAll();
+        //    foreach(var portfolio in portfolios)
+        //    {
+        //        PortfolioHistoryBusiness.UpdatePortfolioHistory(portfolio);
+        //    }
+        //}
 
         public Model.ExchangePortfolio GetExchangePortfolio(string email, int exchangeId)
         {

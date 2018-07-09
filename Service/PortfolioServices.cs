@@ -14,10 +14,10 @@ namespace Auctus.Service
     {
         public PortfolioServices(ILoggerFactory loggerFactory, Cache cache, INodeServices nodeServices) : base(loggerFactory, cache, nodeServices) { }
 
-        public void UpdatePortfoliosHistory()
-        {
-            PortfolioBusiness.UpdateAllPortfoliosHistory();
-        }
+        //public void UpdatePortfoliosHistory()
+        //{
+        //    PortfolioBusiness.UpdateAllPortfoliosHistory();
+        //}
 
         public Portfolio CreatePortfolio(string email, int advisorId, decimal price, string name, string description, double projection, 
             double? optimisticProjection, double? pessimisticProjection, Dictionary<int, double> distribution)

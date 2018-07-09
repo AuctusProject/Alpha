@@ -34,12 +34,12 @@ namespace Api.Controllers
             return base.UpdateAssetsValues();
         }
 
-        [Route("portfolios/history")]
-        [HttpPost]
-        public new IActionResult UpdatePortfoliosHistory()
-        {
-            return base.UpdatePortfoliosHistory();
-        }
+        //[Route("portfolios/history")]
+        //[HttpPost]
+        //public new IActionResult UpdatePortfoliosHistory()
+        //{
+        //    return base.UpdatePortfoliosHistory();
+        //}
 
         [Route("assets/current")]
         [HttpPost]

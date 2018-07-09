@@ -20,12 +20,18 @@ namespace Auctus.DataAccess.Portfolio
         
         public List<Distribution> List(IEnumerable<int> projectionsId)
         {
-            return new List<Distribution>();
             var filterBuilder = Builders<Distribution>.Filter;
-            var filter = filterBuilder.In(x => x.AssetId, projectionsId.ToArray());
+            var filter = filterBuilder.In(x => x.ProjectionId, projectionsId.ToArray());
             var value = Collection.Find(filter).ToList();
 
             return value;
+        }
+
+        public List<Distribution> ListFromPortfolio(IEnumerable<int> portfoliosIds)
+        {
+            var filterBuilder = Builders<Distribution>.Filter;
+            var filter = filterBuilder.In(x => x.PortfolioId, portfoliosIds.ToArray());
+            return Collection.Find(filter).ToList(); ;
         }
 
         public List<Distribution> ListFromPortfolioWithProjection(int portfolioId)

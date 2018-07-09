@@ -26,12 +26,11 @@ namespace Api.Controllers
             return Ok();
         }
 
-
-        protected virtual IActionResult UpdatePortfoliosHistory()
-        {
-            RunJobAsync(PortfolioServices.UpdatePortfoliosHistory);
-            return Ok();
-        }
+        //protected virtual IActionResult UpdatePortfoliosHistory()
+        //{
+        //    RunJobAsync(PortfolioServices.UpdatePortfoliosHistory);
+        //    return Ok();
+        //}
 
         protected virtual IActionResult EvaluateEscrowResults()
         {

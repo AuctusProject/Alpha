@@ -72,13 +72,9 @@ namespace Auctus.Business.Advisor
             Task.WaitAll(portfolios);
 
             var portfolioQty = Task.Factory.StartNew(() => FollowBusiness.ListPortfoliosFollowers(portfolios.Result.SelectMany(c => c.Value.Select(x => x.Id))));
+            var history = Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolios.Result.SelectMany(c => c.Value).ToDictionary(c => c.Id, c => c.CreationDate)));
 
-            List<Task<List<PortfolioHistory>>> histories = new List<Task<List<PortfolioHistory>>>();
-            foreach (DomainObjects.Portfolio.Portfolio portfolio in portfolios.Result.SelectMany(c => c.Value))
-                histories.Add(Task.Factory.StartNew(() => PortfolioHistoryBusiness.ListHistory(portfolio.Id)));
-
-            Task.WaitAll(following, portfolioQty);
-            Task.WaitAll(histories.ToArray());
+            Task.WaitAll(following, portfolioQty, history);
 
             List<Model.Portfolio> portfolioWithSameRisk = new List<Model.Portfolio>();
             List<Model.Portfolio> portfolioWithLittleLowerRisk = new List<Model.Portfolio>();
@@ -90,7 +86,7 @@ namespace Auctus.Business.Advisor
             foreach (KeyValuePair<int, List<DomainObjects.Portfolio.Portfolio>> advisorPortfolios in portfolios.Result)
             {
                 var advisor = advisors.Single(c => c.Id == advisorPortfolios.Key);
-                advisorPortfolios.Value.ForEach(c => c.PortfolioHistory = histories.SelectMany(x => x.Result.Where(g => g.PortfolioId == c.Id)).ToList());
+                advisorPortfolios.Value.ForEach(c => c.PortfolioHistory = history.Result.Where(g => g.PortfolioId == c.Id).ToList());
                 foreach(var r in riskPriority)
                 {
                     var riskFound = advisorPortfolios.Value.SingleOrDefault(c => c.Projection.RiskType == r);

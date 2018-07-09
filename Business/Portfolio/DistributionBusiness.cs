@@ -62,6 +62,13 @@ namespace Auctus.Business.Portfolio
             return distributions;
         }
 
+        public List<Distribution> ListFromPortfolioId(IEnumerable<int> portfolioId)
+        {
+            var distributions = Data.ListFromPortfolio(portfolioId);
+            FillDistributionsWithAssets(distributions);
+            return distributions;
+        }
+
         public List<Distribution> ListFromPortfolioId(int portfolioId)
         {
             var distributions = Data.ListFromPortfolioWithProjection(portfolioId);

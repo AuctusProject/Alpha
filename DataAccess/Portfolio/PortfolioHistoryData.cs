@@ -12,18 +12,18 @@ namespace Auctus.DataAccess.Portfolio
     {
         public override string CollectionName => "PortfolioHistory";   
 
-        public PortfolioHistory LastHistory(int portfolioId)
-        {
-            var value = Collection.Find(x => x.PortfolioId == portfolioId).SortByDescending(x => x.Date).FirstOrDefault();
+        //public PortfolioHistory LastHistory(int portfolioId)
+        //{
+        //    var value = Collection.Find(x => x.PortfolioId == portfolioId).SortByDescending(x => x.Date).FirstOrDefault();
 
-            return value;
-        }
+        //    return value;
+        //}
 
-        public List<PortfolioHistory> ListHistory(int portfolioId)
-        {
-            var values = Collection.Find(x => x.PortfolioId == portfolioId).SortByDescending(x => x.Date);
+        //public List<PortfolioHistory> ListHistory(int portfolioId)
+        //{
+        //    var values = Collection.Find(x => x.PortfolioId == portfolioId).SortByDescending(x => x.Date);
 
-            return values.ToList();
-        }
+        //    return values.ToList();
+        //}
     }
 }
