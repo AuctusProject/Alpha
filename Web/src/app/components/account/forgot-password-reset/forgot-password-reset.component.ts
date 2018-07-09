@@ -14,11 +14,25 @@ export class ForgotPasswordResetComponent implements OnInit {
 
   @Input() forgotPasswordReset: ForgotPasswordReset = new ForgotPasswordReset();
   promise: Subscription;
+  wallet: string;
 
-  constructor(private accountService: AccountService, private notificationService: NotificationsService, private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private accountService: AccountService, 
+    private notificationService: NotificationsService, 
+    private router: Router, 
+    private activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
     this.forgotPasswordReset.code = this.activatedRoute.snapshot.queryParams['c'];
+    this.accountService.getForgotPasswordAddress(this.forgotPasswordReset.code).subscribe(
+      response =>
+      {
+        if (!!response) {
+          this.wallet = response;
+        } else {
+          setTimeout(() => this.router.navigateByUrl('forgot-password-email'), 3000);
+        }
+      }
+    );
   }
 
   onResetClick(): void {

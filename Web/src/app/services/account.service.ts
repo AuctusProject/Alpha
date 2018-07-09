@@ -17,6 +17,7 @@ export class AccountService {
   private setGoalUrl = this.httpService.apiUrl("accounts/v1/goals");
   private confirmEmailUrl = this.httpService.apiUrl("accounts/v1/confirmation");
   private forgotPasswordUrl = this.httpService.apiUrl("accounts/v1/password/forgotten");
+  private forgotPasswordAddressUrl = this.httpService.apiUrl("accounts/v1/password/address");
   private resetPasswordUrl = this.httpService.apiUrl("accounts/v1/password/recovery");
   private resendConfirmationUrl = this.httpService.apiUrl("accounts/v1/confirmation/resend");
   private changePasswordUrl = this.httpService.apiUrl("accounts/v1/password/change");
@@ -101,6 +102,10 @@ export class AccountService {
 
   validateEmail(email: string): Observable<any> {
     return this.httpService.get(this.validateEmailUrl + "/" + email);
+  }
+
+  getForgotPasswordAddress(code: string): Observable<any> {
+    return this.httpService.get(this.forgotPasswordAddressUrl + "/" + code);
   }
 
   validateUsername(username: string): Observable<any> {
