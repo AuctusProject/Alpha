@@ -243,34 +243,37 @@ namespace Auctus.Business.Portfolio
                     }
                 }
             }
-            var values = portfolioHistory.OrderBy(c => c);
-            var minValue = values.First();
-            var maxValue = values.Last();
-            var difference = maxValue - minValue;
-            double rangeGroup;
-            if (difference == 0)
-                rangeGroup = 1;
-            else
-                rangeGroup = difference / (values.Count() > 75 ? 15.0 : 
-                    values.Count() > 55 ? 12.0 :
-                    values.Count() > 35 ? 9.0 :
-                    values.Count() > 15 ? 7.0 :
-                    values.Count() > 10 ? 5.0 :
-                    values.Count() > 5 ? 4.0 :
-                    values.Count() == 1 ? 1.0 : values.Count() - 1);
-
-            minValue = minValue - (rangeGroup / 1.5);
-            maxValue = maxValue + (rangeGroup / 1.5);
-
             List<Model.Portfolio.HistogramDistribution> result = new List<Model.Portfolio.HistogramDistribution>();
-            for (double i = minValue; i <= maxValue; i = i + rangeGroup)
+            if (portfolioHistory.Count > 0)
             {
-                result.Add(new Model.Portfolio.HistogramDistribution()
+                var values = portfolioHistory.OrderBy(c => c);
+                var minValue = values.First();
+                var maxValue = values.Last();
+                var difference = maxValue - minValue;
+                double rangeGroup;
+                if (difference == 0)
+                    rangeGroup = 1;
+                else
+                    rangeGroup = difference / (values.Count() > 75 ? 15.0 :
+                        values.Count() > 55 ? 12.0 :
+                        values.Count() > 35 ? 9.0 :
+                        values.Count() > 15 ? 7.0 :
+                        values.Count() > 10 ? 5.0 :
+                        values.Count() > 5 ? 4.0 :
+                        values.Count() == 1 ? 1.0 : values.Count() - 1);
+
+                minValue = minValue - (rangeGroup / 1.5);
+                maxValue = maxValue + (rangeGroup / 1.5);
+
+                for (double i = minValue; i <= maxValue; i = i + rangeGroup)
                 {
-                    GreaterOrEqual = i,
-                    Lesser = i + rangeGroup,
-                    Quantity = portfolioHistory.Count(c => c >= i && c < (i + rangeGroup))
-                });
+                    result.Add(new Model.Portfolio.HistogramDistribution()
+                    {
+                        GreaterOrEqual = i,
+                        Lesser = i + rangeGroup,
+                        Quantity = portfolioHistory.Count(c => c >= i && c < (i + rangeGroup))
+                    });
+                }
             }
             return result;
         }

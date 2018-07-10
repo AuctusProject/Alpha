@@ -428,7 +428,7 @@ namespace Auctus.Business.Portfolio
                 Following = follows != null && follows.Any(x => x.PortfolioId == portfolio.Id),
                 Enabled = portfolio.Detail.Enabled && advisor.Detail.Enabled,
                 FollowersQuantity = followersQty.ContainsKey(portfolio.Id) ? followersQty[portfolio.Id] : 0,
-                TotalDays = portfolio.PortfolioHistory.Count,
+                TotalDays = portfolio.PortfolioHistory.Any() ? (int)(portfolio.PortfolioHistory.Max(c => c.Date).Subtract(portfolio.PortfolioHistory.Min(c => c.Date)).TotalDays) : 0,
                 LastDay = PortfolioHistoryBusiness.GetHistoryResult(1, portfolio.PortfolioHistory),
                 Last7Days = PortfolioHistoryBusiness.GetHistoryResult(7, portfolio.PortfolioHistory),
                 Last30Days = PortfolioHistoryBusiness.GetHistoryResult(30, portfolio.PortfolioHistory),

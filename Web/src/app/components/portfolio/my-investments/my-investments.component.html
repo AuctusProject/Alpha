@@ -3,7 +3,7 @@
     <header></header>
     <div class="header-text-container" fxLayout="row">
       <div fxFlex>
-        <h1>My investments</h1>
+        <h1>Following</h1>
       </div>
     </div>
   </div>
@@ -12,7 +12,7 @@
     <portfolio-card *ngFor="let portfolio of portfolios" [portfolio]="portfolio"></portfolio-card>
     <exchange-portfolio-card *ngFor="let portfolio of exchangePortfolios" [exchangePortfolio]="portfolio"></exchange-portfolio-card>
     <div *ngIf="portfolios && portfolios.length == 0 && exchangePortfolios && exchangePortfolios.length == 0" class="no-investments">
-      <div class="no-investments-title">You still don't have any investments.</div>
+      <div class="no-investments-title">You don't follow any portfolios yet.</div>
       <div class="no-investments-subtitle">Check the available portfolios at advisors page!</div>
       <div class="advisor-selection">
         <div class="advisor-selection-option" routerLink="/advisors" routerLinkActive="active">

@@ -8,14 +8,14 @@
     </div>
   </div>
   <div fxLayout="row" *ngIf="portfolio.last30Days" fxFlex="280px" fxLayoutGap="40px">
-    <div fxLayout="column" fxLayoutGap="4px">
+    <!-- <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value expected-value">
         <percentage-label [percentage]="portfolio.last30Days.expectedValue"></percentage-label>
       </div>
       <div class="performance-labels">
         Expected return
       </div>
-    </div>
+    </div> -->
     <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value real-return">
         <percentage-label [percentage]="portfolio.last30Days.value"></percentage-label>
@@ -24,14 +24,14 @@
         Real return
       </div>
     </div>
-    <div fxLayout="column" fxLayoutGap="4px">
+    <!-- <div fxLayout="column" fxLayoutGap="4px">
       <div class="performance-value success-rate bold">
         {{portfolio.last30Days.hitPercentage | number:'1.0-2'}}%
       </div>
       <div class="performance-labels">
         Success rate
       </div>
-    </div>
+    </div> -->
   </div>
   <div fxLayout="row" *ngIf="!portfolio.last30Days" fxFlex="280px" fxLayoutGap="40px">
     <div class="history-not-available">Portfolio history data is not available yet.</div>

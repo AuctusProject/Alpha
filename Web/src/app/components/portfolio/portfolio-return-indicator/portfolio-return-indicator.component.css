@@ -10,15 +10,21 @@
     text-align: right;
   }
 
+  .success-value {
+    color: #72F9A9;
+  }
+
+  .fail-value {
+    color: #F5515F;
+  }
+
  .text-center{
     text-align: center;
   }
-  
-  
+
   .return-value {
     font-family: 'HelveticaNeue';
     font-size: 16px;
-    color: #4a4a4a;
   }
 
   .return-label {

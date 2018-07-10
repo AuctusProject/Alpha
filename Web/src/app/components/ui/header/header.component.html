@@ -5,7 +5,7 @@
         <div *ngIf="loginData">
             <div class="menu" fxLayout="row" fxLayoutGap="40px" fxLayoutAlign="space-around center">
                 <a routerLink="/advisors" routerLinkActive="active">ADVISORS</a>
-                <a routerLink="/investments" routerLinkActive="active">MY INVESTMENTS</a>
+                <a routerLink="/following" routerLinkActive="active">FOLLOWING</a>
                 <a *ngIf="loginData.humanAdvisorId" routerLink="/advisor/{{loginData.humanAdvisorId}}" routerLinkActive="active">MY ADVISOR PAGE</a>
                 <div *ngIf="!loginData.humanAdvisorId" class="action-button" routerLink="/become-advisor" routerLinkActive="active">BECOME ADVISOR</div>
                 <div class="pull-right">

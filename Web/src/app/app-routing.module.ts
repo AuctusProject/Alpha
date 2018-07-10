@@ -39,7 +39,7 @@ const routes: Routes = [
     { path: 'become-advisor', component: AdvisorWizardComponent },
     { path: 'advisors', component: HumanAdvisorsComponent },
     { path: 'portfolio/:id', component: PortfolioDetailsComponent },
-    { path: 'investments', component: MyInvestmentsComponent },
+    { path: 'following', component: MyInvestmentsComponent },
     { path: 'add-portfolio', component: AddPortfolioComponent },
     { path: 'edit-portfolio/:id', component: AddPortfolioComponent },
     { path: 'sync-exchange', component: SyncExchangeComponent },

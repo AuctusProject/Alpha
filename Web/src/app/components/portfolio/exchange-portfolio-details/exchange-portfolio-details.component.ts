@@ -38,7 +38,7 @@ export class ExchangePortfolioDetailsComponent implements OnInit {
       .deleteExchangePortfolio(this.portfolio.exchangeId)
       .subscribe(result => {
         this.notificationService.success("Success", "Exchange portfolio deleted.");
-        this.router.navigateByUrl('investments');
+        this.router.navigateByUrl('following');
       });
   }
 }

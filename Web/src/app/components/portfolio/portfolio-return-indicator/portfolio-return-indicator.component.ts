@@ -20,4 +20,13 @@ export class PortfolioReturnIndicatorComponent implements OnInit {
   ngOnInit() {    
   }
 
+  getReturnClass() {
+    let classBase = "text-rigth";
+    if(this.realReturn > 0) {
+      return classBase + " success-value";
+    } else if(this.realReturn < 0) {
+      return classBase + " fail-value";
+    }
+    return classBase;
+  }
 }

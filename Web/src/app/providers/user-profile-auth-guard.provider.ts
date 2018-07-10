@@ -17,7 +17,7 @@ export class UserProfileAuthGuard implements CanActivate {
         if (!loginData.hasInvestment && loginData.humanAdvisorId) {
           this.router.navigateByUrl('advisor/' + loginData.humanAdvisorId);
         } else {
-          this.router.navigateByUrl('investments');
+          this.router.navigateByUrl('following');
         }
       }
       else {
