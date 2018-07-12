@@ -15,14 +15,22 @@ export class PortfolioHistoryChartComponent implements OnInit {
 
   ngOnInit() {
     if (this.historyValues != undefined) {
-      this.historicalChartData = [{ data: [] }];
+      this.historicalChartData = [{ data: [] }, { data: [] }];
       this.historicalChartLabels = [];
       var i = 0;
       var acum = 100;
       for (let value of this.historyValues) {
         acum = acum * (1 + (value.value / 100.0));
+        var val = acum - 100.0;
         i++;
-        this.historicalChartData[0].data.push((acum - 100.0).toFixed(2));
+        if (val >= 0) {
+          this.historicalChartData[0].data.push(val.toFixed(2));
+          this.historicalChartData[1].data.push(null);
+        }
+        else {
+          this.historicalChartData[0].data.push(null);
+          this.historicalChartData[1].data.push(val.toFixed(2));
+        }
         this.historicalChartLabels.push(value.date);
       }
     }
@@ -75,5 +83,13 @@ export class PortfolioHistoryChartComponent implements OnInit {
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(108, 168, 255,0.8)'
+    },
+    {
+      backgroundColor: 'rgba(245,81,95,0.2)',
+      borderColor: 'rgba(245,81,95,1)',
+      pointBackgroundColor: 'rgba(245,81,95,1)',
+      pointBorderColor: '#fff',
+      pointHoverBackgroundColor: '#fff',
+      pointHoverBorderColor: 'rgba(245,81,95,0.8)'
     }];
 }
