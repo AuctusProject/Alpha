@@ -92,8 +92,7 @@ namespace Auctus.Business.Portfolio
                 transaction.Insert(newProjection);
 
                 var distributions = DistributionBusiness.SetNew(newProjection.Id, portfolio.Id, distribution, newProjection.Date);
-                foreach (Distribution dist in distributions)
-                    transaction.Insert(dist);
+                DistributionBusiness.InsertMany(distributions);
 
                 portfolio.ProjectionId = newProjection.Id;
                 transaction.Update(portfolio);
