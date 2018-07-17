@@ -79,6 +79,8 @@ namespace Auctus.DataAccess.Exchanges
                 var value = GetValueByDate(symbol, startTime, hasUSD);
                 if (value != null && !returnDictionary.ContainsKey(startTime))
                     returnDictionary.Add(startTime, value.Value);
+                else if (calledCount > 0 && returnDictionary.Count == 0)
+                    return returnDictionary;
 
                 startTime = startTime.AddMinutes(GAP_IN_MINUTES_BETWEEN_VALUES);
                 ++calledCount;

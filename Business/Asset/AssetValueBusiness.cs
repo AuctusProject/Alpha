@@ -29,7 +29,7 @@ namespace Auctus.Business.Asset
             {
                 return;
             }
-            Dictionary<DateTime, double> assetDateAndValues = GetAssetValuesByDate(asset, lastUpdatedValue, MemoryCache);
+            Dictionary<DateTime, double> assetDateAndValues = ExchangeApi.GetCloseCryptoValue(asset.Code, lastUpdatedValue, MemoryCache);
             CreateAssetValueForPendingDates(asset, lastUpdatedValue, assetDateAndValues);
         }
 
@@ -75,15 +75,6 @@ namespace Auctus.Business.Asset
                 Data.InsertManyAsync(previousAssetValues);
             }
             return currentPendingDateAndValue;
-        }
-
-        private static Dictionary<DateTime, double> GetAssetValuesByDate(DomainObjects.Asset.Asset asset, DateTime startDate, Cache cache)
-        {
-            Dictionary<DateTime, double> assetDateAndValues;
-
-            assetDateAndValues = ExchangeApi.GetCloseCryptoValue(asset.Code, startDate, cache);
-
-            return assetDateAndValues;
         }
     }
 }
