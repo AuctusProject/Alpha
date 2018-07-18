@@ -1,4 +1,5 @@
 ﻿using Auctus.DataAccess.Asset;
+using Auctus.DataAccess.Exchanges;
 using Auctus.Util;
 using Microsoft.AspNetCore.NodeServices;
 using Microsoft.Extensions.Logging;
@@ -47,6 +48,27 @@ namespace Auctus.Business.Asset
             {
                 if (asset.Type == 1)
                     AssetValueBusiness.UpdateAssetValue(asset);
+            }
+        }
+
+        public void CreateCoinMarketCapNotIncludedAssets()
+        {
+            var assets = AssetBusiness.ListAssets();
+            var coinMarketCapAssets = new CoinMarketCapApi().GetAllCoinMarketCapAssets();
+
+            foreach (var coinMarketCapAsset in coinMarketCapAssets)
+            {
+                if (!assets.Any(a => a.CoinMarketCapId == coinMarketCapAsset.Id))
+                {
+                    var assetCurrentValue = new DomainObjects.Asset.Asset()
+                    {
+                        Code = coinMarketCapAsset.Symbol,
+                        CoinMarketCapId = coinMarketCapAsset.Id,
+                        Name = coinMarketCapAsset.Name,
+                        Type = DomainObjects.Asset.AssetType.Crypto.Value
+                    };
+                    Data.Insert(assetCurrentValue);
+                }
             }
         }
     }

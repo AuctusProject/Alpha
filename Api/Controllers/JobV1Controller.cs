@@ -48,6 +48,13 @@ namespace Api.Controllers
             return base.UpdateAssetsCurrentValues();
         }
 
+        [Route("assets/create")]
+        [HttpPost]
+        public new IActionResult CreateAssets()
+        {
+            return base.CreateAssets();
+        }
+
         [Route("purchases/escrowresult")]
         [HttpPost]
         public new IActionResult EvaluateEscrowResults()

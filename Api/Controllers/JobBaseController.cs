@@ -26,6 +26,12 @@ namespace Api.Controllers
             return Ok();
         }
 
+        protected virtual IActionResult CreateAssets()
+        {
+            RunJobSync(AssetServices.CreateAssets);
+            return Ok();
+        }
+
         //protected virtual IActionResult UpdatePortfoliosHistory()
         //{
         //    RunJobAsync(PortfolioServices.UpdatePortfoliosHistory);

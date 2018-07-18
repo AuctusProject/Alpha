@@ -16,5 +16,7 @@ namespace Auctus.DomainObjects.Asset
         public string Code { get; set; }
         [DapperType(System.Data.DbType.Int32)]
         public int Type { get; set; }
+        [DapperType(System.Data.DbType.Int32)]
+        public int CoinMarketCapId { get; set; }
     }
 }
