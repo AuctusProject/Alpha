@@ -36,12 +36,30 @@ namespace Auctus.Business.Asset
         internal Dictionary<DateTime, List<AssetValue>> GetAssetValuesGroupedByDate(IEnumerable<int> assetsIds, DateTime startDate)
         {
             var assetValues = Data.List(assetsIds, startDate);
-            return assetValues.GroupBy(av => av.Date).ToDictionary(av => av.Key, av => av.ToList());
+            var now = DateTime.UtcNow;
+            var rangeValueInMinutes = GetRangeValueToGroupAssetsInMinutes((int)Math.Ceiling(now.Subtract(startDate).TotalMinutes));
+            var iterateDate = startDate.AddSeconds(-startDate.Second).AddMilliseconds(-startDate.Millisecond);
+            var passedMinutes = (iterateDate.Hour * 60 + iterateDate.Minute);
+            iterateDate = iterateDate.AddMinutes(rangeValueInMinutes).AddMinutes(-(passedMinutes % rangeValueInMinutes));
+            var result = new Dictionary<DateTime, List<AssetValue>>();
+            while (iterateDate < now)
+            {
+                var minimumDate = iterateDate.AddMinutes(-Math.Min((rangeValueInMinutes * 6), 1440));
+                var assets = assetValues.Where(c => c.Date > minimumDate && c.Date <= iterateDate).GroupBy(c => c.AssetId).Select(s => s.OrderByDescending(x => x.Date).FirstOrDefault()).Where(c => c != null);
+                result[iterateDate] = new List<AssetValue>();
+                result[iterateDate].AddRange(assets);
+                iterateDate = iterateDate.AddMinutes(rangeValueInMinutes);
+            }
+            return result;
         }
 
-        internal IEnumerable<AssetValue> ListAssetValues(IEnumerable<int> assetsIds)
+        private int GetRangeValueToGroupAssetsInMinutes(int totalMinutes)
         {
-            return Data.List(assetsIds);
+            var expected = totalMinutes / 300;
+            if (expected <= 5)
+                return 5;
+            var possibilities = new int[] { 5, 10, 15, 20, 30, 45, 60, 90, 120, 180, 240, 360, 480, 720, 1440 };
+            return possibilities.Where(c => c <= expected).OrderByDescending(c => c).First();
         }
 
         private void CreateAssetValueForPendingDates(DomainObjects.Asset.Asset asset, DateTime lastUpdatedValue, Dictionary<DateTime, double> assetDateAndValues)

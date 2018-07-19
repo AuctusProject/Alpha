@@ -48,14 +48,14 @@ export class PortfolioHistoryChartComponent implements OnInit {
         type: 'time',
         time: {
           unit: 'day',
-          tooltipFormat: 'MMM D YYYY'
+          tooltipFormat: 'MM/DD/YYYY hh:mm'
         }
       }],
       yAxes: [{
         gridLines: { borderDash: [3], borderDashOffset: [15], drawBorder: false, color: ['#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb', '#bbbbbb'] },
         ticks: {
           fontFamily: 'HelveticaNeue', fontSize: 12, padding: 10, callback: function (value, index, values) {
-            return value.toFixed(2) + ' %';
+            return value.toFixed(1) + ' %';
           }
         }
       }]
