@@ -11,7 +11,7 @@ namespace Auctus.DataAccess.Exchanges
     public class CoinMarketCapApi
     {
         protected string API_BASE_ENDPOINT { get => @"https://api.coinmarketcap.com/"; }
-        protected string API_ENDPOINT { get => @"v2/ticker/?sort=id&structure=array&start={0}"; }
+        protected string API_ENDPOINT { get => @"v2/ticker/?limit=100&sort=id&structure=array&start={0}"; }
         protected string LISTINGS_ENDPOINT { get => @"v2/listings/"; }
 
         public class CoinMarketCapAssetsResult
@@ -74,25 +74,41 @@ namespace Auctus.DataAccess.Exchanges
             var returnDictionary = new Dictionary<int, double>();
             while (true)
             {
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(API_BASE_ENDPOINT);
-                    var response = client.GetAsync(String.Format(API_ENDPOINT, (currentPage * 100 + 1))).Result;
+                var dictionary = CallApiTickerWithRetry(currentPage * 100 + 1);
+                if (dictionary?.Any() == true)
+                    returnDictionary = returnDictionary.Concat(dictionary).ToDictionary(x => x.Key, x => x.Value);
+                else
+                    return returnDictionary;
 
-                    if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                    {
-                        var dictionary = GetAllCurrentPriceValue(response);
-                        if (dictionary?.Any() == true)
-                            returnDictionary = returnDictionary.Concat(dictionary).ToDictionary(x => x.Key, x => x.Value);
-                        else
-                            return returnDictionary;
-                    }
-                    else
-                        throw new InvalidOperationException();
-
-                    currentPage++;
-                }
+                currentPage++;
             }
+        }
+
+        private Dictionary<int, double> CallApiTickerWithRetry(int start)
+        {
+            return Retry.Get().Execute<Dictionary<int, double>>((Func<int, Dictionary<int, double>>)CallApiTicker, start);
+        }
+
+        private Dictionary<int, double> CallApiTicker(int start)
+        {
+            var returnDictionary = new Dictionary<int, double>();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(API_BASE_ENDPOINT);
+                var response = client.GetAsync(String.Format(API_ENDPOINT, start)).Result;
+
+                if (response.IsSuccessStatusCode || response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    var dictionary = GetAllCurrentPriceValue(response);
+                    if (dictionary?.Any() == true)
+                        returnDictionary = returnDictionary.Concat(dictionary).ToDictionary(x => x.Key, x => x.Value);
+                    else
+                        return returnDictionary;
+                }
+                else
+                    throw new InvalidOperationException();
+            }
+            return returnDictionary;
         }
 
         public CoinMarketCapAssetResult[] GetAllCoinMarketCapAssets()
