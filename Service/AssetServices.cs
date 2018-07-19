@@ -19,6 +19,11 @@ namespace Auctus.Service
             AssetBusiness.UpdateAllAssetsValues();
         }
 
+        public void CreateAssets()
+        {
+            AssetBusiness.CreateCoinMarketCapNotIncludedAssets();
+        }
+
         public void UpdateAllAssetsCurrentValues()
         {
             AssetCurrentValueBusiness.UpdateAssetsCurrentValues();

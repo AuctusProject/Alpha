@@ -19,10 +19,11 @@ namespace Auctus.Business.Asset
         public void UpdateAssetsCurrentValues()
         {
             var assets = AssetBusiness.ListAssets();
-            var currentValuesDictionary = ExchangeApi.GetCurrentCryptoValues(assets.Select(a => a.Code));
+            var currentValuesDictionary = new CoinMarketCapApi().GetAllCoinsCurrentPrice();
+
             foreach(var currentValue in currentValuesDictionary)
             {
-                var asset = assets.FirstOrDefault(a => a.Code == currentValue.Key);
+                var asset = assets.FirstOrDefault(a => a.CoinMarketCapId == currentValue.Key);
                 if (asset != null)
                 {
                     var assetCurrentValue = new AssetCurrentValue()
