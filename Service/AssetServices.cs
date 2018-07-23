@@ -16,7 +16,7 @@ namespace Auctus.Service
 
         public void UpdateAllAssetsValues()
         {
-            AssetBusiness.UpdateAllAssetsValues();
+            AssetValueBusiness.UpdateAllAssetsValues();
         }
 
         public void CreateAssets()

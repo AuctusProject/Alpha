@@ -22,6 +22,23 @@ namespace Auctus.Business.Asset
             return Data.GetLastValue(assetId);
         }
 
+        public void UpdateAllAssetsValues()
+        {
+            var assets = AssetBusiness.ListAssets();
+            var currentValuesDictionary = new CoinMarketCapApi().GetAllCoinsCurrentPrice();
+            var currentDate = DateTime.UtcNow;
+            currentDate = currentDate.AddMilliseconds(-currentDate.Millisecond);
+            var assetValues = new List<DomainObjects.Asset.AssetValue>();
+
+            foreach (var currentValue in currentValuesDictionary)
+            {
+                var asset = assets.FirstOrDefault(a => a.CoinMarketCapId == currentValue.Key);
+                if (asset != null)
+                    assetValues.Add(new DomainObjects.Asset.AssetValue() { AssetId = asset.Id, Date = currentDate, Value = currentValue.Value });
+            }
+            Data.InsertManyAsync(assetValues);
+        }
+
         internal void UpdateAssetValue(DomainObjects.Asset.Asset asset)
         {
             var lastUpdatedValue = LastAssetValue(asset.Id)?.Date ?? DateTime.UtcNow.AddDays(-30).Date;

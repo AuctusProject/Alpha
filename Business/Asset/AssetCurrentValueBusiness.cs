@@ -20,8 +20,9 @@ namespace Auctus.Business.Asset
         {
             var assets = AssetBusiness.ListAssets();
             var currentValuesDictionary = new CoinMarketCapApi().GetAllCoinsCurrentPrice();
-
-            foreach(var currentValue in currentValuesDictionary)
+            var currentDate = DateTime.UtcNow;
+            currentDate = currentDate.AddMilliseconds(-currentDate.Millisecond);
+            foreach (var currentValue in currentValuesDictionary)
             {
                 var asset = assets.FirstOrDefault(a => a.CoinMarketCapId == currentValue.Key);
                 if (asset != null)
@@ -29,7 +30,7 @@ namespace Auctus.Business.Asset
                     var assetCurrentValue = new AssetCurrentValue()
                     {
                         AssetId = asset.Id,
-                        Date = DateTime.UtcNow,
+                        Date = currentDate,
                         Value = currentValue.Value
                     };
                     Data.Update(assetCurrentValue);

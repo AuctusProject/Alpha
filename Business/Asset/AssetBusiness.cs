@@ -40,17 +40,6 @@ namespace Auctus.Business.Asset
             return assets;
         }
 
-        public void UpdateAllAssetsValues()
-        {
-            var assets = ListAssets();
-
-            foreach (var asset in assets)
-            {
-                if (asset.Type == 1)
-                    AssetValueBusiness.UpdateAssetValue(asset);
-            }
-        }
-
         public void CreateCoinMarketCapNotIncludedAssets()
         {
             var assets = AssetBusiness.ListAssets();

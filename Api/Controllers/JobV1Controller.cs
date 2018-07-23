@@ -41,13 +41,6 @@ namespace Api.Controllers
         //    return base.UpdatePortfoliosHistory();
         //}
 
-        [Route("assets/current")]
-        [HttpPost]
-        public new IActionResult UpdateAssetsCurrentValues()
-        {
-            return base.UpdateAssetsCurrentValues();
-        }
-
         [Route("assets/create")]
         [HttpPost]
         public new IActionResult CreateAssets()
